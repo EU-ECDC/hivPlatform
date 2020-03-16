@@ -1,0 +1,43 @@
+.input-group {
+  display: table;
+}
+
+.input-group-btn {
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+  max-width: 100%;
+}
+
+.input-group-btn:first-child > .btn {
+  background-color: #f4f4f4;
+  display: inline-block;
+  padding: 6px 12px;
+}
+
+.input-group .form-control:last-child {
+  width: 100%;
+  background-color: #eee;
+  padding: 7px 12px;
+}
+
+.shiny-file-input-progress {
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background-color: #69b023 !important;
+  background-image: none !important;
+  float: left;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  transition: width .6s ease;
+}
+
+.progress-bar.active, .progress.active .progress-bar {
+  animation: progress-bar-stripes 2s linear infinite;
+}

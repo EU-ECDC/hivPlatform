@@ -1,0 +1,26 @@
+Package: hivEstimatesAccuracyReloaded
+Type: Package
+Title: Improves Accuracy of HIV Estimates in EU/EEA Countries
+Version: 1.2.0
+Date: 2020-03-01
+Authors@R: c(person("Magdalena", "Rosinska", email = "mrosinska@pzh.gov.pl",
+    role = c("aut", "cph")), person("Nikos", "Pantazis", email =
+    "npantaz@med.uoa.gr", role = c("aut")), person("Daniel", "Lewandowski",
+    email = "daniel@nextpagesoft.net", role = c("aut", "cre")),
+    person("Janusz", "Janiec", email = "jjaniec@pzh.gov.pl", role = c("aut",
+    "ctb")), person("Chantal", "Quinten", email = "chantal.quinten@ecdc.europa.eu", role = c("aut",
+    "ctb")))
+Maintainer: Daniel Lewandowski <daniel@nextpagesoft.net>
+Description: Improves the accuracy of HIV estimates in EU/EEA countries.
+License: file LICENSE
+Depends: R (>= 3.1.0)
+Imports:
+    data.table (>= 1.12.8),
+    mice (>= 3.8.0),
+    R6 (>= 2.4.1),
+    shiny (>= 1.4.0),
+    shinyMobile (>= 0.5.0.9000),
+    pkgload
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
