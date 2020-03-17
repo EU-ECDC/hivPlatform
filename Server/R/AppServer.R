@@ -15,8 +15,8 @@ AppServer <- function(input, output, session)
     AppManager = AppManager$new(reactive = TRUE)
   )
 
-  callModule(Welcome, 'welcome', appState, session = session)
-  callModule(InputDataUpload, 'upload', appState, session = session)
+  #callModule(Welcome, 'welcome', appState, session = session)
+  #callModule(InputDataUpload, 'upload', appState, session = session)
 
   session$onSessionEnded(function() {
     shiny::stopApp()
@@ -24,6 +24,11 @@ AppServer <- function(input, output, session)
 
   output$mode <- renderText({
     sprintf('Mode: %s', appState$AppManager$Mode)
+  })
+
+  observeEvent(input$foo, {
+    print(input$foo)
+    session$sendCustomMessage('foo2', 'And I am from R')
   })
 
   return(invisible(NULL))

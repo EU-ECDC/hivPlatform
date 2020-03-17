@@ -16,6 +16,6 @@ RunApp <- function(launchBrowser = FALSE)
 {
   app <- shiny::shinyApp(AppUI, AppServer)
   # options(shiny.launch.browser = rstudioapi::viewer)
-  shiny::runApp(app, display.mode = 'normal', test.mode = TRUE)
+  shiny::runApp(app, port = 3306, display.mode = 'normal', test.mode = FALSE)
   return(invisible(NULL))
 }
