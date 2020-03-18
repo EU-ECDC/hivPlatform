@@ -11,12 +11,7 @@
 #' @export
 AppServer <- function(input, output, session)
 {
-  appState <- reactiveValues(
-    AppManager = AppManager$new(reactive = TRUE)
-  )
-
-  #callModule(Welcome, 'welcome', appState, session = session)
-  #callModule(InputDataUpload, 'upload', appState, session = session)
+  appManager <- AppManager$new(session)
 
   session$onSessionEnded(function() {
     shiny::stopApp()
@@ -26,10 +21,7 @@ AppServer <- function(input, output, session)
     sprintf('Mode: %s', appState$AppManager$Mode)
   })
 
-  observeEvent(input$foo, {
-    print(input$foo)
-    session$sendCustomMessage('foo2', 'And I am from R')
-  })
+  Events(input, output, session, appManager)
 
   return(invisible(NULL))
 }

@@ -13,19 +13,16 @@ AppManager <- R6::R6Class(
   classname = 'AppManager',
   public = list(
 
-    # Is it reactive type? Required for shiny app
-    Reactive = FALSE,
-
     # Methods
     initialize = function(
-      reactive = FALSE,
+      session = NULL,
       mode = 'NONE'
     ) {
       stopifnot(mode %in% c('NONE', 'ACCURACY', 'MODELLING', 'ALL-IN-ONE'))
 
-      self$Reactive <- reactive
+      private$Session <- session
 
-      catalogStorage <- ifelse(reactive, shiny::reactiveValues, list)
+      catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
         Mode = mode,
         CaseBasedDataPath = NULL,
@@ -38,7 +35,7 @@ AppManager <- R6::R6Class(
     },
 
     print = function() {
-      print(self$Reactive)
+      print(private$Session)
     },
 
     ReadCaseBasedData = function(fileName) {
@@ -81,10 +78,16 @@ AppManager <- R6::R6Class(
         map
       )
       return(self)
+    },
+
+    SendEventToReact = function(eventName, value) {
+      private$Session$sendCustomMessage(eventName, value)
     }
   ),
 
   private = list(
+    Session = NULL,
+
     # Storage
     Catalogs = NULL,
 
