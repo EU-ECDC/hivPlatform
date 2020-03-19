@@ -23,20 +23,22 @@ export default class AppManager {
   };
 
   @action
-  notifyShinyBtnClicked = btnId => {
+  btnClicked = btnId => {
     if (this.isProd) {
       window.Shiny.setInputValue(btnId, '', {priority: 'event'});
     } else {
-      console.log('notifyShinyBtnClicked executed');
+      console.log('appManager.btnClicked executed');
     }
+
   };
 
   @action
-  setShinyInputValue = (inputId, value) => {
+  inputValueSet = (inputId, value) => {
     if (this.isProd) {
       window.Shiny.setInputValue(inputId, value);
     } else {
-      console.log('setShinyInputValue executed');
+      console.log('appManager.btnClicked executed');
     }
+
   };
 }

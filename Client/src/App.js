@@ -2,7 +2,7 @@ import { hot } from 'react-hot-loader';
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import ClickButton from './components/ClickButton';
+import RootElem from './components/RootElem';
 
 const theme = createMuiTheme({
   palette: {
@@ -48,8 +48,7 @@ const App = () => (
   <MuiThemeProvider theme={theme}>
     <React.Fragment>
       <CssBaseline />
-      <div>Hello, it's Daniel here. I'm awesome.</div>
-      <ClickButton />
+      <RootElem />
     </React.Fragment>
   </MuiThemeProvider>
 );
