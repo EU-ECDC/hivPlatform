@@ -7,14 +7,29 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
-//import MsgBar from './MsgBar';
-//import ModelsOverview from './ModelsOverview';
-//import ModelTabs from './ModelTabs';
-//import Breadcrumb from './Breadcrumb';
 import LeftNav from './LeftNav';
 import { NAME, VERSION } from '../settings';
+
+const TabPanel = props => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`wrapped-tabpanel-${index}`}
+      aria-labelledby={`wrapped-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </Typography>
+  );
+}
+
 
 const styles = () => ({
   root: {
@@ -40,6 +55,7 @@ const styles = () => ({
   },
 });
 
+const steps = ['Input data upload', 'Data summary', 'Adjustments'];
 @withStyles(styles)
 @inject('appManager')
 @observer
@@ -50,6 +66,7 @@ class RootElem extends React.Component {
 
   state = {
     leftNavOpen: false,
+    tabIndex: 0,
   };
 
   setLeftNavOpen = open => {
@@ -59,6 +76,11 @@ class RootElem extends React.Component {
   handleOpenLeftNav = () => this.setLeftNavOpen(true);
 
   handleCloseLeftNav = () => this.setLeftNavOpen(false);
+
+  handleTabChange = tabIndex => {
+    console.log(tabIndex);
+    this.setState({tabIndex})
+  }
 
   render() {
     const { classes } = this.props;
@@ -86,20 +108,33 @@ class RootElem extends React.Component {
       </AppBar>
     );
     const leftNav = (
-      <Drawer open={leftNavOpen} onClose={this.handleCloseLeftNav}>
-        <LeftNav />
-      </Drawer>
-    );
+//      <Drawer variant="persistent" open={leftNavOpen} onClose={this.handleCloseLeftNav}>
+        <LeftNav steps={steps} onStepChange={this.handleTabChange}/>
+//      </Drawer>
+    );;
 
     return (
       <Grid container className={classes.root}>
         <Grid item xs={12}>
           {appBar}
-          {leftNav}
+          <Grid container className={classes.grow}>
+            <Grid item xs={3}>{leftNav}</Grid>
+            <Grid item xs={9}>
+            <TabPanel value={this.state.tabIndex} index={0}>
+              Item One
+            </TabPanel>
+            <TabPanel value={this.state.tabIndex} index={1}>
+              Item Two
+            </TabPanel>
+            <TabPanel value={this.state.tabIndex} index={2}>
+              Item Three
+            </TabPanel>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     );
   }
-}
+};
 
 export default RootElem;

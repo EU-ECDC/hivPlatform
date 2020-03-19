@@ -20,4 +20,4 @@ export default class ClickButton extends React.Component {
       </Button>
     )
   }
-}
+};

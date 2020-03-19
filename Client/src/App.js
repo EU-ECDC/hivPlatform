@@ -10,6 +10,7 @@ const theme = createMuiTheme({
       main: '#69b023',
     },
   },
+  /*
   typography: {
     useNextVariants: true,
     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -42,6 +43,7 @@ const theme = createMuiTheme({
       },
     },
   },
+  */
 });
 
 const App = () => (
