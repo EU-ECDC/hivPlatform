@@ -1,140 +1,97 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { observer, inject, PropTypes as MobxPropTypes } from 'mobx-react';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { observer, inject } from 'mobx-react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Box from '@material-ui/core/Box';
-import Drawer from '@material-ui/core/Drawer';
-import Grid from '@material-ui/core/Grid';
 import LeftNav from './LeftNav';
+import RightNav from './RightNav';
+import TabWelcome from './TabWelcome';
+import TabUpload from './TabUpload';
 import { NAME, VERSION } from '../settings';
 
-const TabPanel = props => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`wrapped-tabpanel-${index}`}
-      aria-labelledby={`wrapped-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-}
-
-
-const styles = () => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: 0,
-    marginRight: 10,
-    color: 'white',
-  },
+const userStyles = makeStyles({
   appBar: {
-    padding: 3,
+    padding: 3
   },
   appName: {
     color: 'white',
+    marginLeft: 10,
   },
   appVersion: {
     color: 'white',
     marginRight: 10,
   },
-  grow: {
-    flexGrow: 1,
-  },
+  rightNavBtn: {
+    color: 'white'
+  }
 });
 
-const steps = ['Input data upload', 'Data summary', 'Adjustments'];
-@withStyles(styles)
-@inject('appManager')
-@observer
-class RootElem extends React.Component {
-  static propTypes = {
-    classes: PropTypes.object.isRequired
-  };
+const StepPanel = props => {
+  const { activePanelId, panelId, children, ...other } = props;
 
-  state = {
-    leftNavOpen: false,
-    tabIndex: 0,
-  };
-
-  setLeftNavOpen = open => {
-    this.setState({ leftNavOpen: open });
-  };
-
-  handleOpenLeftNav = () => this.setLeftNavOpen(true);
-
-  handleCloseLeftNav = () => this.setLeftNavOpen(false);
-
-  handleTabChange = tabIndex => {
-    console.log(tabIndex);
-    this.setState({tabIndex})
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { leftNavOpen } = this.state;
-
-    const appBar = (
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar variant="dense" disableGutters>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-            onClick={this.handleOpenLeftNav}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.appName}>
-            {NAME}
-          </Typography>
-          <div className={classes.grow} />
-          <Typography variant="subtitle1" className={classes.appVersion}>
-            | v. {VERSION}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    );
-    const leftNav = (
-//      <Drawer variant="persistent" open={leftNavOpen} onClose={this.handleCloseLeftNav}>
-        <LeftNav steps={steps} onStepChange={this.handleTabChange}/>
-//      </Drawer>
-    );;
-
-    return (
-      <Grid container className={classes.root}>
-        <Grid item xs={12}>
-          {appBar}
-          <Grid container className={classes.grow}>
-            <Grid item xs={3}>{leftNav}</Grid>
-            <Grid item xs={9}>
-            <TabPanel value={this.state.tabIndex} index={0}>
-              Item One
-            </TabPanel>
-            <TabPanel value={this.state.tabIndex} index={1}>
-              Item Two
-            </TabPanel>
-            <TabPanel value={this.state.tabIndex} index={2}>
-              Item Three
-            </TabPanel>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
+  return (
+    <Typography
+      component='div'
+      role='tabpanel'
+      hidden={activePanelId !== panelId}
+      id={`wrapped-tabpanel-${panelId}`}
+      aria-labelledby={`wrapped-tab-${panelId}`}
+      style={{ flexGrow: 1 }}
+      {...other}
+    >
+      {activePanelId === panelId && <Box p={3}>{children}</Box>}
+    </Typography>
+  );
 };
 
-export default RootElem;
+const RootElem = (props) => {
+  const appManager = props.appManager;
+  const classes = userStyles();
+  const [activePanelId, setActivePanelId] = React.useState(0);
+  const [rightNavState, setRightNavState] = React.useState(false);
+
+  const appBar = (
+    <AppBar position='static' className={classes.appBar}>
+      <Toolbar variant='dense' disableGutters>
+        <Typography variant='h6' className={classes.appName}>
+          {NAME}
+        </Typography>
+        <Box flexGrow={1}/>
+        <Typography variant='subtitle1' className={classes.appVersion}>
+          Mode: {appManager.mode} | Shiny state: {appManager.shinyState} | Version {VERSION}
+        </Typography>
+        <IconButton onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}>
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  );
+
+  return (
+    <Box display='flex' flexGrow={1} flexDirection='column'>
+      <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
+      {appBar}
+      <Box display='flex' flexGrow={1} flexDirection='row'>
+        <LeftNav steps={appManager.steps} onStepChange={setActivePanelId} />
+        <StepPanel panelId={0} activePanelId={activePanelId} >
+          <TabWelcome appManager={appManager}/>
+        </StepPanel>
+        <StepPanel panelId={1} activePanelId={activePanelId}>
+          <TabUpload appManager={appManager} />
+        </StepPanel>
+        <StepPanel panelId={2} activePanelId={activePanelId}>
+          Item Three
+        </StepPanel>
+        <StepPanel panelId={3} activePanelId={activePanelId}>
+          Item Four
+        </StepPanel>
+      </Box>
+    </Box>
+  );
+};
+
+export default inject('appManager')(observer(RootElem));

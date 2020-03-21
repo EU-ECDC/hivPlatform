@@ -4,4 +4,8 @@ Events <- function(input, output, session, appManager)
     print('input$ClickButton')
     appManager$SendEventToReact('eventName', 'Another abra cadabra')
   })
+
+  observeEvent(input$test, {
+    print(input$test)
+  })
 }

@@ -13,6 +13,8 @@ AppServer <- function(input, output, session)
 {
   appManager <- AppManager$new(session)
 
+  print(tempdir())
+
   session$onSessionEnded(function() {
     shiny::stopApp()
   })

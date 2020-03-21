@@ -14,8 +14,8 @@
 #' @export
 RunApp <- function(launchBrowser = FALSE)
 {
+  options(shiny.maxRequestSize = 150 * 1024^2)
   app <- shiny::shinyApp(AppUI, AppServer)
-  # options(shiny.launch.browser = rstudioapi::viewer)
   shiny::runApp(app, port = 3306, display.mode = 'normal', test.mode = FALSE)
   return(invisible(NULL))
 }

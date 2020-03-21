@@ -10,40 +10,24 @@ const theme = createMuiTheme({
       main: '#69b023',
     },
   },
-  /*
-  typography: {
-    useNextVariants: true,
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-    fontSize: 12,
-    caption: {
-      fontSize: '0.8rem',
-      lineHeight: '1rem',
-      fontStyle: 'italic',
-    },
-    h6: {
-      fontSize: '1rem',
-    },
-  },
   overrides: {
-    MuiMenuItem: {
-      root: {
-        paddingTop: 4,
-        paddingBottom: 4,
-        fontSize: 12,
+    MuiStepLabel: {
+      label: {
+        color: 'black'
+      },
+      completed: {
+        fontWeight: 'bold !important'
+      },
+      active: {
+        fontStyle: 'italic !important'
       },
     },
-    MuiIconButton: {
-      root: {
-        padding: 8,
-      },
-    },
-    MuiBackdrop: {
-      root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.08)',
-      },
-    },
-  },
-  */
+    MuiStepIcon: {
+      text: {
+        fill: 'white !important'
+      }
+    }
+  }
 });
 
 const App = () => (
