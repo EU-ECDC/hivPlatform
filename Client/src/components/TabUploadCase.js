@@ -1,10 +1,12 @@
 import React from 'react';
-import Input from '@material-ui/core/Input';
+import { observer } from 'mobx-react';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Tooltip from '@material-ui/core/Tooltip';
 import TabPanel from './TabPanel';
-import { red } from '@material-ui/core/colors';
+import Btn from './Btn';
 
 const TabUploadCase = (props) => {
-  const { appManager, activeTabId } = props;
+  const { appManager } = props;
 
   React.useEffect(
     () => {
@@ -17,12 +19,15 @@ const TabUploadCase = (props) => {
 
   return (
     <TabPanel>
-      <Input type='file' id='test' name='test' />
-      <div id='test_progress' className='shiny-file-input-progress' style={{width: 303, height: 32, backgroundColor: '#e1dbdb', padding: 2}}>
-        <div className='progress-bar' style={{ width: '100%', height: '100%', backgroundColor: '#69b023', color: 'white', padding: 2 }}></div>
-      </div>
+      <input style={{ display: 'none' }} id='caseUploadBtn' className='uploadBtn' type='file' />
+      <Tooltip title='Select case-based data file'>
+        <label htmlFor='caseUploadBtn'>
+          <Btn>Upload</Btn>
+        </label>
+      </Tooltip>
+      {appManager.fileUploadProgress && <LinearProgress variant='determinate' value={appManager.fileUploadProgress * 100} color='secondary' />}
     </TabPanel>
   );
 };
 
-export default TabUploadCase;
+export default observer(TabUploadCase);

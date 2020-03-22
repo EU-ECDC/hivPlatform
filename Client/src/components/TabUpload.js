@@ -18,8 +18,8 @@ const TabUpload = (props) => {
           indicatorColor='primary'
           textColor='primary'
         >
-          <Tab label='Case-based data upload'/>
-          <Tab label='Aggregated data upload'/>
+          <Tab label='Case-based data'/>
+          <Tab label='Aggregated data'/>
         </Tabs>
         {activeTabId === 0 && <TabUploadCase {...props} />}
         {activeTabId === 1 &&

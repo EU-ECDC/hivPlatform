@@ -5,7 +5,7 @@ Events <- function(input, output, session, appManager)
     appManager$SendEventToReact('eventName', 'Another abra cadabra')
   })
 
-  observeEvent(input$test, {
-    print(input$test)
+  observeEvent(input$caseUploadBtn, {
+    print(input$caseUploadBtn)
   })
 }

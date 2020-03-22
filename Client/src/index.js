@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import App from './App';
 import AppManager from './stores/AppManager';
-import jQuery from 'jquery';
+import $ from 'jquery';
 
 // Attach to window for shinyjs
-window.jQuery = jQuery;
+window.jQuery = $;
+window.$ = $;
 
 const appManager = new AppManager();
 
@@ -17,9 +18,12 @@ ReactDOM.render(
   document.getElementById('app'),
   () => {
     console.log('ReactDOM.render complete');
-    jQuery(document).on('shiny:connected', () => appManager.setShinyState('CONNECTED'));
-    jQuery(document).on('shiny:sessioninitialized', () => appManager.setShinyState('SESSION_INITIALIZED'));
-    jQuery(document).on('shiny:disconnected', () => appManager.setShinyState('DISCONNECTED'));
-    jQuery(document).on('shiny:message', () => console.log(event));
+    $(document).ready(() => {
+      $(document).on('shiny:connected', () => appManager.setShinyState('CONNECTED'));
+      $(document).on('shiny:sessioninitialized', () => appManager.setShinyState('SESSION_INITIALIZED'));
+      $(document).on('shiny:disconnected', () => appManager.setShinyState('DISCONNECTED'));
+      $(document).on('shiny:inputchanged', () => console.log('shiny:inputchanged:', event));
+      $(document).on('shiny:message', () => console.log('shiny:message:', event));
+    })
   },
 );

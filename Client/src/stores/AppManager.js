@@ -1,4 +1,5 @@
 import { observable, action, configure, computed } from 'mobx';
+import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 
 configure({
   enforceActions: 'observed',
@@ -17,20 +18,25 @@ export default class AppManager {
 
   @observable
   steps = [
-    { title: 'Welcome', completed: false },
-    { title: 'Input data upload', completed: false },
-    { title: 'Data summary', completed: false },
-    { title: 'Adjustments', completed: false },
-    { title: 'Modelling', completed: false },
-    { title: 'Reports', completed: false },
-    { title: 'Outputs', completed: false },
+    { title: 'Welcome', completed: false, disabled: false },
+    { title: 'Input data upload', completed: false, disabled: true},
+    { title: 'Data summary', completed: false, disabled: true},
+    { title: 'Adjustments', completed: false, disabled: true},
+    { title: 'Modelling', completed: false, disabled: true},
+    { title: 'Reports', completed: false, disabled: true},
+    { title: 'Outputs', completed: false, disabled: true},
   ];
+
+  @observable
+  activeStep = 0;
+
+  @observable
+  fileUploadProgress = null;
 
   // Shiny custom event handlers
   onShinyEventName = val => alert(val);
 
-  constructor() {
-  };
+  constructor() { };
 
   @computed
   get shinyReady() {
@@ -44,12 +50,18 @@ export default class AppManager {
   }
 
   @action
-  setShinyState = state => this.shinyState = state;
+  setShinyState = state => {
+    this.shinyState = state;
+    if (state === 'SESSION_INITIALIZED') {
+      DefineReactFileInputBinding(this);
+    }
+  };
 
   @action
   setMode = mode => {
     this.mode = mode;
     this.steps[0].completed = true;
+    this.setActiveStep(1);
   };
 
   @action
@@ -87,5 +99,18 @@ export default class AppManager {
       console.log('inputValueSet: Shiny is not available');
     }
   };
+
+  @action
+  setFileUploadProgress = progress => {
+    this.fileUploadProgress = progress;
+  }
+
+  @action
+  setActiveStep = step => {
+
+
+    this.steps[step].disabled = false;
+    this.activeStep = step;
+  }
 
 }

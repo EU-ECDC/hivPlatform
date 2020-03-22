@@ -5,20 +5,14 @@ import StepButton from '@material-ui/core/StepButton';
 import StepLabel from '@material-ui/core/StepLabel';
 
 const LeftNav = (props) => {
-  const steps = props.steps;
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const setStep = step => () => {
-    setActiveStep(step);
-    props.onStepChange(step);
-  };
+  const { steps, activeStep, onStepChange } = props;
 
   return (
-    <div style={{minWidth: 300, backgroundColor: 'white'}}>
+    <div style={{ minWidth: 300, backgroundColor: 'white' }}>
       <Stepper nonLinear activeStep={activeStep} orientation='vertical'>
         {steps.map((step, index) => (
-          <Step key={index} completed={step.completed}>
-            <StepButton onClick={setStep(index)}>
+          <Step key={index} completed={step.completed} disabled={step.disabled}>
+            <StepButton onClick={() => onStepChange(index)} >
               <StepLabel>
                 {step.title}
               </StepLabel>

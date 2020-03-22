@@ -147,7 +147,5 @@ AppManager <- R6::R6Class(
     PreProcessedCaseBasedDataStatus = function() {
       return(private$Catalogs$PreProcessedCaseBasedDataStatus)
     }
-
-
   )
 )

@@ -48,10 +48,9 @@ const StepPanel = props => {
   );
 };
 
-const RootElem = (props) => {
+const RootElem = props => {
   const appManager = props.appManager;
   const classes = userStyles();
-  const [activePanelId, setActivePanelId] = React.useState(0);
   const [rightNavState, setRightNavState] = React.useState(false);
 
   const appBar = (
@@ -71,22 +70,26 @@ const RootElem = (props) => {
     </AppBar>
   );
 
+  const handleStepChange = step => {
+    appManager.setActiveStep(step);
+  }
+
   return (
     <Box display='flex' flexGrow={1} flexDirection='column'>
       <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
       <Box display='flex' flexGrow={1} flexDirection='row'>
-        <LeftNav steps={appManager.steps} onStepChange={setActivePanelId} />
-        <StepPanel panelId={0} activePanelId={activePanelId} >
+        <LeftNav steps={appManager.steps} activeStep={appManager.activeStep} onStepChange={handleStepChange} />
+        <StepPanel panelId={0} activePanelId={appManager.activeStep} >
           <TabWelcome appManager={appManager}/>
         </StepPanel>
-        <StepPanel panelId={1} activePanelId={activePanelId}>
+        <StepPanel panelId={1} activePanelId={appManager.activeStep}>
           <TabUpload appManager={appManager} />
         </StepPanel>
-        <StepPanel panelId={2} activePanelId={activePanelId}>
+        <StepPanel panelId={2} activePanelId={appManager.activeStep}>
           Item Three
         </StepPanel>
-        <StepPanel panelId={3} activePanelId={activePanelId}>
+        <StepPanel panelId={3} activePanelId={appManager.activeStep}>
           Item Four
         </StepPanel>
       </Box>

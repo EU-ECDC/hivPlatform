@@ -9,17 +9,22 @@ const theme = createMuiTheme({
     primary: {
       main: '#69b023',
     },
+    secondary: {
+      main: '#7cbdc1',
+    }
   },
   overrides: {
     MuiStepLabel: {
-      label: {
-        color: 'black'
+      active: {
+        fontStyle: 'italic !important'
       },
       completed: {
         fontWeight: 'bold !important'
       },
-      active: {
-        fontStyle: 'italic !important'
+      root: {
+        '&$disabled': {
+          color: 'red !important'
+        },
       },
     },
     MuiStepIcon: {
