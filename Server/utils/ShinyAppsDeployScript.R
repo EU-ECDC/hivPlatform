@@ -5,8 +5,9 @@ rsconnect::setAccountInfo(
 )
 
 rsconnect::deployApp(
-  appName = 'hivEstimatesAccuracyReloaded',
-  appFiles = c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'R/', 'man/'),
+  account = 'nextpage',
+  appName = 'hivEstimatesAccuracy2',
+  appFiles = c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'R/', 'man/', 'inst/', 'data/'),
   contentCategory = 'application',
   forceUpdate = TRUE
 )

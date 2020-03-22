@@ -19,10 +19,6 @@ AppServer <- function(input, output, session)
     shiny::stopApp()
   })
 
-  output$mode <- renderText({
-    sprintf('Mode: %s', appState$AppManager$Mode)
-  })
-
   Events(input, output, session, appManager)
 
   return(invisible(NULL))

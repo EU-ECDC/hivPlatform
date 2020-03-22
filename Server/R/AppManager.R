@@ -5,7 +5,6 @@
 #' @name AppManager
 #' @examples
 #' pppManager <- AppManager$new()
-#'
 NULL
 
 #' @export
@@ -30,19 +29,30 @@ AppManager <- R6::R6Class(
         AttributeMapping = NULL,
         AttributeMappingStatus = NULL,
         PreProcessedCaseBasedData = NULL,
-        PreProcessedCaseBasedDataStatus = NULL
+        PreProcessedCaseBasedDataStatus = NULL,
+        Plots = NULL,
+        AdjustedCaseBasedData = NULL
       )
     },
 
     print = function() {
-      print(private$Session)
+      print(self$Session)
+    },
+
+    SendEventToReact = function(eventName, value) {
+      if (!is.null(private$Session)) {
+        private$Session$sendCustomMessage(eventName, value)
+      }
     },
 
     ReadCaseBasedData = function(fileName) {
       private$Catalogs$CaseBasedDataPath <- fileName
       private$Catalogs$CaseBasedData <- ReadDataFile(fileName)
       private$DetermineAttributeMapping()
-      return(self)
+
+      cli::cli_alert_success('Read case based data {fileName}')
+
+      return(invisible(self))
     },
 
     PreProcessCaseBasedData = function() {
@@ -57,7 +67,10 @@ AppManager <- R6::R6Class(
 
       private$Catalogs$PreProcessedCaseBasedData <- dt
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
-      return(self)
+
+      cli::cli_alert_success('Case based data has been pre-processed')
+
+      return(invisible(self))
     },
 
     ApplyOriginGrouping = function(type) {
@@ -66,26 +79,99 @@ AppManager <- R6::R6Class(
         GetOriginDistribution(private$Catalogs$PreProcessedCaseBasedData$Table)
       )
 
-      map[FullRegionOfOrigin %in% c("CENTEUR", "EASTEUR", "EUROPE", "WESTEUR"),
-          GroupedRegionOfOrigin := "EUROPE"]
-      map[FullRegionOfOrigin %in% c("SUBAFR"),
-          GroupedRegionOfOrigin := "SUBAFR"]
-      map[GroupedRegionOfOrigin %in% c("OTHER"),
-          GroupedRegionOfOrigin := FullRegionOfOrigin]
+      map[
+        FullRegionOfOrigin %in% c('CENTEUR', 'EASTEUR', 'EUROPE', 'WESTEUR'),
+        GroupedRegionOfOrigin := 'EUROPE'
+      ]
+      map[
+        FullRegionOfOrigin %in% c('SUBAFR'),
+        GroupedRegionOfOrigin := 'SUBAFR'
+      ]
+      map[
+        GroupedRegionOfOrigin %in% c('OTHER'),
+        GroupedRegionOfOrigin := FullRegionOfOrigin
+      ]
 
       private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
         private$Catalogs$PreProcessedCaseBasedData,
         map
       )
-      return(self)
+
+      cli::cli_alert_success('Origin grouping has been applied')
+
+      return(invisible(self))
     },
 
-    SendEventToReact = function(eventName, value) {
-      private$Session$sendCustomMessage(eventName, value)
+    CreatePlots = function() {
+      diagnosisYearDensity <- GetDiagnosisYearDensityPlot(
+        private$Catalogs$PreProcessedCaseBasedData$Table
+      )
+      notificationQuarterDensity <- GetNotificationQuarterDensityPlot(
+        private$Catalogs$PreProcessedCaseBasedData$Table
+      )
+
+      private$Catalogs$Plots <- list(
+        DiagnosisYearDensity = diagnosisYearDensity,
+        NotificationQuarterDensity = notificationQuarterDensity
+      )
+
+      cli::cli_ol()
+      cli::cli_li('Diagnosis year density plot created')
+      cli::cli_li('Notification quarter density plot created')
+      cli::cli_end()
+
+      return(invisible(self))
+    },
+
+    AdjustCaseBasedData = function(adjustmentSpecs) {
+      private$Catalogs$AdjustedCaseBasedData <- RunAdjustments(
+        data = private$Catalogs$PreProcessedCaseBasedData$Table,
+        adjustmentSpecs = adjustmentSpecs,
+        diagYearRange = NULL,
+        notifQuarterRange = NULL,
+        seed = NULL
+      )
+      return(invisible(self))
+    },
+
+    CreateReport = function(reportName) {
+      reportFilePath <- GetReportFileNames()[reportName]
+      params <- list(
+        AdjustedData = private$Catalogs$AdjustedCaseBasedData,
+        ReportingDelay = TRUE,
+        Smoothing = TRUE,
+        CD4ConfInt = FALSE
+      )
+
+      if (is.element(reportName, c('Main Report'))) {
+        params <- GetMainReportArtifacts(params)
+      }
+
+      params <- modifyList(
+        params,
+        list(
+          Artifacts = list(
+            FileName = private$Catalogs$CaseBasedDataPath,
+            DiagYearRange = NULL,
+            NotifQuarterRange = NULL,
+            DiagYearRangeApply = TRUE
+          )
+        )
+      )
+
+      htmlReportFileName <- RenderReportToFile(
+        reportFilePath = reportFilePath,
+        format = 'html_document',
+        params = params,
+        outDir = dirname(private$Catalogs$CaseBasedDataPath)
+      )
+
+      return(htmlReportFileName)
     }
   ),
 
   private = list(
+    # Shiny session
     Session = NULL,
 
     # Storage
@@ -146,6 +232,14 @@ AppManager <- R6::R6Class(
 
     PreProcessedCaseBasedDataStatus = function() {
       return(private$Catalogs$PreProcessedCaseBasedDataStatus)
+    },
+
+    Plots = function() {
+      return(private$Catalogs$Plots)
+    },
+
+    AdjustedCaseBasedData = function() {
+      return(private$Catalogs$AdjustedCaseBasedData)
     }
   )
 )

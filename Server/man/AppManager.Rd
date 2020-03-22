@@ -8,5 +8,4 @@ R6 class for representing the app manaager
 }
 \examples{
 pppManager <- AppManager$new()
-
 }

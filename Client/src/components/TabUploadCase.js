@@ -26,6 +26,14 @@ const TabUploadCase = (props) => {
         </label>
       </Tooltip>
       {appManager.fileUploadProgress && <LinearProgress variant='determinate' value={appManager.fileUploadProgress * 100} color='secondary' />}
+      <div>
+        <ul>
+          <li>File name: {appManager.caseBasedDataFileName}</li>
+          <li>File size: {appManager.caseBasedDataFileSize}</li>
+          <li>File type: {appManager.caseBasedDataFileType}</li>
+          <li>Data path: {appManager.caseBasedDataPath}</li>
+        </ul>
+      </div>
     </TabPanel>
   );
 };

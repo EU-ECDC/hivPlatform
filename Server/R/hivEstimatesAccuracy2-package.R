@@ -1,6 +1,6 @@
 #' @docType package
 #'
-#' @name hivEstimatesAccuracyReloaded
+#' @name hivEstimatesAccuracy2
 #'
 #' @title
 #' Improving Accuracy of HIV Estimates in EU/EEA Countries
@@ -15,7 +15,7 @@
 #' Creator: Daniel Lewandowski \email{<daniel@@nextpagesoft.net>}
 #'
 #' @import shiny
-#' @import shinyMobile
 #' @import data.table
+#' @import ggplot2
 #'
 NULL

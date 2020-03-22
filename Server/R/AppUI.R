@@ -6,8 +6,7 @@
 #'
 #' @export
 AppUI <- function() {
-  wwwPath <- system.file('app/www', package = 'hivEstimatesAccuracyReloaded')
+  wwwPath <- system.file('app/www', package = 'hivEstimatesAccuracy2')
   shiny::addResourcePath('www', wwwPath)
-
   shiny::htmlTemplate(file.path(wwwPath, 'index.html'))
 }

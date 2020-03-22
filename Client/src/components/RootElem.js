@@ -79,7 +79,11 @@ const RootElem = props => {
       <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
       <Box display='flex' flexGrow={1} flexDirection='row'>
-        <LeftNav steps={appManager.steps} activeStep={appManager.activeStep} onStepChange={handleStepChange} />
+        <LeftNav
+          steps={appManager.steps}
+          activeStep={appManager.activeStep}
+          onStepChange={handleStepChange}
+        />
         <StepPanel panelId={0} activePanelId={appManager.activeStep} >
           <TabWelcome appManager={appManager}/>
         </StepPanel>

@@ -8,13 +8,10 @@ configure({
 export default class AppManager {
 
   @observable
-  isProd = false;
-
-  @observable
-  mode = 'NONE';
-
-  @observable
   shinyState = 'DISCONNECTED';
+
+  @observable
+  shinyMessage = {};
 
   @observable
   steps = [
@@ -33,8 +30,30 @@ export default class AppManager {
   @observable
   fileUploadProgress = null;
 
+  @observable
+  mode = 'NONE';
+
+  @observable
+  caseBasedDataFileName = null;
+
+  @observable
+  caseBasedDataFileSize = null;
+
+  @observable
+  caseBasedDataFileType = null;
+
+  @observable
+  caseBasedDataPath = null;
+
   // Shiny custom event handlers
-  onShinyEventName = val => alert(val);
+  onShinyEvent = data => {
+    if (data.type === 'CASE_BASED_DATA_UPLOADED') {
+      this.setCaseBasedDataFileName(data.payload.name[0]);
+      this.setCaseBasedDataFileSize(data.payload.size[0]);
+      this.setCaseBasedDataFileType(data.payload.type[0]);
+      this.setCaseBasedDataPath(data.payload.datapath[0]);
+    }
+  };
 
   constructor() { };
 
@@ -49,11 +68,17 @@ export default class AppManager {
     return stepTitles;
   }
 
+  @computed
+  get jsonShinyMessage() {
+    return JSON.stringify(this.shinyMessage);
+  }
+
   @action
   setShinyState = state => {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
       DefineReactFileInputBinding(this);
+      window.Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
     }
   };
 
@@ -63,6 +88,11 @@ export default class AppManager {
     this.steps[0].completed = true;
     this.setActiveStep(1);
   };
+
+  @action setCaseBasedDataFileName = fileName => this.caseBasedDataFileName = fileName;
+  @action setCaseBasedDataFileSize = size => this.caseBasedDataFileSize = size;
+  @action setCaseBasedDataFileType = type => this.caseBasedDataFileType = type;
+  @action setCaseBasedDataPath = path => this.caseBasedDataPath = path;
 
   @action
   unbindShinyInputs = () => {
@@ -107,10 +137,14 @@ export default class AppManager {
 
   @action
   setActiveStep = step => {
-
-
     this.steps[step].disabled = false;
     this.activeStep = step;
+  }
+
+  @action
+  setShinyMessage = msg => {
+    console.log(msg);
+    this.shinyMessage = msg;
   }
 
 }
