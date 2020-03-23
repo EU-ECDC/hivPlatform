@@ -21,3 +21,7 @@ appManager$PreProcessedCaseBasedDataStatus
 appManager$AdjustedCaseBasedData
 appManager$Plots$DiagnosisYearDensity
 appManager$Plots$NotificationQuarterDensity
+
+// class(appManager$Plots$DiagnosisYearDensity)
+// class(appManager$Plots$NotificationQuarterDensity)
+// plotly:::to_JSON(appManager$Plots$NotificationQuarterDensity)

@@ -4,6 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TabPanel from './TabPanel';
 import TabUploadCase from './TabUploadCase';
+import Skel from './Skeleton';
 
 const TabUpload = (props) => {
   const [activeTabId, setActiveTabId] = React.useState(0);
@@ -24,7 +25,7 @@ const TabUpload = (props) => {
         {activeTabId === 0 && <TabUploadCase {...props} />}
         {activeTabId === 1 &&
           <TabPanel>
-            Item Two
+            <Skel />
           </TabPanel>
         }
       </Grid>

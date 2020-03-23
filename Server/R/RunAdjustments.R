@@ -79,9 +79,7 @@ RunAdjustments <- function(data, adjustmentSpecs = list(), diagYearRange = NULL,
     # Store intermediate results for later reference
     results[[adjustmentSpec$Key]] <- data
 
-    cli::cli_div(theme = list(span.emph = list(color = 'orange')))
-    cli::cli_alert_success('Done with adjustment {.emph {caption}}')
-    cli::cli_end()
+    cli::cli_alert_success('Done with adjustment {caption}')
   }
 
   return(results)

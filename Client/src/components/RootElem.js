@@ -11,6 +11,11 @@ import LeftNav from './LeftNav';
 import RightNav from './RightNav';
 import TabWelcome from './TabWelcome';
 import TabUpload from './TabUpload';
+import TabSummary from './TabSummary';
+import TabAdjustments from './TabAdjustments';
+import TabModelling from './TabModelling';
+import TabReports from './TabReports';
+import TabOutputs from './TabOutputs';
 import { NAME, VERSION } from '../settings';
 
 const userStyles = makeStyles({
@@ -91,10 +96,19 @@ const RootElem = props => {
           <TabUpload appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={2} activePanelId={appManager.activeStep}>
-          Item Three
+          <TabSummary appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={3} activePanelId={appManager.activeStep}>
-          Item Four
+          <TabAdjustments />
+        </StepPanel>
+        <StepPanel panelId={4} activePanelId={appManager.activeStep}>
+          <TabModelling />
+        </StepPanel>
+        <StepPanel panelId={5} activePanelId={appManager.activeStep}>
+          <TabReports />
+        </StepPanel>
+        <StepPanel panelId={6} activePanelId={appManager.activeStep}>
+          <TabOutputs />
         </StepPanel>
       </Box>
     </Box>

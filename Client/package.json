@@ -23,6 +23,7 @@
     "mobx": "5.15.4",
     "mobx-react": "6.1.8",
     "prop-types": "15.7.2",
+    "react-plotly.js": "2.4.0",
     "react": "16.13.1",
     "react-dom": "npm:@hot-loader/react-dom",
     "react-hot-loader": "4.12.20",

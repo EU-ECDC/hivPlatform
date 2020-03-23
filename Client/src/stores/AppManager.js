@@ -17,11 +17,11 @@ export default class AppManager {
   steps = [
     { title: 'Welcome', completed: false, disabled: false },
     { title: 'Input data upload', completed: false, disabled: true},
-    { title: 'Data summary', completed: false, disabled: true},
-    { title: 'Adjustments', completed: false, disabled: true},
-    { title: 'Modelling', completed: false, disabled: true},
-    { title: 'Reports', completed: false, disabled: true},
-    { title: 'Outputs', completed: false, disabled: true},
+    { title: 'Data summary', completed: false, disabled: false},
+    { title: 'Adjustments', completed: false, disabled: false},
+    { title: 'Modelling', completed: false, disabled: false},
+    { title: 'Reports', completed: false, disabled: false},
+    { title: 'Outputs', completed: false, disabled: false},
   ];
 
   @observable
@@ -52,6 +52,7 @@ export default class AppManager {
       this.setCaseBasedDataFileSize(data.payload.size[0]);
       this.setCaseBasedDataFileType(data.payload.type[0]);
       this.setCaseBasedDataPath(data.payload.datapath[0]);
+      this.steps[2].disabled = false;
     }
   };
 
