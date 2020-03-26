@@ -5,7 +5,7 @@ adjustmentSpecs <- GetAdjustmentSpecs(c(
 ))
 
 appManager <- AppManager$new()
-appManager$ReadCaseBasedData("~/share/dummy_miss1.zip")
+appManager$ReadCaseBasedData("~/share/HIV_HIV_PL - Copy.xls")
 appManager$PreProcessCaseBasedData()
 appManager$ApplyOriginGrouping("REPCOUNTRY + UNK + OTHER")
 appManager$AdjustCaseBasedData(adjustmentSpecs)
@@ -18,7 +18,6 @@ appManager$AttributeMapping
 appManager$AttributeMappingStatus
 appManager$PreProcessedCaseBasedData
 appManager$PreProcessedCaseBasedDataStatus
-appManager$AdjustedCaseBasedData
 appManager$Plots$DiagnosisYearDensity
 appManager$Plots$NotificationQuarterDensity
 

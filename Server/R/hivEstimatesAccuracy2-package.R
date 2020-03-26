@@ -17,5 +17,6 @@
 #' @import shiny
 #' @import data.table
 #' @import ggplot2
+#' @import plotly
 #'
 NULL
