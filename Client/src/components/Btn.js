@@ -15,7 +15,7 @@ const Btn = (props) => {
     <Button variant='contained' color='primary' component='span' className={classes.root}>
       {props.children}
     </Button>
-  )
+  );
 };
 
 export default Btn;

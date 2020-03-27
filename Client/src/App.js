@@ -1,8 +1,8 @@
-import { hot } from 'react-hot-loader';
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import RootElem from './components/RootElem';
+import Btn from './components/Btn';
 
 const theme = createMuiTheme({
   palette: {
@@ -39,9 +39,9 @@ const App = () => (
   <MuiThemeProvider theme={theme}>
     <React.Fragment>
       <CssBaseline />
-      <RootElem />
+      <Btn>asdjh</Btn>
     </React.Fragment>
   </MuiThemeProvider>
 );
 
-export default hot(module)(App);
+export default App;

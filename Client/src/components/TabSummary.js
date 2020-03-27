@@ -1,28 +1,41 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import {XYPlot, LineSeries} from 'react-vis';
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme } from 'victory';
 
 const data = [
-  {x: 0, y: 8},
-  {x: 1, y: 5},
-  {x: 2, y: 4},
-  {x: 3, y: 9},
-  {x: 4, y: 1},
-  {x: 5, y: 7},
-  {x: 6, y: 6},
-  {x: 7, y: 3},
-  {x: 8, y: 2},
-  {x: 9, y: 0}
+  { quarter: 1, earnings: 13000 },
+  { quarter: 2, earnings: 16500 },
+  { quarter: 3, earnings: 14250 },
+  { quarter: 4, earnings: 9500 }
 ];
 
 const TabSummary = () => {
-
   return (
     <Grid container>
       <Grid item xs={12}>
-        <XYPlot height={300} width={300}>
-          <LineSeries data={data} />
-        </XYPlot>
+        <VictoryChart
+          // domainPadding will add space to each side of VictoryBar to
+          // prevent it from overlapping the axis
+          domainPadding={20}
+          theme={VictoryTheme.material}
+        >
+          <VictoryAxis
+            // tickValues specifies both the number of ticks and where
+            // they are placed on the axis
+            tickValues={[1, 2, 3, 4]}
+            tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
+          />
+          <VictoryAxis
+            dependentAxis
+            // tickFormat specifies how ticks should be displayed
+            tickFormat={(x) => (`$${x / 1000}k`)}
+          />
+          <VictoryBar
+            data={data}
+            x="quarter"
+            y="earnings"
+          />
+        </VictoryChart>
       </Grid>
     </Grid>
   );

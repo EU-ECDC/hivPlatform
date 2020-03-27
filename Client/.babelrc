@@ -6,13 +6,12 @@
           "node": "current",
           "esmodules": true
         },
-        "bugfixes": true
+        "bugfixes": false
       }
     ],
     "@babel/preset-react"
   ],
   "plugins": [
-    "react-hot-loader/babel",
     ["@babel/plugin-proposal-decorators", {
       "legacy": true
     }],
