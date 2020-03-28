@@ -46,7 +46,11 @@ module.exports = {
     }),
   ],
   performance: {
-    maxEntrypointSize: 10240000,
-    maxAssetSize: 10240000
+    maxEntrypointSize: 1024000,
+    maxAssetSize: 1024000
+  },
+  node: {
+    Buffer: false,
+    process: false
   }
 };

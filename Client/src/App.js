@@ -39,7 +39,7 @@ const App = () => (
   <MuiThemeProvider theme={theme}>
     <React.Fragment>
       <CssBaseline />
-      <Btn>asdjh</Btn>
+      <RootElem />
     </React.Fragment>
   </MuiThemeProvider>
 );

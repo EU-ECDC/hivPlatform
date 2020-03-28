@@ -7,7 +7,6 @@ const envs = {
 };
 
 const env = envs[process.env.NODE_ENV || 'development'];
-let prodType = '';
 if (env === 'prod') {
   prodType = '.' + process.env.PROD_TYPE;
 }
