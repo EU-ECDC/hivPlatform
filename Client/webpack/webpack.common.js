@@ -39,11 +39,11 @@ module.exports = {
     extensions: ['*', '.js', '.jsx'],
   },
   plugins: [
-    new webpack.ProgressPlugin(),
     new HtmlWebpackPlugin({
       template: commonPaths.indexPath,
       favicon: commonPaths.faviconPath,
     }),
+    new webpack.ProgressPlugin(),
   ],
   performance: {
     maxEntrypointSize: 1024000,
