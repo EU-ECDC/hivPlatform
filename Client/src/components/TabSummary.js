@@ -61,6 +61,11 @@ const data2 = {
     title: {
       text: 'HeatMap Chart with Color Range'
     },
+    chart: {
+      animations: {
+        enabled: false
+      },
+    },
     heatmap: {
       shadeIntensity: 0.5,
 
@@ -95,64 +100,14 @@ const data2 = {
   }
 }
 
-const TabSummary = () => {
-
-  /*
-  const [width, setWidth] = React.useState(window.innerWidth);
-  const updateWidth = (ev) => {
-    setWidth(ev.target.innerWidth - 300)
-  };
-
-  React.useEffect(
-    () => {
-      window.addEventListener('resize', updateWidth);
-      return () => window.removeEventListener('resize', updateWidth);
-    }
-  );
-  */
-
-  return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Chart options={data1.options} series={data1.series} type='line' width='100%' height={300} />
-        <Chart options={data2.plotOptions} series={data2.series} title={data2.title} type='heatmap' width='100%' height={300} />
-          {/*
-          <VictoryChart
-            // domainPadding will add space to each side of VictoryBar to
-            // prevent it from overlapping the axis
-            domainPadding={width/10}
-            animate={false}
-            standalone={true}
-            width={width}
-            height={300}
-            theme={VictoryTheme.material}
-          >
-            <VictoryAxis
-              // tickValues specifies both the number of ticks and where
-              // they are placed on the axis
-              tickValues={[1, 2, 3, 4]}
-            />
-            <VictoryAxis
-              dependentAxis
-              // tickFormat specifies how ticks should be displayed
-              tickFormat={(x) => (`$${x / 1000}k`)}
-            />
-            <VictoryBar
-              data={data}
-              x="quarter"
-              y="earnings"
-
-            />
-            <VictoryLine
-              data={data}
-              x="quarter"
-              y="earnings"
-            />
-        </VictoryChart>
-        */}
-      </Grid>
+const TabSummary = () => (
+  <Grid container>
+    <Grid item xs={12}>
+      <Chart options={data1.options} series={data1.series} type='line' width='100%' height={300} />
+      <Chart options={data2.plotOptions} series={data2.series} title={data2.title} type='heatmap' width='100%' height={300} />
     </Grid>
-  );
-};
+  </Grid>
+);
+
 
 export default TabSummary;
