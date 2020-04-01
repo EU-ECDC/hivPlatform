@@ -41,3 +41,5 @@ vignettes/*.pdf
 .Rprofile
 
 rsconnect/
+
+inst/app
