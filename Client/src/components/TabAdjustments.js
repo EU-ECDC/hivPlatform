@@ -14,12 +14,9 @@ const TabAdjustments = () => {
       </Grid>
       <Grid item xs={9}>
         <FormControl style={{minWidth: 300, marginBottom: 30}}>
-          <InputLabel id="demo-simple-select-filled-label">Multiple Imputations</InputLabel>
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-          >
-            <MenuItem value=""><em>None</em></MenuItem>
+          <InputLabel id='miSelectLabel'>Multiple Imputations</InputLabel>
+          <Select labelId='miSelectLabel' id='miSelect' value={''}>
+            <MenuItem value=''><em>None</em></MenuItem>
             <MenuItem value={10}>Joint Modelling</MenuItem>
             <MenuItem value={20}>Chained Equations - MICE</MenuItem>
           </Select>
@@ -30,12 +27,9 @@ const TabAdjustments = () => {
       </Grid>
       <Grid item xs={9}>
         <FormControl style={{ minWidth: 300 }}>
-          <InputLabel id="demo-simple-select-filled-label">Reporting Delays</InputLabel>
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-          >
-            <MenuItem value=""><em>None</em></MenuItem>
+          <InputLabel id='rdSelectLabel'>Reporting Delays</InputLabel>
+          <Select labelId='rdSelectLabel' id='rdSelect' value={''}>
+            <MenuItem value=''><em>None</em></MenuItem>
             <MenuItem value={10}>Without trend</MenuItem>
             <MenuItem value={20}>With trend</MenuItem>
           </Select>

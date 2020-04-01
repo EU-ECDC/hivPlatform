@@ -5,6 +5,9 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import RootElem from './components/RootElem';
 
 const theme = createMuiTheme({
+  typography: {
+    fontSize: 12,
+  },
   palette: {
     primary: {
       main: '#69b023',
