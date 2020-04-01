@@ -24,9 +24,9 @@
 <noscript>You need to enable JavaScript to run this app.</noscript>
 
 <div id="app" style="display: flex"></div>
+<%= htmlWebpackPlugin.tags.bodyTags %>
 <% if(htmlWebpackPlugin.options.includeShinyJS) { %>
 <!-- Get access to Shiny framework -->
-<script type="text/javascript" src="www/js/main.js"></script>
 <script type="text/javascript" src="shared/json2-min.js"></script>
 <script type="text/javascript" src="shared/shiny.min.js"></script>
 <% } %>

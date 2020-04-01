@@ -43,6 +43,7 @@ module.exports = {
       template: commonPaths.indexPath,
       favicon: commonPaths.faviconPath,
       minify: false,
+      inject: false,
       includeShinyJS: process.env.NODE_ENV === 'production',
     }),
     new webpack.ProgressPlugin(),

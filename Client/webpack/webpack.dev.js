@@ -5,7 +5,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: commonPaths.outputPath,
-    chunkFilename: '[name].js',
+    chunkFilename: '[name].js'
   },
   devtool: 'inline-source-map',
 };
