@@ -41,7 +41,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: commonPaths.indexPath,
-      favicon: commonPaths.faviconPath,
       minify: false,
       inject: false,
       includeShinyJS: process.env.NODE_ENV === 'production',

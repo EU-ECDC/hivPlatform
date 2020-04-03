@@ -5,11 +5,10 @@ module.exports = {
   name: 'client',
   mode: 'production',
   output: {
-    //path: commonPaths.serverPath,
     path: commonPaths.outputPath,
     filename: `${commonPaths.jsFolder}/[name].js`,
     chunkFilename: '[name].[chunkhash].js',
-    publicPath: 'www/'
+    // publicPath: 'www/'
   },
   plugins: [
     new CleanWebpackPlugin(),
