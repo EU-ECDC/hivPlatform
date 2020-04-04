@@ -4,16 +4,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
-import TabPanel from './TabPanel';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import Btn from './Btn';
 import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import TabPanel from './TabPanel';
+import Btn from './Btn';
 
 const userStyles = makeStyles({
   header: {
@@ -60,7 +63,7 @@ const TabUploadCase = (props) => {
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>
-            <Typography variant='overline' display="block" component='div'>Uploaded file details</Typography>
+            <Typography variant='overline'>Uploaded file details</Typography>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Table>
@@ -87,6 +90,40 @@ const TabUploadCase = (props) => {
                   </TableBody>
                 </Table>
               </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          Attribute mapping
+        </Grid>
+        <Grid item xs={9}>
+          <Paper style={{padding: 10}}>
+            <Typography variant='overline'>Attribute mapping</Typography>
+            <Grid container spacing={2}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Attribute</TableCell>
+                    <TableCell>Column</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Gender</TableCell>
+                    <TableCell>
+                    <Select style={{width: '100%', padding: '0 16px'}}>
+                      <MenuItem value='gender' dense>gender</MenuItem>
+                      <MenuItem value='transmission' dense>transmission</MenuItem>
+                      <MenuItem value='dateOfDiagnosisYear' dense>dateofdiagnosisyear</MenuItem>
+                    </Select>
+                    </TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </Grid>
           </Paper>
         </Grid>

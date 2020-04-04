@@ -34,6 +34,11 @@ const theme = createMuiTheme({
       text: {
         fill: 'white !important'
       }
+    },
+    MuiTableCell: {
+      head: {
+        fontWeight: 'bold !important'
+      }
     }
   }
 });
