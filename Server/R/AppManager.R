@@ -12,7 +12,7 @@ AppManager <- R6::R6Class(
   classname = 'AppManager',
   public = list(
 
-    # Methods
+    # GENERIC METHOD ===============================================================================
     initialize = function(
       session = NULL,
       mode = 'NONE'
@@ -45,16 +45,22 @@ AppManager <- R6::R6Class(
       }
     },
 
+    # USER ACTIONS =================================================================================
+
+    # 1. Read case-based data ----------------------------------------------------------------------
     ReadCaseBasedData = function(fileName) {
       private$Catalogs$CaseBasedDataPath <- fileName
       private$Catalogs$CaseBasedData <- ReadDataFile(fileName)
       private$DetermineAttributeMapping()
 
-      cli::cli_alert_success('Read case based data {fileName}')
+      cli::cli_div(theme = list(span.orange = list(color = "orange")))
+      cli::cli_alert_success('Case-based data file {.orange fileName} read')
+      cli::cli_end()
 
       return(invisible(self))
     },
 
+    # 2. Pre-process case-based data ---------------------------------------------------------------
     PreProcessCaseBasedData = function() {
       dt <- ApplyAttributesMapping(
         private$Catalogs$CaseBasedData,
@@ -68,11 +74,12 @@ AppManager <- R6::R6Class(
       private$Catalogs$PreProcessedCaseBasedData <- dt
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
 
-      cli::cli_alert_success('Case based data has been pre-processed')
+      cli::cli_alert_success('Case-based data has been pre-processed')
 
       return(invisible(self))
     },
 
+    # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(type) {
       map <- GetOriginGroupingMap(
         type,
@@ -102,6 +109,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
+    # 4. Create plots ------------------------------------------------------------------------------
     CreatePlots = function() {
       diagnosisYearDensity <- GetDiagnosisYearDensityPlot(
         private$Catalogs$PreProcessedCaseBasedData$Table
