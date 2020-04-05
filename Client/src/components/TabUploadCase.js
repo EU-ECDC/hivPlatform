@@ -148,7 +148,7 @@ const TabUploadCase = (props) => {
                   <TableRow hover>
                     <TableCell>RecordId</TableCell>
                     <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue=''>
+                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue='' disableUnderline>
                         <MenuItem value='' dense>&nbsp;</MenuItem>
                         <MenuItem value='recordId' dense>recordid</MenuItem>
                         <MenuItem value='gender' dense>gender</MenuItem>
@@ -163,7 +163,7 @@ const TabUploadCase = (props) => {
                   <TableRow hover>
                     <TableCell>Gender</TableCell>
                     <TableCell style={{ padding: '4px 16px 0px 16px'}}>
-                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue=''>
+                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue='' disableUnderline>
                         <MenuItem value='' dense>&nbsp;</MenuItem>
                         <MenuItem value='recordId' dense>recordid</MenuItem>
                         <MenuItem value='gender' dense>gender</MenuItem>
@@ -274,7 +274,7 @@ const TabUploadCase = (props) => {
                     <Checkbox inputProps={{ 'aria-labelledby': 'labelId1' }} color='primary'/>
                   </TableCell>
                   <TableCell id='labelId1' scope='row' padding='none'>
-                    <Input style={{ width: '100%', fontSize: '0.75rem' }} value='REPCOUNTRY' />
+                    <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Group 1' />
                   </TableCell>
                   <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
                     <Select
@@ -292,6 +292,7 @@ const TabUploadCase = (props) => {
                       )}
                       value={['REPCOUNTRY', 'SUBAFR', 'NORTHAMFRMIDEAST', 'AUSTNZ', 'SOUTHASIA', 'CENTEUR']}
                       style={{ width: '100%', fontSize: '0.75rem' }}
+                      disableUnderline
                     >
                       <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
                       <MenuItem value='SUBAFR' dense>SUBAFR</MenuItem>
@@ -314,8 +315,42 @@ const TabUploadCase = (props) => {
                   <TableCell padding='checkbox'>
                     <Checkbox inputProps={{ 'aria-labelledby': 'labelId2' }} color='primary'/>
                   </TableCell>
-                  <TableCell id='labelId2' scope='row' padding='none'>SUBAFR</TableCell>
-                  <TableCell>OTHER</TableCell>
+                  <TableCell id='labelId2' scope='row' padding='none'>
+                    <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Group 2' />
+                  </TableCell>
+                  <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+                    <Select
+                      multiple
+                      renderValue={(selected) => (
+                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                          {selected.map((value) => (
+                            <Chip
+                              key={value}
+                              label={value}
+                              style={{ margin: 2 }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      value={['CAR', 'LATAM']}
+                      style={{ width: '100%', fontSize: '0.75rem' }}
+                      disableUnderline
+                    >
+                      <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
+                      <MenuItem value='SUBAFR' dense>SUBAFR</MenuItem>
+                      <MenuItem value='WESTEUR' dense>WESTEUR</MenuItem>
+                      <MenuItem value='SOUTHASIA' dense>SOUTHASIA</MenuItem>
+                      <MenuItem value='CENTEUR' dense>CENTEUR</MenuItem>
+                      <MenuItem value='CAR' dense>CAR</MenuItem>
+                      <MenuItem value='LATAM' dense>LATAM</MenuItem>
+                      <MenuItem value='EASTEUR' dense>EASTEUR</MenuItem>
+                      <MenuItem value='NORTHAM' dense>NORTHAM</MenuItem>
+                      <MenuItem value='NORTHAMFRMIDEAST' dense>NORTHAMFRMIDEAST</MenuItem>
+                      <MenuItem value='EASTASIAPAC' dense>EASTASIAPAC</MenuItem>
+                      <MenuItem value='AUSTNZ' dense>AUSTNZ</MenuItem>
+                      <MenuItem value='UNK' dense>UNK</MenuItem>
+                    </Select>
+                  </TableCell>
                   <TableCell align='right'>2237</TableCell>
                 </TableRow>
               </TableBody>

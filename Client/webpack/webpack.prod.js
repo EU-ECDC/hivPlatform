@@ -8,7 +8,7 @@ module.exports = {
     path: commonPaths.outputPath,
     filename: `${commonPaths.jsFolder}/[name].js`,
     chunkFilename: '[name].[chunkhash].js',
-    // publicPath: 'www/'
+    publicPath: 'www/'
   },
   plugins: [
     new CleanWebpackPlugin(),
