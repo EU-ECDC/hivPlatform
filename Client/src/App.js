@@ -35,6 +35,13 @@ const theme = createMuiTheme({
         fill: 'white !important'
       }
     },
+    MuiTableRow: {
+      root: {
+        "&:last-child td": {
+          borderBottom: 0,
+        },
+      }
+    },
     MuiTableCell: {
       head: {
         fontWeight: 'bold !important'

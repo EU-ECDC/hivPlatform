@@ -10,10 +10,11 @@ const useStyles = makeStyles(() => ({
 
 const Btn = (props) => {
   const classes = useStyles();
+  const { children, ...other } = props;
 
   return (
-    <Button variant='contained' color='primary' component='span' className={classes.root}>
-      {props.children}
+    <Button variant='contained' color='primary' component='span' className={classes.root} {...other}>
+      {children}
     </Button>
   );
 };
