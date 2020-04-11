@@ -45,7 +45,7 @@ const StepPanel = props => {
       hidden={activePanelId !== panelId}
       id={`wrapped-tabpanel-${panelId}`}
       aria-labelledby={`wrapped-tab-${panelId}`}
-      style={{ flexGrow: 1 }}
+      style={{ flexGrow: 1, overflowY: 'scroll' }}
       {...other}
     >
       {activePanelId === panelId && <Box p={3}>{children}</Box>}
@@ -80,10 +80,10 @@ const RootElem = props => {
   }
 
   return (
-    <Box display='flex' flexGrow={1} flexDirection='column'>
+    <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}}>
       <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
-      <Box display='flex' flexGrow={1} flexDirection='row'>
+      <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}}>
         <LeftNav
           steps={appManager.steps}
           activeStep={appManager.activeStep}

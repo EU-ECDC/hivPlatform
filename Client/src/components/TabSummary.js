@@ -1,113 +1,159 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import Slider from '@material-ui/core/Slider';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import Chart from "react-apexcharts";
 
-const data1 = {
-  options: {
-    chart: {
-      id: "basic-bar"
+const filterDiagChartSeries = [
+  {
+    name: 'Female',
+    data: [30, 40, 45, 50, 49, 60, 70, 91]
+  },
+  {
+    name: 'Male',
+    data: [30, 40, 45, 50, 49, 60, 70, 91]
+  }
+];
+
+const filterDiagChartOptions1 = {
+  chart: {
+    id: 'filter-diag-chart-1',
+    stacked: true,
+    selection: {
+      enabled: true,
+      type: 'x'
     },
-    xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+    toolbar: {
+      autoSelected: 'pan',
+      show: false
+    },
+    events: {
+      selection: () => console.log('selection'),
+      click: () => console.log('click')
     }
   },
-  series: [
-    {
-      name: "series-1",
-      data: [30, 40, 45, 50, 49, 60, 70, 91]
-    }
-  ]
-};
-
-const data2 = {
-  series: [
-    {
-      name: "Series 1",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Series 2",
-      data: [{
-        x: 'W1',
-        y: 43
-      }, {
-        x: 'W2',
-        y: 43
-      }, {
-        x: 'W3',
-        y: 43
-      }, {
-        x: 'W4',
-        y: 43
-      }]
-    }
-  ],
+  legend: {
+    position: 'right',
+    offsetY: 100,
+  },
   plotOptions: {
-    dataLabels: {
-      enabled: false
-    },
+    bar: {
+      columnWidth: '100%',
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  fill: {},
+  stroke: {
+    show: false,
+  },
+  xaxis: {
     title: {
-      text: 'HeatMap Chart with Color Range'
+      text: 'Diagnosis year'
     },
-    chart: {
-      animations: {
-        enabled: false
-      },
+    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+    tickPlacement: 'on'
+  },
+  yaxis: {
+    title: {
+      text: 'Count',
     },
-    heatmap: {
-      shadeIntensity: 0.5,
-
-      colorScale: {
-        ranges: [{
-            from: -30,
-            to: 5,
-            name: 'low',
-            color: '#00A100'
-          },
-          {
-            from: 6,
-            to: 20,
-            name: 'medium',
-            color: '#128FD9'
-          },
-          {
-            from: 21,
-            to: 45,
-            name: 'high',
-            color: '#FFB200'
-          },
-          {
-            from: 46,
-            to: 55,
-            name: 'extreme',
-            color: '#FF0000'
-          }
-        ]
-      }
+  },
+  grid: {
+    row: {
+      colors: ['#fff', '#f2f2f2']
     }
   }
-}
+};
 
-const TabSummary = () => (
-  <Grid container>
-    <Grid item xs={12}>
-      <Chart options={data1.options} series={data1.series} type='line' width='100%' height={300} />
-      <Chart options={data2.plotOptions} series={data2.series} title={data2.title} type='heatmap' width='100%' height={300} />
+const filterDiagChartOptions2 = {
+  chart: {
+    id: 'filter-diag-chart-2',
+    stacked: true,
+    toolbar: {
+      show: false
+    },
+    brush: {
+      target: 'filter-diag-chart-1',
+      enabled: true
+    },
+    selection: {
+      enabled: true,
+    },
+  },
+  legend: {
+    position: 'right',
+    offsetY: 100,
+  },
+  plotOptions: {
+    bar: {
+      columnWidth: '100%',
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  fill: {},
+  stroke: {
+    show: false,
+  },
+  xaxis: {
+    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+    tickPlacement: 'on'
+  },
+  yaxis: {
+    title: {
+      text: '.',
+    },
+  },
+};
+
+const TabSummary = () => {
+  const zoomChart = (
+    <Chart
+      options={filterDiagChartOptions1}
+      series={filterDiagChartSeries}
+      type='bar'
+      width='100%'
+      height={300}
+    />
+  )
+
+  const filterChart = (
+    <Chart
+      options={filterDiagChartOptions2}
+      series={filterDiagChartSeries}
+      type='bar'
+      width='100%'
+      height={300}
+    />
+  )
+
+  return (
+    <Grid container>
+      <Grid item xs={12}>
+        <Box display="flex" justifyContent="flex-end">
+          <Button size='small' color='primary'>Next step</Button>
+        </Box>
+      </Grid>
+      <Grid item xs={6}>
+        <Slider
+          min={0}
+          max={100}
+          value={[20, 34]}
+          valueLabelDisplay='auto'
+          aria-labelledby='range-slider'
+          getAriaValueText={(value) => `${value}°C`}
+        />
+        {zoomChart}
+        {filterChart}
+      </Grid>
     </Grid>
-  </Grid>
-);
+
+  )
+};
 
 
 export default TabSummary;

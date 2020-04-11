@@ -66,6 +66,11 @@ const TabUploadCase = (props) => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography color='textSecondary'>
+            Upload case-based data
+          </Typography>
+        </Grid>
         <Grid item xs={3}>
           <input style={{ display: 'none' }} id='caseUploadBtn' className='uploadBtn' type='file' />
           <Tooltip title='Select case-based data file'>
@@ -73,7 +78,7 @@ const TabUploadCase = (props) => {
               <Btn><CloudUploadIcon/>&nbsp;Upload data</Btn>
             </label>
           </Tooltip>
-          <Skeleton variant="text" width='100%' animation='wave' />
+          <Skeleton variant='text' width='100%' animation='wave' />
           {
             appManager.fileUploadProgress &&
             <LinearProgress

@@ -45,6 +45,9 @@ export default class AppManager {
   @observable
   caseBasedDataPath = null;
 
+  @observable
+  aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
+
   // Shiny custom event handlers
   onShinyEvent = data => {
     if (data.type === 'CASE_BASED_DATA_UPLOADED') {
