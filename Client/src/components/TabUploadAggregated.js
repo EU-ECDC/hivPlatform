@@ -21,7 +21,7 @@ const userStyles = makeStyles({
   }
 });
 
-const TabUploadAggregated = (props) => {
+const TabUploadAggregated = props => {
   const { appManager } = props;
   const classes = userStyles();
 

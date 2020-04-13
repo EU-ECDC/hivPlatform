@@ -99,10 +99,10 @@ const RootElem = props => {
           <TabSummary appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={3} activePanelId={appManager.activeStep}>
-          <TabAdjustments />
+          <TabAdjustments appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={4} activePanelId={appManager.activeStep}>
-          <TabModelling />
+          <TabModelling appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={5} activePanelId={appManager.activeStep}>
           <TabReports />

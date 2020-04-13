@@ -8,7 +8,7 @@ import TabUploadCase from './TabUploadCase';
 import TabUploadAggregated from './TabUploadAggregated';
 
 const TabUpload = (props) => {
-  const [activeTabId, setActiveTabId] = React.useState(1);
+  const [activeTabId, setActiveTabId] = React.useState(0);
   const handleChange = (event, tabId) => setActiveTabId(tabId);
 
   return (

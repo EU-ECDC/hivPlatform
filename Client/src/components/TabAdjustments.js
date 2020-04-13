@@ -13,10 +13,10 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import TabPanel from './TabPanel';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import TabPanel from './TabPanel';
 import Btn from './Btn';
-import { Slide } from '@material-ui/core';
+import Skel from './Skeleton';
 
 const TabAdjustments = () => {
 
@@ -106,6 +106,9 @@ const TabAdjustments = () => {
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Reporting Delays with trend parameters</Typography>
+            <Skel />
+            <Button color='primary'>Restore defaults</Button>
+            <Button color='primary'>Apply</Button>
           </Paper>
         </Grid>
         <Grid item xs={12}>
