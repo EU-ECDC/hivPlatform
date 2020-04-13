@@ -6,211 +6,26 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Box from '@material-ui/core/Box';
-import Chart from "react-apexcharts";
-
-const filterDiagChartSeries = [
-  {
-    name: 'Female',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54]
-  },
-  {
-    name: 'Male',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54]
-  }
-];
-
-const filterNotifChartSeries = [
-  {
-    name: 'Female',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54, 30, 40, 45, 50, 49, 60, 70, 91, 54]
-  },
-  {
-    name: 'Male',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54, 30, 40, 45, 50, 49, 60, 70, 91, 54]
-  }
-];
-
-const filterDiagChartOptions1 = {
-  chart: {
-    id: 'filter-diag-chart-1',
-    stacked: true,
-    selection: {
-      enabled: false,
-      type: 'x'
-    },
-    toolbar: {
-    },
-    events: {
-      selection: null,
-      click: null
-    },
-  },
-  colors: ["#69b023", "#7bbcc0", "#ce80ce", "#9d8b56"],
-  /*
-  theme: {
-    palette: 'palette6'
-  },
-  */
-  title: {
-    text: 'Histogram of cases count per year of diagnosis',
-    style: {
-      fontWeight: 'normal'
-    }
-  },
-  legend: {
-    position: 'right',
-    offsetY: 60,
-  },
-  plotOptions: {
-    bar: {
-      columnWidth: '100%',
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  fill: {},
-  stroke: {
-    show: true,
-    width: 1,
-    colors: 'white',
-    curve: 'stepline'
-  },
-  xaxis: {
-    title: {
-      text: 'Diagnosis year',
-      style: {
-        fontWeight: 'normal'
-      }
-    },
-    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-    tickPlacement: 'between',
-  },
-  yaxis: {
-    title: {
-      text: 'Count',
-      style: {
-        fontWeight: 'normal'
-      }
-
-    },
-    labels: {
-      minWidth: 40,
-      maxWidth: 40
-    }
-  },
-  grid: {
-    row: {
-      colors: ['#fff', '#f2f2f2']
-    },
-    padding: {
-      //left: 0
-    }
-  },
-};
-
-const marks = filterDiagChartOptions1.xaxis.categories.map(function(el) {
-  return({
-    value: el,
-    label: el.toString()
-  })
-})
-
-const filterNotifChartOptions1 = {
-  chart: {
-    id: 'filter-notif-chart-1',
-    stacked: true,
-    selection: {
-      enabled: false,
-      type: 'x'
-    },
-    toolbar: {
-    },
-    events: {
-      selection: null,
-      click: null
-    },
-  },
-  colors: ["#69b023", "#7bbcc0", "#ce80ce", "#9d8b56"],
-  /*
-  theme: {
-    palette: 'palette6'
-  },
-  */
-  title: {
-    text: 'Histogram of cases count per quarter of notification',
-    style: {
-      fontWeight: 'normal'
-    }
-  },
-  legend: {
-    position: 'right',
-    offsetY: 60,
-  },
-  plotOptions: {
-    bar: {
-      columnWidth: '100%',
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  fill: {},
-  stroke: {
-    show: true,
-    width: 1,
-    colors: 'white',
-    curve: 'stepline'
-  },
-  xaxis: {
-    title: {
-      text: 'Notification quarter',
-      style: {
-        fontWeight: 'normal'
-      }
-    },
-    categories: [
-      1991.25, 1992.25, 1993.25, 1994.25, 1995.25, 1996.25, 1997.25, 1998.25, 1999.25,
-      1999.75, 2000.75, 2001.75, 2002.75, 2003.75, 2004.75, 2005.75, 2006.75, 2007.75
-    ],
-    tickPlacement: 'between',
-  },
-  yaxis: {
-    title: {
-      text: 'Count',
-      style: {
-        fontWeight: 'normal'
-      }
-
-    },
-    labels: {
-      minWidth: 40,
-      maxWidth: 40
-    }
-  },
-  grid: {
-    row: {
-      colors: ['#fff', '#f2f2f2']
-    },
-    padding: {
-      //left: 0
-    }
-  },
-};
-
-const notifMarks = filterNotifChartOptions1.xaxis.categories.map(function(el) {
-  return({
-    value: el,
-    label: el.toString()
-  })
-})
+import Chart from 'react-apexcharts';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';import TabPanel from './TabPanel';
+import {
+  filterDiagChartSeries, filterNotifChartSeries, filterDiagChartOptions1, marks,
+  filterNotifChartOptions1, notifMarks, missChartSeries, missChartOptions, missChartSeries2,
+  missChartOptions2, missChartSeries3, missChartOptions3, missChartSeries4, missChartOptions4
+} from './ChartsData';
 
 const userStyles = makeStyles({
   valueLabel: {
     '& span': {
       '& span': {
-        color: 'white'
+        // color: 'white',
+        fontSize: 8
       }
     }
   }
@@ -224,7 +39,7 @@ const TabSummary = () => {
       options={filterDiagChartOptions1}
       series={filterDiagChartSeries}
       type='bar'
-      height={250}
+      height={200}
     />
   )
 
@@ -233,22 +48,26 @@ const TabSummary = () => {
       options={filterNotifChartOptions1}
       series={filterNotifChartSeries}
       type='bar'
-      height={250}
+      height={200}
     />
   )
 
   return (
-    <React.Fragment>
-      <Grid container>
+    <TabPanel>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button size='small' color='primary'>Next step</Button>
           </Box>
         </Grid>
         <Grid item xs={3}>
-        <Typography color='textSecondary'>
-              Select data for summary based on year of diagnosis
-            </Typography>
+          <Typography color='textSecondary'>
+            Filter data on year of diagnosis
+          </Typography>
+          <FormControlLabel
+            control={<Switch checked={true} onChange={() => { }} name='checkedA' color='primary' size='small'/>}
+            label='Apply filter in adjustments'
+          />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>
@@ -260,13 +79,13 @@ const TabSummary = () => {
                 marks={marks}
                 defaultValue={[1994, 1996]}
                 valueLabelDisplay='on'
-                valueLabelFormat={(value)=> value}
+                valueLabelFormat={value=> value.toFixed()}
                 classes={{
                   valueLabel: classes.valueLabel
                 }}
                 aria-labelledby='range-slider'
-                getAriaLabel={index => index.toString()}
-                getAriaValueText={value => value}
+                getAriaLabel={index => index.toFixed()}
+                getAriaValueText={value => value.toFixed()}
                 color='secondary'
               />
             </div>
@@ -277,9 +96,13 @@ const TabSummary = () => {
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={3}>
-        <Typography color='textSecondary'>
-              Select data for summary based on quarter of notification
-            </Typography>
+          <Typography color='textSecondary'>
+            Filter data on quarter of notification
+          </Typography>
+          <FormControlLabel
+            control={<Switch checked={true} onChange={() => { }} name='checkedB' color='primary' size='small' />}
+            label='Apply filter in adjustments'
+          />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>
@@ -287,26 +110,183 @@ const TabSummary = () => {
             <div style={{padding: '40px 100px 0 50px'}}>
               <Slider
                 min={1991.25}
-                max={1999.75}
+                max={2007.75}
                 marks={notifMarks}
+                step={null}
                 defaultValue={[1994.25, 1996.75]}
                 valueLabelDisplay='on'
-                valueLabelFormat={value => value.toString()}
+                valueLabelFormat={value => value.toFixed(2)}
                 classes={{
                   valueLabel: classes.valueLabel
                 }}
                 aria-labelledby='range-slider'
-                getAriaLabel={index => index.toString()}
-                getAriaValueText={value => value.toString()}
+                getAriaLabel={index => index.toFixed(2)}
+                getAriaValueText={value => value.toFixed(2)}
                 color='secondary'
               />
             </div>
             {notifChart}
           </Paper>
         </Grid>
-      </Grid>
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
+        <Grid item xs={3}>
+          <Typography variant='h6'>
+            Missing data summary: key variables
+          </Typography>
+          <Typography variant='body2' color='textSecondary'>
+            Percentages of cases for which the information was not available (missing) for one or
+            more of the key variables: CD4 count, transmission category, migrant status or age.
+          </Typography>
+          <FormControl component='fieldset'>
+            <RadioGroup name='missDataType' defaultValue='all'>
+              <FormControlLabel
+                value='all'
+                control={<Radio color='primary' size='small' />}
+                label='All'
+              />
+              <FormControlLabel
+                value='male'
+                control={<Radio color='primary' size='small' />}
+                label='Male'
+              />
+              <FormControlLabel
+                value='female'
+                control={<Radio color='primary' size='small' />}
+                label='Female'
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={9}>
+          <Paper style={{ padding: 10 }}>
+            <Grid container>
+              <Grid item xs={3}>
+                <Chart
+                  options={missChartOptions}
+                  series={missChartSeries}
+                  type='bar'
+                  height={400}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Chart
+                  options={missChartOptions2}
+                  series={missChartSeries2}
+                  type='heatmap'
+                  height={400}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <Chart
+                  options={missChartOptions3}
+                  series={missChartSeries3}
+                  type='bar'
+                  height={400}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Chart
+                  options={missChartOptions4}
+                  series={missChartSeries4}
+                  type='area'
+                  height={400}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
+        <Grid item xs={3}>
+          <Typography variant='h6'>
+            Reporting delays summary
+          </Typography>
+          <Typography variant='body2' color='textSecondary'>
+            Average reporting delay for cases notified within a quarter and the upper bound for
+            typical average delay values. Quarters when the average delay exceeds the upper bound
+            may indicate cleaning events in surveillance.
+          </Typography>
+          <FormControl component='fieldset'>
+            <RadioGroup name='reportDelaysDataType' defaultValue='all'>
+              <FormControlLabel
+                value='all'
+                control={<Radio color='primary' size='small' />}
+                label='All'
+              />
+              <FormControlLabel
+                value='male'
+                control={<Radio color='primary' size='small' />}
+                label='Male'
+              />
+              <FormControlLabel
+                value='female'
+                control={<Radio color='primary' size='small' />}
+                label='Female'
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={9}>
+          <Paper style={{ padding: 10 }}>
+            <Chart
+              options={{
+                chart: {
+                  parentHeightOffset: 15
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                annotations: {
+                  xaxis: [{
+                    x: 1.25,
+                    borderColor: '#69b023',
+                    strokeDashArray: 0,
+                    label: {
+                      text: '95% of cases reported by 5 quarters',
+                      orientation: 'horizontal',
+                      borderColor: '#69b023',
+                      style: {
+                        color: 'white',
+                        background: '#69b023'
+                      }
+                    }
+                  }]
+                },
+                xaxis: {
+                  type: 'numeric',
+                  title: {
+                    text: 'Notification time in quarters of the year',
+                    style: {
+                      fontWeight: 'normal'
+                    },
+                    offsetY: 10
+                  },
+                },
+                yaxis: {
+                  min: 0,
+                  title: {
+                    text: 'Proportion of reported with the delay',
+                    style: {
+                      fontWeight: 'normal'
+                    },
+                    offsetY: 10
+                  },
 
-    </React.Fragment>
+                }
+              }}
+              series={[
+                { name: 'density', data: [[0, 0.25], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]]}
+              ]}
+              type='area'
+              height={400}
+            />
+          </Paper>
+        </Grid>
+      </Grid>
+    </TabPanel>
   )
 };
 
