@@ -522,3 +522,56 @@ export const missChartOptions4 = {
     }
   }
 };
+
+export const rdSeries1 = [
+  { name: 'density', data: [[0, 0.25], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
+];
+
+export const rdOptions1 = {
+  chart: {
+    parentHeightOffset: 15
+  },
+  dataLabels: {
+    enabled: false
+  },
+  annotations: {
+    xaxis: [{
+      x: 1.25,
+      borderColor: '#69b023',
+      strokeDashArray: 0,
+      label: {
+        text: '95% of cases reported by 5 quarters',
+        orientation: 'horizontal',
+        borderColor: '#69b023',
+        style: {
+          color: 'white',
+          background: '#69b023'
+        }
+      }
+    }]
+  },
+  stroke: {
+    width: 2
+  },
+  xaxis: {
+    type: 'numeric',
+    title: {
+      text: 'Notification time in quarters of the year',
+      style: {
+        fontWeight: 'normal'
+      },
+      offsetY: 10
+    },
+  },
+  yaxis: {
+    min: 0,
+    title: {
+      text: 'Proportion of reported with the delay',
+      style: {
+        fontWeight: 'normal'
+      },
+      offsetY: 10
+    },
+
+  }
+};

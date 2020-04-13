@@ -13,11 +13,12 @@ import Chart from 'react-apexcharts';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';import TabPanel from './TabPanel';
+import TabPanel from './TabPanel';
 import {
   filterDiagChartSeries, filterNotifChartSeries, filterDiagChartOptions1, marks,
   filterNotifChartOptions1, notifMarks, missChartSeries, missChartOptions, missChartSeries2,
-  missChartOptions2, missChartSeries3, missChartOptions3, missChartSeries4, missChartOptions4
+  missChartOptions2, missChartSeries3, missChartOptions3, missChartSeries4, missChartOptions4,
+  rdSeries1, rdOptions1
 } from './ChartsData';
 
 const userStyles = makeStyles({
@@ -232,54 +233,8 @@ const TabSummary = () => {
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Chart
-              options={{
-                chart: {
-                  parentHeightOffset: 15
-                },
-                dataLabels: {
-                  enabled: false
-                },
-                annotations: {
-                  xaxis: [{
-                    x: 1.25,
-                    borderColor: '#69b023',
-                    strokeDashArray: 0,
-                    label: {
-                      text: '95% of cases reported by 5 quarters',
-                      orientation: 'horizontal',
-                      borderColor: '#69b023',
-                      style: {
-                        color: 'white',
-                        background: '#69b023'
-                      }
-                    }
-                  }]
-                },
-                xaxis: {
-                  type: 'numeric',
-                  title: {
-                    text: 'Notification time in quarters of the year',
-                    style: {
-                      fontWeight: 'normal'
-                    },
-                    offsetY: 10
-                  },
-                },
-                yaxis: {
-                  min: 0,
-                  title: {
-                    text: 'Proportion of reported with the delay',
-                    style: {
-                      fontWeight: 'normal'
-                    },
-                    offsetY: 10
-                  },
-
-                }
-              }}
-              series={[
-                { name: 'density', data: [[0, 0.25], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]]}
-              ]}
+              options={rdOptions1}
+              series={rdSeries1}
               type='area'
               height={400}
             />
