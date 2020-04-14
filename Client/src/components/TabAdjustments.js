@@ -29,7 +29,7 @@ const TabAdjustments = () => {
           </Box>
         </Grid>
         <Grid item xs={3}>
-          <Typography variant='h6'>
+          <Typography variant='body1'>
             Multiple Imputations adjustment
           </Typography>
           <FormControl component='fieldset'>
@@ -80,7 +80,7 @@ const TabAdjustments = () => {
           </Paper>
         </Grid>
         <Grid item xs={3}>
-          <Typography variant='h6'>
+          <Typography variant='body1'>
             Reporting Delays adjustment
           </Typography>
           <FormControl component='fieldset'>
@@ -116,6 +116,7 @@ const TabAdjustments = () => {
         </Grid>
         <Grid item xs={3}>
           <Btn><DirectionsRunIcon />&nbsp;Run adjustments</Btn>
+          <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
