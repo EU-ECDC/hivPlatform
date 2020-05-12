@@ -18,6 +18,7 @@ Imports:
     cli (>= 2.0.2),
     ggplot2 (>= 3.3.0),
     data.table (>= 1.12.8),
+    hivModelling (>= 0.9.14),
     jomo (>= 2.6-10),
     knitr (>= 1.28),
     mice (>= 3.8.0),

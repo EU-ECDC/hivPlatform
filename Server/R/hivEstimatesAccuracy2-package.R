@@ -14,9 +14,11 @@
 #' Author: Janusz Janiec \email{<jjaniec@@pzh.gov.pl>}\cr
 #' Creator: Daniel Lewandowski \email{<daniel@@nextpagesoft.net>}
 #'
+#' @importFrom grDevices dev.control dev.off hcl pdf recordPlot
+#' @importFrom stats as.formula coef coefficients setNames vcov
+#' @importFrom utils adist head modifyList tail unzip zip
 #' @import shiny
 #' @import data.table
 #' @import ggplot2
-#' @import plotly
 #'
 NULL
