@@ -21,11 +21,10 @@ GetDate <- function(
 ) {
   temp_d <- d
   temp_w <- w
-  temp_W <- paste0(gsub('-', '', w), '1')
   temp_m <- m
   temp_q <- q
   temp_y <- y
-  temp_Date <- as.Date(temp_W, '%Y%W%u')
+  temp_Date <- as.Date(temp_w, '%Y-%W')
 
   # Day and month missing but week observed
   temp_d <- ifelse(
@@ -60,6 +59,5 @@ GetDate <- function(
   temp_m <- ifelse(is.na(temp_d) & is.na(temp_m), 7, temp_m)
   temp_d <- ifelse(is.na(temp_d), 1, temp_d)
 
-  temp_date <- as.Date(ISOdate(temp_y, temp_m, temp_d))
-  return(temp_date)
+  return(as.Date(ISOdate(temp_y, temp_m, temp_d)))
 }
