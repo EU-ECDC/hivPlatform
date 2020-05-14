@@ -95,10 +95,10 @@
     },
     "backports": {
       "Package": "backports",
-      "Version": "1.1.6",
+      "Version": "1.1.7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3997fd62345a616e59e8161ee0a5816f"
+      "Hash": "e9c8188eb82b137301493492d767a1ac"
     },
     "base64enc": {
       "Package": "base64enc",
@@ -277,10 +277,10 @@
     },
     "glue": {
       "Package": "glue",
-      "Version": "1.4.0",
+      "Version": "1.4.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "2aefa994e8df5da17dc09afd80f924d5"
+      "Hash": "f43e0d5e85ccb0a4045670c0607ee504"
     },
     "gtable": {
       "Package": "gtable",
@@ -359,10 +359,10 @@
     },
     "jomo": {
       "Package": "jomo",
-      "Version": "2.6-10",
+      "Version": "2.7-0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "59c2ec35992a93a21376ac2a6cac60f6"
+      "Hash": "492c103c0ae26e63c978049278978b8f"
     },
     "jsonlite": {
       "Package": "jsonlite",
