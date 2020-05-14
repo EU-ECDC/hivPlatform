@@ -31,7 +31,8 @@ AppManager <- R6::R6Class(
         PreProcessedCaseBasedData = NULL,
         PreProcessedCaseBasedDataStatus = NULL,
         Plots = NULL,
-        AdjustedCaseBasedData = NULL
+        AdjustedCaseBasedData = NULL,
+        AggregatedData = NULL
       )
     },
 
@@ -53,9 +54,7 @@ AppManager <- R6::R6Class(
       private$Catalogs$CaseBasedData <- ReadDataFile(fileName)
       private$DetermineAttributeMapping()
 
-      cli::cli_div(theme = list(span.orange = list(color = "orange")))
-      cli::cli_alert_success('Case-based data file {.orange fileName} read')
-      cli::cli_end()
+      PrintAlert('Case-based data file {.file {fileName}} loaded')
 
       return(invisible(self))
     },
@@ -74,7 +73,7 @@ AppManager <- R6::R6Class(
       private$Catalogs$PreProcessedCaseBasedData <- dt
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
 
-      cli::cli_alert_success('Case-based data has been pre-processed')
+      PrintAlert('Case-based data has been pre-processed')
 
       return(invisible(self))
     },
@@ -104,7 +103,7 @@ AppManager <- R6::R6Class(
         map
       )
 
-      cli::cli_alert_success('Origin grouping has been applied')
+      PrintAlert('Origin grouping has been applied')
 
       return(invisible(self))
     },
@@ -123,10 +122,8 @@ AppManager <- R6::R6Class(
         NotificationQuarterDensity = notificationQuarterDensity
       )
 
-      cli::cli_ol()
-      cli::cli_li('Diagnosis year density plot created')
-      cli::cli_li('Notification quarter density plot created')
-      cli::cli_end()
+      PrintAlert('Diagnosis year density plot created')
+      PrintAlert('Notification quarter density plot created')
 
       return(invisible(self))
     },
@@ -139,6 +136,14 @@ AppManager <- R6::R6Class(
         notifQuarterRange = NULL,
         seed = NULL
       )
+      return(invisible(self))
+    },
+
+    PrepareAggregatedData = function() {
+      finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
+      miData <- private$Catalogs$AdjustedCaseBasedData[[finalIdx]]$Table[Imputation != 0]
+      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(miData, splitBy = 'Imputation')
+
       return(invisible(self))
     },
 
@@ -248,6 +253,15 @@ AppManager <- R6::R6Class(
 
     AdjustedCaseBasedData = function() {
       return(private$Catalogs$AdjustedCaseBasedData)
+    },
+
+    FinalAdjustedCaseBasedData = function() {
+      finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
+      return(private$Catalogs$AdjustedCaseBasedData[[finalIdx]])
+    },
+
+    AggregatedData = function() {
+      return(private$Catalogs$AggregatedData)
     }
   )
 )
