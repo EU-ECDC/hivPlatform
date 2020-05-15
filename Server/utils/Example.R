@@ -1,9 +1,13 @@
 library(hivModelling)
 library(hivEstimatesAccuracy2)
 
+M <- 10L
+B <- 5L
+
 adjustmentSpecs <- GetAdjustmentSpecs(c(
   'Multiple Imputation using Chained Equations - MICE'
 ))
+adjustmentSpecs$`Multiple Imputation using Chained Equations - MICE`$Parameters$nimp$value <- M
 
 appManager <- AppManager$new()
 appManager$ReadCaseBasedData('D:/VirtualBox_Shared/BE.csv')
@@ -15,94 +19,71 @@ appManager$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 appManager$AdjustCaseBasedData(adjustmentSpecs)
 appManager$PrepareAggregatedData()
 
-# STEP 2 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
+# STEP 1a - Fit the model to M pseudo-complete datasets get the estimates --------------------------
+
+aggregatedDataSets <- appManager$AggregatedData
+
+step1a <- list()
+for (i in seq_along(aggregatedDataSets)) {
+  context <- GetRunContext(data = aggregatedDataSets[[i]], parameters = list())
+  data <- GetPopulationData(context)
+  results <- PerformMainFit(context, data)
+
+  step1a[[i]] <-  list(
+    Context = context,
+    Data = data,
+    Results = results
+  )
+}
+
+# STEP 2, 3 and 5A - Perform non-parametric Bootstrap of each of the M case-based datasets ---------
 
 caseBasedDataSets <- split(
   appManager$FinalAdjustedCaseBasedData$Table[Imputation != 0],
   by = 'Imputation'
 )
-aggregatedDataSets <- appManager$AggregatedData
 
-# i <- 1
-for (i in length(aggregatedDataSets)) {
+step2 <- list()
+for (i in seq_len(M)) {
   caseBasedData <- caseBasedDataSets[[i]]
-  aggregatedData <- aggregatedDataSets[[i]]
+  context <- step1a[[i]]$Context
+  param <- step1a[[i]]$Results$Param
+  info <- step1a[[i]]$Results$Info
 
-  context <- GetRunContext(data = aggregatedData, parameters = list())
-  data <- GetPopulationData(context)
-  results <- PerformMainFit(context, data)
-  param <- results$Param
-  info <- results$Info
-
-  # j <- 1
-  newResults <- list()
-  for (j in seq_len(2)) {
+  for (j in seq_len(B)) {
     # 1. Bootstrap case-based data
     indices <- sample(nrow(caseBasedData), replace = TRUE)
-    sampleCaseBasedData <- caseBasedData[indices]
+    bootCaseBasedData <- caseBasedData[indices]
 
     # 2. Create aggregated data set
-    newAggregatedData <- PrepareDataSetsForModel(sampleCaseBasedData)
+    bootAggregatedData <- PrepareDataSetsForModel(bootCaseBasedData)
 
     # 3. Create context
-    newContext <- GetRunContext(
-      data = newAggregatedData,
-      parameters = list(
-        ModelMinYear = context$Parameters$INCIDENCE$ModelMinYear,
-        ModelMaxYear = context$Parameters$INCIDENCE$ModelMaxYear
-      )
+    bootContext <- GetRunContext(
+      data = bootAggregatedData,
+      parameters = context$Parameters
     )
 
     # 4. Create final data set for the model
-    newData <- GetPopulationData(newContext)
+    bootData <- GetPopulationData(bootContext)
 
     # 5. Fit the model. Arguments "param" and "info" are provided, therefore a search for the
     # best fitting parameters is carried out starting from the supplied starting point for
     # beta and thetaF..
-    newResults[[j]] <- PerformMainFit(
-      newContext,
-      newData,
-      param = param,
-      info = info
-    )
+    step2[[B * (i - 1) + j]] <- PerformMainFit(bootContext, bootData, param = param, info = info)
   }
 }
 
-originalContext <- GetRunContext(data = hivModelDataSet[[imputation]], parameters = list())
-data <- GetPopulationData(originalContext)
-mainResults <- PerformMainFit(originalContext, data)
-paramInit <- mainResults$Param
-infoInit <- mainResults$Info
+# STEP 4 - Extract the estimated parameter vector --------------------------------------------------
 
-# STEP 3 - Perform non-parametric Bootstrap of each of the M case-based datasets -------------------
+mainOutputsList <- lapply(step2, '[[', 'MainOutputs')
 
-caseBasedData <- adjustedData[Imputation == imputation]
+# STEP 6A and 7A - Calculate parameters of interest ------------------------------------------------
 
-bootstrapResults <- list()
-for (iter in seq_len(2)) {
-  # 1. Bootstrap case-based data
-  indices <- sample(nrow(caseBasedData), replace = TRUE)
-  sampleCaseBasedData <- caseBasedData[indices]
+colNames <- colnames(mainOutputsList[[1]])
 
-  # 2. Create aggregated data set
-  hivModelDataSet <- PrepareDataSetsForModel(sampleCaseBasedData)
-
-  # 3. Create context
-  context <- GetRunContext(data = hivModelDataSet, parameters = list())
-
-  # context <- GetRunContext(data = hivModelDataSet, parameters = list(
-  #   ModelMinYear = originalContext$Parameters$INCIDENCE$ModelMinYear,
-  #   ModelMaxYear = originalContext$Parameters$INCIDENCE$ModelMaxYear
-  # ))
-
-  # context$Parameters$INCIDENCE$ModelMinYear <- 'equal to original'
-  # context$Parameters$INCIDENCE$ModelMaxYear <- 'equal to original'
-
-  # 4. Create final data set for the model
-  data <- GetPopulationData(context)
-
-  # 5. Fit the model. Arguments "param" and "info" are provided, therefore a search for the
-  # best fitting parameters is carried out starting from the supplied starting point for
-  # beta and thetaF..
-  bootstrapResults[[iter]] <- PerformMainFit(context, data, param = paramInit, info = infoInit)
-}
+quantiles <- setNames(lapply(colNames, function(colName) {
+  resultSample <- sapply(mainOutputsList, '[[', colName)
+  resultQuantiles <- t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975)))
+  return(resultQuantiles)
+}), colNames)
