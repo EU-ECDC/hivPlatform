@@ -87,3 +87,9 @@ quantiles <- setNames(lapply(colNames, function(colName) {
   resultQuantiles <- t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975)))
   return(resultQuantiles)
 }), colNames)
+
+means <- setNames(lapply(colNames, function(colName) {
+  resultSample <- sapply(mainOutputsList, '[[', colName)
+  resultQuantiles <- t(apply(resultSample, 1, mean))
+  return(resultQuantiles)
+}), colNames)
