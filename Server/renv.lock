@@ -207,10 +207,10 @@
     },
     "ellipsis": {
       "Package": "ellipsis",
-      "Version": "0.3.0",
+      "Version": "0.3.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7067d90c1c780bfe80c0d497e3d7b49d"
+      "Hash": "fd2844b3a43ae2d27e70ece2df1b4e2a"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -308,12 +308,12 @@
       "Version": "0.9.14",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "hivModelling",
       "RemoteUsername": "nextpagesoft",
+      "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "0ae5de9d47d5c5fcc1e79bf196bfc1ea47f7b369",
-      "Hash": "2466806a7ee1e3e4e3d8645e49a1f0c5"
+      "RemoteSha": "577d87ad27604024cdc80bd65a427399a431645c",
+      "RemoteHost": "api.github.com",
+      "Hash": "55a55859ec156a24efbe82b8b0533fa6"
     },
     "hms": {
       "Package": "hms",
@@ -450,10 +450,10 @@
     },
     "mice": {
       "Package": "mice",
-      "Version": "3.8.0",
+      "Version": "3.9.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9d0710fc48d992c6c1817f9d811dcfc2"
+      "Hash": "5e81b48e5feee77b60e1c7f9c1b7849f"
     },
     "mime": {
       "Package": "mime",
@@ -765,10 +765,10 @@
     },
     "tidyr": {
       "Package": "tidyr",
-      "Version": "1.0.3",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "df860e8e4e1a1b454f18537c8bc96211"
+      "Hash": "7395a05640bf91502dd475a84008d87e"
     },
     "tidyselect": {
       "Package": "tidyselect",
@@ -779,10 +779,10 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.22",
+      "Version": "0.23",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8b0712f45a05c8e79ce7ba06b249583c"
+      "Hash": "a8c653ef8ce67683f588e6088ed45572"
     },
     "ucminf": {
       "Package": "ucminf",
@@ -821,10 +821,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.13",
+      "Version": "0.14",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3c1eeacd705ff1695db94bfd443b8a84"
+      "Hash": "60e146e3aba37a547e12306dc3da77a6"
     },
     "xml2": {
       "Package": "xml2",
