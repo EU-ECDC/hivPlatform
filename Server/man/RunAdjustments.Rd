@@ -15,13 +15,14 @@ RunAdjustments(
 \arguments{
 \item{data}{data table object on which adjustments should be applied. Required.}
 
-\item{adjustmentSpecs}{List of adjustment specifications to execute. Optional. Default = \code{list()}.}
+\item{adjustmentSpecs}{List of adjustment specifications to execute. Optional.
+Default = \code{list()}.}
 
 \item{diagYearRange}{Numeric vector of length two with lower and upper bound for diagnosis year.
 Optional. Default = \code{NULL}.}
 
-\item{notifQuarterRange}{Numeric vector of length two with lower and upper bound for notification quarter.
-Optional. Default = \code{NULL}.}
+\item{notifQuarterRange}{Numeric vector of length two with lower and upper bound for
+notification quarter. Optional. Default = \code{NULL}.}
 
 \item{seed}{Random seed. Optional. Default = NULL}
 }
