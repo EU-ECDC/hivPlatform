@@ -311,9 +311,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "577d87ad27604024cdc80bd65a427399a431645c",
+      "RemoteSha": "0b6862e799dd538e38f5be3344b9062e44564ca0",
       "RemoteHost": "api.github.com",
-      "Hash": "55a55859ec156a24efbe82b8b0533fa6"
+      "Hash": "615b6664398efe8eea63bdd90edc8efa"
     },
     "hms": {
       "Package": "hms",
@@ -359,10 +359,10 @@
     },
     "jomo": {
       "Package": "jomo",
-      "Version": "2.7-0",
+      "Version": "2.7-1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "492c103c0ae26e63c978049278978b8f"
+      "Hash": "6d2e819b17d00989d38b2ec79c5181d0"
     },
     "jsonlite": {
       "Package": "jsonlite",
