@@ -1,42 +1,46 @@
 library(hivModelling)
 library(hivEstimatesAccuracy2)
 
-M <- 10L
-B <- 5L
-
-adjustmentSpecs <- GetAdjustmentSpecs(c(
-  'Multiple Imputation using Chained Equations - MICE'
-))
-adjustmentSpecs$`Multiple Imputation using Chained Equations - MICE`$Parameters$nimp$value <- M
+M <- 2
+B <- 10
 
 appManager <- AppManager$new()
-appManager$ReadCaseBasedData('D:/VirtualBox_Shared/BE.csv')
+appManager$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
 appManager$PreProcessCaseBasedData()
 appManager$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 
 # STEP 1 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
 
-appManager$AdjustCaseBasedData(adjustmentSpecs)
-appManager$PrepareAggregatedData()
+adjustmentSpecs <- GetAdjustmentSpecs(c(
+  'Multiple Imputation using Chained Equations - MICE'
+))
+appManager$AdjustCaseBasedData(adjustmentSpecs, miCount = M)
 
 # STEP 1a - Fit the model to M pseudo-complete datasets get the estimates --------------------------
 
-aggregatedDataSets <- appManager$AggregatedData
-
-step1a <- list()
-for (i in seq_along(aggregatedDataSets)) {
-  context <- GetRunContext(data = aggregatedDataSets[[i]], parameters = list())
-  data <- GetPopulationData(context)
-  results <- PerformMainFit(context, data)
-
-  step1a[[i]] <-  list(
-    Context = context,
-    Data = data,
-    Results = results
-  )
-}
+appManager$FitHIVModelToAdjustedData()
 
 # STEP 2, 3 and 5A - Perform non-parametric Bootstrap of each of the M case-based datasets ---------
+
+BoostrapCaseBasedDataSets <- function(bsCount = B) {
+
+  caseBasedDataSets <- split(
+    appManager$FinalAdjustedCaseBasedData$Table[Imputation != 0],
+    by = 'Imputation'
+  )
+
+  bootCaseBasedDataSets <- list()
+  for (i in seq_along(caseBasedDataSets)) {
+    for (j in seq_len(B)) {
+      # 1. Bootstrap case-based data
+      indices <- sample(nrow(caseBasedData), replace = TRUE)
+      bootCaseBasedDataSets[[]] <- caseBasedData[indices]
+    }
+  }
+
+
+}
+
 
 caseBasedDataSets <- split(
   appManager$FinalAdjustedCaseBasedData$Table[Imputation != 0],

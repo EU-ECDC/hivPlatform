@@ -10,6 +10,8 @@ NULL
 #' @export
 AppManager <- R6::R6Class(
   classname = 'AppManager',
+  class = FALSE,
+  cloneable = FALSE,
   public = list(
 
     # GENERIC METHOD ===============================================================================
@@ -25,14 +27,19 @@ AppManager <- R6::R6Class(
       private$Catalogs <- catalogStorage(
         Mode = mode,
         CaseBasedDataPath = NULL,
-        CaseBasedData = NULL,
         AttributeMapping = NULL,
         AttributeMappingStatus = NULL,
-        PreProcessedCaseBasedData = NULL,
         PreProcessedCaseBasedDataStatus = NULL,
         Plots = NULL,
+        MICount = 0,
+        BSCount = 0,
+
+        CaseBasedData = NULL,
+        PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
-        AggregatedData = NULL
+        AggregatedData = NULL,
+
+        HIVModelResults = NULL
       )
     },
 
@@ -128,7 +135,28 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    AdjustCaseBasedData = function(adjustmentSpecs) {
+    # 5. Adjust case-based data --------------------------------------------------------------------
+    AdjustCaseBasedData = function(adjustmentSpecs, miCount = NULL) {
+
+      if (is.null(miCount)) {
+        miCount <- private$Catalogs$MICount
+      }
+
+      adjustNames <- names(adjustmentSpecs)
+      miTypes <- sapply(adjustmentSpecs, '[[', 'Type') == 'MULTIPLE_IMPUTATIONS'
+      adjustmentSpecs <- setNames(lapply(
+        seq_along(miTypes),
+        function(i) {
+          miType <- miTypes[i]
+          as <- adjustmentSpecs[[i]]
+          if (miType) {
+            as$Parameters$nimp$value <- miCount
+          }
+
+          return(as)
+        }
+      ), adjustNames)
+
       private$Catalogs$AdjustedCaseBasedData <- RunAdjustments(
         data = private$Catalogs$PreProcessedCaseBasedData$Table,
         adjustmentSpecs = adjustmentSpecs,
@@ -136,15 +164,35 @@ AppManager <- R6::R6Class(
         notifQuarterRange = NULL,
         seed = NULL
       )
+
+      private$PrepareAggregatedData()
+
       return(invisible(self))
     },
 
-    PrepareAggregatedData = function() {
-      finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
-      miData <- private$Catalogs$AdjustedCaseBasedData[[finalIdx]]$Table[Imputation != 0]
-      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(miData, splitBy = 'Imputation')
+    # 6. Fit HIV model to adjusted data ------------------------------------------------------------
+    FitHIVModelToAdjustedData = function() {
+      aggregatedDataSets <- private$Catalogs$AggregatedData
 
-      return(invisible(self))
+      results <- list()
+      for (i in seq_along(aggregatedDataSets)) {
+        context <- hivModelling::GetRunContext(data = aggregatedDataSets[[i]], parameters = list())
+        data <- hivModelling::GetPopulationData(context)
+        results <- hivModelling::PerformMainFit(context, data)
+
+        results[[i]] <-  list(
+          Context = context,
+          Data = data,
+          Results = results
+        )
+      }
+
+      private$Catalogs$HIVModelResults <- results
+    },
+
+    # 7. Perform non-parametric bootstrap ----------------------------------------------------------
+    Fit = function() {
+
     },
 
     CreateReport = function(reportName) {
@@ -180,7 +228,16 @@ AppManager <- R6::R6Class(
       )
 
       return(htmlReportFileName)
+    },
+
+    SetMICount = function(count) {
+      private$Catalogs$MICount <- max(count, 0)
+    },
+
+    SetBSCount = function(count) {
+      private$Catalogs$BSCount <- max(count, 0)
     }
+
   ),
 
   private = list(
@@ -209,6 +266,13 @@ AppManager <- R6::R6Class(
 
       private$Catalogs$AttributeMapping <- attrMapping
       private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
+    },
+
+    PrepareAggregatedData = function() {
+      miData <- self$FinalAdjustedCaseBasedData$Table[Imputation != 0]
+      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(miData, splitBy = 'Imputation')
+
+      return(invisible(self))
     }
   ),
 
@@ -217,7 +281,9 @@ AppManager <- R6::R6Class(
       if (missing(mode)) {
         return(private$Catalogs$Mode)
       } else {
-        stopifnot(mode %in% c('NONE', 'ACCURACY', 'MODELLING', 'ALL-IN-ONE'))
+        if (!mode %in% c('NONE', 'ACCURACY', 'MODELLING', 'ALL-IN-ONE')) {
+          mode <- 'NONE'
+        }
         private$Catalogs$Mode <- mode
         return(self)
       }
@@ -225,10 +291,6 @@ AppManager <- R6::R6Class(
 
     CaseBasedDataPath = function(caseBasedDataPath) {
       return(private$Catalogs$CaseBasedDataPath)
-    },
-
-    CaseBasedData = function() {
-      return(private$Catalogs$CaseBasedData)
     },
 
     AttributeMapping = function() {
@@ -251,6 +313,18 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$Plots)
     },
 
+    MICount = function() {
+      return(private$Catalogs$MICount)
+    },
+
+    BSCount = function() {
+      return(private$Catalogs$BSCount)
+    },
+
+    CaseBasedData = function() {
+      return(private$Catalogs$CaseBasedData)
+    },
+
     AdjustedCaseBasedData = function() {
       return(private$Catalogs$AdjustedCaseBasedData)
     },
@@ -262,6 +336,11 @@ AppManager <- R6::R6Class(
 
     AggregatedData = function() {
       return(private$Catalogs$AggregatedData)
+    },
+
+    HIVModelResults = function() {
+      return(private$Catalogs$HIVModelResults)
     }
+
   )
 )

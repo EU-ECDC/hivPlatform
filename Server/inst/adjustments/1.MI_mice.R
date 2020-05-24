@@ -85,10 +85,8 @@ list(
       yColNames <- Filter(yFilterFunc, yColNamesAll)
 
       # Keep for reporting
-      artifacts[["X_COLS"]] <- list(All = xColNamesAll,
-                                    Kept = xColNames)
-      artifacts[["Y_COLS"]] <- list(All = yColNamesAll,
-                                    Kept = yColNames)
+      artifacts[["X_COLS"]] <- list(All = xColNamesAll, Kept = xColNames)
+      artifacts[["Y_COLS"]] <- list(All = yColNamesAll, Kept = yColNames)
 
       # Create splines with proper names and intercept
       splineBasisMatrix <- try(as.data.table(splines::ns(dataSet$DY, df = nsdf)), silent = TRUE)
@@ -118,9 +116,7 @@ list(
 
         # Run model
         cat("Performing imputation.\n")
-        mids <- mice::mice(cbind(Y, X),
-                           m = nimp,
-                           maxit = nit)
+        mids <- mice::mice(cbind(Y, X), m = nimp, maxit = nit)
         artifacts[["Mids"]] <- mids
 
         imp <- setDT(mice::complete(mids, action = "long", include = TRUE))
