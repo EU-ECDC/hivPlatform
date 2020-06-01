@@ -38,8 +38,11 @@ AppManager <- R6::R6Class(
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
+        BootstrapCaseBasedDataSets = NULL,
+        BootstrapAggregatedDataSets = NULL,
 
-        HIVModelResults = NULL
+        HIVModelResults = NULL,
+        HIVBootstrapModelResults = NULL
       )
     },
 
@@ -136,10 +139,14 @@ AppManager <- R6::R6Class(
     },
 
     # 5. Adjust case-based data --------------------------------------------------------------------
-    AdjustCaseBasedData = function(adjustmentSpecs, miCount = NULL) {
-
+    AdjustCaseBasedData = function(
+      adjustmentSpecs,
+      miCount = NULL
+    ) {
       if (is.null(miCount)) {
         miCount <- private$Catalogs$MICount
+      } else {
+        private$Catalogs$MICount <- miCount
       }
 
       adjustNames <- names(adjustmentSpecs)
@@ -171,28 +178,141 @@ AppManager <- R6::R6Class(
     },
 
     # 6. Fit HIV model to adjusted data ------------------------------------------------------------
-    FitHIVModelToAdjustedData = function() {
+    FitHIVModelToAdjustedData = function(
+      settings = list(),
+      parameters = list()
+    ) {
       aggregatedDataSets <- private$Catalogs$AggregatedData
 
       results <- list()
       for (i in seq_along(aggregatedDataSets)) {
-        context <- hivModelling::GetRunContext(data = aggregatedDataSets[[i]], parameters = list())
+        startTime <- Sys.time()
+
+        context <- hivModelling::GetRunContext(
+          data = aggregatedDataSets[[i]],
+          settings = settings,
+          parameters = parameters
+        )
         data <- hivModelling::GetPopulationData(context)
-        results <- hivModelling::PerformMainFit(context, data)
+        fitResults <- hivModelling::PerformMainFit(context, data)
 
         results[[i]] <-  list(
           Context = context,
           Data = data,
-          Results = results
+          Results = fitResults
+        )
+
+        PrintAlert(
+          'Fit to data set {.val {i}} done |',
+          'Run time: {.timestamp {format(Sys.time() - startTime)}}',
+          type = 'success'
         )
       }
 
       private$Catalogs$HIVModelResults <- results
+
+      return(invisible(self))
     },
 
     # 7. Perform non-parametric bootstrap ----------------------------------------------------------
-    Fit = function() {
+    GenerateBoostrapCaseBasedDataSets = function(
+      bsCount = NULL
+    ) {
+      if (is.null(bsCount)) {
+        bsCount <- private$Catalogs$BSCount
+      } else {
+        private$Catalogs$BSCount <- bsCount
+      }
 
+      caseBasedDataSets <- split(
+        self$FinalAdjustedCaseBasedData$Table[Imputation != 0],
+        by = 'Imputation'
+      )
+
+      bootCaseBasedDataSets <- list()
+      for (i in seq_along(caseBasedDataSets)) {
+        caseBasedData <- caseBasedDataSets[[i]]
+        bootCaseBasedDataSet <- list()
+        for (j in seq_len(bsCount)) {
+          indices <- sample(nrow(caseBasedData), replace = TRUE)
+          bootCaseBasedDataSet[[j]] <- caseBasedData[indices]
+        }
+        bootCaseBasedDataSets[[i]] <- bootCaseBasedDataSet
+      }
+
+      private$Catalogs$BootstrapCaseBasedDataSets <- bootCaseBasedDataSets
+
+      private$PrepareBootstrapAggregatedData()
+
+      return(invisible(self))
+    },
+
+    FitHIVModelToBootstrapData = function() {
+      bootResults <- list()
+      for (i in seq_along(private$Catalogs$HIVModelResults)) {
+        hivModelResults <- private$Catalogs$HIVModelResults[[i]]
+
+        context <- hivModelResults$Context
+        param <- hivModelResults$Results$Param
+        info <- hivModelResults$Results$Info
+
+        context$Settings <- modifyList(
+          context$Settings,
+          list(
+            ModelFilePath = NULL,
+            InputDataPath = NULL,
+            Verbose = FALSE
+          ),
+          keep.null = TRUE
+        )
+
+        iterResults <- list()
+        for (j in seq_along(private$Catalogs$BootstrapAggregatedDataSets[[i]])) {
+          startTime <- Sys.time()
+
+          bootAggregatedData <- private$Catalogs$BootstrapAggregatedDataSets[[i]][[j]]
+
+          bootContext <- GetRunContext(
+            parameters = context$Parameters,
+            settings = context$Settings,
+            data = bootAggregatedData
+          )
+
+          bootData <- GetPopulationData(bootContext)
+
+          iterResults[[j]] <- PerformMainFit(bootContext, bootData, param = param, info = info)
+
+          PrintAlert(
+            'Bootstrap fit to data set {.val {j}} using initial parameters from adjusted data fit {.val {i}} done |',
+            'Run time: {.timestamp {format(Sys.time() - startTime)}}',
+            type = 'success'
+          )
+        }
+
+        bootResults[[i]] <- iterResults
+      }
+
+      private$Catalogs$HIVBootstrapModelResults <- bootResults
+
+      return(invisible(self))
+    },
+
+    ComputeHIVBootstrapStatistics = function() {
+      bootMainOutputsList <- self$HIVBootstrapMainOutputs
+
+      colNames <- colnames(bootMainOutputsList[[1]])
+      bootStats <- setNames(lapply(colNames, function(colName) {
+        resultSample <- sapply(bootMainOutputsList, '[[', colName)
+        result <- cbind(
+          t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975))),
+          Mean = apply(resultSample, 1, mean)
+        )
+        return(result)
+      }), colNames)
+
+      private$Catalogs$HIVBootstrapStatistics <- bootStats
+
+      return(invisible(self))
     },
 
     CreateReport = function(reportName) {
@@ -273,6 +393,18 @@ AppManager <- R6::R6Class(
       private$Catalogs$AggregatedData <- PrepareDataSetsForModel(miData, splitBy = 'Imputation')
 
       return(invisible(self))
+    },
+
+    PrepareBootstrapAggregatedData = function() {
+      bootCaseBasedDataSets <- private$Catalogs$BootstrapCaseBasedDataSets
+      bootAggregatedDataSets <- lapply(
+        bootCaseBasedDataSets,
+        function(bootCaseBasedDataSet) {
+          lapply(bootCaseBasedDataSet, PrepareDataSetsForModel)
+        }
+      )
+
+      private$Catalogs$BootstrapAggregatedDataSets <- bootAggregatedDataSets
     }
   ),
 
@@ -338,8 +470,29 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$AggregatedData)
     },
 
+    BootstrapCaseBasedDataSets = function() {
+      return(private$Catalogs$BootstrapCaseBasedDataSets)
+    },
+
+    BootstrapAggregatedDataSets = function() {
+      return(private$Catalogs$BootstrapAggregatedDataSets)
+    },
+
     HIVModelResults = function() {
       return(private$Catalogs$HIVModelResults)
+    },
+
+    HIVBootstrapModelResults = function() {
+      return(private$Catalogs$HIVBootstrapModelResults)
+    },
+
+    HIVBootstrapMainOutputs = function() {
+      bootMainOutputs <- lapply(Reduce(c, appMgr$HIVBootstrapModelResults), '[[', 'MainOutputs')
+      return(bootMainOutputs)
+    },
+
+    HIVBootstrapStatistics = function() {
+      return(private$Catalogs$HIVBootstrapStatistics)
     }
 
   )

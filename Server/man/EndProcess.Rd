@@ -4,16 +4,16 @@
 \alias{EndProcess}
 \title{EndProcess}
 \usage{
-EndProcess(processId = NULL, ..., collapse = " ", .envir = parent.frame())
+EndProcess(procList = NULL, ..., collapse = " ", .envir = parent.frame())
 }
 \arguments{
-\item{processId}{Process Id}
-
 \item{...}{Text to be printed}
 
 \item{collapse}{String to be used for concatenating texts}
 
 \item{.envir}{Environment for lookup of variables referenced in the text}
+
+\item{processId}{Process Id}
 }
 \description{
 EndProcess

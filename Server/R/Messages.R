@@ -100,9 +100,13 @@ StartProcess <- function(
   .envir = parent.frame()
 ) {
   try(cli::cli_status_clear(NULL), silent = TRUE)
+  startTime <- Sys.time()
   processId <- cli::cli_process_start(CollapseTexts(..., collapse = collapse), .envir = .envir)
 
-  invisible(processId)
+  invisible(list(
+    ProcessId = processId,
+    StartTime = startTime
+  ))
 }
 
 #' EndProcess
@@ -121,12 +125,16 @@ StartProcess <- function(
 #'
 #' @export
 EndProcess <- function(
-  processId = NULL,
+  procList = NULL,
   ...,
   collapse = ' ',
   .envir = parent.frame()
 ) {
-  cli::cli_process_done(id = processId, CollapseTexts(..., collapse = collapse), .envir = .envir)
+  cli::cli_process_done(
+    id = procList$ProcessId,
+    CollapseTexts(..., collapse = collapse),
+    .envir = .envir
+  )
 
   invisible(NULL)
 }
