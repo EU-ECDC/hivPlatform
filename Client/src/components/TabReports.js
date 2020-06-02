@@ -98,8 +98,8 @@ const TabReports = () => {
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
-            <div id="introduction" class="section level1">
-              <h1><span class="header-section-number">1</span> Introduction</h1>
+            <div id="introduction" className="section level1">
+              <h1><span className="header-section-number">1</span> Introduction</h1>
               <p>Input data:</p>
               <ul>
                 <li>No filter on diagnosis year applied.</li>
@@ -124,16 +124,16 @@ const TabReports = () => {
               </ul>
               <hr />
             </div>
-            <div id="comparison-of-data-by-gender" class="section level1">
-              <h1><span class="header-section-number">2</span> Comparison of data by Gender</h1>
-              <div id="number-of-diagnoses-per-year" class="section level2">
-                <h2><span class="header-section-number">2.1</span> Number of diagnoses per year</h2>
+            <div id="comparison-of-data-by-gender" className="section level1">
+              <h1><span className="header-section-number">2</span> Comparison of data by Gender</h1>
+              <div id="number-of-diagnoses-per-year" className="section level2">
+                <h2><span className="header-section-number">2.1</span> Number of diagnoses per year</h2>
                 <p>Data stratified by <em>gender</em> is shown only for unadjusted data since there were no missing data on <em>gender</em> after pre-processing, which takes place before adjustments.</p>
-                <div id="before-and-after-adjustments" class="section level3">
-                  <h3><span class="header-section-number">2.1.1</span> Before and after adjustments</h3>
+                <div id="before-and-after-adjustments" className="section level3">
+                  <h3><span className="header-section-number">2.1.1</span> Before and after adjustments</h3>
                   <table>
                     <thead>
-                      <tr class="header">
+                      <tr className="header">
                         <th align="right">Year of diagnosis</th>
                         <th align="right">Male [N (%)]</th>
                         <th align="right">Female [N (%)]</th>
@@ -141,97 +141,97 @@ const TabReports = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2000</td>
                         <td align="right">183 (62)</td>
                         <td align="right">112 (38)</td>
                         <td align="right">295 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2001</td>
                         <td align="right">235 (61)</td>
                         <td align="right">149 (39)</td>
                         <td align="right">384 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2002</td>
                         <td align="right">269 (57)</td>
                         <td align="right">206 (43)</td>
                         <td align="right">475 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2003</td>
                         <td align="right">324 (57)</td>
                         <td align="right">245 (43)</td>
                         <td align="right">569 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2004</td>
                         <td align="right">358 (58)</td>
                         <td align="right">260 (42)</td>
                         <td align="right">618 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2005</td>
                         <td align="right">359 (55)</td>
                         <td align="right">290 (45)</td>
                         <td align="right">649 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2006</td>
                         <td align="right">376 (62)</td>
                         <td align="right">233 (38)</td>
                         <td align="right">609 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2007</td>
                         <td align="right">406 (66)</td>
                         <td align="right">211 (34)</td>
                         <td align="right">617 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2008</td>
                         <td align="right">386 (65)</td>
                         <td align="right">212 (35)</td>
                         <td align="right">598 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2009</td>
                         <td align="right">373 (65)</td>
                         <td align="right">201 (35)</td>
                         <td align="right">574 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2010</td>
                         <td align="right">387 (70)</td>
                         <td align="right">168 (30)</td>
                         <td align="right">555 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2011</td>
                         <td align="right">398 (73)</td>
                         <td align="right">147 (27)</td>
                         <td align="right">545 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2012</td>
                         <td align="right">398 (74)</td>
                         <td align="right">139 (26)</td>
                         <td align="right">537 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">2013</td>
                         <td align="right">381 (78)</td>
                         <td align="right">108 (22)</td>
                         <td align="right">489 (100)</td>
                       </tr>
-                      <tr class="odd">
+                      <tr className="odd">
                         <td align="right">2014</td>
                         <td align="right">80 (76)</td>
                         <td align="right">25 (24)</td>
                         <td align="right">105 (100)</td>
                       </tr>
-                      <tr class="even">
+                      <tr className="even">
                         <td align="right">Total</td>
                         <td align="right">4913 (64)</td>
                         <td align="right">2706 (36)</td>
@@ -241,10 +241,10 @@ const TabReports = () => {
                   </table>
                 </div>
                 </div>
-                <div id="median-cd4-cell-count-cellsµl" class="section level2">
-                  <h2><span class="header-section-number">2.2</span> Median CD4 cell count (cells/µL)</h2>
-                  <div id="before-adjustments" class="section level3">
-                    <h3><span class="header-section-number">2.2.1</span> Before adjustments</h3>
+                <div id="median-cd4-cell-count-cellsµl" className="section level2">
+                  <h2><span className="header-section-number">2.2</span> Median CD4 cell count (cells/µL)</h2>
+                  <div id="before-adjustments" className="section level3">
+                    <h3><span className="header-section-number">2.2.1</span> Before adjustments</h3>
                       <table>
                         <colgroup>
                           <col width="21%" />
@@ -253,7 +253,7 @@ const TabReports = () => {
                           <col width="27%" />
                         </colgroup>
                         <thead>
-                          <tr class="header">
+                          <tr className="header">
                             <th align="right">Year of diagnosis</th>
                             <th align="right">Male [Median (IQR)]</th>
                             <th align="right">Female [Median (IQR)]</th>
@@ -261,97 +261,97 @@ const TabReports = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2000</td>
                             <td align="right">319 (103, 563)</td>
                             <td align="right">294 (98, 431)</td>
                             <td align="right">312 (100, 542)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2001</td>
                             <td align="right">345 (104, 531)</td>
                             <td align="right">320 (181, 568)</td>
                             <td align="right">340 (142, 533)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2002</td>
                             <td align="right">323 (100, 480)</td>
                             <td align="right">220 (63, 380)</td>
                             <td align="right">300 (84, 465)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2003</td>
                             <td align="right">353 (180, 548)</td>
                             <td align="right">272 (133, 392)</td>
                             <td align="right">333 (161, 522)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2004</td>
                             <td align="right">324 (159, 490)</td>
                             <td align="right">320 (177, 468)</td>
                             <td align="right">320 (165, 484)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2005</td>
                             <td align="right">362 (221, 538)</td>
                             <td align="right">300 (110, 435)</td>
                             <td align="right">340 (163, 521)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2006</td>
                             <td align="right">360 (200, 538)</td>
                             <td align="right">249 (133, 405)</td>
                             <td align="right">332 (164, 508)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2007</td>
                             <td align="right">388 (251, 605)</td>
                             <td align="right">299 (172, 430)</td>
                             <td align="right">370 (240, 586)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2008</td>
                             <td align="right">353 (189, 549)</td>
                             <td align="right">217 (126, 395)</td>
                             <td align="right">329 (156, 531)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2009</td>
                             <td align="right">408 (254, 600)</td>
                             <td align="right">266 (106, 397)</td>
                             <td align="right">372 (198, 576)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2010</td>
                             <td align="right">364 (201, 539)</td>
                             <td align="right">266 (179, 520)</td>
                             <td align="right">354 (195, 533)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2011</td>
                             <td align="right">388 (234, 550)</td>
                             <td align="right">323 (188, 580)</td>
                             <td align="right">382 (229, 555)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2012</td>
                             <td align="right">451 (239, 594)</td>
                             <td align="right">360 (154, 522)</td>
                             <td align="right">420 (228, 582)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">2013</td>
                             <td align="right">430 (264, 610)</td>
                             <td align="right">449 (193, 606)</td>
                             <td align="right">430 (259, 611)</td>
                           </tr>
-                          <tr class="odd">
+                          <tr className="odd">
                             <td align="right">2014</td>
                             <td align="right">493 (268, 596)</td>
                             <td align="right">340 (238, 489)</td>
                             <td align="right">456 (256, 583)</td>
                           </tr>
-                          <tr class="even">
+                          <tr className="even">
                             <td align="right">Overall</td>
                             <td align="right">380 (201, 560)</td>
                             <td align="right">290 (133, 460)</td>
