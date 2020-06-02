@@ -20,7 +20,7 @@ const WelcomeCard = props => {
   return (
     <Card>
       <CardActionArea onClick={onClick(mode)}>
-        <CardMedia style={{height: 150}}
+        <CardMedia style={{height: 300}}
           image={image}
         />
         <CardContent>
@@ -54,7 +54,7 @@ const TabWelcome = props => {
   const accuracyMore = <React.Fragment>
     <p>
       The <b>HIV Estimates Accuracy Tool</b> is an application that uses statistical methods to
-      calculate adjusted estimates from HIV surveillance.
+      calculate adjusted estimates from HIV surveillance data.
     </p>
     <p>
       Missing data are a well-recognised problem within surveillance systems. When values for some
@@ -67,14 +67,14 @@ const TabWelcome = props => {
     <p>
       With this tool you can correct missing data for the variables age, gender, transmission
       category and CD4 count. Additionally, the tool allows for correction of delays in reporting.
-       The adjustments may be used separately or in combination.
+      The adjustments may be used separately or in combination.
     </p>
     <p>
       The tool accepts HIV case-based surveillance data and requires a minimum set of variables
       routinely collected at national public health systems.
     </p>
     <p>
-      A complete instruction <a href="#">manual</a> will guide you through the tool. The manual can
+      A complete instruction <a href='#'>manuel</a> will guide you through the tool. The manual can
       also be consulted to interpret the outputs. The outputs include results in the form of a
       report containing tables and graphs, and datasets in various file formats, in which the
       corrections have been incorporated and are ready for further analysis.
@@ -83,24 +83,25 @@ const TabWelcome = props => {
 
   const modellingMore = <React.Fragment>
     <p>
-      How many people are getting infected with HIV, how many are being missed or not being
-      reported and how many should be on treatment.
+      The <b>HIV Modelling Tool</b> is an application that can estimate How many people are getting
+      infected with HIV, how many are being missed or not being reported and how many should be on
+      treatment.
     </p>
     <p>
-      The <b>HIV Modelling Tool</b> is an application that helps to understand local HIV epidemics
-      by providing better estimates based on surveillance data. The Tool uses back calculation
-      methods to estimate the number of people living with HIV, including those not yet diagnosed.
-      The tool can also estimate the annual number of new HIV infections, the average time between
-      infection and diagnosis, and the number of people in need of treatment according to CD4
-      counts.
+      The tool uses CD4 back calculation methods to estimate the number of people living with HIV,
+      including those not yet diagnosed. The tool can also estimate the annual number of new HIV
+      infections, the average time between infection and diagnosis, and the number of undiagnosed
+      people CD4 category.
     </p>
     <p>
-      The tool accepts HIV case-based surveillance data and aggregated-based data containing a
-      minimum required set of variables; HIV cases, AIDS cases and HIVAID cases and preferably CD4
-      counts. When provided, the tool also accounts for the number of dead and migrants.
+      The tool accepts a minimum required set of variables: HIV cases, AIDS cases and HIVAIDS cases
+      and, if available, CD4 count at HIV diagnosis. The tool uses aggregated HIV surveillance data
+      or case-based data. Data adjusted by the Accuracy tool can thereafter be used as input data
+      for this tool. When data on these parameters are provided, the tool also accounts for
+      mortality and migration.
     </p>
     <p>
-      A complete instruction <a href="#">manual</a> will guide you through the tool. The manual can
+      A complete instruction manual will guide you through the tool. The <a href='#'>manual</a> can
       also be consulted to interpret the outputs and to aid in the selection of some parameters
       using clear and well instructed examples.
     </p>
@@ -108,10 +109,11 @@ const TabWelcome = props => {
 
   const allinoneMore = <React.Fragment>
     <p>
-      The two tools were combine in one flexible tool that manages both the tools in one single
-      flow. After uploading HIV cased-based data, the data firstly will be adjusted for missing
-      data and/or reporting delay before the parameters are calculated as provided through the
-      modelling tool.
+      The two tools were combined into one flexible tool that manages all inputs, adjustments and
+      outputs in one simple workflow. After uploading HIV cased-based data, the data can be
+      initially adjusted for missing information and/or reporting delay and then automatically used
+      as input data to the modelling tool, where estimates of HIV incidence, prevalence and the
+      undiagnosed number of people living with HIV can be made.
     </p>
   </React.Fragment>
 
@@ -121,19 +123,18 @@ const TabWelcome = props => {
         <Box width='50%' m='auto' p={5}>
           <p>
             HIV continues to be of significant public health importance in the European Union as
-            well as globally. To evaluate and direct prevention efforts, it is crucial to
+            well as globally. To evaluate and direct prevention efforts, it is crucial to
             understand the pattern of new HIV infections, or HIV incidence, among groups most at
             risk of infection. It is also important to estimate the size of the total population of
             persons living with HIV, including those that are not yet diagnosed, in order to
             understand the burden of HIV and the need for antiretroviral treatment and other
-            HIV-related care. Accurate surveillance data are crucial to achieve reliable parameter
+            HIV-related care. Accurate surveillance data are crucial to achieve reliable parameter
             estimates.
           </p>
-
           <p>
             The ECDC HIV Modelling Platform provides a set of tools to support users to obtain
-            reliable parameter estimates to appropriately direct and evaluate public health
-            response.
+            reliable parameter estimates to appropriately direct and evaluate public health
+            responses.
           </p>
         </Box>
       </Grid>

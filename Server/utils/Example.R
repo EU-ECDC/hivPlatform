@@ -23,9 +23,7 @@ appMgr$AdjustCaseBasedData(adjustmentSpecs, miCount = M)
 
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 
-appMgr$FitHIVModelToAdjustedData(
-  settings = list(Verbose = FALSE)
-)
+appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = FALSE))
 
 # STEP 4 - Generate B bootstrapped case-based datasets for each pseudo-complete datasets -----------
 
