@@ -247,7 +247,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    FitHIVModelToBootstrapData = function() {
+    FitHIVModelToBootstrapData = function(verbose = FALSE) {
       bootResults <- list()
       for (i in seq_along(private$Catalogs$HIVModelResults)) {
         hivModelResults <- private$Catalogs$HIVModelResults[[i]]
@@ -261,7 +261,7 @@ AppManager <- R6::R6Class(
           list(
             ModelFilePath = NULL,
             InputDataPath = NULL,
-            Verbose = FALSE
+            Verbose = verbose
           ),
           keep.null = TRUE
         )
@@ -298,10 +298,10 @@ AppManager <- R6::R6Class(
     },
 
     ComputeHIVBootstrapStatistics = function() {
-      bootMainOutputsList <- self$HIVBootstrapMainOutputs
+      bootMainOutputsList <- self$GetFlatHIVBootstrapResults('MainOutputs')
 
       colNames <- colnames(bootMainOutputsList[[1]])
-      bootStats <- setNames(lapply(colNames, function(colName) {
+      bootMainOutputsStats <- setNames(lapply(colNames, function(colName) {
         resultSample <- sapply(bootMainOutputsList, '[[', colName)
         result <- cbind(
           t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975))),
@@ -310,7 +310,31 @@ AppManager <- R6::R6Class(
         return(result)
       }), colNames)
 
-      private$Catalogs$HIVBootstrapStatistics <- bootStats
+      bootParamList <- self$GetFlatHIVBootstrapResults('Param')
+
+      betas <- as.data.table(t(sapply(bootParamList, '[[', 'Beta')))
+      setnames(betas, sprintf('Beta%d', seq_len(ncol(betas))))
+      bootBetasStats <- lapply(betas, function(col) {
+        c(
+          quantile(col, probs = c(0.025, 0.5, 0.975)),
+          Mean = mean(col)
+        )
+      })
+
+      thetas <- as.data.table(t(sapply(bootParamList, '[[', 'Theta')))
+      setnames(thetas, sprintf('Theta%d', seq_len(ncol(thetas))))
+      bootThetasStats <- lapply(thetas, function(col) {
+        c(
+          quantile(col, probs = c(0.025, 0.5, 0.975)),
+          Mean = mean(col)
+        )
+      })
+
+      private$Catalogs$HIVBootstrapStatistics <- list(
+        MainOutputs = bootMainOutputsStats,
+        Beta = bootBetasStats,
+        Theta = bootThetasStats
+      )
 
       return(invisible(self))
     },
@@ -356,8 +380,14 @@ AppManager <- R6::R6Class(
 
     SetBSCount = function(count) {
       private$Catalogs$BSCount <- max(count, 0)
-    }
+    },
 
+    GetFlatHIVBootstrapResults = function(itemName) {
+      flatBootResults <- lapply(
+        Reduce(c, private$Catalogs$HIVBootstrapModelResults), '[[', itemName
+      )
+      return(flatBootResults)
+    }
   ),
 
   private = list(
@@ -490,14 +520,8 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$HIVBootstrapModelResults)
     },
 
-    HIVBootstrapMainOutputs = function() {
-      bootMainOutputs <- lapply(Reduce(c, appMgr$HIVBootstrapModelResults), '[[', 'MainOutputs')
-      return(bootMainOutputs)
-    },
-
     HIVBootstrapStatistics = function() {
       return(private$Catalogs$HIVBootstrapStatistics)
     }
-
   )
 )

@@ -5,7 +5,7 @@ library(hivEstimatesAccuracy2)
 M <- 2
 
 # Define count of bootstrap data sets
-B <- 10
+B <- 5
 
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
