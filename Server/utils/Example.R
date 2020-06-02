@@ -11,6 +11,7 @@ B <- 5
 
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
+# appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/BE.csv')
 appMgr$PreProcessCaseBasedData()
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 
@@ -36,3 +37,6 @@ appMgr$FitHIVModelToBootstrapData()
 # STEP 6 - Calculate statistics for every output column --------------------------------------------
 
 appMgr$ComputeHIVBootstrapStatistics()
+#
+# appMgr$AttributeMapping
+# appMgr$AttributeMappingStatus

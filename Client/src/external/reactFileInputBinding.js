@@ -176,9 +176,11 @@ const DefineReactFileInputBinding = (appManager) => {
     };
     this.onError = function (message) {
       console.log('onError: ', message);
+      appManager.setFileUploadProgress(null);
     };
     this.onAbort = function () {
       console.log('onAbort');
+      appManager.setFileUploadProgress(null);
     };
     this.onProgress = function (percentage) {
       appManager.setFileUploadProgress(percentage);

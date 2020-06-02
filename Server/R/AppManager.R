@@ -21,6 +21,8 @@ AppManager <- R6::R6Class(
     ) {
       stopifnot(mode %in% c('NONE', 'ACCURACY', 'MODELLING', 'ALL-IN-ONE'))
 
+      print(tempdir())
+
       private$Session <- session
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)

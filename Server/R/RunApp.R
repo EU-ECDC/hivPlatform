@@ -12,10 +12,12 @@
 #' }
 #'
 #' @export
-RunApp <- function(launchBrowser = FALSE)
+RunApp <- function(launchBrowser = getOption("shiny.launch.browser", interactive()))
 {
   options(shiny.maxRequestSize = 150 * 1024^2)
   app <- shiny::shinyApp(AppUI, AppServer)
-  shiny::runApp(app, port = 3306, display.mode = 'normal', test.mode = FALSE)
+  shiny::runApp(
+    app, port = 3306, display.mode = 'normal', test.mode = FALSE, launch.browser = launchBrowser
+  )
   return(invisible(NULL))
 }

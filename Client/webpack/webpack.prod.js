@@ -10,6 +10,7 @@ module.exports = {
     chunkFilename: '[name].[chunkhash].js',
     publicPath: 'www/'
   },
+  watch: false,
   plugins: [
     new CleanWebpackPlugin(),
   ],

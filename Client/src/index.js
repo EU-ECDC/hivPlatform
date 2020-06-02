@@ -26,7 +26,7 @@ ReactDOM.render(
       $(document).on('shiny:disconnected', () => appManager.setShinyState('DISCONNECTED'));
       $(document).on('shiny:message', () => appManager.setShinyMessage(event.data));
       $(document).on('shiny:inputchanged', () => console.log('shiny:inputchanged:', event.data));
-      $(document).on('shiny:filedownload', () => console.log('shiny: filedownload:', event.data));
+      $(document).on('shiny:filedownload', () => console.log('shiny:filedownload:', event.data));
     });
     runInit(appManager);
   },

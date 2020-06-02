@@ -1,40 +1,47 @@
-Events <- function(input, output, session, appManager)
+Events <- function(input, output, session, appMgr)
 {
+  # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
-
     fileInfo <- input$caseUploadBtn
     print(fileInfo)
 
     # Case based data uploaded
-    appManager$SendEventToReact('shinyHandler', list(
-      type = 'CASE_BASED_DATA_UPLOADED',
-      status = 'SUCCESS',
-      payload = fileInfo
-    ))
-
-    appManager$ReadCaseBasedData(input$caseUploadBtn$datapath)
-    appManager$SendEventToReact('shinyHandler', list(
-      type = 'CASE_BASED_DATA_READ',
-      status = 'SUCCESS',
-      payload = list(
-        colnames(appManager$CaseBasedData),
-        nrow(appManager$CaseBasedData)
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_DATA_UPLOADED',
+      Status = 'SUCCESS',
+      Payload = list(
+        FileName = fileInfo$name[1],
+        FileSize = fileInfo$size[1],
+        FileType = fileInfo$type[1],
+        FilePath = fileInfo$datapath[1]
       )
     ))
 
-    appManager$PreProcessCaseBasedData()
-    appManager$SendEventToReact('shinyHandler', list(
-      type = 'CASE_BASED_DATA_PREPROCESSED',
-      status = 'SUCCESS',
-      payload = list()
+    appMgr$ReadCaseBasedData(input$caseUploadBtn$datapath)
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_DATA_READ',
+      Status = 'SUCCESS',
+      Payload = list(
+        ColumnNames = colnames(appMgr$CaseBasedData),
+        RowCount = nrow(appMgr$CaseBasedData),
+        AttributeMapping = appMgr$AttributeMapping,
+        AttributeMappingStatus = appMgr$AttributeMappingStatus
+      )
     ))
 
-    appManager$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
-    appManager$SendEventToReact('shinyHandler', list(
-      type = 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-      status = 'SUCCESS',
-      payload = list(
-        type = 'REPCOUNTRY + UNK + OTHER'
+    appMgr$PreProcessCaseBasedData()
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_DATA_PREPROCESSED',
+      Status = 'SUCCESS',
+      Payload = list()
+    ))
+
+    appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
+      Status = 'SUCCESS',
+      Payload = list(
+        OriginGroupingType = 'REPCOUNTRY + UNK + OTHER'
       )
     ))
   })

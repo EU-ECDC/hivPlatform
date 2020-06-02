@@ -46,16 +46,34 @@ export default class AppManager {
   caseBasedDataPath = null;
 
   @observable
+  caseBasedDataColumnNames = null;
+
+  @observable
+  caseBasedDataRowCount = null;
+
+  @observable
+  caseBasedDataAttributeMapping = null;
+
+  @observable
+  caseBasedDataAttributeMappingStatus = null;
+
+  @observable
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
   // Shiny custom event handlers
   onShinyEvent = data => {
-    if (data.type === 'CASE_BASED_DATA_UPLOADED') {
-      this.setCaseBasedDataFileName(data.payload.name[0]);
-      this.setCaseBasedDataFileSize(data.payload.size[0]);
-      this.setCaseBasedDataFileType(data.payload.type[0]);
-      this.setCaseBasedDataPath(data.payload.datapath[0]);
+    console.log(data);
+    if (data.Type === 'CASE_BASED_DATA_UPLOADED') {
+      this.setCaseBasedDataFileName(data.Payload.FileName);
+      this.setCaseBasedDataPath(data.Payload.FilePath);
+      this.setCaseBasedDataFileSize(data.Payload.FileSize);
+      this.setCaseBasedDataFileType(data.Payload.FileType);
       this.steps[2].disabled = false;
+    } else if (data.Type === 'CASE_BASED_DATA_READ') {
+      this.setCaseBasedDataColumnNames(data.Payload.ColumnNames);
+      this.setCaseBasedDataRowCount(data.Payload.RowCount);
+      this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
+      this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
     }
   };
 
@@ -75,6 +93,22 @@ export default class AppManager {
   @computed
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
+  }
+
+  @computed
+  get CaseBasedDataColumnNamesString() {
+    if (this.caseBasedDataColumnNames === null) {
+      return '';
+    }
+    return this.caseBasedDataColumnNames.join(', ');
+  }
+
+  @computed
+  get CaseBasedDataAttributeMappingArray() {
+    if (this.caseBasedDataAttributeMapping === null) {
+      return [];
+    }
+    return Object.entries(this.caseBasedDataAttributeMapping).map(key => ({ Key: key[0], Val: key[1] }))
   }
 
   @action
@@ -97,6 +131,10 @@ export default class AppManager {
   @action setCaseBasedDataFileSize = size => this.caseBasedDataFileSize = size;
   @action setCaseBasedDataFileType = type => this.caseBasedDataFileType = type;
   @action setCaseBasedDataPath = path => this.caseBasedDataPath = path;
+  @action setCaseBasedDataColumnNames = columnNames => this.caseBasedDataColumnNames = columnNames;
+  @action setCaseBasedDataRowCount = rowCount => this.caseBasedDataRowCount = rowCount;
+  @action setCaseBasedDataAttributeMapping = attributeMapping => this.caseBasedDataAttributeMapping = attributeMapping;
+  @action setCaseBasedDataAttributeMappingStatus = attributeMappingStatus => this.caseBasedDataAttributeMappingStatus = attributeMappingStatus;
 
   @action
   unbindShinyInputs = () => {
@@ -136,6 +174,7 @@ export default class AppManager {
 
   @action
   setFileUploadProgress = progress => {
+    console.log('AppManager:setFileUploadProgress', progress);
     this.fileUploadProgress = progress;
   }
 
@@ -147,8 +186,6 @@ export default class AppManager {
 
   @action
   setShinyMessage = msg => {
-    console.log(msg);
     this.shinyMessage = msg;
   }
-
 }

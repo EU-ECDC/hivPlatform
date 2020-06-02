@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
-import Skeleton from '@material-ui/lab/Skeleton';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,10 +27,18 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import CheckIcon from '@material-ui/icons/Check';
 import TabPanel from './TabPanel';
 import Btn from './Btn';
+import FormatBytes from '../utilities/FormatBytes'
 
 const userStyles = makeStyles({
   header: {
-    // textTransform: 'uppercase'
+    width: 142,
+    fontWeight: 'bold'
+  },
+  content: {
+    maxWidth: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   }
 });
 
@@ -50,6 +57,12 @@ const EnhancedTableToolbar = (props) => {
   );
 };
 
+const UploadProgressBar = (props) => {
+  const { progress } = props;
+  if (progress === null) return null;
+  return <LinearProgress variant='determinate' value={progress * 100} color='secondary'/>
+};
+
 const TabUploadCase = (props) => {
   const { appManager } = props;
   const classes = userStyles();
@@ -63,6 +76,29 @@ const TabUploadCase = (props) => {
     }
   );
 
+  let attrMappingSelectOptions = [];
+  if (appManager.caseBasedDataColumnNames !== null) {
+    attrMappingSelectOptions = appManager.caseBasedDataColumnNames.map(colName => (
+      <MenuItem key={colName} value={colName} dense>{colName}</MenuItem>
+    ));
+  }
+
+  const attrMappingTableRows = appManager.CaseBasedDataAttributeMappingArray.map(entry => (
+    <TableRow hover key={entry.Key}>
+      <TableCell>{entry.Key}</TableCell>
+      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+        <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue={entry.Val} disableUnderline>
+          <MenuItem value='' dense>&nbsp;</MenuItem>
+          {attrMappingSelectOptions}
+        </Select>
+      </TableCell>
+      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+        <Input style={{ width: '100%', fontSize: '0.75rem' }}></Input>
+      </TableCell>
+    </TableRow>
+  ));
+
+
   return (
     <TabPanel>
       <Grid container spacing={2}>
@@ -75,22 +111,14 @@ const TabUploadCase = (props) => {
           <input style={{ display: 'none' }} id='caseUploadBtn' className='uploadBtn' type='file' />
           <Tooltip title='Select case-based data file'>
             <label htmlFor='caseUploadBtn'>
-              <Btn><CloudUploadIcon/>&nbsp;Upload data</Btn>
+              <Btn style={{ marginBottom: 6 }}><CloudUploadIcon/>&nbsp;Upload data</Btn>
             </label>
           </Tooltip>
-          <Skeleton variant='text' width='100%' animation='wave' />
-          {
-            appManager.fileUploadProgress &&
-            <LinearProgress
-              variant='determinate'
-              value={appManager.fileUploadProgress * 100}
-              color='secondary'
-            />
-          }
           <Typography variant='body2' color='textSecondary'>
             Maximum file size: 70MB<br />
             Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)
           </Typography>
+          <UploadProgressBar progress={appManager.fileUploadProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>
@@ -100,16 +128,19 @@ const TabUploadCase = (props) => {
                 <Table>
                   <TableBody>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File name</TableCell><TableCell>{appManager.caseBasedDataFileName}</TableCell>
+                      <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataFileName}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File size</TableCell><TableCell>{appManager.caseBasedDataFileSize}</TableCell>
+                      <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataPath}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File type</TableCell><TableCell>{appManager.caseBasedDataFileType}</TableCell>
+                      <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appManager.caseBasedDataFileSize)}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File path</TableCell><TableCell>{appManager.caseBasedDataPath}</TableCell>
+                      <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataFileType}</TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>Number of records</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataRowCount}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -118,6 +149,11 @@ const TabUploadCase = (props) => {
                 <Table>
                   <TableBody>
                     <TableRow hover><TableCell className={classes.header}>Column names</TableCell></TableRow>
+                    <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
+                      <div style={{overflow: 'auto', maxHeight: 164}}>
+                        {appManager.CaseBasedDataColumnNamesString}
+                      </div>
+                    </TableCell></TableRow>
                   </TableBody>
                 </Table>
               </Grid>
@@ -145,41 +181,12 @@ const TabUploadCase = (props) => {
                 <TableHead>
                   <TableRow>
                     <TableCell width='30%'>Attribute</TableCell>
-                    <TableCell width='40%'>Input data column</TableCell>
-                    <TableCell width='30%'>Default value</TableCell>
+                    <TableCell width='40%'>Uploaded data column</TableCell>
+                    <TableCell width='30%'>Override value</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow hover>
-                    <TableCell>RecordId</TableCell>
-                    <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue='' disableUnderline>
-                        <MenuItem value='' dense>&nbsp;</MenuItem>
-                        <MenuItem value='recordId' dense>recordid</MenuItem>
-                        <MenuItem value='gender' dense>gender</MenuItem>
-                        <MenuItem value='transmission' dense>transmission</MenuItem>
-                        <MenuItem value='dateOfDiagnosisYear' dense>dateofdiagnosisyear</MenuItem>
-                      </Select>
-                    </TableCell>
-                    <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-                      <Input style={{ width: '100%', fontSize: '0.75rem' }}></Input>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>Gender</TableCell>
-                    <TableCell style={{ padding: '4px 16px 0px 16px'}}>
-                      <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue='' disableUnderline>
-                        <MenuItem value='' dense>&nbsp;</MenuItem>
-                        <MenuItem value='recordId' dense>recordid</MenuItem>
-                        <MenuItem value='gender' dense>gender</MenuItem>
-                        <MenuItem value='transmission' dense>transmission</MenuItem>
-                        <MenuItem value='dateOfDiagnosisYear' dense>dateofdiagnosisyear</MenuItem>
-                      </Select>
-                    </TableCell>
-                    <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-                      <Input disabled style={{ width: '100%', fontSize: '0.75rem' }}></Input>
-                    </TableCell>
-                  </TableRow>
+                  {attrMappingTableRows}
                 </TableBody>
               </Table>
             </Grid>

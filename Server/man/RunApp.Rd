@@ -4,7 +4,7 @@
 \alias{RunApp}
 \title{RunApp}
 \usage{
-RunApp(launchBrowser = FALSE)
+RunApp(launchBrowser = getOption("shiny.launch.browser", interactive()))
 }
 \arguments{
 \item{launchBrowser}{Logical indicating to open the app in a newly open web browser}

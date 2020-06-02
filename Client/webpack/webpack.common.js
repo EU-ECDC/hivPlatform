@@ -48,8 +48,8 @@ module.exports = {
     new webpack.ProgressPlugin(),
   ],
   performance: {
-    maxEntrypointSize: 1024000,
-    maxAssetSize: 1024000
+    maxEntrypointSize: 2048000,
+    maxAssetSize: 2048000
   },
   node: {
     Buffer: false,

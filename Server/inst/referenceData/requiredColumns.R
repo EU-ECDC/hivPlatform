@@ -157,5 +157,126 @@ list(
     type = 'character',
     values = c('', 'UNK', 'A', 'D'),
     defaultValue = NA_character_
+  ),
+
+  YearOfArrivalYear = list(
+    description = 'Year of arrival',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  YearOfArrivalQuarter = list(
+    description = 'Quarter of arrival',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  YearOfArrivalMonth = list(
+    description = 'Month of arrival',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  YearOfArrivalWeek = list(
+    description = 'Week of arrival',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  YearOfArrivalDay = list(
+    description = 'Day of arrival',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  Art = list(
+    description = 'Art',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  ArtDateYear = list(
+    description = 'Year of art',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  ArtDateQuarter = list(
+    description = 'Quarter of art',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  ArtDateMonth = list(
+    description = 'Month of art',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  ArtDateWeek = list(
+    description = 'Week of art',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  ArtDateDay = list(
+    description = 'Day of art',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  CD4Latest = list(
+    description = 'Latest CD4',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  CD4LatestDateYear = list(
+    description = 'Year of latest CD4',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  CD4LatestDateQuarter = list(
+    description = 'Quarter of latest CD4',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  CD4LatestDateMonth = list(
+    description = 'Month of latest CD4',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  CD4LatestDateWeek = list(
+    description = 'Week of latest CD4',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  CD4LatestDateDay = list(
+    description = 'Day of latest CD4',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  VLLatest = list(
+    description = 'Latest VL',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  VLLatestDateYear = list(
+    description = 'Year of latest VL',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  VLLatestDateQuarter = list(
+    description = 'Quarter of latest VL',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  VLLatestDateMonth = list(
+    description = 'Month of latest VL',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  VLLatestDateWeek = list(
+    description = 'Week of latest VL',
+    type = 'character',
+    defaultValue = NA_character_
+  ),
+  CLLatestDateDay = list(
+    description = 'Day of latest VL',
+    type = 'integer',
+    defaultValue = NA_integer_
+  ),
+  AcuteInfection = list(
+    description = 'Acute infection',
+    type = 'character',
+    defaultValue = NA_character_
   )
 )

@@ -11,15 +11,14 @@
 #' @export
 AppServer <- function(input, output, session)
 {
-  appManager <- AppManager$new(session)
-
-  print(tempdir())
+  appMgr <- AppManager$new(session)
 
 #  session$onSessionEnded(function() {
 #    shiny::stopApp()
 #  })
 
-  Events(input, output, session, appManager)
+  # Respond to events
+  Events(input, output, session, appMgr)
 
   return(invisible(NULL))
 }

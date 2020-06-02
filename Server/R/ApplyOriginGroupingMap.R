@@ -18,9 +18,11 @@ ApplyOriginGroupingMap <- function(inputData, map)
 {
   data <- copy(inputData$Table)
 
-  data[map,
-       GroupedRegionOfOrigin := GroupedRegionOfOrigin,
-       on = "FullRegionOfOrigin"]
+  data[
+    map,
+    GroupedRegionOfOrigin := GroupedRegionOfOrigin,
+    on = 'FullRegionOfOrigin'
+  ]
 
   data[, GroupedRegionOfOrigin := droplevels(GroupedRegionOfOrigin)]
   inputData$Table <- data
