@@ -388,19 +388,23 @@ AppManager <- R6::R6Class(
       private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
     },
 
-    PrepareAggregatedData = function() {
+    PrepareAggregatedData = function(strata = NULL) {
       miData <- self$FinalAdjustedCaseBasedData$Table[Imputation != 0]
-      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(miData, splitBy = 'Imputation')
+      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(
+        miData,
+        splitBy = 'Imputation',
+        strata = strata
+      )
 
       return(invisible(self))
     },
 
-    PrepareBootstrapAggregatedData = function() {
+    PrepareBootstrapAggregatedData = function(strata = NULL) {
       bootCaseBasedDataSets <- private$Catalogs$BootstrapCaseBasedDataSets
       bootAggregatedDataSets <- lapply(
         bootCaseBasedDataSets,
         function(bootCaseBasedDataSet) {
-          lapply(bootCaseBasedDataSet, PrepareDataSetsForModel)
+          lapply(bootCaseBasedDataSet, PrepareDataSetsForModel, strata = strata)
         }
       )
 
