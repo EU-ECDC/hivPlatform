@@ -28,14 +28,14 @@ GetPreliminaryAttributesMapping <- function(origData)
   # Get column mapping
   attrMapping <- sapply(names(columnSpecs), function(x) NULL)
   origColNames <- names(origData)
-  # requiredColumnName <- 'Transmission'
+  # requiredColumnName <- 'FirstCD4DateYear'
   for (requiredColumnName in names(columnSpecs)) {
     # Fuzzy string matching
     bestMatchColumn <- origColNames[which.min(adist(requiredColumnName, origColNames, ignore.case = TRUE))]
     # Remove matched column from searching in the next step.
     if (!is.na(bestMatchColumn)) {
-      origColNames <- setdiff(origColNames, requiredColumnName)
       attrMapping[[requiredColumnName]] <- bestMatchColumn
+      origColNames <- setdiff(origColNames, bestMatchColumn)
     }
   }
 

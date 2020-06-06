@@ -2,16 +2,15 @@ library(hivModelling)
 library(hivEstimatesAccuracy2)
 
 # Define count of MI data sets
-M <- 2
+M <- 5
 
 # Define count of bootstrap data sets
-B <- 5
+B <- 10
 
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
-# appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/BE.csv')
 appMgr$PreProcessCaseBasedData()
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 
@@ -37,6 +36,20 @@ appMgr$FitHIVModelToBootstrapData()
 # STEP 6 - Calculate statistics for every output column --------------------------------------------
 
 appMgr$ComputeHIVBootstrapStatistics()
-#
-# appMgr$AttributeMapping
-# appMgr$AttributeMappingStatus
+
+# STEP 7 - Explore ---------------------------------------------------------------------------------
+
+# Extract betas and plot scatter plots pair-wise
+betas <- t(sapply(appMgr$GetFlatHIVBootstrapResults('Param'), '[[', 'Beta'))
+colnames(betas) <- sprintf('Beta%d', seq_len(ncol(betas)))
+pairs(betas)
+
+# Extract thetas and plot scatter plots pair-wise
+thetas <- t(sapply(appMgr$GetFlatHIVBootstrapResults('Param'), '[[', 'Theta'))
+colnames(thetas) <- sprintf('Theta%d', seq_len(ncol(thetas)))
+pairs(thetas)
+
+# Check statistics (quantiles, means)
+appMgr$HIVBootstrapStatistics$Beta
+appMgr$HIVBootstrapStatistics$Theta
+appMgr$HIVBootstrapStatistics$MainOutputs$N_HIV_Obs_M

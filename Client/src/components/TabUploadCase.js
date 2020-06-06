@@ -169,9 +169,11 @@ const TabUploadCase = (props) => {
             Input data set to be mapped to internal attributes.<br />
             Adjust mapping and press 'Apply mapping' button.
           </Typography>
+          {/*
           <Typography variant='body2'>
             <CheckIcon style={{ width: '0.75rem', height: '0.75rem'}}/>&nbsp;Applied mapping is valid.
           </Typography>
+          */}
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>

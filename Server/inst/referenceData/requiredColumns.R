@@ -269,7 +269,7 @@ list(
     type = 'character',
     defaultValue = NA_character_
   ),
-  CLLatestDateDay = list(
+  VLLatestDateDay = list(
     description = 'Day of latest VL',
     type = 'integer',
     defaultValue = NA_integer_
