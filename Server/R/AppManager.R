@@ -206,7 +206,7 @@ AppManager <- R6::R6Class(
 
         PrintAlert(
           'Fit to data set {.val {i}} done |',
-          'Run time: {.timestamp {format(Sys.time() - startTime)}}',
+          'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
           type = 'success'
         )
       }
@@ -286,7 +286,7 @@ AppManager <- R6::R6Class(
 
           PrintAlert(
             'Bootstrap fit to data set {.val {j}} using initial parameters from adjusted data fit {.val {i}} done |',
-            'Run time: {.timestamp {format(Sys.time() - startTime)}}',
+            'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
             type = 'success'
           )
         }

@@ -2,10 +2,10 @@ library(hivModelling)
 library(hivEstimatesAccuracy2)
 
 # Define count of MI data sets
-M <- 5
+M <- 2
 
 # Define count of bootstrap data sets
-B <- 10
+B <- 5
 
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
@@ -31,7 +31,7 @@ appMgr$GenerateBoostrapCaseBasedDataSets(bsCount = B)
 
 # STEP 5 - Fit the model to M x B bootstrapped case-based datasets ---------------------------------
 
-appMgr$FitHIVModelToBootstrapData()
+appMgr$FitHIVModelToBootstrapData(verbose = TRUE)
 
 # STEP 6 - Calculate statistics for every output column --------------------------------------------
 
