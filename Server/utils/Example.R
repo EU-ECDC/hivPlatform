@@ -31,7 +31,7 @@ appMgr$GenerateBoostrapCaseBasedDataSets(bsCount = B)
 
 # STEP 5 - Fit the model to M x B bootstrapped case-based datasets ---------------------------------
 
-appMgr$FitHIVModelToBootstrapData(verbose = TRUE)
+appMgr$FitHIVModelToBootstrapData(verbose = FALSE)
 
 # STEP 6 - Calculate statistics for every output column --------------------------------------------
 
@@ -53,3 +53,61 @@ pairs(thetas)
 appMgr$HIVBootstrapStatistics$Beta
 appMgr$HIVBootstrapStatistics$Theta
 appMgr$HIVBootstrapStatistics$MainOutputs$N_HIV_Obs_M
+
+
+bsCount <- B
+bootResults <- list()
+verbose <- FALSE
+# i <- 1
+timeOut <- mean(sapply(appMgr$HIVModelResults, '[[', 'RunTime')) * 5
+strata <- NULL
+results <- list()
+for (i in seq_along(appMgr$HIVModelResults)) {
+  hivModelResults <- appMgr$HIVModelResults[[i]]
+
+  context <- hivModelResults$Context
+  param <- hivModelResults$Results$Param
+  info <- hivModelResults$Results$Info
+
+  context$Settings <- modifyList(
+    context$Settings,
+    list(
+      ModelFilePath = NULL,
+      InputDataPath = NULL,
+      Verbose = verbose
+    ),
+    keep.null = TRUE
+  )
+
+  mainCaseBasedDataSet <- appMgr$FinalAdjustedCaseBasedData$Table[Imputation == i]
+
+  bsResults <- list()
+  # j <- 1
+  for (j in seq_along(bsCount)) {
+    startTime <- Sys.time()
+
+    indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
+    bootCaseBasedDataSet <- mainCaseBasedDataSet[indices]
+
+    bootAggregatedData <- PrepareDataSetsForModel(bootCaseBasedDataSet)
+
+    bootContext <- GetRunContext(
+      parameters = context$Parameters,
+      settings = context$Settings,
+      data = bootAggregatedData
+    )
+
+    bootData <- GetPopulationData(bootContext)
+
+    bsResults[[j]] <- PerformMainFit(bootContext, bootData, param = param, info = info)
+
+    PrintAlert(
+      'Fitting using initial parameters from adjusted data {.val {i}} |',
+      'Bootstrap fit {.val {j}} |',
+      'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
+      type = 'success'
+    )
+  }
+
+  results[[i]] <- bsResults
+}

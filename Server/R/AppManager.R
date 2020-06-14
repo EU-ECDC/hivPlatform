@@ -198,15 +198,18 @@ AppManager <- R6::R6Class(
         data <- hivModelling::GetPopulationData(context)
         fitResults <- hivModelling::PerformMainFit(context, data)
 
+        runTime <- Sys.time() - startTime
+
         results[[i]] <-  list(
           Context = context,
           Data = data,
-          Results = fitResults
+          Results = fitResults,
+          RunTime = runTime
         )
 
         PrintAlert(
           'Fit to data set {.val {i}} done |',
-          'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
+          'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
           type = 'success'
         )
       }
