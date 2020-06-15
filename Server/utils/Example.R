@@ -2,10 +2,10 @@ library(hivModelling)
 library(hivEstimatesAccuracy2)
 
 # Define count of MI data sets
-M <- 2
+M <- 5
 
 # Define count of bootstrap data sets
-B <- 5
+B <- 10
 
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
@@ -58,10 +58,10 @@ appMgr$HIVBootstrapStatistics$MainOutputs$N_HIV_Obs_M
 bsCount <- B
 bootResults <- list()
 verbose <- FALSE
-# i <- 1
 timeOut <- mean(sapply(appMgr$HIVModelResults, '[[', 'RunTime')) * 5
 strata <- NULL
 results <- list()
+# i <- 1
 for (i in seq_along(appMgr$HIVModelResults)) {
   hivModelResults <- appMgr$HIVModelResults[[i]]
 
@@ -83,7 +83,7 @@ for (i in seq_along(appMgr$HIVModelResults)) {
 
   bsResults <- list()
   # j <- 1
-  for (j in seq_along(bsCount)) {
+  for (j in seq_len(bsCount)) {
     startTime <- Sys.time()
 
     indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
@@ -111,3 +111,5 @@ for (i in seq_along(appMgr$HIVModelResults)) {
 
   results[[i]] <- bsResults
 }
+
+length(bsResults)
