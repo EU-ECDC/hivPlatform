@@ -1,12 +1,6 @@
 library(hivModelling)
 library(hivEstimatesAccuracy2)
 
-# Define count of MI data sets
-M <- 2
-
-# Define count of bootstrap data sets
-B <- 3
-
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
 appMgr <- AppManager$new()
@@ -19,35 +13,34 @@ appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 adjustmentSpecs <- GetAdjustmentSpecs(c(
   'Multiple Imputation using Chained Equations - MICE'
 ))
-appMgr$AdjustCaseBasedData(adjustmentSpecs, miCount = M)
+appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
 
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 
 appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = FALSE))
 
-# STEP 5 - Generate B bootstrapped case-based datasets for each pseudo-complete datasets -----------
+# STEP 4 - Fit the model to M x B pseudo-complete bootstrapped datasets get the estimates ----------
 
-appMgr$FitHIVModelToBootstrapData(bsCount = B, verbose = FALSE)
+appMgr$FitHIVModelToBootstrapData(bsCount = 3, verbose = FALSE)
 
-# STEP 6 - Calculate statistics for every output column --------------------------------------------
+# STEP 5 - Calculate statistics for every output column --------------------------------------------
 
 appMgr$ComputeHIVBootstrapStatistics()
 
-# STEP 7 - Explore ---------------------------------------------------------------------------------
+# STEP 6 - Explore ---------------------------------------------------------------------------------
 
-# Extract betas and plot scatter plots pair-wise
-betas <- t(sapply(appMgr$GetFlatHIVBootstrapResults('Param'), '[[', 'Beta'))
-colnames(betas) <- sprintf('Beta%d', seq_len(ncol(betas)))
-pairs(betas)
+# All data sets
+hist(appMgr$HIVBootstrapStatistics$RunTime)
+table(appMgr$HIVBootstrapStatistics$Converged)
 
-# Extract thetas and plot scatter plots pair-wise
-thetas <- t(sapply(appMgr$GetFlatHIVBootstrapResults('Param'), '[[', 'Theta'))
-colnames(thetas) <- sprintf('Theta%d', seq_len(ncol(thetas)))
-pairs(thetas)
-
-# Check statistics (quantiles, means)
+# Successful fits only data sets
 appMgr$HIVBootstrapStatistics$Beta
+pairs(appMgr$HIVBootstrapStatistics$Beta)
+appMgr$HIVBootstrapStatistics$BetaStats
+
 appMgr$HIVBootstrapStatistics$Theta
-appMgr$HIVBootstrapStatistics$MainOutputs$N_HIV_Obs_M
+pairs(appMgr$HIVBootstrapStatistics$Theta)
+appMgr$HIVBootstrapStatistics$ThetaStats
 
-
+appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIV_Obs_M
+appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M

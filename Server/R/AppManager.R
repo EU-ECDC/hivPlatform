@@ -40,8 +40,6 @@ AppManager <- R6::R6Class(
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
-        BootstrapCaseBasedDataSets = NULL,
-        BootstrapAggregatedDataSets = NULL,
 
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL
@@ -142,8 +140,8 @@ AppManager <- R6::R6Class(
 
     # 5. Adjust case-based data --------------------------------------------------------------------
     AdjustCaseBasedData = function(
-      adjustmentSpecs,
-      miCount = NULL
+      miCount = NULL,
+      adjustmentSpecs
     ) {
       if (is.null(miCount)) {
         miCount <- private$Catalogs$MICount
@@ -188,19 +186,18 @@ AppManager <- R6::R6Class(
 
       results <- list()
       for (i in seq_along(aggregatedDataSets)) {
-        startTime <- Sys.time()
-
         context <- hivModelling::GetRunContext(
           data = aggregatedDataSets[[i]],
           settings = settings,
           parameters = parameters
         )
         data <- hivModelling::GetPopulationData(context)
-        fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
 
+        startTime <- Sys.time()
+        fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
         runTime <- Sys.time() - startTime
 
-        results[[i]] <-  list(
+        results[[i]] <- list(
           Context = context,
           Data = data,
           Results = fitResults,
@@ -220,41 +217,10 @@ AppManager <- R6::R6Class(
     },
 
     # 7. Perform non-parametric bootstrap ----------------------------------------------------------
-    GenerateBoostrapCaseBasedDataSets = function(
-      bsCount = NULL
-    ) {
-      if (is.null(bsCount)) {
-        bsCount <- private$Catalogs$BSCount
-      } else {
-        private$Catalogs$BSCount <- bsCount
-      }
-
-      caseBasedDataSets <- split(
-        self$FinalAdjustedCaseBasedData$Table[Imputation != 0],
-        by = 'Imputation'
-      )
-
-      bootCaseBasedDataSets <- list()
-      for (i in seq_along(caseBasedDataSets)) {
-        caseBasedData <- caseBasedDataSets[[i]]
-        bootCaseBasedDataSet <- list()
-        for (j in seq_len(bsCount)) {
-          indices <- sample(nrow(caseBasedData), replace = TRUE)
-          bootCaseBasedDataSet[[j]] <- caseBasedData[indices]
-        }
-        bootCaseBasedDataSets[[i]] <- bootCaseBasedDataSet
-      }
-
-      private$Catalogs$BootstrapCaseBasedDataSets <- bootCaseBasedDataSets
-
-      private$PrepareBootstrapAggregatedData()
-
-      return(invisible(self))
-    },
-
     FitHIVModelToBootstrapData = function(
       bsCount = NULL,
-      verbose = FALSE
+      verbose = FALSE,
+      maxRunTimeFactor = 3
     ) {
       if (is.null(bsCount)) {
         bsCount <- private$Catalogs$BSCount
@@ -263,9 +229,15 @@ AppManager <- R6::R6Class(
       }
 
       avgRunTime <- mean(sapply(private$Catalogs$HIVModelResults, '[[', 'RunTime'))
-      maxRunTime <- as.difftime(avgRunTime * 5, units = 'secs')
+      maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
+
+      PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
+
       results <- list()
       for (i in seq_along(private$Catalogs$HIVModelResults)) {
+
+        PrintH2('Adjusted data {.val {i}}')
+
         hivModelResults <- private$Catalogs$HIVModelResults[[i]]
 
         context <- hivModelResults$Context
@@ -285,14 +257,14 @@ AppManager <- R6::R6Class(
         mainCaseBasedDataSet <- self$FinalAdjustedCaseBasedData$Table[Imputation == i]
 
         bootResults <- list()
-        jSucc <- 0
-        jFail <- 0
-        while (jSucc < bsCount) {
-          startTime <- Sys.time()
+        jSucc <- 1
+        j <- 0
+        while (jSucc <= bsCount) {
+          j <- j + 1
 
+          # Bootstrap data set
           indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
           bootCaseBasedDataSet <- mainCaseBasedDataSet[indices]
-
           bootAggregatedData <- PrepareDataSetsForModel(bootCaseBasedDataSet)
 
           bootContext <- hivModelling::GetRunContext(
@@ -303,27 +275,31 @@ AppManager <- R6::R6Class(
 
           bootData <- hivModelling::GetPopulationData(bootContext)
 
+          startTime <- Sys.time()
           bootResult <- hivModelling::PerformMainFit(
             bootContext, bootData, param = param, info = info, attemptSimplify = FALSE,
             maxRunTime = maxRunTime
           )
+          runTime <- Sys.time() - startTime
 
-          if (bootResult$Converged) {
-            msgType <- 'success'
-            jSucc <- jSucc + 1
-          } else {
-            msgType <- 'failure'
-            jFail <- jFail + 1
-          }
+          msgType <- ifelse(bootResult$Converged, 'success', 'danger')
 
           PrintAlert(
-            'Fitting using initial parameters from adjusted data {.val {i}} |',
-            'Bootstrap fit {.val {jSucc + jFail}} |',
-            'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
+            'Fit to data set {.val {jSucc}} done |',
+            'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
             type = msgType
           )
 
-          bootResults[[jSucc + jFail]] <- bootResult
+          bootResults[[j]] <- list(
+            Context = bootContext,
+            Data = bootData,
+            Results = bootResult,
+            RunTime = runTime
+          )
+
+          if (bootResult$Converged) {
+            jSucc <- jSucc + 1
+          }
         }
 
         results[[i]] <- bootResults
@@ -335,42 +311,63 @@ AppManager <- R6::R6Class(
     },
 
     ComputeHIVBootstrapStatistics = function() {
-      bootMainOutputsList <- self$GetFlatHIVBootstrapResults('MainOutputs')
+      flatList <- self$FlatHIVBootstrapModelResults
 
-      colNames <- colnames(bootMainOutputsList[[1]])
-      bootMainOutputsStats <- setNames(lapply(colNames, function(colName) {
-        resultSample <- sapply(bootMainOutputsList, '[[', colName)
+      resultsList <- lapply(flatList, '[[', 'Results')
+
+      runTime <- sapply(resultsList, '[[', 'RunTime')
+
+      converged <- sapply(resultsList, '[[', 'Converged')
+
+      succFlatList <- Filter(function(item) item$Results$Converged, flatList)
+
+      succResultsList <- lapply(succFlatList, '[[', 'Results')
+
+      info <- lapply(succResultsList, '[[', 'Info')[[1]]
+      years <- info$ModelMinYear:(info$ModelMaxYear - 1)
+
+      mainOutputList <- lapply(succResultsList, '[[', 'MainOutputs')
+      colNames <- colnames(mainOutputList[[1]])
+      mainOutputStats <- setNames(lapply(colNames, function(colName) {
+        resultSample <- sapply(mainOutputList, '[[', colName)
         result <- cbind(
           t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975))),
-          Mean = apply(resultSample, 1, mean)
+          Mean = apply(resultSample, 1, mean),
+          Std = apply(resultSample, 1, sd)
         )
+        rownames(result) <- years
         return(result)
       }), colNames)
 
-      bootParamList <- self$GetFlatHIVBootstrapResults('Param')
-
-      betas <- as.data.table(t(sapply(bootParamList, '[[', 'Beta')))
+      succParamList <- lapply(succResultsList, '[[', 'Param')
+      betas <- as.data.table(t(sapply(succParamList, '[[', 'Beta')))
       setnames(betas, sprintf('Beta%d', seq_len(ncol(betas))))
       bootBetasStats <- lapply(betas, function(col) {
         c(
           quantile(col, probs = c(0.025, 0.5, 0.975)),
-          Mean = mean(col)
+          Mean = mean(col),
+          Std = sd(col)
         )
       })
 
-      thetas <- as.data.table(t(sapply(bootParamList, '[[', 'Theta')))
+      thetas <- as.data.table(t(sapply(succParamList, '[[', 'Theta')))
       setnames(thetas, sprintf('Theta%d', seq_len(ncol(thetas))))
       bootThetasStats <- lapply(thetas, function(col) {
         c(
           quantile(col, probs = c(0.025, 0.5, 0.975)),
-          Mean = mean(col)
+          Mean = mean(col),
+          Std = sd(col)
         )
       })
 
       private$Catalogs$HIVBootstrapStatistics <- list(
-        MainOutputs = bootMainOutputsStats,
-        Beta = bootBetasStats,
-        Theta = bootThetasStats
+        RunTime = runTime,
+        Converged = converged,
+        Beta = betas,
+        Theta = thetas,
+        MainOutputsStats = mainOutputStats,
+        BetaStats = bootBetasStats,
+        ThetaStats = bootThetasStats
       )
 
       return(invisible(self))
@@ -417,13 +414,6 @@ AppManager <- R6::R6Class(
 
     SetBSCount = function(count) {
       private$Catalogs$BSCount <- max(count, 0)
-    },
-
-    GetFlatHIVBootstrapResults = function(itemName) {
-      flatBootResults <- lapply(
-        Reduce(c, private$Catalogs$HIVBootstrapModelResults), '[[', itemName
-      )
-      return(flatBootResults)
     }
   ),
 
@@ -492,7 +482,7 @@ AppManager <- R6::R6Class(
       }
     },
 
-    CaseBasedDataPath = function(caseBasedDataPath) {
+    CaseBasedDataPath = function() {
       return(private$Catalogs$CaseBasedDataPath)
     },
 
@@ -555,6 +545,10 @@ AppManager <- R6::R6Class(
 
     HIVBootstrapModelResults = function() {
       return(private$Catalogs$HIVBootstrapModelResults)
+    },
+
+    FlatHIVBootstrapModelResults = function() {
+      return(Reduce(c, private$Catalogs$HIVBootstrapModelResults))
     },
 
     HIVBootstrapStatistics = function() {
