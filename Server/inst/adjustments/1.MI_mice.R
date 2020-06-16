@@ -48,7 +48,7 @@ list(
   ## Adjustment function ----
   AdjustmentFunction = function(inputData, parameters) {
 
-    require(data.table)
+    require(data.table, quietly = TRUE)
 
     # Perform imputations per data set.
     # This is the actual worker function.

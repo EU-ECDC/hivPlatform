@@ -196,7 +196,7 @@ AppManager <- R6::R6Class(
           parameters = parameters
         )
         data <- hivModelling::GetPopulationData(context)
-        fitResults <- hivModelling::PerformMainFit(context, data)
+        fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
 
         runTime <- Sys.time() - startTime
 
@@ -252,8 +252,19 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    FitHIVModelToBootstrapData = function(verbose = FALSE) {
-      bootResults <- list()
+    FitHIVModelToBootstrapData = function(
+      bsCount = NULL,
+      verbose = FALSE
+    ) {
+      if (is.null(bsCount)) {
+        bsCount <- private$Catalogs$BSCount
+      } else {
+        private$Catalogs$BSCount <- bsCount
+      }
+
+      avgRunTime <- mean(sapply(private$Catalogs$HIVModelResults, '[[', 'RunTime'))
+      maxRunTime <- as.difftime(avgRunTime * 5, units = 'secs')
+      results <- list()
       for (i in seq_along(private$Catalogs$HIVModelResults)) {
         hivModelResults <- private$Catalogs$HIVModelResults[[i]]
 
@@ -271,33 +282,54 @@ AppManager <- R6::R6Class(
           keep.null = TRUE
         )
 
-        iterResults <- list()
-        for (j in seq_along(private$Catalogs$BootstrapAggregatedDataSets[[i]])) {
+        mainCaseBasedDataSet <- self$FinalAdjustedCaseBasedData$Table[Imputation == i]
+
+        bootResults <- list()
+        jSucc <- 0
+        jFail <- 0
+        while (jSucc < bsCount) {
           startTime <- Sys.time()
 
-          bootAggregatedData <- private$Catalogs$BootstrapAggregatedDataSets[[i]][[j]]
+          indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
+          bootCaseBasedDataSet <- mainCaseBasedDataSet[indices]
 
-          bootContext <- GetRunContext(
+          bootAggregatedData <- PrepareDataSetsForModel(bootCaseBasedDataSet)
+
+          bootContext <- hivModelling::GetRunContext(
             parameters = context$Parameters,
             settings = context$Settings,
             data = bootAggregatedData
           )
 
-          bootData <- GetPopulationData(bootContext)
+          bootData <- hivModelling::GetPopulationData(bootContext)
 
-          iterResults[[j]] <- PerformMainFit(bootContext, bootData, param = param, info = info)
+          bootResult <- hivModelling::PerformMainFit(
+            bootContext, bootData, param = param, info = info, attemptSimplify = FALSE,
+            maxRunTime = maxRunTime
+          )
+
+          if (bootResult$Converged) {
+            msgType <- 'success'
+            jSucc <- jSucc + 1
+          } else {
+            msgType <- 'failure'
+            jFail <- jFail + 1
+          }
 
           PrintAlert(
-            'Bootstrap fit to data set {.val {j}} using initial parameters from adjusted data fit {.val {i}} done |',
+            'Fitting using initial parameters from adjusted data {.val {i}} |',
+            'Bootstrap fit {.val {jSucc + jFail}} |',
             'Run time: {.timestamp {prettyunits::pretty_dt(Sys.time() - startTime)}}',
-            type = 'success'
+            type = msgType
           )
+
+          bootResults[[jSucc + jFail]] <- bootResult
         }
 
-        bootResults[[i]] <- iterResults
+        results[[i]] <- bootResults
       }
 
-      private$Catalogs$HIVBootstrapModelResults <- bootResults
+      private$Catalogs$HIVBootstrapModelResults <- results
 
       return(invisible(self))
     },

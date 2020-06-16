@@ -47,8 +47,8 @@ list(
   ## Adjustment function ----
   AdjustmentFunction = function(inputData, parameters) {
 
-    require(data.table)
-    require(survival)
+    require(data.table, quietly = TRUE)
+    require(survival, quietly = TRUE)
 
     # A) SETUP -------------------------------------------------------------------------------------
 
