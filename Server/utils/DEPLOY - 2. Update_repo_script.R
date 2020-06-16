@@ -16,8 +16,8 @@ devtools::build(path = repoPath, binary = TRUE, args = c('--preclean'))
 descr <- as.data.frame(read.dcf(file = 'DESCRIPTION'))
 version <- as.character(descr$Version)
 
-tarFileName <- paste0('hivModelling_', version, '.tar.gz')
-zipFileName <- paste0('hivModelling_', version, '.zip')
+tarFileName <- paste0('hivEstimatesAccuracy2_', version, '.tar.gz')
+zipFileName <- paste0('hivEstimatesAccuracy2_', version, '.zip')
 
 # Copy package files to appropriate subfolders
 file.copy(

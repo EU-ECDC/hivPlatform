@@ -13,7 +13,7 @@ appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 adjustmentSpecs <- GetAdjustmentSpecs(c(
   'Multiple Imputation using Chained Equations - MICE'
 ))
-appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
+appMgr$AdjustCaseBasedData(miCount = 10, adjustmentSpecs)
 
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 
@@ -21,7 +21,7 @@ appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = FALSE))
 
 # STEP 4 - Fit the model to M x B pseudo-complete bootstrapped datasets get the estimates ----------
 
-appMgr$FitHIVModelToBootstrapData(bsCount = 3, verbose = FALSE)
+appMgr$FitHIVModelToBootstrapData(bsCount = 10, verbose = FALSE)
 
 # STEP 5 - Calculate statistics for every output column --------------------------------------------
 
