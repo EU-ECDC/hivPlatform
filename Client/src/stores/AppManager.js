@@ -58,6 +58,26 @@ export default class AppManager {
   caseBasedDataAttributeMappingStatus = null;
 
   @observable
+  adjustmentsRunProgress = null;
+
+  @observable
+  adjustmentsRunLog = null;
+
+  @observable
+  diagnosisYearFilterData = {
+    ScaleMinYear: null,
+    ScaleMaxYear: null,
+    ValueMinYear: null,
+    ValueMaxYear: null
+  };
+
+  @observable
+  diagnosisYearChartData = [];
+
+  @observable
+  diagnosisYearChartCategories = [];
+
+  @observable
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
   // Shiny custom event handlers
@@ -74,6 +94,16 @@ export default class AppManager {
       this.setCaseBasedDataRowCount(data.Payload.RowCount);
       this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
       this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
+    } else if (data.Type === 'ADJUSTMENTS_RUN_STARTED') {
+      this.setAdjustmentsRunLog(data.Payload.RunLog);
+      this.setAdjustmentsRunProgress(1);
+    } else if (data.Type === 'ADJUSTMENTS_RUN_FINISHED') {
+      this.setAdjustmentsRunLog(data.Payload.RunLog);
+      this.setAdjustmentsRunProgress(null);
+    } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
+      this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
+      this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
+      this.setDiagnosisYearChartCategories(data.Payload.DiagnosisYearChartCategories);
     }
   };
 
@@ -135,6 +165,17 @@ export default class AppManager {
   @action setCaseBasedDataRowCount = rowCount => this.caseBasedDataRowCount = rowCount;
   @action setCaseBasedDataAttributeMapping = attributeMapping => this.caseBasedDataAttributeMapping = attributeMapping;
   @action setCaseBasedDataAttributeMappingStatus = attributeMappingStatus => this.caseBasedDataAttributeMappingStatus = attributeMappingStatus;
+  @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
+  @action setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
+  @action setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
+  @action setDiagnosisYearFilterData = data => {
+    this.diagnosisYearFilterData.ScaleMinYear = data.ScaleMinYear;
+    this.diagnosisYearFilterData.ScaleMaxYear = data.ScaleMaxYear;
+    this.diagnosisYearFilterData.ValueMinYear = data.ValueMinYear;
+    this.diagnosisYearFilterData.ValueMaxYear = data.ValueMaxYear;
+  };
+  @action setDiagnosisYearChartData = data => this.diagnosisYearChartData = data;
+  @action setDiagnosisYearChartCategories = categories => this.diagnosisYearChartCategories = categories;
 
   @action
   unbindShinyInputs = () => {
@@ -171,12 +212,6 @@ export default class AppManager {
       console.log('inputValueSet: Shiny is not available');
     }
   };
-
-  @action
-  setFileUploadProgress = progress => {
-    console.log('AppManager:setFileUploadProgress', progress);
-    this.fileUploadProgress = progress;
-  }
 
   @action
   setActiveStep = step => {

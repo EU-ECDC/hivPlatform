@@ -44,5 +44,57 @@ Events <- function(input, output, session, appMgr)
         OriginGroupingType = 'REPCOUNTRY + UNK + OTHER'
       )
     ))
+
+    plotDT <- appMgr$PreProcessedCaseBasedData$Table
+    counts <- plotDT[, .(Count = .N), keyby = .(Gender, DateOfDiagnosisYear)]
+    categories <- sort(unique(counts$DateOfDiagnosisYear))
+
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'SUMMARY_DATA_PREPARED',
+      Status = 'SUCCESS',
+      Payload = list(
+        DiagnosisYearFilterData = list(
+          ScaleMinYear = min(categories),
+          ScaleMaxYear = max(categories),
+          ValueMinYear = min(categories),
+          ValueMaxYear = max(categories)
+        ),
+        DiagnosisYearChartCategories = categories,
+        DiagnosisYearChartData = list(
+          list(
+            name = 'Female',
+            data = counts[Gender == 'F', Count]
+          ),
+          list(
+            name = 'Male',
+            data = counts[Gender == 'M', Count]
+          )
+        )
+      )
+    ))
+  })
+
+  observeEvent(input$runAdjustBtn, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'ADJUSTMENTS_RUN_STARTED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = 'Adjustments run started'
+      )
+    ))
+
+    adjustmentSpecs <- GetAdjustmentSpecs(c(
+      'Multiple Imputation using Chained Equations - MICE'
+    ))
+    runLog <- capture.output(appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs))
+    runLog <- paste(runLog, collapse = '\n')
+
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'ADJUSTMENTS_RUN_FINISHED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = runLog
+      )
+    ))
   })
 }

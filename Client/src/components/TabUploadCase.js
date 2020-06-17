@@ -24,7 +24,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Chip from '@material-ui/core/Chip';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import CheckIcon from '@material-ui/icons/Check';
 import TabPanel from './TabPanel';
 import Btn from './Btn';
 import FormatBytes from '../utilities/FormatBytes'

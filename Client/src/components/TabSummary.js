@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
@@ -32,13 +33,17 @@ const userStyles = makeStyles({
   }
 });
 
-const TabSummary = () => {
+const TabSummary = (props) => {
+  const { appManager } = props;
   const classes = userStyles();
+
+  let opts = filterDiagChartOptions1;
+  opts.categories = appManager.diagnosisYearChartCategories;
 
   const zoomChart = (
     <Chart
-      options={filterDiagChartOptions1}
-      series={filterDiagChartSeries}
+      options={opts}
+      series={appManager.diagnosisYearChartData}
       type='bar'
       height={200}
     />
@@ -75,10 +80,13 @@ const TabSummary = () => {
             <Typography variant='overline'>Diagnosis year</Typography>
             <div style={{padding: '40px 100px 0 50px'}}>
               <Slider
-                min={1991}
-                max={1999}
-                marks={marks}
-                defaultValue={[1994, 1996]}
+                min={appManager.diagnosisYearFilterData.ScaleMinYear}
+                max={appManager.diagnosisYearFilterData.ScaleMaxYear}
+                marks={true}
+                defaultValue={[
+                  appManager.diagnosisYearFilterData.ValueMinYear,
+                  appManager.diagnosisYearFilterData.ValueMaxYear
+                ]}
                 valueLabelDisplay='on'
                 valueLabelFormat={value=> value.toFixed()}
                 classes={{
@@ -246,4 +254,4 @@ const TabSummary = () => {
 };
 
 
-export default TabSummary;
+export default observer(TabSummary);

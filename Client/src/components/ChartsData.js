@@ -80,7 +80,7 @@ export const filterDiagChartOptions1 = {
     axisTicks: {
       show: false,
     },
-    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+    categories: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014],
     tickPlacement: 'between',
   },
   yaxis: {
@@ -123,6 +123,7 @@ export const filterDiagChartOptions1 = {
 };
 
 export const marks = filterDiagChartOptions1.xaxis.categories.map(function (el) {
+  console.log(el);
   return ({
     value: el,
     label: el.toString()

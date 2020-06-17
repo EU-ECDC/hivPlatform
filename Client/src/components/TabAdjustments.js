@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -14,11 +15,23 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import TabPanel from './TabPanel';
 import Btn from './Btn';
 import Skel from './Skeleton';
 
-const TabAdjustments = () => {
+const AdjustmentsRunProgressBar = (props) => {
+  const { progress } = props;
+  if (progress === null) return null;
+  return <LinearProgress color='secondary' />
+};
+
+const TabAdjustments = (props) => {
+  const { appManager } = props;
+
+  const onRunAdjustBtnClick = () => {
+    appManager.btnClicked('runAdjustBtn');
+  }
 
   return (
     <TabPanel>
@@ -115,17 +128,15 @@ const TabAdjustments = () => {
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={3}>
-          <Btn><DirectionsRunIcon />&nbsp;Run adjustments</Btn>
+          <Btn onClick={onRunAdjustBtnClick}><DirectionsRunIcon />&nbsp;Run adjustments</Btn>
           <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
+          <AdjustmentsRunProgressBar progress={appManager.adjustmentsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre>
-              {`Example run log output
-
-Start time:
-End time:`}
+              {appManager.adjustmentsRunLog}
             </pre>
           </Paper>
         </Grid>
@@ -134,4 +145,4 @@ End time:`}
   );
 };
 
-export default TabAdjustments;
+export default observer(TabAdjustments);
