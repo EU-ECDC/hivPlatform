@@ -15,13 +15,13 @@ export default class AppManager {
 
   @observable
   steps = [
-    { title: 'Welcome', completed: false, disabled: false },
-    { title: 'Input data upload', completed: false, disabled: true},
-    { title: 'Data summary', completed: false, disabled: false},
-    { title: 'Adjustments', completed: false, disabled: false},
-    { title: 'Modelling', completed: false, disabled: false},
-    { title: 'Reports', completed: false, disabled: false},
-    { title: 'Outputs', completed: false, disabled: false},
+    { title: 'Welcome', completed: false, disabled: false, subSteps: []},
+    { title: 'Input data upload', completed: false, disabled: true, subSteps: [{ title: 'Case-based data' }, { title: 'Aggregated data' }]},
+    { title: 'Data summary', completed: false, disabled: false, subSteps: []},
+    { title: 'Adjustments', completed: false, disabled: false, subSteps: []},
+    { title: 'Modelling', completed: false, disabled: false, subSteps: []},
+    { title: 'Reports', completed: false, disabled: false, subSteps: []},
+    { title: 'Outputs', completed: false, disabled: false, subSteps: []},
   ];
 
   @observable
