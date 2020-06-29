@@ -1,30 +1,28 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import StepLabel from '@material-ui/core/StepLabel';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { StepContent } from '@material-ui/core';
 
 const LeftNav = (props) => {
-  const { steps, activeStep, onStepChange } = props;
+  const { steps, activeStepId, onStepChange, onSubStepChange } = props;
 
   return (
     <div style={{ minWidth: 300, backgroundColor: 'white' }}>
-      <Stepper nonLinear activeStep={activeStep} orientation='vertical'>
+      <Stepper nonLinear activeStep={activeStepId} orientation='vertical'>
         {steps.map((step, index) => (
           <Step key={index} completed={step.completed} disabled={step.disabled}>
             <StepButton onClick={() => onStepChange(index)} >
               <StepLabel>{step.title}</StepLabel>
             </StepButton>
-            <StepContent>
+            {step.subSteps && <StepContent>
               <TreeView
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                defaultExpanded={['2']}
+                selected={String(step.activeSubStepId)}
+                onNodeSelect={(event, subStepId) => onSubStepChange(index, parseInt(subStepId))}
               >
                 {
                   step.subSteps.map((subStep, index) => (
@@ -32,7 +30,7 @@ const LeftNav = (props) => {
                   ))
                 }
               </TreeView>
-            </StepContent>
+            </StepContent>}
           </Step>
         ))}
       </Stepper>
@@ -40,4 +38,4 @@ const LeftNav = (props) => {
   );
 };
 
-export default LeftNav;
+export default observer(LeftNav);

@@ -75,8 +75,12 @@ const RootElem = props => {
     </AppBar>
   );
 
-  const handleStepChange = step => {
-    appManager.setActiveStep(step);
+  const handleStepChange = stepId => {
+    appManager.setActiveStepId(stepId);
+  }
+
+  const handleSubStepChange = (stepId, subStepId) => {
+    appManager.setActiveSubStepId(stepId, subStepId);
   }
 
   return (
@@ -86,28 +90,29 @@ const RootElem = props => {
       <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}}>
         <LeftNav
           steps={appManager.steps}
-          activeStep={appManager.activeStep}
+          activeStepId={appManager.activeStepId}
           onStepChange={handleStepChange}
+          onSubStepChange={handleSubStepChange}
         />
-        <StepPanel panelId={0} activePanelId={appManager.activeStep} >
+        <StepPanel panelId={0} activePanelId={appManager.activeStepId} >
           <TabWelcome appManager={appManager}/>
         </StepPanel>
-        <StepPanel panelId={1} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={1} activePanelId={appManager.activeStepId}>
           <TabUpload appManager={appManager} />
         </StepPanel>
-        <StepPanel panelId={2} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={2} activePanelId={appManager.activeStepId}>
           <TabSummary appManager={appManager} />
         </StepPanel>
-        <StepPanel panelId={3} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={3} activePanelId={appManager.activeStepId}>
           <TabAdjustments appManager={appManager} />
         </StepPanel>
-        <StepPanel panelId={4} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={4} activePanelId={appManager.activeStepId}>
           <TabModelling appManager={appManager} />
         </StepPanel>
-        <StepPanel panelId={5} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={5} activePanelId={appManager.activeStepId}>
           <TabReports />
         </StepPanel>
-        <StepPanel panelId={6} activePanelId={appManager.activeStep}>
+        <StepPanel panelId={6} activePanelId={appManager.activeStepId}>
           <TabOutputs />
         </StepPanel>
       </Box>

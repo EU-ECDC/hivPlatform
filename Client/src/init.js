@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveStep(1);
+  appManager.setActiveStepId(1);
 
   appManager.setCaseBasedDataColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
 

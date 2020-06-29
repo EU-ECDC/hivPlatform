@@ -16,7 +16,16 @@ export default class AppManager {
   @observable
   steps = [
     { title: 'Welcome', completed: false, disabled: false, subSteps: []},
-    { title: 'Input data upload', completed: false, disabled: true, subSteps: [{ title: 'Case-based data' }, { title: 'Aggregated data' }]},
+    {
+      title: 'Input data upload',
+      completed: false,
+      disabled: false,
+      subSteps: [
+        { title: 'Case-based data' },
+        { title: 'Aggregated data' }
+      ],
+      activeSubStepId: 0
+    },
     { title: 'Data summary', completed: false, disabled: false, subSteps: []},
     { title: 'Adjustments', completed: false, disabled: false, subSteps: []},
     { title: 'Modelling', completed: false, disabled: false, subSteps: []},
@@ -25,7 +34,7 @@ export default class AppManager {
   ];
 
   @observable
-  activeStep = 0;
+  activeStepId = 0;
 
   @observable
   fileUploadProgress = null;
@@ -154,7 +163,7 @@ export default class AppManager {
   setMode = mode => {
     this.mode = mode;
     this.steps[0].completed = true;
-    this.setActiveStep(1);
+    this.setActiveStepId(1);
   };
 
   @action setCaseBasedDataFileName = fileName => this.caseBasedDataFileName = fileName;
@@ -214,9 +223,16 @@ export default class AppManager {
   };
 
   @action
-  setActiveStep = step => {
-    this.steps[step].disabled = false;
-    this.activeStep = step;
+  setActiveStepId = stepId => {
+    this.steps[stepId].disabled = false;
+    this.activeStepId = stepId;
+  }
+
+  @action
+  setActiveSubStepId = (stepId, subStepId) => {
+    this.steps[stepId].disabled = false;
+    this.activeStepId = stepId;
+    this.steps[stepId].activeSubStepId = subStepId;
   }
 
   @action
