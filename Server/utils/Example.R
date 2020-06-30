@@ -58,3 +58,9 @@ private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
   private$Catalogs$PreProcessedCaseBasedData,
   map
 )
+
+test <- list(
+  list(Name = 'UNK', Regions = c('UNK')),
+  list(Name = 'OTHER', Regions = c('ABROAD', 'AUSTNZ')),
+  list(Name = 'REPCOUNTRY', Regions = c('REPCOUNTRY'))
+)

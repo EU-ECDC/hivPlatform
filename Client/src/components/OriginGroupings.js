@@ -34,7 +34,7 @@ const EnhancedTableToolbar = (props) => {
   );
 };
 
-const RegionGroupings = (props) => {
+const OriginGroupings = (props) => {
   const { appManager } = props;
 
   const originDistr = appManager.originDistributionArray;
@@ -236,4 +236,4 @@ const RegionGroupings = (props) => {
   )
 };
 
-export default observer(RegionGroupings);
+export default observer(OriginGroupings);

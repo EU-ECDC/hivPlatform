@@ -93,7 +93,7 @@ export default class AppManager {
   originDistribution = {FullRegionOfOrigin: [], Count: []};
 
   @observable
-  originGrouping = {};
+  originGrouping = [];
 
   // Shiny custom event handlers
   onShinyEvent = data => {

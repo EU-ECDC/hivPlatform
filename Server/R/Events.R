@@ -85,11 +85,18 @@ Events <- function(input, output, session, appMgr)
     # )
     dtMap <- GetOriginGroupingMap(type, distr, groups = groups)
     dtList <- ConvertOriginGroupingDtToList(dtMap)
+
+    test <- list(
+      list(GroupedRegionOfOrigin = 'UNK', FullRegionsOfOrigin = c('UNK')),
+      list(GroupedRegionOfOrigin = 'OTHER', FullRegionsOfOrigin = c('ABROAD', 'AUSTNZ')),
+      list(GroupedRegionOfOrigin = 'REPCOUNTRY', FullRegionsOfOrigin = c('REPCOUNTRY'))
+    )
+
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
       Status = 'SUCCESS',
       Payload = list(
-        OriginGrouping = dtList
+        OriginGrouping = test
       )
     ))
   })

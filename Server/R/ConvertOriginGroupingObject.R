@@ -7,10 +7,10 @@ ConvertOriginGroupingDtToList <- function(dtMap) {
 }
 
 ConvertOriginGroupingListToDt <- function(dtList) {
-  groupNames <- names(listMap)
+  groupNames <- names(dtList)
   dtMap <- rbindlist(lapply(groupNames, function(groupName) {
     data.table(
-      FullRegionOfOrigin = listMap[[groupName]],
+      FullRegionOfOrigin = dtList[[groupName]],
       GroupedRegionOfOrigin = groupName
     )
   }))

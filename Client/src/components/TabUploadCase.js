@@ -18,7 +18,7 @@ import Divider from '@material-ui/core/Divider';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import TabPanel from './TabPanel';
-import RegionGroupings from './RegionGroupings';
+import OriginGroupings from './OriginGroupings';
 import Btn from './Btn';
 import FormatBytes from '../utilities/FormatBytes'
 
@@ -174,7 +174,7 @@ const TabUploadCase = (props) => {
         </Grid>
       </Grid>
       <Divider light style={{ margin: '30px 0' }} />
-      <RegionGroupings appManager={appManager}/>
+      <OriginGroupings appManager={appManager}/>
       <Divider light style={{ margin: '30px 0' }} />
     </TabPanel>
   );
