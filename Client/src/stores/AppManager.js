@@ -89,6 +89,12 @@ export default class AppManager {
   @observable
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
+  @observable
+  originDistribution = {FullRegionOfOrigin: [], Count: []};
+
+  @observable
+  originGrouping = {};
+
   // Shiny custom event handlers
   onShinyEvent = data => {
     console.log(data);
@@ -103,16 +109,20 @@ export default class AppManager {
       this.setCaseBasedDataRowCount(data.Payload.RowCount);
       this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
       this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
+    } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED') {
+      this.setOriginDistribution(data.Payload.Distribution);
+    } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_SET') {
+      this.setOriginGrouping(data.Payload.OriginGrouping);
+    } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
+      this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
+      this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
+      this.setDiagnosisYearChartCategories(data.Payload.DiagnosisYearChartCategories);
     } else if (data.Type === 'ADJUSTMENTS_RUN_STARTED') {
       this.setAdjustmentsRunLog(data.Payload.RunLog);
       this.setAdjustmentsRunProgress(1);
     } else if (data.Type === 'ADJUSTMENTS_RUN_FINISHED') {
       this.setAdjustmentsRunLog(data.Payload.RunLog);
       this.setAdjustmentsRunProgress(null);
-    } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
-      this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
-      this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
-      this.setDiagnosisYearChartCategories(data.Payload.DiagnosisYearChartCategories);
     }
   };
 
@@ -135,7 +145,7 @@ export default class AppManager {
   }
 
   @computed
-  get CaseBasedDataColumnNamesString() {
+  get caseBasedDataColumnNamesString() {
     if (this.caseBasedDataColumnNames === null) {
       return '';
     }
@@ -143,11 +153,18 @@ export default class AppManager {
   }
 
   @computed
-  get CaseBasedDataAttributeMappingArray() {
+  get caseBasedDataAttributeMappingArray() {
     if (this.caseBasedDataAttributeMapping === null) {
       return [];
     }
     return Object.entries(this.caseBasedDataAttributeMapping).map(key => ({ Key: key[0], Val: key[1] }))
+  }
+
+  @computed
+  get originDistributionArray() {
+    const fullRegionOfOrigins = this.originDistribution.FullRegionOfOrigin;
+    const counts = this.originDistribution.Count;
+    return fullRegionOfOrigins.map((el, i) => ({ FullRegionOfOrigin: fullRegionOfOrigins[i], Count: counts[i] }));
   }
 
   @action
@@ -185,6 +202,10 @@ export default class AppManager {
   };
   @action setDiagnosisYearChartData = data => this.diagnosisYearChartData = data;
   @action setDiagnosisYearChartCategories = categories => this.diagnosisYearChartCategories = categories;
+  @action setOriginDistribution = distr => this.originDistribution = distr;
+  @action setOriginGrouping = grouping => this.originGrouping = grouping;
+  @action setRegionGroup = (name, regions) => this.regionGroups.set(name, regions);
+  @action removeRegionGroup = name => this.regionGroups.delete(name);
 
   @action
   unbindShinyInputs = () => {

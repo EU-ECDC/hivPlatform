@@ -52,14 +52,16 @@ GetOriginGroupingMap <- function(type, distr, groups)
   setnames(map, c("FullRegionOfOrigin", "GroupedRegionOfOrigin"))
 
   if (type == "REPCOUNTRY + UNK + 3 most prevalent regions + OTHER") {
-    sepRegions <- head(distr[!FullRegionOfOrigin %chin% c("REPCOUNTRY", "UNK"),
-                             FullRegionOfOrigin], 3)
-    map[FullRegionOfOrigin %chin% sepRegions,
-        GroupedRegionOfOrigin := FullRegionOfOrigin]
+    sepRegions <- head(
+      distr[!FullRegionOfOrigin %chin% c("REPCOUNTRY", "UNK"), FullRegionOfOrigin],
+      3
+    )
+    map[FullRegionOfOrigin %chin% sepRegions, GroupedRegionOfOrigin := FullRegionOfOrigin]
   }
 
-  map[, GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin,
-                                        levels = unique(GroupedRegionOfOrigin))]
+  map[,
+    GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin, levels = unique(GroupedRegionOfOrigin))
+  ]
 
   return(map)
 }

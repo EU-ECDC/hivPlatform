@@ -43,3 +43,18 @@ appMgr$HIVBootstrapStatistics$ThetaStats
 
 appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIV_Obs_M
 appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
+
+
+type <- 'REPCOUNTRY + UNK + OTHER'
+distr <- GetOriginDistribution(appMgr$PreProcessedCaseBasedData$Table)
+groups = list(
+  list(Name = 'EUROPE', Regions = c('CENTEUR', 'EASTEUR', 'EUROPE', 'WESTEUR'))
+)
+dtMap <- GetOriginGroupingMap(type, distr, groups = groups)
+dtList <- ConvertOriginGroupingDtToList(dtMap)
+ConvertOriginGroupingListToDt(dtList)
+
+private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
+  private$Catalogs$PreProcessedCaseBasedData,
+  map
+)
