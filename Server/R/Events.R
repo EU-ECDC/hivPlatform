@@ -52,7 +52,7 @@ Events <- function(input, output, session, appMgr)
     #
     # appMgr$SendEventToReact('shinyHandler', list(
     #   Type = 'SUMMARY_DATA_PREPARED',
-    #   Status = 'SUCCESS',
+      # Status = 'SUCCESS',
     #   Payload = list(
     #     DiagnosisYearFilterData = list(
     #       ScaleMinYear = min(categories),

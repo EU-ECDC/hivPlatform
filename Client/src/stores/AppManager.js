@@ -95,6 +95,9 @@ export default class AppManager {
   @observable
   originGrouping = [];
 
+  @observable
+  regionGroups = new Map();
+
   // Shiny custom event handlers
   onShinyEvent = data => {
     console.log(data);

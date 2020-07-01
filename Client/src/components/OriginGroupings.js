@@ -1,4 +1,5 @@
 import React from 'react';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -37,8 +38,10 @@ const EnhancedTableToolbar = (props) => {
 const OriginGroupings = (props) => {
   const { appManager } = props;
 
-  const originDistr = appManager.originDistributionArray;
-  const originGrouping = appManager.originGrouping;
+  const originDistribution = appManager.originDistributionArray;
+  const originGrouping = toJS(appManager.originGrouping);
+
+  console.log(originGrouping);
 
   const handleGroupingPresetChange = e => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);
@@ -61,7 +64,7 @@ const OriginGroupings = (props) => {
           </TableHead>
           <TableBody>
             {
-              originDistr.map(el => (
+              originDistribution.map(el => (
                 <TableRow hover>
                   <TableCell>{el.FullRegionOfOrigin}</TableCell><TableCell align='right'>{el.Count}</TableCell>
                 </TableRow>
@@ -106,127 +109,11 @@ const OriginGroupings = (props) => {
                       <Checkbox inputProps={{ 'aria-labelledby': `labelId${i}` }} color='primary' />
                     </TableCell>
                     <TableCell id={`labelId${i}`} scope='row' padding='none'>
-                      <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Group 1' />
+                      <Input style={{ width: '100%', fontSize: '0.75rem' }} value={el.GroupedRegionOfOrigin} />
                     </TableCell>
-                    <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
-                      <Select
-                        multiple
-                        renderValue={(selected) => (
-                          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                            {selected.map((value) => (
-                              <Chip
-                                key={value}
-                                label={value}
-                                style={{ margin: 2 }} />
-                            ))}
-                          </div>
-                        )}
-                        value={['REPCOUNTRY', 'SUBAFR', 'NORTHAMFRMIDEAST', 'AUSTNZ', 'SOUTHASIA', 'CENTEUR']}
-                        style={{ width: '100%', fontSize: '0.75rem' }}
-                        disableUnderline
-                      >
-                        <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
-                        <MenuItem value='SUBAFR' dense>SUBAFR</MenuItem>
-                        <MenuItem value='WESTEUR' dense>WESTEUR</MenuItem>
-                        <MenuItem value='SOUTHASIA' dense>SOUTHASIA</MenuItem>
-                        <MenuItem value='CENTEUR' dense>CENTEUR</MenuItem>
-                        <MenuItem value='CAR' dense>CAR</MenuItem>
-                        <MenuItem value='LATAM' dense>LATAM</MenuItem>
-                        <MenuItem value='EASTEUR' dense>EASTEUR</MenuItem>
-                        <MenuItem value='NORTHAM' dense>NORTHAM</MenuItem>
-                        <MenuItem value='NORTHAMFRMIDEAST' dense>NORTHAMFRMIDEAST</MenuItem>
-                        <MenuItem value='EASTASIAPAC' dense>EASTASIAPAC</MenuItem>
-                        <MenuItem value='AUSTNZ' dense>AUSTNZ</MenuItem>
-                        <MenuItem value='UNK' dense>UNK</MenuItem>
-                      </Select>
-                    </TableCell>
-                    <TableCell align='right'>1562</TableCell>
                   </TableRow>
                 ))
               }
-
-              <TableRow hover role='checkbox'>
-                <TableCell padding='checkbox'>
-                  <Checkbox inputProps={{ 'aria-labelledby': 'labelId10' }} color='primary' />
-                </TableCell>
-                <TableCell id='labelId10' scope='row' padding='none'>
-                  <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Group 1' />
-                </TableCell>
-                <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
-                  <Select
-                    multiple
-                    renderValue={(selected) => (
-                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                        {selected.map((value) => (
-                          <Chip
-                            key={value}
-                            label={value}
-                            style={{ margin: 2 }} />
-                        ))}
-                      </div>
-                    )}
-                    value={['REPCOUNTRY', 'SUBAFR', 'NORTHAMFRMIDEAST', 'AUSTNZ', 'SOUTHASIA', 'CENTEUR']}
-                    style={{ width: '100%', fontSize: '0.75rem' }}
-                    disableUnderline
-                  >
-                    <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
-                    <MenuItem value='SUBAFR' dense>SUBAFR</MenuItem>
-                    <MenuItem value='WESTEUR' dense>WESTEUR</MenuItem>
-                    <MenuItem value='SOUTHASIA' dense>SOUTHASIA</MenuItem>
-                    <MenuItem value='CENTEUR' dense>CENTEUR</MenuItem>
-                    <MenuItem value='CAR' dense>CAR</MenuItem>
-                    <MenuItem value='LATAM' dense>LATAM</MenuItem>
-                    <MenuItem value='EASTEUR' dense>EASTEUR</MenuItem>
-                    <MenuItem value='NORTHAM' dense>NORTHAM</MenuItem>
-                    <MenuItem value='NORTHAMFRMIDEAST' dense>NORTHAMFRMIDEAST</MenuItem>
-                    <MenuItem value='EASTASIAPAC' dense>EASTASIAPAC</MenuItem>
-                    <MenuItem value='AUSTNZ' dense>AUSTNZ</MenuItem>
-                    <MenuItem value='UNK' dense>UNK</MenuItem>
-                  </Select>
-                </TableCell>
-                <TableCell align='right'>1562</TableCell>
-              </TableRow>
-              <TableRow hover>
-                <TableCell padding='checkbox'>
-                  <Checkbox inputProps={{ 'aria-labelledby': 'labelId11' }} color='primary' />
-                </TableCell>
-                <TableCell id='labelId11' scope='row' padding='none'>
-                  <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Group 2' />
-                </TableCell>
-                <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
-                  <Select
-                    multiple
-                    renderValue={(selected) => (
-                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                        {selected.map((value) => (
-                          <Chip
-                            key={value}
-                            label={value}
-                            style={{ margin: 2 }} />
-                        ))}
-                      </div>
-                    )}
-                    value={['CAR', 'LATAM']}
-                    style={{ width: '100%', fontSize: '0.75rem' }}
-                    disableUnderline
-                  >
-                    <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
-                    <MenuItem value='SUBAFR' dense>SUBAFR</MenuItem>
-                    <MenuItem value='WESTEUR' dense>WESTEUR</MenuItem>
-                    <MenuItem value='SOUTHASIA' dense>SOUTHASIA</MenuItem>
-                    <MenuItem value='CENTEUR' dense>CENTEUR</MenuItem>
-                    <MenuItem value='CAR' dense>CAR</MenuItem>
-                    <MenuItem value='LATAM' dense>LATAM</MenuItem>
-                    <MenuItem value='EASTEUR' dense>EASTEUR</MenuItem>
-                    <MenuItem value='NORTHAM' dense>NORTHAM</MenuItem>
-                    <MenuItem value='NORTHAMFRMIDEAST' dense>NORTHAMFRMIDEAST</MenuItem>
-                    <MenuItem value='EASTASIAPAC' dense>EASTASIAPAC</MenuItem>
-                    <MenuItem value='AUSTNZ' dense>AUSTNZ</MenuItem>
-                    <MenuItem value='UNK' dense>UNK</MenuItem>
-                  </Select>
-                </TableCell>
-                <TableCell align='right'>2237</TableCell>
-              </TableRow>
             </TableBody>
           </Table>
           <EnhancedTableToolbar numSelected={0} />
