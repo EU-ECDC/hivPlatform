@@ -18,7 +18,7 @@
 #' )
 #'
 #' @export
-GetOriginGroupingMap <- function(type, distr, groups)
+GetOriginGroupingMap <- function(type, distr, groups = list())
 {
   # Initialize mapping
   map <- c("UNK", "ABROAD", "AUSTNZ", "CAR", "CENTEUR", "EASTASIAPAC",
@@ -58,6 +58,16 @@ GetOriginGroupingMap <- function(type, distr, groups)
     )
     map[FullRegionOfOrigin %chin% sepRegions, GroupedRegionOfOrigin := FullRegionOfOrigin]
   }
+
+  # Add count per FullRegionOfOrigin
+  map[distr,
+    FullRegionOfOriginCount := Count,
+    on = .(FullRegionOfOrigin)
+  ]
+  map[is.na(FullRegionOfOriginCount), FullRegionOfOriginCount := 0]
+
+  # Add count per GroupedRegionOfOrigin
+  map[, GroupedRegionOfOriginCount := sum(FullRegionOfOriginCount), by = .(GroupedRegionOfOrigin)]
 
   map[,
     GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin, levels = unique(GroupedRegionOfOrigin))

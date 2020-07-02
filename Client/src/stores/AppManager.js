@@ -1,4 +1,4 @@
-import { observable, action, configure, computed } from 'mobx';
+import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 
 configure({
@@ -87,6 +87,20 @@ export default class AppManager {
   diagnosisYearChartCategories = [];
 
   @observable
+  notifQuarterFilterData = {
+    ScaleMinYear: null,
+    ScaleMaxYear: null,
+    ValueMinYear: null,
+    ValueMaxYear: null
+  };
+
+  @observable
+  notifQuarterChartData = [];
+
+  @observable
+  notifQuarterChartCategories = [];
+
+  @observable
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
   @observable
@@ -113,13 +127,16 @@ export default class AppManager {
       this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
       this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED') {
-      this.setOriginDistribution(data.Payload.Distribution);
+      this.setOriginDistribution(data.Payload.OriginDistribution);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_SET') {
       this.setOriginGrouping(data.Payload.OriginGrouping);
     } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
       this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
       this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
       this.setDiagnosisYearChartCategories(data.Payload.DiagnosisYearChartCategories);
+      this.setNotifQuarterFilterData(data.Payload.NotifQuarterFilterData);
+      this.setNotifQuarterChartData(data.Payload.NotifQuarterChartData);
+      this.setNotifQuarterChartCategories(data.Payload.NotifQuarterChartCategories);
     } else if (data.Type === 'ADJUSTMENTS_RUN_STARTED') {
       this.setAdjustmentsRunLog(data.Payload.RunLog);
       this.setAdjustmentsRunProgress(1);
@@ -165,9 +182,23 @@ export default class AppManager {
 
   @computed
   get originDistributionArray() {
-    const fullRegionOfOrigins = this.originDistribution.FullRegionOfOrigin;
+    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin;
     const counts = this.originDistribution.Count;
-    return fullRegionOfOrigins.map((el, i) => ({ FullRegionOfOrigin: fullRegionOfOrigins[i], Count: counts[i] }));
+    return fullRegionsOfOrigin.map((el, i) => ({
+      FullRegionOfOrigin: fullRegionsOfOrigin[i],
+      Count: counts[i]
+    }));
+  }
+
+  @computed
+  get fullRegionsOfOriginArray() {
+    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin.sort();
+    return fullRegionsOfOrigin;
+  }
+
+  @computed
+  get originGroupingArray() {
+    return toJS(this.originGrouping);
   }
 
   @action
@@ -205,8 +236,28 @@ export default class AppManager {
   };
   @action setDiagnosisYearChartData = data => this.diagnosisYearChartData = data;
   @action setDiagnosisYearChartCategories = categories => this.diagnosisYearChartCategories = categories;
+  @action setNotifQuarterFilterData = data => {
+    this.notifQuarterFilterData.ScaleMinYear = data.ScaleMinYear;
+    this.notifQuarterFilterData.ScaleMaxYear = data.ScaleMaxYear;
+    this.notifQuarterFilterData.ValueMinYear = data.ValueMinYear;
+    this.notifQuarterFilterData.ValueMaxYear = data.ValueMaxYear;
+  };
+  @action setNotifQuarterChartData = data => this.notifQuarterChartData = data;
+  @action setnotifQuarterChartCategories = categories => this.notifQuarterChartCategories = categories;
   @action setOriginDistribution = distr => this.originDistribution = distr;
-  @action setOriginGrouping = grouping => this.originGrouping = grouping;
+  @action setOriginGrouping = grouping => {
+    // Make sure that FullRegionsOfOrigin are arrays
+    const temp = grouping.map(el => {
+      const arr = Array.isArray(el.FullRegionsOfOrigin) ? el.FullRegionsOfOrigin : [el.FullRegionsOfOrigin];
+      return ({
+        GroupedRegionOfOrigin: el.GroupedRegionOfOrigin,
+        GroupedRegionOfOriginCount: el.GroupedRegionOfOriginCount,
+        FullRegionsOfOrigin: arr
+      })
+    })
+
+    this.originGrouping = temp;
+  }
   @action setRegionGroup = (name, regions) => this.regionGroups.set(name, regions);
   @action removeRegionGroup = name => this.regionGroups.delete(name);
 

@@ -1,18 +1,16 @@
 ConvertOriginGroupingDtToList <- function(dtMap) {
   groupNames <- unique(dtMap$GroupedRegionOfOrigin)
-  listMap <- setNames(lapply(groupNames, function(groupName) {
-    dtMap[GroupedRegionOfOrigin == groupName, unique(FullRegionOfOrigin)]
-  }), groupNames)
+  listMap <- lapply(groupNames, function(groupName) {
+    list(
+      GroupedRegionOfOrigin = as.character(groupName),
+      FullRegionsOfOrigin = dtMap[GroupedRegionOfOrigin == groupName, sort(unique(FullRegionOfOrigin))],
+      GroupedRegionOfOriginCount = dtMap[GroupedRegionOfOrigin == groupName, sort(unique(GroupedRegionOfOriginCount))]
+    )
+  })
   return(listMap)
 }
 
 ConvertOriginGroupingListToDt <- function(dtList) {
-  groupNames <- names(dtList)
-  dtMap <- rbindlist(lapply(groupNames, function(groupName) {
-    data.table(
-      FullRegionOfOrigin = dtList[[groupName]],
-      GroupedRegionOfOrigin = groupName
-    )
-  }))
+  dtMap <- rbindlist(lapply(dtList, as.data.table))
   return(dtMap)
 }

@@ -33,6 +33,7 @@ AppManager <- R6::R6Class(
         AttributeMappingStatus = NULL,
         OriginGroupingType = 'REPCOUNTRY + UNK + OTHER',
         PreProcessedCaseBasedDataStatus = NULL,
+        OriginDistribution = NULL,
         Plots = NULL,
         MICount = 0,
         BSCount = 0,
@@ -83,6 +84,7 @@ AppManager <- R6::R6Class(
 
       private$Catalogs$PreProcessedCaseBasedData <- dt
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
+      private$Catalogs$OriginDistribution <- GetOriginDistribution(dt$Table)
 
       PrintAlert('Case-based data has been pre-processed')
 
@@ -91,8 +93,12 @@ AppManager <- R6::R6Class(
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(type) {
-      distr <- GetOriginDistribution(private$Catalogs$PreProcessedCaseBasedData$Table)
-      map <- GetOriginGroupingMap(type, distr)
+      if (missing(type)) {
+        type <- private$Catalogs$OriginGroupingType
+      }
+      distr <- private$Catalogs$OriginDistribution
+      groups <- list()
+      map <- GetOriginGroupingMap(type, distr, groups)
 
       private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
         private$Catalogs$PreProcessedCaseBasedData,
@@ -105,23 +111,80 @@ AppManager <- R6::R6Class(
     },
 
     # 4. Create plots ------------------------------------------------------------------------------
-    CreatePlots = function() {
-      diagnosisYearDensity <- GetDiagnosisYearDensityPlot(
-        private$Catalogs$PreProcessedCaseBasedData$Table
-      )
-      notificationQuarterDensity <- GetNotificationQuarterDensityPlot(
-        private$Catalogs$PreProcessedCaseBasedData$Table
-      )
+    GetSummaryData = function() {
+      # diagnosisYearDensity <- GetDiagnosisYearDensityPlot(
+      #   private$Catalogs$PreProcessedCaseBasedData$Table
+      # )
+      # notificationQuarterDensity <- GetNotificationQuarterDensityPlot(
+      #   private$Catalogs$PreProcessedCaseBasedData$Table
+      # )
+      #
+      # private$Catalogs$Plots <- list(
+      #   DiagnosisYearDensity = diagnosisYearDensity,
+      #   NotificationQuarterDensity = notificationQuarterDensity
+      # )
 
-      private$Catalogs$Plots <- list(
-        DiagnosisYearDensity = diagnosisYearDensity,
-        NotificationQuarterDensity = notificationQuarterDensity
+      plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
+
+      # Diagnosis year plot
+      diagYearCounts <- plotDT[,
+        .(Count = .N),
+        keyby = .(Gender, DateOfDiagnosisYear = year(DateOfDiagnosisISODate))
+      ]
+      diagYearCategories <- sort(unique(diagYearCounts$DateOfDiagnosisYear))
+
+      # Notification quarter plot
+      notifQuarterCounts <- plotDT[,
+        .(Count = .N),
+        keyby = .(
+          Gender,
+          DateOfNotificationQuarter =
+            year(DateOfNotificationISODate) + quarter(DateOfNotificationISODate) / 4
+        )
+      ]
+      notifQuarterCategories <- sort(unique(notifQuarterCounts$DateOfNotificationQuarter))
+
+      summaryData <- list(
+        DiagnosisYearFilterData = list(
+          ScaleMinYear = min(diagYearCategories),
+          ScaleMaxYear = max(diagYearCategories),
+          ValueMinYear = min(diagYearCategories),
+          ValueMaxYear = max(diagYearCategories)
+        ),
+        DiagnosisYearChartCategories = diagYearCategories,
+        DiagnosisYearChartData = list(
+          list(
+            name = 'Female',
+            data = diagYearCounts[Gender == 'F', Count]
+          ),
+          list(
+            name = 'Male',
+            data = counts[Gender == 'M', Count]
+          )
+        ),
+        NotifQuarterFilterData = list(
+          ScaleMinYear = min(notifQuarterCategories),
+          ScaleMaxYear = max(notifQuarterCategories),
+          ValueMinYear = min(notifQuarterCategories),
+          ValueMaxYear = max(notifQuarterCategories)
+        ),
+        NotifQuarterChartCategories = notifQuarterCategories,
+        NotifQuarterChartData = list(
+          list(
+            name = 'Female',
+            data = notifQuarterCounts[Gender == 'F', Count]
+          ),
+          list(
+            name = 'Male',
+            data = notifQuarterCounts[Gender == 'M', Count]
+          )
+        )
       )
 
       PrintAlert('Diagnosis year density plot created')
       PrintAlert('Notification quarter density plot created')
 
-      return(invisible(self))
+      return(summaryData)
     },
 
     # 5. Adjust case-based data --------------------------------------------------------------------
@@ -412,21 +475,6 @@ AppManager <- R6::R6Class(
 
     DetermineAttributeMapping = function() {
       attrMapping <- GetPreliminaryAttributesMapping(private$Catalogs$CaseBasedData)
-
-      if (is.null(attrMapping[['RecordId']])) {
-        attrMapping[['RecordId']] <- 'Identyfikator'
-      }
-      if (is.null(attrMapping[['Age']])) {
-        attrMapping[['Age']] <- 'WiekHIVdor'
-      }
-
-      # Map 'FirstCD4Count' to 'cd4_num' if not mapped yet
-      if (is.null(attrMapping[['FirstCD4Count']])) {
-        attrMapping[['FirstCD4Count']] <- 'cd4_num'
-      }
-
-      attrMapping[['FirstCD4Count']] <- 'cd4_num'
-
       private$Catalogs$AttributeMapping <- attrMapping
       private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
     },
@@ -493,8 +541,13 @@ AppManager <- R6::R6Class(
         return(private$Catalogs$OriginGroupingType)
       } else {
         private$Catalogs$OriginGroupingType <- type
+        self$ApplyOriginGrouping()
         return(self)
       }
+    },
+
+    OriginDistribution = function() {
+      return(private$Catalogs$OriginDistribution)
     },
 
     Plots = function() {

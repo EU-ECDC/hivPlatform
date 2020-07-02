@@ -25,29 +25,33 @@
 #' @export
 ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
 {
-  if (!is.data.table(object))
+  if (!is.data.table(object)) {
     stop("Input object must be of class data.table")
+  }
 
   objectColNames <- colnames(object)
 
   # Iterate over defined transformations
-  # columnName <- names(columnDefs)[1]
+  # columnName <- names(columnDefs)[20]
   for (columnName in names(columnDefs)) {
 
     columnDef <- columnDefs[[columnName]]
 
     # Transformation as new class name
     if (is.character(columnDef)) {
-      transFunc <- switch(tolower(columnDef),
-                          logical = as.logical,
-                          integer = as.integer,
-                          single = as.single,
-                          double = as.double,
-                          numeric = as.numeric,
-                          string = as.character,
-                          character = as.character,
-                          factor = factor,
-                          NULL)
+      transFunc <- switch(
+        tolower(columnDef),
+        logical = as.logical,
+        integer = as.integer,
+        single = as.single,
+        double = as.double,
+        numeric = as.numeric,
+        string = as.character,
+        character = as.character,
+        factor = factor,
+        date = ConvertStringToDate,
+        NULL
+      )
     } else if (is.function(columnDef)) {
       transFunc <- columnDef
     } else {

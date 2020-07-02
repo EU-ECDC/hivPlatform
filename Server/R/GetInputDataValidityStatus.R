@@ -22,10 +22,10 @@ GetInputDataValidityStatus <- function(inputData)
     return(NULL)
   }
 
-  columnSpecs <- GetListObject(system.file("referenceData/requiredColumns.R",
-                                           package = "hivEstimatesAccuracy2"),
-                               includeFileName = FALSE)
-  ConvertDataTableColumns(inputData, sapply(columnSpecs, "[[", "type"))
+  columnSpecs <- GetListObject(
+    system.file("referenceData/requiredColumns.R", package = "hivEstimatesAccuracy2"),
+    includeFileName = FALSE
+  )
 
   checkStatus <- list()
   for (columnName in names(columnSpecs)) {

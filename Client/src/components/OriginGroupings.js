@@ -1,5 +1,4 @@
 import React from 'react';
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -39,9 +38,11 @@ const OriginGroupings = (props) => {
   const { appManager } = props;
 
   const originDistribution = appManager.originDistributionArray;
-  const originGrouping = toJS(appManager.originGrouping);
-
+  const originGrouping = appManager.originGroupingArray;
+  const fullRegionsOfOriginArray = appManager.fullRegionsOfOriginArray;
+  console.log(originDistribution);
   console.log(originGrouping);
+  console.log(fullRegionsOfOriginArray);
 
   const handleGroupingPresetChange = e => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);
@@ -111,6 +112,31 @@ const OriginGroupings = (props) => {
                     <TableCell id={`labelId${i}`} scope='row' padding='none'>
                       <Input style={{ width: '100%', fontSize: '0.75rem' }} value={el.GroupedRegionOfOrigin} />
                     </TableCell>
+                    <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+                      <Select
+                        multiple
+                        renderValue={(selected) => (
+                          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                            {selected.map((value) => (
+                              <Chip
+                                key={value}
+                                label={value}
+                                style={{ margin: 2 }} />
+                            ))}
+                          </div>
+                        )}
+                        value={el.FullRegionsOfOrigin}
+                        style={{ width: '100%', fontSize: '0.75rem' }}
+                        disableUnderline
+                      >
+                        {
+                          fullRegionsOfOriginArray.map(el => (
+                            <MenuItem value={el} dense>{el}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </TableCell>
+                    <TableCell align='right'>{el.GroupedRegionOfOriginCount}</TableCell>
                   </TableRow>
                 ))
               }

@@ -39,7 +39,9 @@ GetAttrMappingStatus <- function(attrMapping)
     valid <- FALSE
   }
 
-  return(list(Valid = valid,
-              NonMapped = nonMappedAnalysisAttrs,
-              MultipleMapped = multipleMappedDataAttrs))
+  return(list(
+    Valid = valid,
+    NonMapped = nonMappedAnalysisAttrs,
+    MultipleMapped = multipleMappedDataAttrs
+  ))
 }

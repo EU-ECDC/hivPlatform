@@ -30,6 +30,11 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiTreeItem: {
+      label: {
+        fontSize: 12
+      }
+    },
     MuiStepIcon: {
       text: {
         fill: 'white !important'

@@ -3,7 +3,7 @@ library(hivEstimatesAccuracy2)
 # STEP 1 - Load case-based dataset -----------------------------------------------------------------
 
 appMgr <- AppManager$new()
-appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
+appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
 appMgr$PreProcessCaseBasedData()
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 
@@ -46,11 +46,10 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 
 
 type <- 'REPCOUNTRY + UNK + OTHER'
+type <- 'Custom'
 distr <- GetOriginDistribution(appMgr$PreProcessedCaseBasedData$Table)
-groups = list(
-  list(Name = 'EUROPE', Regions = c('CENTEUR', 'EASTEUR', 'EUROPE', 'WESTEUR'))
-)
-dtMap <- GetOriginGroupingMap(type, distr, groups = groups)
+groups <- list()
+dtMap <- GetOriginGroupingMap(type, distr)
 dtList <- ConvertOriginGroupingDtToList(dtMap)
 ConvertOriginGroupingListToDt(dtList)
 
@@ -64,3 +63,67 @@ test <- list(
   list(Name = 'OTHER', Regions = c('ABROAD', 'AUSTNZ')),
   list(Name = 'REPCOUNTRY', Regions = c('REPCOUNTRY'))
 )
+
+appMgr$CaseBasedData
+appMgr$AttributeMapping
+appMgr$AttributeMappingStatus
+
+dt <- ApplyAttributesMapping(
+  originalData = appMgr$CaseBasedData,
+  attrMapping = appMgr$AttributeMapping,
+  defaultValues = GetPreliminaryDefaultValues()
+)
+
+dt <- PreProcessInputDataBeforeSummary(inputData = dt)
+dtStatus <- GetInputDataValidityStatus(inputData = dt$Table)
+
+appMgr$OriginGroupingType <- 'Custom'
+dt <- appMgr$PreProcessedCaseBasedData$Table
+dt[is.na(GroupedRegionOfOrigin), unique(FullRegionOfOrigin)]
+
+
+plotDT <- appMgr$PreProcessedCaseBasedData$Table
+counts <- plotDT[, .(Count = .N), keyby = .(Gender, DateOfDiagnosisYear = year(DateOfDiagnosisISODate))]
+categories <- sort(unique(counts$DateOfDiagnosisYear))
+
+appMgr$SendEventToReact('shinyHandler', list(
+  Type = 'SUMMARY_DATA_PREPARED',
+Status = 'SUCCESS',
+  Payload = list(
+    DiagnosisYearFilterData = list(
+      ScaleMinYear = min(categories),
+      ScaleMaxYear = max(categories),
+      ValueMinYear = min(categories),
+      ValueMaxYear = max(categories)
+    ),
+    DiagnosisYearChartCategories = categories,
+    DiagnosisYearChartData = list(
+      list(
+        name = 'Female',
+        data = counts[Gender == 'F', Count]
+      ),
+      list(
+        name = 'Male',
+        data = counts[Gender == 'M', Count]
+      )
+    )
+  )
+))
+
+appMgr$GetSummaryData()
+
+plotDT <- appMgr$PreProcessedCaseBasedData$Table
+counts <- plotDT[,
+                 .(Count = .N),
+                 keyby = .(Gender, DateOfDiagnosisYear = year(DateOfDiagnosisISODate))
+]
+categories <- sort(unique(counts$DateOfDiagnosisYear))
+
+counts <- plotDT[,
+  .(Count = .N),
+  keyby = .(Gender, DateOfNotificationQuarter = year(DateOfNotificationISODate) + quarter(DateOfNotificationISODate) / 4)
+]
+categories <- sort(unique(counts$DateOfNotificationQuarter))
+
+
+

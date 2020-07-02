@@ -32,96 +32,10 @@ list(
     type = 'numeric',
     defaultValue = NA_real_
   ),
-  FirstCD4DateYear = list(
-    description = 'Year of first CD4 cell count at time of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  FirstCD4DateQuarter = list(
-    description = 'Quarter of first CD4 cell count at time of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  FirstCD4DateMonth = list(
-    description = 'Month of first CD4 cell count at time of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  FirstCD4DateWeek = list(
-    description = 'Week of first CD4 cell count at time of diagnosis',
+  CD4Latest = list(
+    description = 'Latest CD4',
     type = 'character',
     defaultValue = NA_character_
-  ),
-  FirstCD4DateDay = list(
-    description = 'Day of first CD4 cell count at time of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfAIDSDiagnosisYear = list(
-    description = 'Year of AIDS diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfAIDSDiagnosisQuarter = list(
-    description = 'Quarter of AIDS diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfAIDSDiagnosisMonth = list(
-    description = 'Month of AIDS diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfAIDSDiagnosisWeek = list(
-    description = 'Week of AIDS diagnosis',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  DateOfAIDSDiagnosisDay = list(
-    description = 'Day of AIDS diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfDeathYear = list(
-    description = 'Year of death',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfDiagnosisYear = list(
-    description = 'Year of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_,
-    restrictedValues = NA_integer_
-  ),
-  DateOfDiagnosisQuarter = list(
-    description = 'Quarter of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfDiagnosisMonth = list(
-    description = 'Month of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfDiagnosisWeek = list(
-    description = 'Week of diagnosis',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  DateOfDiagnosisDay = list(
-    description = 'Day of diagnosis',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfNotificationYear = list(
-    description = 'Year of notification',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  DateOfNotificationQuarter = list(
-    description = 'Quarter of notification',
-    type = 'integer',
-    defaultValue = NA_integer_
   ),
   CountryOfBirth = list(
     description = 'Country of birth of patient',
@@ -152,131 +66,65 @@ list(
     type = 'character',
     defaultValue = NA_character_
   ),
-  Outcome = list(
-    description = 'Outcome of case',
-    type = 'character',
-    values = c('', 'UNK', 'A', 'D'),
-    defaultValue = NA_character_
-  ),
-
-  YearOfArrivalYear = list(
-    description = 'Year of arrival',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  YearOfArrivalQuarter = list(
-    description = 'Quarter of arrival',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  YearOfArrivalMonth = list(
-    description = 'Month of arrival',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  YearOfArrivalWeek = list(
-    description = 'Week of arrival',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  YearOfArrivalDay = list(
-    description = 'Day of arrival',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
   Art = list(
     description = 'Art',
     type = 'character',
     defaultValue = NA_character_
-  ),
-  ArtDateYear = list(
-    description = 'Year of art',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  ArtDateQuarter = list(
-    description = 'Quarter of art',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  ArtDateMonth = list(
-    description = 'Month of art',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  ArtDateWeek = list(
-    description = 'Week of art',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  ArtDateDay = list(
-    description = 'Day of art',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  CD4Latest = list(
-    description = 'Latest CD4',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  CD4LatestDateYear = list(
-    description = 'Year of latest CD4',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  CD4LatestDateQuarter = list(
-    description = 'Quarter of latest CD4',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  CD4LatestDateMonth = list(
-    description = 'Month of latest CD4',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  CD4LatestDateWeek = list(
-    description = 'Week of latest CD4',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  CD4LatestDateDay = list(
-    description = 'Day of latest CD4',
-    type = 'integer',
-    defaultValue = NA_integer_
   ),
   VLLatest = list(
     description = 'Latest VL',
     type = 'character',
     defaultValue = NA_character_
   ),
-  VLLatestDateYear = list(
-    description = 'Year of latest VL',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  VLLatestDateQuarter = list(
-    description = 'Quarter of latest VL',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  VLLatestDateMonth = list(
-    description = 'Month of latest VL',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
-  VLLatestDateWeek = list(
-    description = 'Week of latest VL',
-    type = 'character',
-    defaultValue = NA_character_
-  ),
-  VLLatestDateDay = list(
-    description = 'Day of latest VL',
-    type = 'integer',
-    defaultValue = NA_integer_
-  ),
   AcuteInfection = list(
     description = 'Acute infection',
     type = 'character',
     defaultValue = NA_character_
+  ),
+  DateOfNotificationISODate = list(
+    description = 'ISO date of notification',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  FirstCD4DateISODate = list(
+    description = 'ISO date of First CD4 cell count at time of diagnosis',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  DateOfAIDSDiagnosisISODate = list(
+    description = 'ISO date of AIDS diagnosis',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  DateOfDeathISODate = list(
+    description = 'ISO date of death',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  DateOfDiagnosisISODate = list(
+    description = 'ISO date of diagnosis',
+    type = 'date',
+    defaultValue = as.Date(NA),
+    restrictedValues = as.Date(NA)
+  ),
+  YearOfArrivalISODate = list(
+    description = 'ISO date of arrival',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  ArtDateISODate = list(
+    description = 'ISO date of art',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  CD4LatestDateISODate = list(
+    description = 'ISO date of latest CD4',
+    type = 'date',
+    defaultValue = as.Date(NA)
+  ),
+  VLLatestDateISODate = list(
+    description = 'ISO date of latest VL',
+    type = 'date',
+    defaultValue = as.Date(NA)
   )
 )
