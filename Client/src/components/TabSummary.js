@@ -16,8 +16,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import TabPanel from './TabPanel';
 import {
-  filterDiagChartSeries, filterNotifChartSeries, filterDiagChartOptions1, marks,
-  filterNotifChartOptions1, notifMarks, missChartSeries, missChartOptions, missChartSeries2,
+  defDiagChartOptions,
+  defNotifChartOptions,
+  missChartSeries, missChartOptions, missChartSeries2,
   missChartOptions2, missChartSeries3, missChartOptions3, missChartSeries4, missChartOptions4,
   rdSeries1, rdOptions1
 } from './ChartsData';
@@ -37,12 +38,23 @@ const TabSummary = (props) => {
   const { appManager } = props;
   const classes = userStyles();
 
-  let opts = filterDiagChartOptions1;
-  opts.categories = appManager.diagnosisYearChartCategories;
+  let diagChartOptions = defDiagChartOptions;
+  diagChartOptions.categories = appManager.diagnosisYearChartCategories;
 
-  const zoomChart = (
+  console.log(appManager.notifQuarterChartCategories)
+
+  let notifChartOptions = defNotifChartOptions;
+  notifChartOptions.categories = appManager.notifQuarterChartCategories;
+  const notifChartMarks = notifChartOptions.xaxis.categories.map((el, idx) =>
+    ({
+      value: el,
+      label: idx % 2 ? null : el.toFixed(2)
+    })
+  );
+
+  const diagChart = (
     <Chart
-      options={opts}
+      options={diagChartOptions}
       series={appManager.diagnosisYearChartData}
       type='bar'
       height={200}
@@ -51,8 +63,8 @@ const TabSummary = (props) => {
 
   const notifChart = (
     <Chart
-      options={filterNotifChartOptions1}
-      series={filterNotifChartSeries}
+      options={notifChartOptions}
+      series={appManager.notifQuarterChartData}
       type='bar'
       height={200}
     />
@@ -62,7 +74,7 @@ const TabSummary = (props) => {
     <TabPanel>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Box display="flex" justifyContent="flex-end">
+          <Box display='flex' justifyContent='flex-end'>
             <Button size='small' color='primary'>Next step</Button>
           </Box>
         </Grid>
@@ -98,7 +110,7 @@ const TabSummary = (props) => {
                 color='secondary'
               />
             </div>
-            {zoomChart}
+            {diagChart}
           </Paper>
         </Grid>
         <Grid item xs={12}>
@@ -118,11 +130,13 @@ const TabSummary = (props) => {
             <Typography variant='overline'>Notification quarter</Typography>
             <div style={{padding: '40px 100px 0 50px'}}>
               <Slider
-                min={1991.25}
-                max={2007.75}
-                marks={notifMarks}
-                step={null}
-                defaultValue={[1994.25, 1996.75]}
+                min={appManager.notifQuarterFilterData.ScaleMinYear}
+                max={appManager.notifQuarterFilterData.ScaleMaxYear}
+                marks={true}
+                defaultValue={[
+                  appManager.notifQuarterFilterData.ScaleMinYear,
+                  appManager.notifQuarterFilterData.ScaleMaxYear
+                ]}
                 valueLabelDisplay='on'
                 valueLabelFormat={value => value.toFixed(2)}
                 classes={{

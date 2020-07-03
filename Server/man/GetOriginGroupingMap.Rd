@@ -4,7 +4,7 @@
 \alias{GetOriginGroupingMap}
 \title{GetOriginGroupingMap}
 \usage{
-GetOriginGroupingMap(type, distr, groups)
+GetOriginGroupingMap(type, distr, groups = list())
 }
 \arguments{
 \item{type}{Grouping type}

@@ -28,7 +28,18 @@ export default class AppManager {
     },
     { title: 'Data summary', completed: false, disabled: false, subSteps: []},
     { title: 'Adjustments', completed: false, disabled: false, subSteps: []},
-    { title: 'Modelling', completed: false, disabled: false, subSteps: []},
+    {
+      title: 'Modelling',
+      completed: false,
+      disabled: false,
+      subSteps: [
+        { title: 'Populations' },
+        { title: 'Inputs' },
+        { title: 'Advanced' },
+        { title: 'Run' }
+      ],
+      activeSubStepId: 0
+    },
     { title: 'Reports', completed: false, disabled: false, subSteps: []},
     { title: 'Outputs', completed: false, disabled: false, subSteps: []},
   ];
@@ -243,7 +254,7 @@ export default class AppManager {
     this.notifQuarterFilterData.ValueMaxYear = data.ValueMaxYear;
   };
   @action setNotifQuarterChartData = data => this.notifQuarterChartData = data;
-  @action setnotifQuarterChartCategories = categories => this.notifQuarterChartCategories = categories;
+  @action setNotifQuarterChartCategories = categories => this.notifQuarterChartCategories = categories;
   @action setOriginDistribution = distr => this.originDistribution = distr;
   @action setOriginGrouping = grouping => {
     // Make sure that FullRegionsOfOrigin are arrays

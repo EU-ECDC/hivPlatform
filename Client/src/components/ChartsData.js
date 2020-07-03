@@ -1,26 +1,4 @@
-export const filterDiagChartSeries = [
-  {
-    name: 'Female',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54]
-  },
-  {
-    name: 'Male',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54]
-  }
-];
-
-export const filterNotifChartSeries = [
-  {
-    name: 'Female',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54, 30, 40, 45, 50, 49, 60, 70, 91, 54]
-  },
-  {
-    name: 'Male',
-    data: [30, 40, 45, 50, 49, 60, 70, 91, 54, 30, 40, 45, 50, 49, 60, 70, 91, 54]
-  }
-];
-
-export const filterDiagChartOptions1 = {
+export const defDiagChartOptions = {
   chart: {
     id: 'filter-diag-chart-1',
     stacked: true,
@@ -37,11 +15,6 @@ export const filterDiagChartOptions1 = {
     parentHeightOffset: 0
   },
   colors: ["#69b023", "#7bbcc0", "#ce80ce", "#9d8b56"],
-  /*
-  theme: {
-    palette: 'palette6'
-  },
-  */
   title: {
     // text: 'Histogram of cases count per year of diagnosis',
     style: {
@@ -122,15 +95,16 @@ export const filterDiagChartOptions1 = {
   }
 };
 
-export const marks = filterDiagChartOptions1.xaxis.categories.map(function (el) {
-  console.log(el);
+/*
+export const marks = defaultFilterDiagChartOptions.xaxis.categories.map(function (el) {
   return ({
     value: el,
     label: el.toString()
   })
 })
+*/
 
-export const filterNotifChartOptions1 = {
+export const defNotifChartOptions = {
   chart: {
     id: 'filter-notif-chart-1',
     stacked: true,
@@ -228,13 +202,6 @@ export const filterNotifChartOptions1 = {
     },
   },
 };
-
-export const notifMarks = filterNotifChartOptions1.xaxis.categories.map((el, idx) =>
-  ({
-    value: el,
-    label: idx % 2 ? null : el.toFixed(2)
-  })
-)
 
 export const missChartSeries = [
   {

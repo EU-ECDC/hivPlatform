@@ -159,7 +159,7 @@ AppManager <- R6::R6Class(
           ),
           list(
             name = 'Male',
-            data = counts[Gender == 'M', Count]
+            data = diagYearCounts[Gender == 'M', Count]
           )
         ),
         NotifQuarterFilterData = list(
