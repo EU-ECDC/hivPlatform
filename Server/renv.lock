@@ -72,13 +72,6 @@
       "Repository": "CRAN",
       "Hash": "fbe4ac267bf42a91e495cc68ad3f8b63"
     },
-    "XML": {
-      "Package": "XML",
-      "Version": "3.99-0.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "2625adc5e07995996f05407a5eb39977"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -506,10 +499,10 @@
     },
     "mice": {
       "Package": "mice",
-      "Version": "3.9.0",
+      "Version": "3.10.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5e81b48e5feee77b60e1c7f9c1b7849f"
+      "Hash": "3d63d9f6747e16a4cdd0b1103feb6e0c"
     },
     "mime": {
       "Package": "mime",
@@ -520,10 +513,10 @@
     },
     "miniCRAN": {
       "Package": "miniCRAN",
-      "Version": "0.2.12",
+      "Version": "0.2.13",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5772d3855f62916dddebf6e4aac866a0"
+      "Hash": "670c25da9e97efd9c1180eea5bea04f9"
     },
     "minqa": {
       "Package": "minqa",
@@ -597,10 +590,10 @@
     },
     "pkgbuild": {
       "Package": "pkgbuild",
-      "Version": "1.0.8",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8d8b5e29223aabb829246397299f0592"
+      "Hash": "404684bc4e3685007f9720adf13b06c1"
     },
     "pkgconfig": {
       "Package": "pkgconfig",
@@ -877,10 +870,10 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.3.1",
+      "Version": "0.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1739235995f08583db4095a28c357207"
+      "Hash": "5ba3006888ac62fd5e97b208d00d3317"
     },
     "viridisLite": {
       "Package": "viridisLite",
