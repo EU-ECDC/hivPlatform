@@ -267,5 +267,4 @@ const TabSummary = (props) => {
   )
 };
 
-
 export default observer(TabSummary);

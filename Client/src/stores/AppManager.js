@@ -131,7 +131,6 @@ export default class AppManager {
       this.setCaseBasedDataPath(data.Payload.FilePath);
       this.setCaseBasedDataFileSize(data.Payload.FileSize);
       this.setCaseBasedDataFileType(data.Payload.FileType);
-      this.steps[2].disabled = false;
     } else if (data.Type === 'CASE_BASED_DATA_READ') {
       this.setCaseBasedDataColumnNames(data.Payload.ColumnNames);
       this.setCaseBasedDataRowCount(data.Payload.RowCount);
