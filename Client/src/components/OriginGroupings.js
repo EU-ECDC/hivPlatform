@@ -40,9 +40,6 @@ const OriginGroupings = (props) => {
   const originDistribution = appManager.originDistributionArray;
   const originGrouping = appManager.originGroupingArray;
   const fullRegionsOfOriginArray = appManager.fullRegionsOfOriginArray;
-  console.log(originDistribution);
-  console.log(originGrouping);
-  console.log(fullRegionsOfOriginArray);
 
   const handleGroupingPresetChange = e => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);

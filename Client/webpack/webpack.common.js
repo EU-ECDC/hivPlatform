@@ -39,12 +39,16 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx'],
   },
+  externals: {
+    jquery: 'jQuery',
+    $: 'jQuery'
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: commonPaths.indexPath,
       minify: false,
-      inject: false,
+      inject: 'body',
       includeShinyJS: process.env.NODE_ENV === 'production',
     }),
     new webpack.ProgressPlugin(),

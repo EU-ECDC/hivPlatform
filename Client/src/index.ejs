@@ -19,16 +19,17 @@
     }
   </style>
   <link rel="shortcut icon" href="www/favicon.ico">
+  <% if(htmlWebpackPlugin.options.includeShinyJS) { %>
+  <!-- Get access to Shiny framework -->
+  <script type="text/javascript" src="shared/json2-min.js"></script>
+  <script type="text/javascript" src="shared/jquery.min.js"></script>
+  <script type="text/javascript" src="shared/shiny.min.js"></script>
+  <% } else{ %>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <% } %>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>
-
 <div id="app" style="display: flex; overflow: hidden;"></div>
-<%= htmlWebpackPlugin.tags.bodyTags %>
-<% if(htmlWebpackPlugin.options.includeShinyJS) { %>
-<!-- Get access to Shiny framework -->
-<script type="text/javascript" src="shared/json2-min.js"></script>
-<script type="text/javascript" src="shared/shiny.min.js"></script>
-<% } %>
 </body>
 </html>

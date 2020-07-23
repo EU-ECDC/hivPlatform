@@ -202,7 +202,7 @@ export default class AppManager {
 
   @computed
   get fullRegionsOfOriginArray() {
-    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin.sort();
+    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin.slice().sort();
     return fullRegionsOfOrigin;
   }
 
