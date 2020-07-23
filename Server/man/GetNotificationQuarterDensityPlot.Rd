@@ -9,8 +9,7 @@ GetNotificationQuarterDensityPlot(
   colorPalette = c("#69b023", "#7bbcc0", "#9d8b56", "#ce80ce"),
   genderLabels = c(M = "Male", F = "Female", O = "Other"),
   xLimits = NULL,
-  markerLocations = NULL,
-  plotly = TRUE
+  markerLocations = NULL
 )
 }
 \arguments{
@@ -28,9 +27,6 @@ x axis. Optional. Default = \code{NULL}.}
 
 \item{markerLocations}{Vector of numbers (years) for positions of vertical
 dashed lines. Optional. Default = \code{NULL}.}
-
-\item{plotly}{Logical indicating to produce interactive, plotly-based, version of the chart.
-Default = \code{TRUE}}
 }
 \value{
 ggplot2 object

@@ -317,13 +317,6 @@
       "Repository": "CRAN",
       "Hash": "ac5c6baf7822ce8732b343f14c072c4d"
     },
-    "hexbin": {
-      "Package": "hexbin",
-      "Version": "1.28.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "3d59212f2814d65dff517e6899813c58"
-    },
     "highr": {
       "Package": "highr",
       "Version": "0.8",
@@ -601,13 +594,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b6b150cd4709e0c0c9b5d51ac4376282"
-    },
-    "plotly": {
-      "Package": "plotly",
-      "Version": "4.9.2.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b08edf378e0e38959a6983e3d5902795"
     },
     "praise": {
       "Package": "praise",

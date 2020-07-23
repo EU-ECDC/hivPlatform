@@ -12,10 +12,8 @@
 #'   x axis. Optional. Default = \code{NULL}.
 #' @param markerLocations Vector of numbers (years) for positions of vertical
 #'   dashed lines. Optional. Default = \code{NULL}.
-#' @param plotly Logical indicating to produce interactive, plotly-based, version of the chart.
-#'   Default = \code{TRUE}
 #'
-#' @return ggplot2 or plotly  object
+#' @return ggplot2 object
 #'
 #' @examples
 #' \dontrun{
@@ -28,8 +26,7 @@ GetDiagnosisYearDensityPlot <- function(
   colorPalette = c("#69b023", "#7bbcc0", "#9d8b56", "#ce80ce"),
   genderLabels = c("M" = "Male", "F" = "Female", "O" = "Other"),
   xLimits = NULL,
-  markerLocations = NULL,
-  plotly = TRUE
+  markerLocations = NULL
 )
 {
   if (is.null(plotData)) {
@@ -84,10 +81,6 @@ GetDiagnosisYearDensityPlot <- function(
           axis.text.y = element_text(size = 9, angle = 90, hjust = 0.5)) +
     xlab("Diagnosis year") +
     ylab("Count of cases")
-
-  if (plotly) {
-    plot <- plotly::ggplotly(plot) %>% plotly::config(displaylogo = FALSE)
-  }
 
   return(plot)
 }
