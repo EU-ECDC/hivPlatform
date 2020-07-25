@@ -45,11 +45,21 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIV_Obs_M
 appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 
 
+distr <- GetOriginDistribution(appMgr$PreProcessedCaseBasedData$Table)
 type <- 'REPCOUNTRY + UNK + OTHER'
 type <- 'Custom'
-distr <- GetOriginDistribution(appMgr$PreProcessedCaseBasedData$Table)
-groups <- list()
-dtMap <- GetOriginGroupingMap(type, distr)
+groups <- list(
+  list(
+    GroupedRegionOfOrigin = 'Test',
+    FullRegionOfOrigin = c('UNK', 'ABROAD', 'AUSTNZ')
+  ),
+  list(
+    GroupedRegionOfOrigin = 'ajskd',
+    FullRegionOfOrigin = c('CENTEUR', 'EASTASIAPAC', 'EASTEUR')
+  )
+
+)
+dtMap <- GetOriginGroupingMap(type, distr, groups)
 dtList <- ConvertOriginGroupingDtToList(dtMap)
 ConvertOriginGroupingListToDt(dtList)
 

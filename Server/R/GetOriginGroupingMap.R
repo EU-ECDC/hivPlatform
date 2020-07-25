@@ -42,7 +42,7 @@ GetOriginGroupingMap <- function(type, distr, groups = list())
     },
     "Custom" = {
       for (group in groups) {
-        map[map %chin% group$Regions] <- group$Name
+        map[map %chin% group$FullRegionOfOrigin] <- group$GroupedRegionOfOrigin
       }
     },
     stop("Unsupported type")

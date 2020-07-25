@@ -115,7 +115,10 @@ export default class AppManager {
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
   @observable
-  originDistribution = {FullRegionOfOrigin: [], Count: []};
+  originDistribution = {
+    FullRegionOfOrigin: [],
+    Count: []
+  };
 
   @observable
   originGrouping = [];
