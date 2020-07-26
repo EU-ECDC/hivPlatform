@@ -62,8 +62,8 @@ const OriginGroupings = (props) => {
           </TableHead>
           <TableBody>
             {
-              originDistribution.map(el => (
-                <TableRow hover>
+              originDistribution.map((el, i) => (
+                <TableRow hover key={i}>
                   <TableCell>{el.FullRegionOfOrigin}</TableCell><TableCell align='right'>{el.Count}</TableCell>
                 </TableRow>
               ))
@@ -118,7 +118,8 @@ const OriginGroupings = (props) => {
                               <Chip
                                 key={value}
                                 label={value}
-                                style={{ margin: 2 }} />
+                                style={{ margin: 2 }}
+                              />
                             ))}
                           </div>
                         )}
@@ -127,8 +128,8 @@ const OriginGroupings = (props) => {
                         disableUnderline
                       >
                         {
-                          fullRegionsOfOriginArray.map(el => (
-                            <MenuItem value={el} dense>{el}</MenuItem>
+                          fullRegionsOfOriginArray.map((el, i) => (
+                            <MenuItem value={el} dense>{el} key={i}</MenuItem>
                           ))
                         }
                       </Select>

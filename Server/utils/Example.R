@@ -46,7 +46,7 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 
 
 distr <- GetOriginDistribution(appMgr$PreProcessedCaseBasedData$Table)
-type <- 'REPCOUNTRY + UNK + OTHER'
+# type <- 'REPCOUNTRY + UNK + OTHER'
 type <- 'Custom'
 groups <- list(
   list(
