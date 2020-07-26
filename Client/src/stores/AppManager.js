@@ -123,9 +123,6 @@ export default class AppManager {
   @observable
   originGrouping = [];
 
-  @observable
-  regionGroups = new Map();
-
   // Shiny custom event handlers
   onShinyEvent = data => {
     console.log(data);
@@ -164,18 +161,18 @@ export default class AppManager {
   @computed
   get shinyReady() {
     return this.shinyState === 'SESSION_INITIALIZED';
-  }
+  };
 
   @computed
   get stepsTitles() {
     const stepTitles = this.steps.map(step => step.title);
     return stepTitles;
-  }
+  };
 
   @computed
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
-  }
+  };
 
   @computed
   get caseBasedDataColumnNamesString() {
@@ -183,7 +180,7 @@ export default class AppManager {
       return '';
     }
     return this.caseBasedDataColumnNames.join(', ');
-  }
+  };
 
   @computed
   get caseBasedDataAttributeMappingArray() {
@@ -191,7 +188,7 @@ export default class AppManager {
       return [];
     }
     return Object.entries(this.caseBasedDataAttributeMapping).map(key => ({ Key: key[0], Val: key[1] }))
-  }
+  };
 
   @computed
   get originDistributionArray() {
@@ -201,19 +198,27 @@ export default class AppManager {
       FullRegionOfOrigin: fullRegionsOfOrigin[i],
       Count: counts[i]
     }));
-  }
+  };
 
   @computed
   get fullRegionsOfOriginArray() {
     const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin.slice().sort();
     return fullRegionsOfOrigin;
-  }
+  };
 
   @computed
   get originGroupingArray() {
     return toJS(this.originGrouping);
-  }
+  };
 
+  @computed
+  get usedFullRegionsOfOrigin() {
+    return [].concat.apply([], this.originGrouping.map(el => el.FullRegionsOfOrigin));
+  };
+  @computed
+  get unusedFullRegionsOfOrigin() {
+    return this.fullRegionsOfOriginArray.filter(x => !this.usedFullRegionsOfOrigin.includes(x));
+  };
   @action
   setShinyState = state => {
     this.shinyState = state;
@@ -270,10 +275,13 @@ export default class AppManager {
     })
 
     this.originGrouping = temp;
-  }
-  @action setRegionGroup = (name, regions) => this.regionGroups.set(name, regions);
-  @action removeRegionGroup = name => this.regionGroups.delete(name);
-
+  };
+  @action setGroupedRegionOfOrigin = (i, groupedRegionOfOrigin) => {
+    this.originGrouping[i].GroupedRegionOfOrigin = groupedRegionOfOrigin;
+  };
+  @action setFullRegionsOfOrigin = (i, fullRegionsOfOrigin) => {
+    this.originGrouping[i].FullRegionsOfOrigin = fullRegionsOfOrigin;
+  };
   @action
   unbindShinyInputs = () => {
     if (this.shinyReady) {
@@ -281,7 +289,7 @@ export default class AppManager {
     } else {
       console.log('unbindShinyInputs: Shiny is not available');
     }
-  }
+  };
 
   @action
   bindShinyInputs = () => {
@@ -290,7 +298,7 @@ export default class AppManager {
     } else {
       console.log('bindShinyInputs: Shiny is not available');
     }
-  }
+  };
 
   @action
   btnClicked = btnId => {
