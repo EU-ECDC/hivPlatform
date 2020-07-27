@@ -1,12 +1,15 @@
 import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import NotificationsManager from './NotificationsManager';
 
 configure({
   enforceActions: 'observed',
 });
 
 export default class AppManager {
+
+  notificationsMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -137,10 +140,13 @@ export default class AppManager {
       this.setCaseBasedDataRowCount(data.Payload.RowCount);
       this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
       this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
+      this.notificationsMgr.setMsg('Case based data uploaded');
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED') {
       this.setOriginDistribution(data.Payload.OriginDistribution);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_SET') {
       this.setOriginGrouping(data.Payload.OriginGrouping);
+    } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED') {
+      this.notificationsMgr.setMsg('Origin grouping applied');
     } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
       this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
       this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
@@ -157,7 +163,9 @@ export default class AppManager {
     }
   };
 
-  constructor() { };
+  constructor() {
+    this.notificationsMgr = new NotificationsManager(this);
+  };
 
   @computed
   get shinyReady() {
@@ -293,8 +301,10 @@ export default class AppManager {
       FullRegionsOfOrigin: []
     })
   }
-  @action applyOriginGrouping = () =>
+  @action applyOriginGrouping = () => {
     this.inputValueSet('originGrouping:OriginGroupingArray', this.originGrouping);
+  }
+
   @action
   unbindShinyInputs = () => {
     if (this.shinyReady) {

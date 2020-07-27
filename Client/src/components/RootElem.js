@@ -16,6 +16,7 @@ import TabAdjustments from './TabAdjustments';
 import TabModelling from './TabModelling';
 import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';
+import MessageBar from './MessageBar';
 import { NAME, VERSION } from '../settings';
 
 const userStyles = makeStyles({
@@ -116,6 +117,7 @@ const RootElem = props => {
           <TabOutputs />
         </StepPanel>
       </Box>
+      <MessageBar notificationsMgr={appManager.notificationsMgr} />
     </Box>
   );
 };

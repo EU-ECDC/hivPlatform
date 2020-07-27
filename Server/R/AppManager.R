@@ -113,6 +113,12 @@ AppManager <- R6::R6Class(
         map
       )
 
+      self$SendEventToReact('shinyHandler', list(
+        Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+
       PrintAlert('Origin grouping has been applied')
 
       return(invisible(self))
