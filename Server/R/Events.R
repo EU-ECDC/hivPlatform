@@ -69,11 +69,7 @@ Events <- function(input, output, session, appMgr)
     type <- input$groupingPresetSelect
     appMgr$OriginGroupingType <- type
     distr <- appMgr$OriginDistribution
-
-    groups <- list()
-    # groups <- list(
-    #   list(Name = 'EUROPE', Regions = c('CENTEUR', 'EASTEUR', 'EUROPE', 'WESTEUR'))
-    # )
+    groups <- appMgr$OriginGrouping
     dtMap <- GetOriginGroupingMap(type, distr, groups = groups)
     dtList <- ConvertOriginGroupingDtToList(dtMap)
 
@@ -84,6 +80,10 @@ Events <- function(input, output, session, appMgr)
         OriginGrouping = dtList
       )
     ))
+  })
+
+  observeEvent(input$originGrouping, {
+    appMgr$OriginGrouping <- input$originGrouping
   })
 
   observeEvent(input$runAdjustBtn, {

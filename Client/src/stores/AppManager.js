@@ -1,5 +1,6 @@
 import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
+import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 
 configure({
   enforceActions: 'observed',
@@ -282,6 +283,18 @@ export default class AppManager {
   @action setFullRegionsOfOrigin = (i, fullRegionsOfOrigin) => {
     this.originGrouping[i].FullRegionsOfOrigin = fullRegionsOfOrigin;
   };
+  @action removeOriginGroupings = selectedIds => {
+    this.originGrouping = RemoveElementsFromArray(this.originGrouping, selectedIds);
+  }
+  @action addOriginGrouping = () => {
+    this.originGrouping.push({
+      GroupedRegionOfOrigin: 'New',
+      GroupedRegionOfOriginCount: 0,
+      FullRegionsOfOrigin: []
+    })
+  }
+  @action applyOriginGrouping = () =>
+    this.inputValueSet('originGrouping:OriginGroupingArray', this.originGrouping);
   @action
   unbindShinyInputs = () => {
     if (this.shinyReady) {
@@ -303,7 +316,7 @@ export default class AppManager {
   @action
   btnClicked = btnId => {
     if (this.shinyReady) {
-      window.Shiny.setInputValue(btnId, '', { priority: 'event' });
+      Shiny.setInputValue(btnId, '', { priority: 'event' });
     } else {
       console.log('btnClicked: Shiny is not available');
     }
@@ -312,7 +325,7 @@ export default class AppManager {
   @action
   inputValueSet = (inputId, value) => {
     if (this.shinyReady) {
-      window.Shiny.setInputValue(inputId, value);
+      Shiny.setInputValue(inputId, value);
     } else {
       console.log('inputValueSet: Shiny is not available');
     }

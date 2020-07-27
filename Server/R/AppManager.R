@@ -31,9 +31,10 @@ AppManager <- R6::R6Class(
         CaseBasedDataPath = NULL,
         AttributeMapping = NULL,
         AttributeMappingStatus = NULL,
-        OriginGroupingType = 'REPCOUNTRY + UNK + OTHER',
         PreProcessedCaseBasedDataStatus = NULL,
+        OriginGroupingType = 'REPCOUNTRY + UNK + OTHER',
         OriginDistribution = NULL,
+        OriginGrouping = list(),
         Plots = NULL,
         MICount = 0,
         BSCount = 0,
@@ -92,12 +93,19 @@ AppManager <- R6::R6Class(
     },
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
-    ApplyOriginGrouping = function(type) {
+    ApplyOriginGrouping = function(type, groups) {
       if (missing(type)) {
         type <- private$Catalogs$OriginGroupingType
+      } else {
+        private$Catalogs$OriginGroupingType <- type
       }
+      if (missing(groups)) {
+        groups <- private$Catalogs$OriginGrouping
+      } else {
+        private$Catalogs$OriginGrouping <- groups
+      }
+
       distr <- private$Catalogs$OriginDistribution
-      groups <- list()
       map <- GetOriginGroupingMap(type, distr, groups)
 
       private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
@@ -542,6 +550,16 @@ AppManager <- R6::R6Class(
       } else {
         private$Catalogs$OriginGroupingType <- type
         self$ApplyOriginGrouping()
+        return(self)
+      }
+    },
+
+    OriginGrouping = function(originGrouping) {
+      if (missing(originGrouping)) {
+        return(private$Catalogs$OriginGrouping)
+      } else {
+        private$Catalogs$OriginGrouping <- originGrouping
+        self$ApplyOriginGrouping('Custom')
         return(self)
       }
     },

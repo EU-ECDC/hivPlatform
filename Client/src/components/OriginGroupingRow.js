@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 
 const OriginGroupingRow = (props) => {
-  const { i, isSelected, originGroup:el, appManager } = props;
+  const { i, isSelected, onSelectClick,  originGroup:el, appManager } = props;
 
   const unusedFullRegionsOfOrigin = appManager.unusedFullRegionsOfOrigin;
   const menuItems = el.FullRegionsOfOrigin.concat(unusedFullRegionsOfOrigin);
@@ -22,8 +22,6 @@ const OriginGroupingRow = (props) => {
     appManager.setFullRegionsOfOrigin(i, e.target.value);
   };
 
-  console.log(i, isSelected);
-
   return (
     <TableRow hover role='checkbox'>
       <TableCell padding='checkbox'>
@@ -31,6 +29,7 @@ const OriginGroupingRow = (props) => {
           inputProps={{ 'aria-labelledby': `labelId${i}` }}
           color='primary'
           checked={isSelected}
+          onClick={onSelectClick}
         />
       </TableCell>
       <TableCell id={`labelId${i}`} scope='row' padding='none'>

@@ -51,7 +51,7 @@ type <- 'Custom'
 groups <- list(
   list(
     GroupedRegionOfOrigin = 'Test',
-    FullRegionOfOrigin = c('UNK', 'ABROAD', 'AUSTNZ')
+    FullRegionOfOrigin = c('UNK', 'ABROAD', 'AUSTNZ', 'REPCOUNTRY')
   ),
   list(
     GroupedRegionOfOrigin = 'ajskd',
@@ -59,6 +59,12 @@ groups <- list(
   )
 
 )
+appMgr$ApplyOriginGrouping(type, groups)
+appMgr$OriginGroupingType
+appMgr$OriginGrouping
+appMgr$PreProcessedCaseBasedData$Table[, unique(GroupedRegionOfOrigin)]
+
+
 dtMap <- GetOriginGroupingMap(type, distr, groups)
 dtList <- ConvertOriginGroupingDtToList(dtMap)
 ConvertOriginGroupingListToDt(dtList)

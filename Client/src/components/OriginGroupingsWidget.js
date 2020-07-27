@@ -18,16 +18,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import OriginGroupingRow from './OriginGroupingRow';
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { selectedCount, onAddClick, onDeleteClick } = props;
+
+  const deleteDisabled = selectedCount === 0;
 
   return (
     <Toolbar>
       <Typography variant='subtitle1' component='div' style={{ flex: '1 1 100%' }}>
-        {numSelected} selected
+        {selectedCount} selected
       </Typography>
 
-      <Button color='primary' disabled>Delete</Button>
-      <Button color='primary'>Add</Button>
+      <Button color='primary' disabled={deleteDisabled} onClick={onDeleteClick}>Delete</Button>
+      <Button color='primary' onClick={onAddClick}>Add</Button>
     </Toolbar>
   );
 };
@@ -42,7 +44,7 @@ const OriginGroupingsWidget = (props) => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);
   };
 
-  const handleSelectAllChecked = e => {
+  const handleSelectAllClick = e => {
     if (e.target.checked) {
       const newSelectedIds = originGrouping.map((el, i) => i);
       setSelected(newSelectedIds);
@@ -51,13 +53,42 @@ const OriginGroupingsWidget = (props) => {
     setSelected([]);
   }
 
+  const handleSelectClick = i => e => {
+    const selectedIndex = selected.indexOf(i);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, i);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleDeleteClick = () => {
+    appManager.removeOriginGroupings(selected);
+    setSelected([]);
+  }
+
+  const handleAddClick = () => {
+    appManager.addOriginGrouping(selected);
+  }
+
   const rowCount = originGrouping.length;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
     <Paper style={{ padding: 10 }}>
-      <Typography variant='overline'>Grouping options</Typography>
+      <Typography variant='overline'>Migrant variable regrouping</Typography>
       <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
         <InputLabel>
           Preset
@@ -77,7 +108,7 @@ const OriginGroupingsWidget = (props) => {
               <Checkbox
                 inputProps={{ 'aria-label': 'select all desserts' }}
                 color='primary'
-                onChange={handleSelectAllChecked}
+                onClick={handleSelectAllClick}
                 checked={rowCount > 0 && selectedCount === rowCount}
               />
             </TableCell>
@@ -95,12 +126,17 @@ const OriginGroupingsWidget = (props) => {
                 originGroup={el}
                 appManager={appManager}
                 isSelected={isSelected(i)}
+                onSelectClick={handleSelectClick(i)}
               />
             ))
           }
         </TableBody>
       </Table>
-      <EnhancedTableToolbar numSelected={0} />
+      <EnhancedTableToolbar
+        selectedCount={selectedCount}
+        onAddClick={handleAddClick}
+        onDeleteClick={handleDeleteClick}
+      />
     </Paper>
   )
 };

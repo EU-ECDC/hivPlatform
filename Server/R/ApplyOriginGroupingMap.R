@@ -20,7 +20,7 @@ ApplyOriginGroupingMap <- function(inputData, map)
 
   data[
     map,
-    GroupedRegionOfOrigin := GroupedRegionOfOrigin,
+    GroupedRegionOfOrigin := i.GroupedRegionOfOrigin,
     on = 'FullRegionOfOrigin'
   ]
 
