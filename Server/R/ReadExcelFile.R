@@ -23,10 +23,12 @@ ReadExcelFile <- function(fileName, fileType, ...)
     fileType <- tolower(tools::file_ext(fileName))
   }
 
-  data <- switch(fileType,
-                 "xls"  = data.table::setDT(readxl::read_xls(path = fileName, ...)),
-                 "xlsx" = data.table::setDT(readxl::read_xlsx(path = fileName, ...)),
-                 {"Unsupported file extension"})
+  data <- switch(
+    fileType,
+    'xls'  = data.table::setDT(readxl::read_xls(path = fileName, ...)),
+    'xlsx' = data.table::setDT(readxl::read_xlsx(path = fileName, ...)),
+    {'Unsupported file extension'}
+  )
 
   return(data)
 }

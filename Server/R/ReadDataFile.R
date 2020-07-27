@@ -26,15 +26,11 @@ ReadDataFile <- function(fileName, fileType, ...)
 
   localFileName <- fileName
 
-  if (tools::file_ext(fileName) == "zip") {
+  if (tools::file_ext(fileName) == 'zip') {
     zippedFilesList <- as.character(unzip(fileName, list = TRUE)$Name)
     if (length(zippedFilesList) == 1) {
-      zippedFile <- utils::unzip(zipfile = fileName,
-                                 files = zippedFilesList[1],
-                                 exdir = tempdir())
-
+      zippedFile <- utils::unzip(zipfile = fileName, files = zippedFilesList[1], exdir = tempdir())
       localFileName <- zippedFile
-
       on.exit({
         unlink(zippedFile)
       })
@@ -47,17 +43,19 @@ ReadDataFile <- function(fileName, fileType, ...)
   }
 
   if (IsEmptyString(fileType)) {
-    stop("Undetected file type")
+    stop('Undetected file type')
   }
 
   # Run appropriate reading function
-  data <- switch(fileType,
-                 "xls"  = ReadExcelFile(localFileName, fileType, ...),
-                 "xlsx" = ReadExcelFile(localFileName, fileType, ...),
-                 "txt"  = ReadTextFile(localFileName, colClasses = 'character', ...),
-                 "csv"  = ReadTextFile(localFileName, colClasses = 'character', ...),
-                 "rds"  = ReadRdsFile(localFileName, ...),
-                 {"Unsupported file extension"})
+  data <- switch(
+    fileType,
+    'xls'  = ReadExcelFile(localFileName, fileType, ...),
+    'xlsx' = ReadExcelFile(localFileName, fileType, ...),
+    'txt'  = ReadTextFile(localFileName, colClasses = 'character', ...),
+    'csv'  = ReadTextFile(localFileName, colClasses = 'character', ...),
+    'rds'  = ReadRdsFile(localFileName, ...),
+    {'Unsupported file extension'}
+  )
 
   return(data)
 }

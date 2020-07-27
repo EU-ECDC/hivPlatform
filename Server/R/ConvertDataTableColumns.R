@@ -26,13 +26,13 @@
 ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
 {
   if (!is.data.table(object)) {
-    stop("Input object must be of class data.table")
+    stop('Input object must be of class data.table')
   }
 
   objectColNames <- colnames(object)
 
   # Iterate over defined transformations
-  # columnName <- names(columnDefs)[20]
+  # columnName <- names(columnDefs)[22]
   for (columnName in names(columnDefs)) {
 
     columnDef <- columnDefs[[columnName]]
@@ -61,10 +61,10 @@ ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
     # Apply the transformation if both:
     #   a) specified,
     #   b) the transformed column exists
-    if (!is.null(transFunc) & columnName %in% objectColNames) {
+    if (!is.null(transFunc) && columnName %in% objectColNames) {
       # Apply the transformation to the data.table by reference (directly on the object, no copies made)
       if (is.character(columnDef)) {
-        if (columnDef == "factor" & !is.null(levelsFunc)) {
+        if (columnDef == 'factor' && !is.null(levelsFunc)) {
           object[, eval(columnName) := transFunc(get(columnName), levels = levelsFunc(columnName, ...))]
           next
         }

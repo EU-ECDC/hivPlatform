@@ -126,37 +126,24 @@ AppManager <- R6::R6Class(
 
     # 4. Create plots ------------------------------------------------------------------------------
     GetSummaryData = function() {
-      # diagnosisYearDensity <- GetDiagnosisYearDensityPlot(
-      #   private$Catalogs$PreProcessedCaseBasedData$Table
-      # )
-      # notificationQuarterDensity <- GetNotificationQuarterDensityPlot(
-      #   private$Catalogs$PreProcessedCaseBasedData$Table
-      # )
-      #
-      # private$Catalogs$Plots <- list(
-      #   DiagnosisYearDensity = diagnosisYearDensity,
-      #   NotificationQuarterDensity = notificationQuarterDensity
-      # )
-
       plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
 
       # Diagnosis year plot
       diagYearCounts <- plotDT[,
         .(Count = .N),
-        keyby = .(Gender, DateOfDiagnosisYear = year(DateOfDiagnosisISODate))
+        keyby = .(Gender, YearOfHIVDiagnosis)
       ]
-      diagYearCategories <- sort(unique(diagYearCounts$DateOfDiagnosisYear))
+      diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
 
       # Notification quarter plot
       notifQuarterCounts <- plotDT[,
         .(Count = .N),
         keyby = .(
           Gender,
-          DateOfNotificationQuarter =
-            year(DateOfNotificationISODate) + quarter(DateOfNotificationISODate) / 4
+          QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
         )
       ]
-      notifQuarterCategories <- sort(unique(notifQuarterCounts$DateOfNotificationQuarter))
+      notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
 
       summaryData <- list(
         DiagnosisYearFilterData = list(

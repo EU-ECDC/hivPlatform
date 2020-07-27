@@ -3,6 +3,8 @@
 #' Gets attributes mappings.
 #'
 #' @param origData Original data. Required.
+#' @param maxDistance Maximum allowed generalized Levenshtein distance between internal and origina
+#'   column name. Optional. Default = 4
 #'
 #' @return list with attributes mapping
 #'
@@ -12,7 +14,7 @@
 #' }
 #'
 #' @export
-GetPreliminaryAttributesMapping <- function(origData)
+GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
 {
   stopifnot(!missing(origData))
 
@@ -26,17 +28,22 @@ GetPreliminaryAttributesMapping <- function(origData)
   requiredColumnNames <- names(columnSpecs)
   origColNames <- names(origData)
 
-  # Get column mapping
+  # Initialize column mapping
   attrMapping <- sapply(names(columnSpecs), function(x) NULL)
 
   # 1. Fixed matching first
-  if (
-    'FirstCD4Count' %in% requiredColumnNames &
-    'cd4_num' %in% origColNames
-  ) {
-    attrMapping[['FirstCD4Count']] <- 'cd4_num'
-    requiredColumnNames <- setdiff(requiredColumnNames, 'FirstCD4Count')
-    origColNames <- setdiff(origColNames, 'cd4_num')
+  # requiredColumnName <- requiredColumnNames[1]
+  for (requiredColumnName in requiredColumnNames) {
+    fixedColNames <- columnSpecs[[requiredColumnName]]$origColNames
+    # fixedColName <- fixedColNames[1]
+    for (fixedColName in fixedColNames) {
+      if (fixedColName %in% origColNames) {
+        attrMapping[[requiredColumnName]] <- fixedColName
+        requiredColumnNames <- setdiff(requiredColumnNames, requiredColumnName)
+        origColNames <- setdiff(origColNames, fixedColName)
+        break
+      }
+    }
   }
 
   # 2. Exact matching second
@@ -51,8 +58,9 @@ GetPreliminaryAttributesMapping <- function(origData)
   for (requiredColumnName in requiredColumnNames) {
     # Fuzzy string matching
     distance <- as.vector(adist(requiredColumnName, origColNames, ignore.case = TRUE))
-    if (min(distance) < 6) {
-      bestMatchColumn <- origColNames[which.min(adist(requiredColumnName, origColNames, ignore.case = TRUE))]
+    if (min(distance) <= maxDistance) {
+      bestMatchColumn <-
+        origColNames[which.min(adist(requiredColumnName, origColNames, ignore.case = TRUE))]
       # Remove matched column from searching in the next step.
       if (!is.na(bestMatchColumn)) {
         attrMapping[[requiredColumnName]] <- bestMatchColumn

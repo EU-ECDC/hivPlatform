@@ -30,32 +30,34 @@ PrepareDataSetsForModel <- function(
   }
 
   WorkFunc <- function(dt) {
-    dt[is.na(FirstCD4Count), FirstCD4Count := DateOfDiagnosisYear]
-
-    # Prepare extra details
-    dt[, ':='(
-      HIVDiagnosisDate = GetDate(
-        DateOfDiagnosisYear, DateOfDiagnosisQuarter, DateOfDiagnosisMonth, DateOfDiagnosisWeek,
-        DateOfDiagnosisDay
-      ),
-      AIDSDiagnosisDate = GetDate(
-        DateOfAIDSDiagnosisYear, DateOfAIDSDiagnosisQuarter, DateOfAIDSDiagnosisMonth,
-        DateOfAIDSDiagnosisWeek, DateOfAIDSDiagnosisDay
-      ),
-      FirstCD4Day = GetDate(
-        FirstCD4DateYear, FirstCD4DateQuarter, FirstCD4DateMonth, FirstCD4DateWeek,
-        FirstCD4DateDay
-      )
-    )]
+    # dt[is.na(FirstCD4Count), FirstCD4Count := DiagnosisYear]
+    #
+    # # Prepare extra details
+    # dt[, ':='(
+    #   HIVDiagnosisDate = GetDate(
+    #     DateOfDiagnosisYear, DateOfDiagnosisQuarter, DateOfDiagnosisMonth, DateOfDiagnosisWeek,
+    #     DateOfDiagnosisDay
+    #   ),
+    #   AIDSDiagnosisDate = GetDate(
+    #     DateOfAIDSDiagnosisYear, DateOfAIDSDiagnosisQuarter, DateOfAIDSDiagnosisMonth,
+    #     DateOfAIDSDiagnosisWeek, DateOfAIDSDiagnosisDay
+    #   ),
+    #   FirstCD4Day = GetDate(
+    #     FirstCD4DateYear, FirstCD4DateQuarter, FirstCD4DateMonth, FirstCD4DateWeek,
+    #     FirstCD4DateDay
+    #   )
+    # )]
     dt[, ':='(
       CD4Category = sprintf('HIV_CD4_%d', findInterval(FirstCD4Count, c(0, 200, 350, 500, Inf))),
-      HIVToAIDSDaysCount = as.integer(AIDSDiagnosisDate - HIVDiagnosisDate),
-      HIVToFirstCD4DaysCount = as.integer(FirstCD4Day - HIVDiagnosisDate)
+      HIVToAIDSDaysCount = as.integer(DateOfAIDSDiagnosis - DateOfHIVDiagnosis),
+      HIVToFirstCD4DaysCount = as.integer(DateOfFirstCD4Count - DateOfHIVDiagnosis),
+      YearOfAIDSDiagnosis = year(DateOfAIDSDiagnosis),
+      YearOfDeath = year(DateOfDeath)
     )]
 
     # HIV file
-    hiv <- dt[!is.na(DateOfDiagnosisYear), .(Count = .N), keyby = c('DateOfDiagnosisYear', strata)]
-    setnames(hiv, old = c('DateOfDiagnosisYear'), new = c('Year'))
+    hiv <- dt[!is.na(YearOfHIVDiagnosis), .(Count = .N), keyby = c('YearOfHIVDiagnosis', strata)]
+    setnames(hiv, old = c('YearOfHIVDiagnosis'), new = c('Year'))
     if (length(strata) > 0) {
       hiv <- dcast(
         hiv,
@@ -64,13 +66,13 @@ PrepareDataSetsForModel <- function(
       )
     }
 
-    # HIV file
+    # AIDS file
     aids <- dt[
-      !is.na(DateOfAIDSDiagnosisYear),
+      !is.na(YearOfAIDSDiagnosis),
       .(Count = .N),
-      keyby = c('DateOfAIDSDiagnosisYear', strata)
+      keyby = c('YearOfAIDSDiagnosis', strata)
     ]
-    setnames(aids, old = c('DateOfAIDSDiagnosisYear'), new = c('Year'))
+    setnames(aids, old = c('YearOfAIDSDiagnosis'), new = c('Year'))
     if (length(strata) > 0) {
       aids <- dcast(
         aids,
@@ -81,11 +83,11 @@ PrepareDataSetsForModel <- function(
 
     # HIVAIDS file
     hivAids <- dt[
-      !is.na(DateOfDiagnosisYear) & HIVToAIDSDaysCount <= 90,
+      !is.na(YearOfHIVDiagnosis) & HIVToAIDSDaysCount <= 90,
       .(Count = .N),
-      keyby = c('DateOfDiagnosisYear', strata)
+      keyby = c('YearOfHIVDiagnosis', strata)
     ]
-    setnames(hivAids, old = c('DateOfDiagnosisYear'), new = c('Year'))
+    setnames(hivAids, old = c('YearOfHIVDiagnosis'), new = c('Year'))
     if (length(strata) > 0) {
       hivAids <- dcast(
         hivAids,
@@ -101,8 +103,8 @@ PrepareDataSetsForModel <- function(
       sorted = TRUE
     )
     cd4 <- lapply(cd4, function(d) {
-      d <- d[, .(Count = .N), keyby = c('DateOfDiagnosisYear', strata)]
-      setnames(d, old = c('DateOfDiagnosisYear'), new = c('Year'))
+      d <- d[, .(Count = .N), keyby = c('YearOfHIVDiagnosis', strata)]
+      setnames(d, old = c('YearOfHIVDiagnosis'), new = c('Year'))
       if (length(strata) > 0) {
         d <- dcast(
           d,
@@ -114,8 +116,8 @@ PrepareDataSetsForModel <- function(
     })
 
     # Dead file
-    dead <- dt[!is.na(DateOfDeathYear), .(Count = .N), keyby = c('DateOfDeathYear', strata)]
-    setnames(dead, old = c('DateOfDeathYear'), new = c('Year'))
+    dead <- dt[!is.na(YearOfDeath), .(Count = .N), keyby = c('YearOfDeath', strata)]
+    setnames(dead, old = c('YearOfDeath'), new = c('Year'))
     if (length(strata) > 0) {
       dead <- dcast(
         dead,
@@ -135,11 +137,7 @@ PrepareDataSetsForModel <- function(
     )
 
     # Ensure all data items have the same columns
-    requiredColumns <- Reduce(
-      union,
-      lapply(dataSet, colnames),
-      init = c()
-    )
+    requiredColumns <- Reduce(union, lapply(dataSet, colnames), init = c())
 
     dataSet <- lapply(
       dataSet,
@@ -153,9 +151,7 @@ PrepareDataSetsForModel <- function(
       }
     )
 
-    return(
-      dataSet
-    )
+    return(dataSet)
   }
 
   if (!is.null(splitBy)) {

@@ -23,7 +23,7 @@ GetInputDataValidityStatus <- function(inputData)
   }
 
   columnSpecs <- GetListObject(
-    system.file("referenceData/requiredColumns.R", package = "hivEstimatesAccuracy2"),
+    system.file('referenceData/requiredColumns.R', package = 'hivEstimatesAccuracy2'),
     includeFileName = FALSE
   )
 
@@ -36,22 +36,26 @@ GetInputDataValidityStatus <- function(inputData)
     wrongValues <- c()
 
     if (!is.null(restrictedValues)) {
-      wrongValues <- c(wrongValues,
-                       restrictedValues[inputData[, restrictedValues %in% unique(get(columnName))]])
+      wrongValues <- c(
+        wrongValues,
+        restrictedValues[inputData[, restrictedValues %in% unique(get(columnName))]]
+      )
     }
 
     if (!is.null(allowedValues)) {
-      wrongValues <- c(wrongValues,
-                       inputData[!get(columnName) %in% c(allowedValues, NA),
-                                 unique(get(columnName))])
+      wrongValues <- c(
+        wrongValues,
+        inputData[!get(columnName) %in% c(allowedValues, NA), unique(get(columnName))]
+      )
     }
 
     valid <- length(wrongValues) == 0
 
-    checkStatus[[columnName]] <- list(Valid = valid,
-                                      WrongValues = wrongValues)
+    checkStatus[[columnName]] <- list(Valid = valid, WrongValues = wrongValues)
   }
 
-  return(list(Valid = all(sapply(checkStatus, "[[", "Valid")),
-              CheckStatus = checkStatus))
+  return(list(
+    Valid = all(sapply(checkStatus, '[[', 'Valid')),
+    CheckStatus = checkStatus)
+  )
 }

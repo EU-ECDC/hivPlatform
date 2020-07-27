@@ -4,10 +4,13 @@
 \alias{GetPreliminaryAttributesMapping}
 \title{GetPreliminaryAttributesMapping}
 \usage{
-GetPreliminaryAttributesMapping(origData)
+GetPreliminaryAttributesMapping(origData, maxDistance = 4)
 }
 \arguments{
 \item{origData}{Original data. Required.}
+
+\item{maxDistance}{Maximum allowed generalized Levenshtein distance between internal and origina
+column name. Optional. Default = 4}
 }
 \value{
 list with attributes mapping

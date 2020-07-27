@@ -34,7 +34,7 @@ RunAdjustments <- function(
   data <- list(Table = copy(data))
   if (!is.null(diagYearRange)) {
     data$Table <- data$Table[
-      DateOfDiagnosisYear %between% diagYearRange | is.na(DateOfDiagnosisYear)
+      HIVDiagnosisYear %between% diagYearRange | is.na(DateOfDiagnosis)
     ]
   }
   if (!is.null(notifQuarterRange)) {

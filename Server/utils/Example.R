@@ -6,11 +6,13 @@ appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
 appMgr$PreProcessCaseBasedData()
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
+appMgr$GetSummaryData()
 
 # STEP 2 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
 
 adjustmentSpecs <- GetAdjustmentSpecs(c(
-  'Multiple Imputation using Chained Equations - MICE'
+  # 'Multiple Imputation using Chained Equations - MICE'
+  'Joint Modelling Multiple Imputation'
 ))
 appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
 

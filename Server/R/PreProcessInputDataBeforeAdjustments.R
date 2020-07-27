@@ -25,40 +25,42 @@ PreProcessInputDataBeforeAdjustments <- function(inputData)
   # Support imputing reporting delay -----------------------------------------------
 
   # Create Min and Max notification time
-  inputData[, ":="(
+  inputData[, ':='(
     MinNotificationTime = min(NotificationTime, na.rm = TRUE),
     MaxNotificationTime = max(NotificationTime, na.rm = TRUE)
   ), by = .(ReportingCountry)]
 
-  inputData[is.infinite(MinNotificationTime), MinNotificationTime := NA]
-  inputData[is.infinite(MaxNotificationTime), MaxNotificationTime := NA]
+  inputData[is.infinite(MinNotificationTime), MinNotificationTime := NA_real_]
+  inputData[is.infinite(MaxNotificationTime), MaxNotificationTime := NA_real_]
 
   # Create VarX, MaxPossibleDelay
-  inputData[, c("VarX", "TweakedVarX", "MaxPossibleDelay", "TweakedMaxPossibleDelay") := {
+  inputData[, c('VarX', 'TweakedVarX', 'MaxPossibleDelay', 'TweakedMaxPossibleDelay') := {
     # Compute VarX
     varX <- 4 * (NotificationTime - DiagnosisTime)
     varX[varX < 0] <- NA
 
     # Compute MaxPossibleDelay
-    maxPossibleDelay <- ifelse(is.na(DiagnosisTime),
-                               4 * (MaxNotificationTime - DateOfDiagnosisYear - 0.25),
-                               4 * (MaxNotificationTime - DiagnosisTime))
-    maxPossibleDelay <- ifelse(is.na(DateOfDiagnosisYear),
-                               4 * (NotificationTime - MinNotificationTime),
-                               maxPossibleDelay)
-    maxPossibleDelay <- ifelse(is.na(maxPossibleDelay),
-                               4 * (MaxNotificationTime - MinNotificationTime),
-                               maxPossibleDelay)
+    maxPossibleDelay <- ifelse(
+      is.na(DiagnosisTime),
+      4 * (MaxNotificationTime - YearOfHIVDiagnosis - 0.25),
+      4 * (MaxNotificationTime - DiagnosisTime)
+    )
+    maxPossibleDelay <- ifelse(
+      is.na(DateOfHIVDiagnosis),
+      4 * (NotificationTime - MinNotificationTime),
+      maxPossibleDelay
+    )
+    maxPossibleDelay <- ifelse(
+      is.na(maxPossibleDelay),
+      4 * (MaxNotificationTime - MinNotificationTime),
+      maxPossibleDelay
+    )
 
     tweakedVarX <- ifelse(varX == 0, 0.01, varX)
-    tweakedVarX <- ifelse(tweakedVarX == maxPossibleDelay,
-                          maxPossibleDelay - 0.01,
-                          tweakedVarX)
+    tweakedVarX <- ifelse(tweakedVarX == maxPossibleDelay, maxPossibleDelay - 0.01, tweakedVarX)
 
     # Tweak MaxPossibleDelay
-    tweakedMaxPossibleDelay <- ifelse(maxPossibleDelay == 0,
-                                      0.02,
-                                      maxPossibleDelay)
+    tweakedMaxPossibleDelay <- ifelse(maxPossibleDelay == 0, 0.02, maxPossibleDelay)
 
     list(varX, tweakedVarX, maxPossibleDelay, tweakedMaxPossibleDelay)
   }]
