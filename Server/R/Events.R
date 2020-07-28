@@ -48,7 +48,6 @@ Events <- function(input, output, session, appMgr)
     distr <- appMgr$OriginDistribution
     dtMap <- GetOriginGroupingMap(type, distr)
     dtList <- ConvertOriginGroupingDtToList(dtMap)
-
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
       Status = 'SUCCESS',
@@ -103,6 +102,53 @@ Events <- function(input, output, session, appMgr)
 
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'ADJUSTMENTS_RUN_FINISHED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = runLog
+      )
+    ))
+  })
+
+  observeEvent(input$runModelBtn, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'MODEL_RUN_STARTED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = 'Model run started'
+      )
+    ))
+
+    runLog <- capture.output({
+      appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = TRUE))
+    })
+    runLog <- paste(runLog, collapse = '\n')
+
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'MODEL_RUN_FINISHED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = runLog
+      )
+    ))
+  })
+
+  observeEvent(input$runBootstrapBtn, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'BOOTSTRAP_RUN_STARTED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = 'Bootstrap run started'
+      )
+    ))
+
+    runLog <- capture.output({
+      appMgr$FitHIVModelToBootstrapData(bsCount = 5, verbose = FALSE)
+      appMgr$ComputeHIVBootstrapStatistics()
+    })
+    runLog <- paste(runLog, collapse = '\n')
+
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'BOOTSTRAP_RUN_FINISHED',
       Status = 'SUCCESS',
       Payload = list(
         RunLog = runLog

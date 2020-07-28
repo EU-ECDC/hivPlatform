@@ -30,23 +30,7 @@ PrepareDataSetsForModel <- function(
   }
 
   WorkFunc <- function(dt) {
-    # dt[is.na(FirstCD4Count), FirstCD4Count := DiagnosisYear]
-    #
-    # # Prepare extra details
-    # dt[, ':='(
-    #   HIVDiagnosisDate = GetDate(
-    #     DateOfDiagnosisYear, DateOfDiagnosisQuarter, DateOfDiagnosisMonth, DateOfDiagnosisWeek,
-    #     DateOfDiagnosisDay
-    #   ),
-    #   AIDSDiagnosisDate = GetDate(
-    #     DateOfAIDSDiagnosisYear, DateOfAIDSDiagnosisQuarter, DateOfAIDSDiagnosisMonth,
-    #     DateOfAIDSDiagnosisWeek, DateOfAIDSDiagnosisDay
-    #   ),
-    #   FirstCD4Day = GetDate(
-    #     FirstCD4DateYear, FirstCD4DateQuarter, FirstCD4DateMonth, FirstCD4DateWeek,
-    #     FirstCD4DateDay
-    #   )
-    # )]
+    dt[is.na(DateOfFirstCD4Count), DateOfFirstCD4Count := DateOfHIVDiagnosis]
     dt[, ':='(
       CD4Category = sprintf('HIV_CD4_%d', findInterval(FirstCD4Count, c(0, 200, 350, 500, Inf))),
       HIVToAIDSDaysCount = as.integer(DateOfAIDSDiagnosis - DateOfHIVDiagnosis),

@@ -5,7 +5,7 @@
 #' @return Date
 #'
 #' @examples
-#' ConvertStringToDate(c(NA, '2020', '2020-05-20'))
+#' ConvertStringToDate(c(NA, 'UNK', '', '2020', '2020-Q1', '2020-W01', '2020-05-20'))
 #'
 #' @export
 ConvertStringToDate <- function(str) {

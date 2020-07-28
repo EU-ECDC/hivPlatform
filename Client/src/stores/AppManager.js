@@ -40,7 +40,8 @@ export default class AppManager {
         { title: 'Populations' },
         { title: 'Inputs' },
         { title: 'Advanced' },
-        { title: 'Run' }
+        { title: 'Run' },
+        { title: 'Tables and charts' }
       ],
       activeSubStepId: 0
     },
@@ -86,6 +87,18 @@ export default class AppManager {
 
   @observable
   adjustmentsRunLog = null;
+
+  @observable
+  modelsRunProgress = null;
+
+  @observable
+  modelsRunLog = null;
+
+  @observable
+  bootstrapRunProgress = null;
+
+  @observable
+  bootstrapRunLog = null;
 
   @observable
   diagnosisYearFilterData = {
@@ -160,6 +173,23 @@ export default class AppManager {
     } else if (data.Type === 'ADJUSTMENTS_RUN_FINISHED') {
       this.setAdjustmentsRunLog(data.Payload.RunLog);
       this.setAdjustmentsRunProgress(null);
+      this.notificationsMgr.setMsg('Adjustment run finished');
+    } else if(data.Type === 'MODEL_RUN_STARTED') {
+      this.setModelsRunLog(data.Payload.RunLog);
+      this.setModelsRunProgress(1);
+    } else if (data.Type === 'MODEL_RUN_FINISHED') {
+      this.setModelsRunLog(data.Payload.RunLog);
+      this.setModelsRunProgress(null);
+      this.notificationsMgr.setMsg('Model run finished');
+    } else if (data.Type === 'BOOTSTRAP_RUN_STARTED') {
+      this.setBootstrapRunLog(data.Payload.RunLog);
+      this.setBootstrapRunProgress(1);
+    } else if (data.Type === 'BOOTSTRAP_RUN_PROGRESSES') {
+      this.setBootstrapRunProgress(data.Payload.Progress);
+    } else if (data.Type === 'BOOTSTRAP_RUN_FINISHED') {
+      this.setBootstrapRunLog(data.Payload.RunLog);
+      this.setBootstrapRunProgress(null);
+      this.notificationsMgr.setMsg('Bootstrap run finished');
     }
   };
 
@@ -255,6 +285,10 @@ export default class AppManager {
   @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
   @action setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
   @action setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
+  @action setModelsRunProgress = progress => this.modelsRunProgress = progress;
+  @action setModelsRunLog = runLog => this.modelsRunLog = runLog;
+  @action setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
+  @action setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
   @action setDiagnosisYearFilterData = data => {
     this.diagnosisYearFilterData.ScaleMinYear = data.ScaleMinYear;
     this.diagnosisYearFilterData.ScaleMaxYear = data.ScaleMaxYear;

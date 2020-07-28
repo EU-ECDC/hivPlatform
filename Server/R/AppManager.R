@@ -283,8 +283,9 @@ AppManager <- R6::R6Class(
 
       PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
 
+      miCount <- length(private$Catalogs$HIVModelResults)
       results <- list()
-      for (i in seq_along(private$Catalogs$HIVModelResults)) {
+      for (i in seq_len(miCount)) {
 
         PrintH2('Adjusted data {.val {i}}')
 
@@ -350,6 +351,15 @@ AppManager <- R6::R6Class(
           if (bootResult$Converged) {
             jSucc <- jSucc + 1
           }
+
+          progress <- (jSucc + (i - 1) * bsCount)/(miCount * bsCount) * 100
+          self$SendEventToReact('shinyHandler', list(
+            Type = 'BOOTSTRAP_RUN_PROGRESSES',
+            Status = 'SUCCESS',
+            Payload = list(
+              Progress = progress
+            )
+          ))
         }
 
         results[[i]] <- bootResults

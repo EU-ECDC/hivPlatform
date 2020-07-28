@@ -1,7 +1,9 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -12,12 +14,20 @@ import Btn from './Btn';
 const ModelRunProgressBar = (props) => {
   const { progress } = props;
   if (progress === null) return null;
-  return <LinearProgress color='secondary' />
+  return <LinearProgress color='secondary' variant='determinate' value={progress} />
 };
 
 
 const TabModellingRun = props => {
   const { appManager } = props;
+
+  const onRunModelsBtnClick = () => {
+    appManager.btnClicked('runModelBtn');
+  }
+
+  const onRunBootstrapBtnClick = () => {
+    appManager.btnClicked('runBootstrapBtn');
+  }
 
   return (
     <TabPanel>
@@ -28,15 +38,31 @@ const TabModellingRun = props => {
           </Box>
         </Grid>
         <Grid item xs={3}>
-          <Btn onClick={()=>{}}><DirectionsRunIcon />&nbsp;Run model</Btn>
+          <Btn onClick={onRunModelsBtnClick}><DirectionsRunIcon />&nbsp;Run main model</Btn>
           <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
-          <ModelRunProgressBar progress={0.3} />
+          <ModelRunProgressBar progress={appManager.modelsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre>
-              Run log
+              {appManager.modelsRunLog}
+            </pre>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
+        <Grid item xs={3}>
+          <Btn onClick={onRunBootstrapBtnClick}><DirectionsRunIcon />&nbsp;Run bootstrap</Btn>
+          <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
+          <ModelRunProgressBar progress={appManager.bootstrapRunProgress} />
+        </Grid>
+        <Grid item xs={9}>
+          <Paper style={{ padding: 10 }}>
+            <Typography variant='overline'>Run log</Typography>
+            <pre>
+              {appManager.bootstrapRunLog}
             </pre>
           </Paper>
         </Grid>
@@ -45,4 +71,4 @@ const TabModellingRun = props => {
   );
 };
 
-export default TabModellingRun;
+export default observer(TabModellingRun);

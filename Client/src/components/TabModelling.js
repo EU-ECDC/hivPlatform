@@ -4,6 +4,7 @@ import TabModellingPopulation from './TabModellingPopulation';
 import TabModellingInputs from './TabModellingInputs';
 import TabModellingAdvanced from './TabModellingAdvanced';
 import TabModellingRun from './TabModellingRun';
+import TabModellingTables from './TabModellingTables';
 
 const TabModelling = (props) => {
   const { appManager } = props;
@@ -16,6 +17,7 @@ const TabModelling = (props) => {
       {activeSubStepId === 1 && <TabModellingInputs {...props} />}
       {activeSubStepId === 2 && <TabModellingAdvanced {...props} />}
       {activeSubStepId === 3 && <TabModellingRun {...props} />}
+      {activeSubStepId === 4 && <TabModellingTables {...props} />}
     </React.Fragment>
   );
 };
