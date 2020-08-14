@@ -18,10 +18,10 @@
     },
     "DT": {
       "Package": "DT",
-      "Version": "0.14",
+      "Version": "0.15",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a3580ce0309c94d061c23b0afb4accbd"
+      "Hash": "85738c69035e67ec4b484a5e02640ef6"
     },
     "MASS": {
       "Package": "MASS",
@@ -228,10 +228,10 @@
     },
     "dplyr": {
       "Package": "dplyr",
-      "Version": "1.0.0",
+      "Version": "1.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4011f62581a34080e44105d4aa05a97f"
+      "Hash": "018b2fc43cb25d9f07241986c53fbf8e"
     },
     "ellipsis": {
       "Package": "ellipsis",
@@ -270,10 +270,10 @@
     },
     "fs": {
       "Package": "fs",
-      "Version": "1.4.2",
+      "Version": "1.5.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8c04112383ca1988e96f429255f95675"
+      "Hash": "44594a07a42e5f91fac9f93fda6d0109"
     },
     "future": {
       "Package": "future",
@@ -332,9 +332,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "4d443636bc546c89972ccf3b40ff7e8dcfefc90b",
+      "RemoteSha": "1cb00a9f8d7695c3bc9f5dc18da11948fc958df9",
       "RemoteHost": "api.github.com",
-      "Hash": "b10a35503c7fa71d9cd123c8bcec1efa"
+      "Hash": "63044ea1edc387e38ca3f9d054f0f5a7"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -380,10 +380,10 @@
     },
     "jomo": {
       "Package": "jomo",
-      "Version": "2.7-1",
+      "Version": "2.7-2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6d2e819b17d00989d38b2ec79c5181d0"
+      "Hash": "229a3d43f5b119aa866311f292a9b66e"
     },
     "jsonlite": {
       "Package": "jsonlite",
@@ -485,10 +485,10 @@
     },
     "mice": {
       "Package": "mice",
-      "Version": "3.10.0",
+      "Version": "3.11.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3d63d9f6747e16a4cdd0b1103feb6e0c"
+      "Hash": "07f5361d25503ed302810641643faf61"
     },
     "mime": {
       "Package": "mime",
@@ -625,10 +625,10 @@
     },
     "ps": {
       "Package": "ps",
-      "Version": "1.3.3",
+      "Version": "1.3.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "425d938eb9c02906a8ac98c0c2a306b5"
+      "Hash": "a54a7dfd68124abb2225dbfa9a85c457"
     },
     "purrr": {
       "Package": "purrr",
@@ -814,10 +814,10 @@
     },
     "tidyr": {
       "Package": "tidyr",
-      "Version": "1.1.0",
+      "Version": "1.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7395a05640bf91502dd475a84008d87e"
+      "Hash": "a0d8d887f9887f668e3d54d1b820c2a2"
     },
     "tidyselect": {
       "Package": "tidyselect",
