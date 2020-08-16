@@ -5,7 +5,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -16,9 +15,9 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import TabPanel from './TabPanel';
 import OriginGroupings from './OriginGroupings';
+import AttributeMapping from './AttributeMapping';
 import Btn from './Btn';
 import FormatBytes from '../utilities/FormatBytes'
 
@@ -53,29 +52,6 @@ const TabUploadCase = (props) => {
       return () => appManager.unbindShinyInputs();
     }
   );
-
-  let attrMappingSelectOptions = [];
-  if (appManager.caseBasedDataColumnNames !== null) {
-    attrMappingSelectOptions = appManager.caseBasedDataColumnNames.map(colName => (
-      <MenuItem key={colName} value={colName} dense>{colName}</MenuItem>
-    ));
-  }
-
-  const attrMappingTableRows = appManager.caseBasedDataAttributeMappingArray.map(entry => (
-    <TableRow hover key={entry.Key}>
-      <TableCell>{entry.Key}</TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        <Select style={{ width: '100%', fontSize: '0.75rem' }} defaultValue={entry.Val} disableUnderline>
-          <MenuItem value='' dense>&nbsp;</MenuItem>
-          {attrMappingSelectOptions}
-        </Select>
-      </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        <Input style={{ width: '100%', fontSize: '0.75rem' }}></Input>
-      </TableCell>
-    </TableRow>
-  ));
-
 
   return (
     <TabPanel>
@@ -140,39 +116,7 @@ const TabUploadCase = (props) => {
         </Grid>
       </Grid>
       <Divider light style={{ margin: '30px 0' }} />
-      <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <Btn style={{marginBottom: 6}}><AssignmentIcon />&nbsp;Apply mapping</Btn>
-          <Typography variant='body2' color='textSecondary'>
-            Input data set to be mapped to internal attributes.<br />
-            Adjust mapping and press 'Apply mapping' button.
-          </Typography>
-          {/*
-          <Typography variant='body2'>
-            <CheckIcon style={{ width: '0.75rem', height: '0.75rem'}}/>&nbsp;Applied mapping is valid.
-          </Typography>
-          */}
-        </Grid>
-        <Grid item xs={9}>
-          <Paper style={{padding: 10}}>
-            <Typography variant='overline'>Attribute mapping</Typography>
-            <Grid container spacing={2}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell width='30%'>Attribute</TableCell>
-                    <TableCell width='40%'>Uploaded data column</TableCell>
-                    <TableCell width='30%'>Override value</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {attrMappingTableRows}
-                </TableBody>
-              </Table>
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
+      <AttributeMapping appManager={appManager} />
       <Divider light style={{ margin: '30px 0' }} />
       <OriginGroupings appManager={appManager}/>
       <Divider light style={{ margin: '30px 0' }} />

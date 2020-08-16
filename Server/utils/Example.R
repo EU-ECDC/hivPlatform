@@ -4,7 +4,12 @@ library(hivEstimatesAccuracy2)
 
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
+
+appMgr$AttributeMapping
+
+
 appMgr$PreProcessCaseBasedData()
+
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 appMgr$GetSummaryData()
 
@@ -45,9 +50,3 @@ appMgr$HIVBootstrapStatistics$ThetaStats
 
 appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIV_Obs_M
 appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
-
-for (i in seq_len(10)) {
-  for (j in seq_len(5)) {
-    print((j + (i - 1) * 5)/(10 * 5) * 100)
-  }
-}

@@ -8,13 +8,15 @@ export default appManager => {
 
   appManager.setCaseBasedDataColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
 
-  appManager.setCaseBasedDataAttributeMapping({
+  appManager.attrMappingMgr.setMapping({
     RecordId: 'recordid',
     ReportingCountry: 'reportingcountry',
     Age: 'age',
-    Gender: 'gender'
+    Gender: 'gender',
+    DateOfArt: ''
   });
 
+  /*
   let temp1 = {
     "Type": "CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED",
     "Status": "SUCCESS",
@@ -51,4 +53,5 @@ export default appManager => {
     }
   }
   appManager.onShinyEvent(temp2);
+  */
 };

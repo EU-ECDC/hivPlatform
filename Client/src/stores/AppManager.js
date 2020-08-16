@@ -2,6 +2,7 @@ import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 import NotificationsManager from './NotificationsManager';
+import AttrMappingManager from './AttrMappingManager';
 
 configure({
   enforceActions: 'observed',
@@ -10,6 +11,7 @@ configure({
 export default class AppManager {
 
   notificationsMgr = null;
+  attrMappingMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -195,6 +197,7 @@ export default class AppManager {
 
   constructor() {
     this.notificationsMgr = new NotificationsManager(this);
+    this.attrMappingMgr = new AttrMappingManager(this);
   };
 
   @computed
@@ -219,14 +222,6 @@ export default class AppManager {
       return '';
     }
     return this.caseBasedDataColumnNames.join(', ');
-  };
-
-  @computed
-  get caseBasedDataAttributeMappingArray() {
-    if (this.caseBasedDataAttributeMapping === null) {
-      return [];
-    }
-    return Object.entries(this.caseBasedDataAttributeMapping).map(key => ({ Key: key[0], Val: key[1] }))
   };
 
   @computed
@@ -280,8 +275,6 @@ export default class AppManager {
   @action setCaseBasedDataPath = path => this.caseBasedDataPath = path;
   @action setCaseBasedDataColumnNames = columnNames => this.caseBasedDataColumnNames = columnNames;
   @action setCaseBasedDataRowCount = rowCount => this.caseBasedDataRowCount = rowCount;
-  @action setCaseBasedDataAttributeMapping = attributeMapping => this.caseBasedDataAttributeMapping = attributeMapping;
-  @action setCaseBasedDataAttributeMappingStatus = attributeMappingStatus => this.caseBasedDataAttributeMappingStatus = attributeMappingStatus;
   @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
   @action setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
   @action setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
