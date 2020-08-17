@@ -72,10 +72,6 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    ApplyAttributesMapping = function() {
-
-    },
-
     # 2. Pre-process case-based data ---------------------------------------------------------------
     PreProcessCaseBasedData = function() {
       dt <- ApplyAttributesMapping(

@@ -85,6 +85,10 @@ Events <- function(input, output, session, appMgr)
     appMgr$OriginGrouping <- input$originGrouping
   })
 
+  observeEvent(input$attrMapping, {
+    print(input$attrMapping)
+  })
+
   observeEvent(input$runAdjustBtn, {
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'ADJUSTMENTS_RUN_STARTED',

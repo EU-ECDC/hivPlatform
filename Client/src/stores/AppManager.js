@@ -364,7 +364,7 @@ export default class AppManager {
     if (this.shinyReady) {
       Shiny.setInputValue(inputId, value);
     } else {
-      console.log('inputValueSet: Shiny is not available');
+      console.log('inputValueSet: Shiny is not available', inputId, value);
     }
   };
 

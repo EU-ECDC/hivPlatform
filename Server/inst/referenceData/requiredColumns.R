@@ -1,88 +1,102 @@
 list(
   RecordId = list(
+    attribute = 'RecordId',
     desciption = 'Unique identifier for each record within and across the national surveillance system',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('recordid')
+    candidateOrigColNames = c('recordid')
   ),
   ReportingCountry = list(
+    attribute = 'ReportingCountry',
     description = 'The country reporting the record',
     type = 'character',
     values = union('UNK', countryData$Code),
     defaultValue = NA_character_,
-    origColNames = c('reportingcountry')
+    candidateOrigColNames = c('reportingcountry')
   ),
   Age = list(
+    attribute = 'Age',
     description = 'Exact age at diagnosis of HIV. Age as a crude number is preferred',
     type = 'numeric',
     defaultValue = NA_real_,
-    origColNames = c('age')
+    candidateOrigColNames = c('age')
   ),
   Gender = list(
+    attribute = 'Gender',
     description = 'Gender',
     type = 'character',
     values = c('', 'UNK', 'F', 'M', 'O'),
     defaultValue = NA_character_,
-    origColNames = c('gender')
+    candidateOrigColNames = c('gender')
   ),
   Transmission = list(
+    attribute = 'Transmission',
     description = 'Describes the most probable route of Transmission',
     type = 'character',
     values = c('', 'UNK', 'HAEMO', 'HETERO', 'IDU', 'MSM', 'MTCT', 'NOSO', 'TRANSFU'),
     defaultValue = NA_character_,
-    origColNames = c('transmission')
+    candidateOrigColNames = c('transmission')
   ),
   FirstCD4Count = list(
+    attribute = 'FirstCD4Count',
     description = 'CD4 cell count at time of diagnosis',
     type = 'numeric',
     defaultValue = NA_real_,
-    origColNames = c('cd4_num')
+    candidateOrigColNames = c('cd4_num')
   ),
   LatestCD4Count = list(
+    attribute = 'LatestCD4Count',
     description = 'Latest CD4',
     type = 'numeric',
     defaultValue = NA_character_,
-    origColNames = c('cd4latest')
+    candidateOrigColNames = c('cd4latest')
   ),
   LatestVLCount = list(
+    attribute = 'LatestVLCount',
     description = 'Latest viral load test count',
     type = 'numeric',
     defaultValue = NA_character_,
-    origColNames = c('vllatest')
+    candidateOrigColNames = c('vllatest')
   ),
   AcuteInfection = list(
+    attribute = 'AcuteInfection',
     description = 'Acute infection type',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('acuteinfection')
+    candidateOrigColNames = c('acuteinfection')
   ),
   Art = list(
+    attribute = 'Art',
     description = 'Indicator of antiretroviral therapy',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('art')
+    candidateOrigColNames = c('art')
   ),
   HIVStatus = list(
+    attribute = 'HIVStatus',
     description = 'Status of HIV',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('hivstatus')
+    candidateOrigColNames = c('hivstatus')
   ),
   CountryOfBirth = list(
+    attribute = 'CountryOfBirth',
     description = 'Country of birth of patient',
     type = 'character',
     values = union(c('', 'UNK'), countryData$Code),
     defaultValue = NA_character_,
-    origColNames = c('countryofbirth')
+    candidateOrigColNames = c('countryofbirth')
   ),
   CountryOfNationality = list(
+    attribute = 'CountryOfNationality',
     description = 'Country of nationality of patient',
     type = 'character',
     values = union(c('', 'UNK'), countryData$Code),
     defaultValue = NA_character_,
-    origColNames = c('countryofnationality')
+    candidateOrigColNames = c('countryofnationality')
   ),
   RegionOfOrigin = list(
+    attribute = 'RegionOfOrigin',
     description = 'Region of origin of patient',
     type = 'character',
     values = c(
@@ -90,73 +104,84 @@ list(
       'NORTHAFRMIDEAST', 'NORTHAM', 'REPCOUNTRY', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
     ),
     defaultValue = NA_character_,
-    origColNames = c('regionoforigin')
+    candidateOrigColNames = c('regionoforigin')
   ),
   PlaceOfNotification = list(
+    attribute = 'PlaceOfNotification',
     description = 'Place of notification',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('placeofnotification')
+    candidateOrigColNames = c('placeofnotification')
   ),
   PlaceOfResidence = list(
+    attribute = 'PlaceOfResidence',
     description = 'Place of residence',
     type = 'character',
     defaultValue = NA_character_,
-    origColNames = c('placeofresidence')
+    candidateOrigColNames = c('placeofresidence')
   ),
   DateOfNotification = list(
+    attribute = 'DateOfNotification',
     description = 'Date of notification',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('dateofnotificationisodate')
+    candidateOrigColNames = c('dateofnotificationisodate')
   ),
   DateOfHIVDiagnosis = list(
+    attribute = 'DateOfHIVDiagnosis',
     description = 'Date of HIV diagnosis',
     type = 'date',
     defaultValue = as.Date(NA),
     restrictedValues = as.Date(NA),
-    origColNames = c('dateofdiagnosisisodate')
+    candidateOrigColNames = c('dateofdiagnosisisodate')
   ),
   DateOfAIDSDiagnosis = list(
+    attribute = 'DateOfAIDSDiagnosis',
     description = 'Date of AIDS diagnosis',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('dateofaidsdiagnosisisodate')
+    candidateOrigColNames = c('dateofaidsdiagnosisisodate')
   ),
   DateOfFirstCD4Count = list(
+    attribute = 'DateOfFirstCD4Count',
     description = 'Date of First CD4 cell count',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('firstcd4dateisodate')
+    candidateOrigColNames = c('firstcd4dateisodate')
   ),
   DateOfLatestCD4Count = list(
+    attribute = 'DateOfLatestCD4Count',
     description = 'Date of latest CD4 count',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('cd4latestdateisodate')
+    candidateOrigColNames = c('cd4latestdateisodate')
   ),
   DateOfLatestVLCount = list(
+    attribute = 'DateOfLatestVLCount',
     description = 'Date of latest viral load test',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('vllatestdateisodate')
+    candidateOrigColNames = c('vllatestdateisodate')
   ),
   DateOfDeath = list(
+    attribute = 'DateOfDeath',
     description = 'Date of death',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('dateofdeathisodate')
+    candidateOrigColNames = c('dateofdeathisodate')
   ),
   DateOfArrival = list(
+    attribute = 'DateOfArrival',
     description = 'Date of arrival',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('yearofarrivalisodate')
+    candidateOrigColNames = c('yearofarrivalisodate')
   ),
   DateOfArt = list(
+    attribute = 'DateOfArt',
     description = 'Date of latest antiretroviral therapy',
     type = 'date',
     defaultValue = as.Date(NA),
-    origColNames = c('artdateisodate')
+    candidateOrigColNames = c('artdateisodate')
   )
 )

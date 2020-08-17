@@ -16,14 +16,18 @@
 GetAttrMappingStatus <- function(attrMapping)
 {
   # 1. Find not-mapped attributes
-  nonMappedAnalysisAttrs <- names(Filter(IsEmptyString, attrMapping))
+  nonMappedAnalysisAttrs <- names(Filter(function(el) IsEmptyString(el$origColName), attrMapping))
 
   # 2. Find data attributes mapped to multiple analysis attributes
-  mappedAnalysisAttrs <- Filter(Negate(IsEmptyString), attrMapping)
-  mappedDataAttrs <- unique(unname(sapply(mappedAnalysisAttrs, "[[", 1)))
+  mappedAnalysisAttrs <- Filter(function(el) !IsEmptyString(el$origColName), attrMapping)
+  mappedDataAttrs <- unique(unname(sapply(mappedAnalysisAttrs, '[[', 'origColName')))
   multipleMappedDataAttrs <-
     setNames(lapply(mappedDataAttrs, function(mappedDataAttr) {
       multiMappedDataAttr <- names(mappedAnalysisAttrs[mappedAnalysisAttrs == mappedDataAttr])
+      multiMappedDataAttr <- names(Filter(
+        function(el) el$origColName == mappedDataAttr,
+        mappedAnalysisAttrs
+      ))
       if (length(multiMappedDataAttr) != 1) {
         return(multiMappedDataAttr)
       } else {

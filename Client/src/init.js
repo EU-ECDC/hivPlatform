@@ -8,13 +8,13 @@ export default appManager => {
 
   appManager.setCaseBasedDataColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
 
-  appManager.attrMappingMgr.setMapping({
-    RecordId: 'recordid',
-    ReportingCountry: 'reportingcountry',
-    Age: 'age',
-    Gender: 'gender',
-    DateOfArt: ''
-  });
+  appManager.attrMappingMgr.setMapping([
+    { Attribute: 'RecordId', OrigColName: 'recordid', DefVal: null },
+    { Attribute: 'ReportingCountry', OrigColName: 'reportingcountry', DefVal: null },
+    { Attribute: 'Age', OrigColName: 'age', DefVal: null },
+    { Attribute: 'Gender', OrigColName: 'gender', DefVal: null },
+    { Attribute: 'DateOfArt', OrigColName: null, DefVal: null }
+  ]);
 
   /*
   let temp1 = {

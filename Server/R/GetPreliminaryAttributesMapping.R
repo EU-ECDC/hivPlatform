@@ -29,16 +29,21 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
   origColNames <- names(origData)
 
   # Initialize column mapping
-  attrMapping <- sapply(names(columnSpecs), function(x) NULL)
+  attrMapping <- lapply(
+    columnSpecs,
+    modifyList,
+    val = list(origColName = NULL),
+    keep.null = TRUE
+  )
 
   # 1. Fixed matching first
   # requiredColumnName <- requiredColumnNames[1]
   for (requiredColumnName in requiredColumnNames) {
-    fixedColNames <- columnSpecs[[requiredColumnName]]$origColNames
+    fixedColNames <- columnSpecs[[requiredColumnName]]$candidateOrigColNames
     # fixedColName <- fixedColNames[1]
     for (fixedColName in fixedColNames) {
       if (fixedColName %in% origColNames) {
-        attrMapping[[requiredColumnName]] <- fixedColName
+        attrMapping[[requiredColumnName]]$origColName <- fixedColName
         requiredColumnNames <- setdiff(requiredColumnNames, requiredColumnName)
         origColNames <- setdiff(origColNames, fixedColName)
         break
@@ -48,13 +53,24 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
 
   # 2. Exact matching second
   exactMatchIndices <- match(tolower(requiredColumnNames), tolower(origColNames))
-  if (any(!is.na(exactMatchIndices))) {
-    attrMapping[requiredColumnNames] <- origColNames[exactMatchIndices]
-    requiredColumnNames <- requiredColumnNames[is.na(exactMatchIndices)]
-    origColNames <- setdiff(origColNames, origColNames[exactMatchIndices])
+  for (i in seq_along(requiredColumnNames)) {
+    requiredColumnName <- requiredColumnNames[i]
+    exactMatchIndex <- exactMatchIndices[i]
+    if (!is.na(exactMatchIndex)) {
+      attrMapping[[requiredColumnName]]$origColName <- origColNames[exactMatchIndex]
+    }
   }
+  requiredColumnNames <- setdiff(
+    requiredColumnNames,
+    requiredColumnNames[!is.na(exactMatchIndices)]
+  )
+  origColNames <- setdiff(
+    origColNames,
+    origColNames[exactMatchIndices[!is.na(exactMatchIndices)]]
+  )
 
   # 3. Fuzzy matching third
+  # requiredColumnName <- requiredColumnNames[1]
   for (requiredColumnName in requiredColumnNames) {
     # Fuzzy string matching
     distance <- as.vector(adist(requiredColumnName, origColNames, ignore.case = TRUE))
@@ -63,7 +79,7 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
         origColNames[which.min(adist(requiredColumnName, origColNames, ignore.case = TRUE))]
       # Remove matched column from searching in the next step.
       if (!is.na(bestMatchColumn)) {
-        attrMapping[[requiredColumnName]] <- bestMatchColumn
+        attrMapping[[requiredColumnName]]$origColName <- bestMatchColumn
         origColNames <- setdiff(origColNames, bestMatchColumn)
       }
     }

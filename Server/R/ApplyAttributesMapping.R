@@ -5,17 +5,16 @@
 #' @param originalData Original data. Required.
 #' @param attrMapping List of attributes mapping between original data and internal representation.
 #'   Required.
-#' @param defaultValues List of default values for non-mapped columns
 #'
 #' @return data.table
 #'
 #' @examples
 #' \dontrun{
-#' ApplyAttributesMapping(originalData, attrMapping, defaultValues)
+#' ApplyAttributesMapping(originalData, attrMapping)
 #' }
 #'
 #' @export
-ApplyAttributesMapping <- function(originalData, attrMapping, defaultValues)
+ApplyAttributesMapping <- function(originalData, attrMapping)
 {
   stopifnot(!missing(originalData))
   stopifnot(!missing(attrMapping))
@@ -27,19 +26,22 @@ ApplyAttributesMapping <- function(originalData, attrMapping, defaultValues)
   }
 
   # Deal with mapped attributes
-  nonMappedAttributes <- Filter(function(x) IsEmptyString(x), attrMapping)
-  mappedAttributes <- Filter(function(x) !IsEmptyString(x), attrMapping)
+  nonMappedAttributes <- Filter(function(x) IsEmptyString(x$origColName), attrMapping)
+  mappedAttributes <- Filter(function(x) !IsEmptyString(x$origColName), attrMapping)
 
-  oldColNames <- unname(sapply(mappedAttributes, '[[', 1))
-  newColNames <- names(mappedAttributes)
+  oldColNames <- unname(sapply(mappedAttributes, '[[', 'origColName'))
+  newColNames <- unname(sapply(mappedAttributes, '[[', 'attribute'))
 
   outputData <- originalData[, ..oldColNames]
   setnames(outputData, oldColNames, newColNames)
 
   # Deal with non-mapped attributes
+  # nonMappedAttributeName <- names(nonMappedAttributes)[1]
   for (nonMappedAttributeName in names(nonMappedAttributes)) {
-    defValue <- defaultValues[[nonMappedAttributeName]]
-    defValue <- ifelse(defValue %in% c('NA', ''), NA, defValue)
+    defValue <- attrMapping[[nonMappedAttributeName]]$defaultValue
+    if (defValue %in% c('NA', '')) {
+      defValue <- NA
+    }
     outputData[, (nonMappedAttributeName) := defValue]
   }
 

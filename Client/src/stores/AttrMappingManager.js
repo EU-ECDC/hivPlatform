@@ -1,4 +1,4 @@
-import { observable, computed, action, toJS } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 export default class AttrMappingManager {
   rootMgr = null;
@@ -7,28 +7,58 @@ export default class AttrMappingManager {
     this.rootMgr = mgr;
   }
 
-  observable
-  mapping = null;
+  @observable
+  mapping = [];
+
+  attrToIdxMap = {};
 
   @observable
-  meta = {
-    valid: false,
-    msg: 'dfsdf',
+  valid = true;
+
+  @observable
+  msg = 'Mapping is valid';
+
+  @action setMapping = mapping => {
+    this.mapping = mapping;
+    this.validateMapping();
   };
 
-  @action setMapping = mapping => this.mapping = mapping;
-  @action setMeta = meta => this.meta = meta;
-
-  @computed
-  get mappingArray() {
-    if (this.mapping === null) {
-      return [];
+  @action setOrigCol = (attribute, origCol) => {
+    const idx = this.mapping.findIndex(el => el.Attribute === attribute);
+    if (idx !== -1) {
+      this.mapping[idx].OrigColName = origCol !== '' ? origCol : null;
+      this.validateMapping();
     } else {
-      const mapping = toJS(this.mapping);
-      return Object.entries(mapping).map(
-        el => ({ Key: el[0], Val: el[1] })
-      );
+      console.log(`AttrMappingManager.setOrigCol: cannot find element with Attribute "${attribute}"`)
     }
   };
 
+  @action setDefVal = (attribute, defVal) => {
+    const idx = this.mapping.findIndex(el => el.Attribute === attribute);
+    if (idx !== -1) {
+      this.mapping[idx].DefVal = defVal !== '' ? defVal : null;
+    } else {
+      console.log(`AttrMappingManager.setDefVal: cannot find element with Attribute "${attribute}"`)
+    }
+  };
+
+  @action applyMapping = () => {
+    this.rootMgr.inputValueSet('attrMapping:AttrMappingArray', this.mapping);
+  }
+
+  validateMapping = () => {
+    const counts = this.mapping
+      .filter(el => el.OrigColName) // Filter nulls
+      .map(el => el.OrigColName)
+      .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+    const multipleMappedColumns = [...counts].filter(el => el[1] > 1).map(el => el[0]);
+
+    if (multipleMappedColumns.length > 0) {
+      this.valid = false;
+      this.msg = `Column${multipleMappedColumns.length > 1 ? 's' : ''} "${multipleMappedColumns.join(', ')}" ${multipleMappedColumns.length > 1 ? 'are' : 'is'} mapped multiple times`;
+    } else {
+      this.valid = true;
+      this.msg = 'Mapping is valid'
+    }
+  };
 }

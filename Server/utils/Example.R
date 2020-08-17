@@ -5,7 +5,9 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
 
-appMgr$AttributeMapping
+
+attrMapping <- GetPreliminaryAttributesMapping(origData = appMgr$CaseBasedData)
+private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
 
 
 appMgr$PreProcessCaseBasedData()

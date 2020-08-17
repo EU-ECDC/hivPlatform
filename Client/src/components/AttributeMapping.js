@@ -13,6 +13,7 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CheckIcon from '@material-ui/icons/Check';
+import ErrorIcon from '@material-ui/icons/Error';
 import Btn from './Btn';
 
 const AttributeMapping = (props) => {
@@ -25,18 +26,24 @@ const AttributeMapping = (props) => {
     ));
   }
 
-  const onAttributeChange = attribute => e => {
-    console.log(attribute, e.target.value);
+  const onApplyBtnClick = () => appManager.attrMappingMgr.applyMapping();
+
+  const onOrigColSelect = attribute => e => {
+    appManager.attrMappingMgr.setOrigCol(attribute, e.target.value);
   }
 
-  const attrMappingTableRows = appManager.attrMappingMgr.mappingArray.map(entry => (
-    <TableRow hover key={entry.Key}>
-      <TableCell>{entry.Key}</TableCell>
+  const onDefValChange = attribute => e => {
+    appManager.attrMappingMgr.setDefVal(attribute, e.target.value);
+  }
+
+  const attrMappingTableRows = appManager.attrMappingMgr.mapping.map((entry, idx) => (
+    <TableRow hover key={idx}>
+      <TableCell>{entry.Attribute}</TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
         <Select
           style={{ width: '100%', fontSize: '0.75rem' }}
-          value={entry.Val}
-          onChange={onAttributeChange(entry.Key)}
+          value={entry.OrigColName || ''}
+          onChange={onOrigColSelect(entry.Attribute)}
           disableUnderline
         >
           <MenuItem value='' dense>&nbsp;</MenuItem>
@@ -44,22 +51,36 @@ const AttributeMapping = (props) => {
         </Select>
       </TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        <Input style={{ width: '100%', fontSize: '0.75rem' }}></Input>
+        <Input
+          style={{ width: '100%', fontSize: '0.75rem' }}
+          onChange={onDefValChange(entry.Attribute)}
+          disabled={!!entry.OrigColName}
+        />
       </TableCell>
     </TableRow>
   ));
 
+  const validIcon = appManager.attrMappingMgr.valid ?
+    <CheckIcon style={{ width: '0.75rem', height: '0.75rem' }} /> :
+    <ErrorIcon style={{ width: '0.75rem', height: '0.75rem' }} />
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
-        <Btn style={{ marginBottom: 6 }}><AssignmentIcon />&nbsp;Apply mapping</Btn>
+        <Btn
+          style={{ marginBottom: 6 }}
+          onClick={onApplyBtnClick}
+          disabled={!appManager.attrMappingMgr.valid}
+        >
+          <AssignmentIcon />&nbsp;Apply mapping
+        </Btn>
         <Typography variant='body2' color='textSecondary'>
           Input data set to be mapped to internal attributes.<br />
           Adjust mapping and press 'Apply mapping' button.
         </Typography>
         <Typography variant='body2' style={{marginTop: 10}}>
-          <CheckIcon style={{ width: '0.75rem', height: '0.75rem' }} />
-          {appManager.attrMappingMgr.meta.msg}
+          {validIcon}&nbsp;
+          {appManager.attrMappingMgr.msg}
         </Typography>
       </Grid>
       <Grid item xs={9}>
