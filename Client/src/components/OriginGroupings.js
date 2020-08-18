@@ -14,9 +14,9 @@ import OriginGroupingsWidget from './OriginGroupingsWidget';
 const OriginGroupings = (props) => {
   const { appManager } = props;
 
-  const originDistribution = appManager.originDistributionArray;
+  const distribution = appManager.origGroupMgr.distributionArray;
 
-  const onApplyClick = () => appManager.applyOriginGrouping();
+  const onApplyClick = () => appManager.origGroupMgr.applyGroupings();
 
   return (
     <Grid container spacing={2}>
@@ -35,10 +35,10 @@ const OriginGroupings = (props) => {
           </TableHead>
           <TableBody>
             {
-              originDistribution.map((el, i) => (
+              distribution.map((el, i) => (
                 <TableRow hover key={i}>
-                  <TableCell>{el.FullRegionOfOrigin}</TableCell>
-                  <TableCell align='right'>{el.Count}</TableCell>
+                  <TableCell>{el.origin}</TableCell>
+                  <TableCell align='right'>{el.count}</TableCell>
                 </TableRow>
               ))
             }

@@ -38,7 +38,7 @@ const OriginGroupingsWidget = (props) => {
   const { appManager } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const originGrouping = appManager.originGroupingArray;
+  const groupings = appManager.origGroupMgr.groupingsJS;
 
   const handleGroupingPresetChange = e => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);
@@ -46,7 +46,7 @@ const OriginGroupingsWidget = (props) => {
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = originGrouping.map((el, i) => i);
+      const newSelectedIds = groupings.map((el, i) => i);
       setSelected(newSelectedIds);
       return;
     }
@@ -74,15 +74,15 @@ const OriginGroupingsWidget = (props) => {
   };
 
   const handleDeleteClick = () => {
-    appManager.removeOriginGroupings(selected);
+    appManager.origGroupMgr.removeGroupings(selected);
     setSelected([]);
   }
 
   const handleAddClick = () => {
-    appManager.addOriginGrouping(selected);
+    appManager.addEmptyGrouping();
   }
 
-  const rowCount = originGrouping.length;
+  const rowCount = groupings.length;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
@@ -119,11 +119,11 @@ const OriginGroupingsWidget = (props) => {
         </TableHead>
         <TableBody>
           {
-            originGrouping.map((el, i) => (
+            groupings.map((el, i) => (
               <OriginGroupingRow
                 key={i}
                 i={i}
-                originGroup={el}
+                grouping={el}
                 appManager={appManager}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}

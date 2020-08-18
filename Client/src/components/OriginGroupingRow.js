@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -9,17 +9,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 
 const OriginGroupingRow = (props) => {
-  const { i, isSelected, onSelectClick,  originGroup:el, appManager } = props;
+  const { i, isSelected, onSelectClick,  grouping:el, appManager } = props;
 
-  const unusedFullRegionsOfOrigin = appManager.unusedFullRegionsOfOrigin;
-  const menuItems = el.FullRegionsOfOrigin.concat(unusedFullRegionsOfOrigin);
+  const unusedOrigins = appManager.origGroupMgr.unusedOrigins;
+  const menuItems = el.origin.concat(unusedOrigins);
 
-  const handleGroupedRegionOfOriginChange = e => {
-    appManager.setGroupedRegionOfOrigin(i, e.target.value);
+  const handleGroupedNameChange = e => {
+    appManager.origGroupMgr.setGroupName(i, e.target.value);
   };
 
-  const handleFullRegionsOfOriginChange = e => {
-    appManager.setFullRegionsOfOrigin(i, e.target.value);
+  const handleOriginsChange = e => {
+    appManager.origGroupMgr.setGroupOrigin(i, e.target.value);
   };
 
   return (
@@ -35,8 +35,8 @@ const OriginGroupingRow = (props) => {
       <TableCell id={`labelId${i}`} scope='row' padding='none'>
         <Input
           style={{ width: '100%', fontSize: '0.75rem' }}
-          value={el.GroupedRegionOfOrigin}
-          onChange={handleGroupedRegionOfOriginChange}
+          value={el.name}
+          onChange={handleGroupedNameChange}
         />
       </TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
@@ -49,9 +49,9 @@ const OriginGroupingRow = (props) => {
               ))}
             </div>
           )}
-          value={el.FullRegionsOfOrigin}
+          value={el.origin}
           style={{ width: '100%', fontSize: '0.75rem' }}
-          onChange={handleFullRegionsOfOriginChange}
+          onChange={handleOriginsChange}
           disableUnderline
         >
           {
@@ -61,7 +61,7 @@ const OriginGroupingRow = (props) => {
           }
         </Select>
       </TableCell>
-      <TableCell align='right'>{el.GroupedRegionOfOriginCount}</TableCell>
+      <TableCell align='right'>{el.groupCount}</TableCell>
     </TableRow>
   )
 };

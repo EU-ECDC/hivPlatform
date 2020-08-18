@@ -36,7 +36,6 @@ ApplyAttributesMapping <- function(originalData, attrMapping)
   setnames(outputData, oldColNames, newColNames)
 
   # Deal with non-mapped attributes
-  # nonMappedAttributeName <- names(nonMappedAttributes)[1]
   for (nonMappedAttributeName in names(nonMappedAttributes)) {
     defValue <- attrMapping[[nonMappedAttributeName]]$defaultValue
     if (defValue %in% c('NA', '')) {

@@ -4,13 +4,14 @@ library(hivEstimatesAccuracy2)
 
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
-
-
-attrMapping <- GetPreliminaryAttributesMapping(origData = appMgr$CaseBasedData)
-private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
-
-
+appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
+
+# type <- appMgr$OriginGroupingType
+type <- 'Custom'
+distr <- appMgr$OriginDistribution
+groups <- appMgr$OriginGrouping
+dtMap <- GetOriginGroupingMap(type, distr, groups)
 
 appMgr$ApplyOriginGrouping('REPCOUNTRY + UNK + OTHER')
 appMgr$GetSummaryData()

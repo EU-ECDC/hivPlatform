@@ -40,6 +40,7 @@ AppManager <- R6::R6Class(
         BSCount = 0,
 
         CaseBasedData = NULL,
+        MappedCaseBasedData = NULL,
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
@@ -65,6 +66,8 @@ AppManager <- R6::R6Class(
     ReadCaseBasedData = function(fileName) {
       private$Catalogs$CaseBasedDataPath <- fileName
       private$Catalogs$CaseBasedData <- ReadDataFile(fileName)
+
+      # Initialize attribute mapping
       private$DetermineAttributeMapping()
 
       PrintAlert('Case-based data file {.file {fileName}} loaded')
@@ -72,15 +75,28 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 2. Pre-process case-based data ---------------------------------------------------------------
-    PreProcessCaseBasedData = function() {
-      dt <- ApplyAttributesMapping(
+    # 2. Apply attribute mapping -------------------------------------------------------------------
+    ApplyAttributesMappingToCaseBasedData = function(attrMapping) {
+      if (missing(attrMapping)) {
+        private$DetermineAttributeMapping()
+      } else {
+        private$Catalogs$AttributeMapping <- attrMapping
+        private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
+      }
+
+      private$Catalogs$MappedCaseBasedData <- ApplyAttributesMapping(
         private$Catalogs$CaseBasedData,
-        private$Catalogs$AttributeMapping,
-        GetPreliminaryDefaultValues()
+        private$Catalogs$AttributeMapping
       )
 
-      dt <- PreProcessInputDataBeforeSummary(dt)
+      PrintAlert('Attribute mapping has been applied to case-based data')
+
+      return(invisible(self))
+    },
+
+    # 3. Pre-process case-based data ---------------------------------------------------------------
+    PreProcessCaseBasedData = function() {
+      dt <- PreProcessInputDataBeforeSummary(private$Catalogs$MappedCaseBasedData)
       dtStatus <- GetInputDataValidityStatus(dt$Table)
 
       private$Catalogs$PreProcessedCaseBasedData <- dt
@@ -92,7 +108,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 3. Apply origin grouping ---------------------------------------------------------------------
+    # 4. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(type, groups) {
       if (missing(type)) {
         type <- private$Catalogs$OriginGroupingType
@@ -106,7 +122,7 @@ AppManager <- R6::R6Class(
       }
 
       distr <- private$Catalogs$OriginDistribution
-      map <- GetOriginGroupingMap(type, distr, groups)
+      map <- GetOriginGroupingMap('Custom', distr, groups)
 
       private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
         private$Catalogs$PreProcessedCaseBasedData,
@@ -552,7 +568,6 @@ AppManager <- R6::R6Class(
         return(private$Catalogs$OriginGroupingType)
       } else {
         private$Catalogs$OriginGroupingType <- type
-        self$ApplyOriginGrouping()
         return(self)
       }
     },
@@ -562,7 +577,7 @@ AppManager <- R6::R6Class(
         return(private$Catalogs$OriginGrouping)
       } else {
         private$Catalogs$OriginGrouping <- originGrouping
-        self$ApplyOriginGrouping('Custom')
+        #private$Catalogs$OriginGroupingType <- 'Custom'
         return(self)
       }
     },
@@ -585,6 +600,10 @@ AppManager <- R6::R6Class(
 
     CaseBasedData = function() {
       return(private$Catalogs$CaseBasedData)
+    },
+
+    MappedCaseBasedData = function() {
+      return(private$Catalogs$MappedCaseBasedData)
     },
 
     AdjustedCaseBasedData = function() {

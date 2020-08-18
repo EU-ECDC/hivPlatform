@@ -10,10 +10,11 @@
 #'
 #' @examples
 #' distr <- data.table::data.table(
-#'   FullRegionOfOrigin = c("REPCOUNTRY", "SUBAFR"),
-#'   Count = c(1536, 2237))
+#'   origin = c('REPCOUNTRY', 'SUBAFR'),
+#'   count = c(1536, 2237)
+#' )
 #' GetOriginGroupingMap(
-#'   type = "REPCOUNTRY + UNK + 3 most prevalent regions + OTHER",
+#'   type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
 #'   distr = distr
 #' )
 #'
@@ -21,56 +22,63 @@
 GetOriginGroupingMap <- function(type, distr, groups = list())
 {
   # Initialize mapping
-  map <- c("UNK", "ABROAD", "AUSTNZ", "CAR", "CENTEUR", "EASTASIAPAC",
-           "EASTEUR", "EUROPE", "LATAM", "NORTHAFRMIDEAST", "NORTHAM",
-           "REPCOUNTRY", "SOUTHASIA", "SUBAFR", "WESTEUR")
+  map <- c(
+    'UNK', 'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM',
+    'NORTHAFRMIDEAST', 'NORTHAM', 'REPCOUNTRY', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
+  )
   names(map) <- map
 
   # Adjust according to type
   switch(
     type,
-    "REPCOUNTRY + UNK + OTHER" = ,
-    "REPCOUNTRY + UNK + 3 most prevalent regions + OTHER" = {
-      map[map %chin% c("ABROAD", "SUBAFR", "WESTEUR", "CENTEUR", "EASTEUR",
-                       "EASTASIAPAC", "EUROPE", "AUSTNZ", "SOUTHASIA",
-                       "NORTHAFRMIDEAST", "NORTHAM", "CAR", "LATAM")] <- "OTHER"
+    'REPCOUNTRY + UNK + OTHER' = ,
+    'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' = {
+      map[
+        map %chin% c(
+          'ABROAD', 'SUBAFR', 'WESTEUR', 'CENTEUR', 'EASTEUR', 'EASTASIAPAC', 'EUROPE', 'AUSTNZ',
+          'SOUTHASIA', 'NORTHAFRMIDEAST', 'NORTHAM', 'CAR', 'LATAM'
+        )
+      ] <- 'OTHER'
     },
-    "REPCOUNTRY + UNK + SUBAFR + OTHER" = {
-      map[map %chin% c("ABROAD", "WESTEUR", "CENTEUR", "EASTEUR", "EASTASIAPAC",
-                       "EUROPE", "AUSTNZ", "SOUTHASIA", "NORTHAFRMIDEAST",
-                       "NORTHAM", "CAR", "LATAM")] <- "OTHER"
+    'REPCOUNTRY + UNK + SUBAFR + OTHER' = {
+      map[
+        map %chin% c(
+          'ABROAD', 'WESTEUR', 'CENTEUR', 'EASTEUR', 'EASTASIAPAC', 'EUROPE', 'AUSTNZ', 'SOUTHASIA',
+          'NORTHAFRMIDEAST', 'NORTHAM', 'CAR', 'LATAM'
+        )
+      ] <- 'OTHER'
     },
-    "Custom" = {
+    'Custom' = {
       for (group in groups) {
-        map[map %chin% group$FullRegionOfOrigin] <- group$GroupedRegionOfOrigin
+        map[map %chin% group$origin] <- group$name
       }
     },
-    stop("Unsupported type")
+    stop('Unsupported type')
   )
 
   map <- as.data.table(map, keep.rownames = TRUE)
-  setnames(map, c("FullRegionOfOrigin", "GroupedRegionOfOrigin"))
+  setnames(map, c('origin', 'name'))
 
-  if (type == "REPCOUNTRY + UNK + 3 most prevalent regions + OTHER") {
+  if (type == 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER') {
     sepRegions <- head(
-      distr[!FullRegionOfOrigin %chin% c("REPCOUNTRY", "UNK"), FullRegionOfOrigin],
+      distr[!origin %chin% c('REPCOUNTRY', 'UNK'), origin],
       3
     )
-    map[FullRegionOfOrigin %chin% sepRegions, GroupedRegionOfOrigin := FullRegionOfOrigin]
+    map[origin %chin% sepRegions, name := origin]
   }
 
-  # Add count per FullRegionOfOrigin
+  # Add count per origin
   map[distr,
-    FullRegionOfOriginCount := Count,
-    on = .(FullRegionOfOrigin)
+    originCount := count,
+    on = .(origin)
   ]
-  map[is.na(FullRegionOfOriginCount), FullRegionOfOriginCount := 0]
+  map[is.na(originCount), originCount := 0]
 
   # Add count per GroupedRegionOfOrigin
-  map[, GroupedRegionOfOriginCount := sum(FullRegionOfOriginCount), by = .(GroupedRegionOfOrigin)]
+  map[, groupCount := sum(originCount), by = .(name)]
 
   map[,
-    GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin, levels = unique(GroupedRegionOfOrigin))
+    name := factor(name, levels = unique(name))
   ]
 
   return(map)

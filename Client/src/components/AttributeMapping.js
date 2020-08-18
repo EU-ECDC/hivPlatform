@@ -38,12 +38,12 @@ const AttributeMapping = (props) => {
 
   const attrMappingTableRows = appManager.attrMappingMgr.mapping.map((entry, idx) => (
     <TableRow hover key={idx}>
-      <TableCell>{entry.Attribute}</TableCell>
+      <TableCell>{entry.attribute}</TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
         <Select
           style={{ width: '100%', fontSize: '0.75rem' }}
-          value={entry.OrigColName || ''}
-          onChange={onOrigColSelect(entry.Attribute)}
+          value={entry.origColName || ''}
+          onChange={onOrigColSelect(entry.attribute)}
           disableUnderline
         >
           <MenuItem value='' dense>&nbsp;</MenuItem>
@@ -53,8 +53,8 @@ const AttributeMapping = (props) => {
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
         <Input
           style={{ width: '100%', fontSize: '0.75rem' }}
-          onChange={onDefValChange(entry.Attribute)}
-          disabled={!!entry.OrigColName}
+          onChange={onDefValChange(entry.attribute)}
+          disabled={!!entry.origColName}
         />
       </TableCell>
     </TableRow>

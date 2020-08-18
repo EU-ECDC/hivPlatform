@@ -1,10 +1,10 @@
 ConvertOriginGroupingDtToList <- function(dtMap) {
-  groupNames <- unique(dtMap$GroupedRegionOfOrigin)
+  groupNames <- unique(dtMap$name)
   listMap <- lapply(groupNames, function(groupName) {
     list(
-      GroupedRegionOfOrigin = as.character(groupName),
-      FullRegionsOfOrigin = dtMap[GroupedRegionOfOrigin == groupName, sort(unique(FullRegionOfOrigin))],
-      GroupedRegionOfOriginCount = dtMap[GroupedRegionOfOrigin == groupName, sort(unique(GroupedRegionOfOriginCount))]
+      name = as.character(groupName),
+      origin = dtMap[name == groupName, sort(unique(origin))],
+      groupCount = dtMap[name == groupName, sort(unique(groupCount))]
     )
   })
   return(listMap)

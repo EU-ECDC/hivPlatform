@@ -28,6 +28,21 @@ Events <- function(input, output, session, appMgr)
         AttributeMappingStatus = appMgr$AttributeMappingStatus
       )
     ))
+  })
+
+  observeEvent(input$attrMapping, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START',
+      Status = 'SUCCESS',
+      Payload = list()
+    ))
+
+    appMgr$ApplyAttributesMappingToCaseBasedData(input$attrMapping)
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
+      Status = 'SUCCESS',
+      Payload = list()
+    ))
 
     appMgr$PreProcessCaseBasedData()
     appMgr$SendEventToReact('shinyHandler', list(
@@ -46,7 +61,8 @@ Events <- function(input, output, session, appMgr)
 
     type <- appMgr$OriginGroupingType
     distr <- appMgr$OriginDistribution
-    dtMap <- GetOriginGroupingMap(type, distr)
+    groups <- appMgr$OriginGrouping
+    dtMap <- GetOriginGroupingMap(type, distr, groups)
     dtList <- ConvertOriginGroupingDtToList(dtMap)
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
@@ -55,21 +71,14 @@ Events <- function(input, output, session, appMgr)
         OriginGrouping = dtList
       )
     ))
-
-    summaryData <- appMgr$GetSummaryData()
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'SUMMARY_DATA_PREPARED',
-    Status = 'SUCCESS',
-      Payload = summaryData
-    ))
   })
 
   observeEvent(input$groupingPresetSelect, {
     type <- input$groupingPresetSelect
     appMgr$OriginGroupingType <- type
     distr <- appMgr$OriginDistribution
-    groups <- appMgr$OriginGrouping
-    dtMap <- GetOriginGroupingMap(type, distr, groups = groups)
+    # groups <- appMgr$OriginGrouping
+    dtMap <- GetOriginGroupingMap(type, distr)
     dtList <- ConvertOriginGroupingDtToList(dtMap)
 
     appMgr$SendEventToReact('shinyHandler', list(
@@ -83,10 +92,15 @@ Events <- function(input, output, session, appMgr)
 
   observeEvent(input$originGrouping, {
     appMgr$OriginGrouping <- input$originGrouping
-  })
+    appMgr$ApplyOriginGrouping()
 
-  observeEvent(input$attrMapping, {
-    print(input$attrMapping)
+    # summaryData <- appMgr$GetSummaryData()
+    # appMgr$SendEventToReact('shinyHandler', list(
+    #   Type = 'SUMMARY_DATA_PREPARED',
+    #   Status = 'SUCCESS',
+    #   Payload = summaryData
+    # ))
+
   })
 
   observeEvent(input$runAdjustBtn, {

@@ -85,5 +85,5 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
     }
   }
 
-  return(attrMapping)
+  return(unname(attrMapping))
 }

@@ -1,8 +1,8 @@
 import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
-import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
+import OriginGroupingsManager from './OriginGroupingsManager';
 
 configure({
   enforceActions: 'observed',
@@ -12,6 +12,7 @@ export default class AppManager {
 
   notificationsMgr = null;
   attrMappingMgr = null;
+  origGroupMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -133,15 +134,6 @@ export default class AppManager {
   @observable
   aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
 
-  @observable
-  originDistribution = {
-    FullRegionOfOrigin: [],
-    Count: []
-  };
-
-  @observable
-  originGrouping = [];
-
   // Shiny custom event handlers
   onShinyEvent = data => {
     console.log(data);
@@ -153,13 +145,16 @@ export default class AppManager {
     } else if (data.Type === 'CASE_BASED_DATA_READ') {
       this.setCaseBasedDataColumnNames(data.Payload.ColumnNames);
       this.setCaseBasedDataRowCount(data.Payload.RowCount);
-      this.setCaseBasedDataAttributeMapping(data.Payload.AttributeMapping);
-      this.setCaseBasedDataAttributeMappingStatus(data.Payload.AttributeMappingStatus);
+      this.attrMappingMgr.setMapping(data.Payload.AttributeMapping);
       this.notificationsMgr.setMsg('Case based data uploaded');
+    } else if (data.Type === 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START') {
+      this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+    } else if (data.Type === 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END') {
+      this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED') {
-      this.setOriginDistribution(data.Payload.OriginDistribution);
+      this.origGroupMgr.setDistribution(data.Payload.OriginDistribution);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_SET') {
-      this.setOriginGrouping(data.Payload.OriginGrouping);
+      this.origGroupMgr.setGroupings(data.Payload.OriginGrouping);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED') {
       this.notificationsMgr.setMsg('Origin grouping applied');
     } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
@@ -198,6 +193,7 @@ export default class AppManager {
   constructor() {
     this.notificationsMgr = new NotificationsManager(this);
     this.attrMappingMgr = new AttrMappingManager(this);
+    this.origGroupMgr = new OriginGroupingsManager(this);
   };
 
   @computed
@@ -224,35 +220,6 @@ export default class AppManager {
     return this.caseBasedDataColumnNames.join(', ');
   };
 
-  @computed
-  get originDistributionArray() {
-    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin;
-    const counts = this.originDistribution.Count;
-    return fullRegionsOfOrigin.map((el, i) => ({
-      FullRegionOfOrigin: fullRegionsOfOrigin[i],
-      Count: counts[i]
-    }));
-  };
-
-  @computed
-  get fullRegionsOfOriginArray() {
-    const fullRegionsOfOrigin = this.originDistribution.FullRegionOfOrigin.slice().sort();
-    return fullRegionsOfOrigin;
-  };
-
-  @computed
-  get originGroupingArray() {
-    return toJS(this.originGrouping);
-  };
-
-  @computed
-  get usedFullRegionsOfOrigin() {
-    return [].concat.apply([], this.originGrouping.map(el => el.FullRegionsOfOrigin));
-  };
-  @computed
-  get unusedFullRegionsOfOrigin() {
-    return this.fullRegionsOfOriginArray.filter(x => !this.usedFullRegionsOfOrigin.includes(x));
-  };
   @action
   setShinyState = state => {
     this.shinyState = state;
@@ -298,39 +265,6 @@ export default class AppManager {
   };
   @action setNotifQuarterChartData = data => this.notifQuarterChartData = data;
   @action setNotifQuarterChartCategories = categories => this.notifQuarterChartCategories = categories;
-  @action setOriginDistribution = distr => this.originDistribution = distr;
-  @action setOriginGrouping = grouping => {
-    // Make sure that FullRegionsOfOrigin are arrays
-    const temp = grouping.map(el => {
-      const arr = Array.isArray(el.FullRegionsOfOrigin) ? el.FullRegionsOfOrigin : [el.FullRegionsOfOrigin];
-      return ({
-        GroupedRegionOfOrigin: el.GroupedRegionOfOrigin,
-        GroupedRegionOfOriginCount: el.GroupedRegionOfOriginCount,
-        FullRegionsOfOrigin: arr
-      })
-    })
-
-    this.originGrouping = temp;
-  };
-  @action setGroupedRegionOfOrigin = (i, groupedRegionOfOrigin) => {
-    this.originGrouping[i].GroupedRegionOfOrigin = groupedRegionOfOrigin;
-  };
-  @action setFullRegionsOfOrigin = (i, fullRegionsOfOrigin) => {
-    this.originGrouping[i].FullRegionsOfOrigin = fullRegionsOfOrigin;
-  };
-  @action removeOriginGroupings = selectedIds => {
-    this.originGrouping = RemoveElementsFromArray(this.originGrouping, selectedIds);
-  }
-  @action addOriginGrouping = () => {
-    this.originGrouping.push({
-      GroupedRegionOfOrigin: 'New',
-      GroupedRegionOfOriginCount: 0,
-      FullRegionsOfOrigin: []
-    })
-  }
-  @action applyOriginGrouping = () => {
-    this.inputValueSet('originGrouping:OriginGroupingArray', this.originGrouping);
-  }
 
   @action
   unbindShinyInputs = () => {
@@ -364,7 +298,7 @@ export default class AppManager {
     if (this.shinyReady) {
       Shiny.setInputValue(inputId, value);
     } else {
-      console.log('inputValueSet: Shiny is not available', inputId, value);
+      console.log('inputValueSet: Shiny is not available', inputId, toJS(value));
     }
   };
 

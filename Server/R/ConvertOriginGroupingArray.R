@@ -5,9 +5,8 @@ ConvertOriginGroupingArray <- function(
 ) {
   originGrouping <- lapply(x, function(el) {
     list(
-      GroupedRegionOfOrigin = el$GroupedRegionOfOrigin,
-      GroupedRegionOfOriginCount = el$GroupedRegionOfOriginCount,
-      FullRegionsOfOrigin = simplify2array(el$FullRegionsOfOrigin)
+      name = el$name,
+      origin = simplify2array(el$origin)
     )
   })
 

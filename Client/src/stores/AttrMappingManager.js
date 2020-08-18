@@ -24,9 +24,9 @@ export default class AttrMappingManager {
   };
 
   @action setOrigCol = (attribute, origCol) => {
-    const idx = this.mapping.findIndex(el => el.Attribute === attribute);
+    const idx = this.mapping.findIndex(el => el.attribute === attribute);
     if (idx !== -1) {
-      this.mapping[idx].OrigColName = origCol !== '' ? origCol : null;
+      this.mapping[idx].origColName = origCol !== '' ? origCol : null;
       this.validateMapping();
     } else {
       console.log(`AttrMappingManager.setOrigCol: cannot find element with Attribute "${attribute}"`)
@@ -34,9 +34,9 @@ export default class AttrMappingManager {
   };
 
   @action setDefVal = (attribute, defVal) => {
-    const idx = this.mapping.findIndex(el => el.Attribute === attribute);
+    const idx = this.mapping.findIndex(el => el.attribute === attribute);
     if (idx !== -1) {
-      this.mapping[idx].DefVal = defVal !== '' ? defVal : null;
+      this.mapping[idx].defaultValue = defVal !== '' ? defVal : null;
     } else {
       console.log(`AttrMappingManager.setDefVal: cannot find element with Attribute "${attribute}"`)
     }
@@ -48,8 +48,8 @@ export default class AttrMappingManager {
 
   validateMapping = () => {
     const counts = this.mapping
-      .filter(el => el.OrigColName) // Filter nulls
-      .map(el => el.OrigColName)
+      .filter(el => el.origColName) // Filter nulls
+      .map(el => el.origColName)
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
     const multipleMappedColumns = [...counts].filter(el => el[1] > 1).map(el => el[0]);
 

@@ -20,8 +20,8 @@ ApplyOriginGroupingMap <- function(inputData, map)
 
   data[
     map,
-    GroupedRegionOfOrigin := i.GroupedRegionOfOrigin,
-    on = 'FullRegionOfOrigin'
+    GroupedRegionOfOrigin := name,
+    on = c('FullRegionOfOrigin' = 'origin')
   ]
 
   data[, GroupedRegionOfOrigin := droplevels(GroupedRegionOfOrigin)]
