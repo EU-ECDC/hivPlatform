@@ -1,4 +1,4 @@
-export const defDiagChartOptions = {
+export const defaultDiagChartOptions = {
   chart: {
     id: 'filter-diag-chart-1',
     stacked: true,
@@ -16,7 +16,6 @@ export const defDiagChartOptions = {
   },
   colors: ["#69b023", "#7bbcc0", "#ce80ce", "#9d8b56"],
   title: {
-    // text: 'Histogram of cases count per year of diagnosis',
     style: {
       fontWeight: 'normal'
     }
@@ -95,16 +94,7 @@ export const defDiagChartOptions = {
   }
 };
 
-/*
-export const marks = defaultFilterDiagChartOptions.xaxis.categories.map(function (el) {
-  return ({
-    value: el,
-    label: el.toString()
-  })
-})
-*/
-
-export const defNotifChartOptions = {
+export const defaultNotifChartOptions = {
   chart: {
     id: 'filter-notif-chart-1',
     stacked: true,
@@ -203,14 +193,7 @@ export const defNotifChartOptions = {
   },
 };
 
-export const missChartSeries = [
-  {
-    name: 'Missingness',
-    data: [0.45, 0.23, 0.19, 0.12]
-  }
-];
-
-export const missChartOptions = {
+export const defaultMissChart1Options = {
   chart: {
     id: 'miss-chart-1',
     selection: {
@@ -225,7 +208,7 @@ export const missChartOptions = {
     },
     parentHeightOffset: 0
   },
-  colors: ["#cccccc", "#7bbcc0", "#ce80ce", "#9d8b56"],
+  colors: ["#cccccc"],
   legend: {
     enabled: false
   },
@@ -249,7 +232,7 @@ export const missChartOptions = {
     axisTicks: {
       show: false
     },
-    categories: ['CD4', 'Migrant', 'Transmission', 'Age'],
+    //categories: ['CD4', 'Migrant', 'Transmission', 'Age'],
     tickPlacement: 'between',
   },
   yaxis: {
@@ -279,47 +262,7 @@ export const missChartOptions = {
   },
 };
 
-export const missChartSeries2 = [
-  {
-    name: 'Layer 1',
-    data: [
-      { x: 'CD4', y: 1 },
-      { x: 'Migrant', y: 1 },
-      { x: 'Transmission', y: 1 },
-      { x: 'Age', y: 1 }
-    ]
-  },
-  {
-    name: 'Layer 2',
-    data: [
-      { x: 'CD4', y: 0 },
-      { x: 'Migrant', y: 1 },
-      { x: 'Transmission', y: 0 },
-      { x: 'Age', y: 1 }
-    ]
-  },
-  {
-    name: 'Layer 3',
-    data: [
-      { x: 'CD4', y: 1 },
-      { x: 'Migrant', y: 0 },
-      { x: 'Transmission', y: 1 },
-      { x: 'Age', y: 1 }
-    ]
-  },
-  {
-    name: 'Layer 4',
-    data: [
-      { x: 'CD4', y: 1 },
-      { x: 'Migrant', y: 0 },
-      { x: 'Transmission', y: 0 },
-      { x: 'Age', y: 0 }
-    ]
-  }
-];
-
-
-export const missChartOptions2 = {
+export const defaultMissChart2Options = {
   chart: {
     parentHeightOffset: 0
   },
@@ -377,14 +320,9 @@ export const missChartOptions2 = {
       }
     }
   }
-}
+};
 
-export const missChartSeries3 = [
-  { name: 'Present', data: [{ x: 'Layer1', y: 0 }, { x: 'Layer2', y: 0 }, { x: 'Layer3', y: 0 }, { x: 'Layer4', y: 0.2622 }] },
-  { name: 'Missing', data: [{ x: 'Layer1', y: 0.03 }, { x: 'Layer2', y: 0.07 }, { x: 'Layer3', y: 0.14 }, { x: 'Layer4', y: 0 }] }
-];
-
-export const missChartOptions3 = {
+export const defaultMissChart3Options = {
   chart: {
     stacked: true,
     parentHeightOffset: 0
@@ -393,7 +331,7 @@ export const missChartOptions3 = {
     enabled: false
   },
   xaxis: {
-    categories: ['26.22%', '14.00%', '7.00%', '3.00%'],
+    // categories: ['26.22%', '14.00%', '7.00%', '3.00%'],
     labels: {
       show: false
     },
@@ -438,16 +376,9 @@ export const missChartOptions3 = {
       }
     },
   },
-}
+};
 
-export const missChartSeries4 = [
-  { name: 'CD4', data: [0.2, 0.3, 0.5, 0.2, 0.4] },
-  { name: 'Migrant', data: [0.4, 0.1, 0.09, 0.1, 0.7] },
-  { name: 'Transmission', data: [0.7, 0.5, 0.3, 0.12, 0.44] },
-  { name: 'Age', data: [0.5, 0.2, 0.55, 0.6, 0.34] }
-];
-
-export const missChartOptions4 = {
+export const defaultMissChart4Options = {
   chart: {
     dropShadow: {
       enabled: false
@@ -455,7 +386,7 @@ export const missChartOptions4 = {
     parentHeightOffset: 0
   },
   xaxis: {
-    categories: [1999, 2000, 2001, 2002, 2003],
+    // categories: [1999, 2000, 2001, 2002, 2003],
     title: {
       text: 'Year of diagnosis',
       style: {
@@ -491,11 +422,7 @@ export const missChartOptions4 = {
   }
 };
 
-export const rdSeries1 = [
-  { name: 'density', data: [[0, 0.25], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
-];
-
-export const rdOptions1 = {
+export const defaultRepDelChartOptions = {
   chart: {
     parentHeightOffset: 15
   },
@@ -510,6 +437,7 @@ export const rdOptions1 = {
       label: {
         text: '95% of cases reported by 5 quarters',
         orientation: 'horizontal',
+        textAnchor: 'start',
         borderColor: '#69b023',
         style: {
           color: 'white',
@@ -540,6 +468,5 @@ export const rdOptions1 = {
       },
       offsetY: 10
     },
-
   }
 };

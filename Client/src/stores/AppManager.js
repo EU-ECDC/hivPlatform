@@ -5,6 +5,7 @@ import AttrMappingManager from './AttrMappingManager';
 import OriginGroupingsManager from './OriginGroupingsManager';
 import CaseBasedDataManager from './CaseBasedDataManager';
 import AggrDataManager from './AggrDataManager';
+import SummaryDataManager from './SummaryDataManager';
 
 configure({
   enforceActions: 'observed',
@@ -17,6 +18,7 @@ export default class AppManager {
   origGroupMgr = null;
   caseBasedDataMgr = null;
   aggrDataMgr = null;
+  summaryDataMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -63,9 +65,6 @@ export default class AppManager {
   mode = 'NONE';
 
   @observable
-  aggrFileUploadProgress = null;
-
-  @observable
   adjustmentsRunProgress = null;
 
   @observable
@@ -82,34 +81,6 @@ export default class AppManager {
 
   @observable
   bootstrapRunLog = null;
-
-  @observable
-  diagnosisYearFilterData = {
-    ScaleMinYear: null,
-    ScaleMaxYear: null,
-    ValueMinYear: null,
-    ValueMaxYear: null
-  };
-
-  @observable
-  diagnosisYearChartData = [];
-
-  @observable
-  diagnosisYearChartCategories = [];
-
-  @observable
-  notifQuarterFilterData = {
-    ScaleMinYear: null,
-    ScaleMaxYear: null,
-    ValueMinYear: null,
-    ValueMaxYear: null
-  };
-
-  @observable
-  notifQuarterChartData = [];
-
-  @observable
-  notifQuarterChartCategories = [];
 
   // Shiny custom event handlers
   onShinyEvent = data => {
@@ -145,12 +116,8 @@ export default class AppManager {
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED') {
       this.notificationsMgr.setMsg('Origin grouping applied');
     } else if (data.Type === 'SUMMARY_DATA_PREPARED') {
-      this.setDiagnosisYearFilterData(data.Payload.DiagnosisYearFilterData);
-      this.setDiagnosisYearChartData(data.Payload.DiagnosisYearChartData);
-      this.setDiagnosisYearChartCategories(data.Payload.DiagnosisYearChartCategories);
-      this.setNotifQuarterFilterData(data.Payload.NotifQuarterFilterData);
-      this.setNotifQuarterChartData(data.Payload.NotifQuarterChartData);
-      this.setNotifQuarterChartCategories(data.Payload.NotifQuarterChartCategories);
+      this.summaryDataMgr.setDiagYearPlotData(data.Payload.DiagYearPlotData);
+      this.summaryDataMgr.setNotifQuarterPlotData(data.Payload.NotifQuarterPlotData);
     } else if (data.Type === 'ADJUSTMENTS_RUN_STARTED') {
       this.setAdjustmentsRunLog(data.Payload.RunLog);
       this.setAdjustmentsRunProgress(1);
@@ -183,6 +150,7 @@ export default class AppManager {
     this.aggrDataMgr = new AggrDataManager(this);
     this.attrMappingMgr = new AttrMappingManager(this);
     this.origGroupMgr = new OriginGroupingsManager(this);
+    this.summaryDataMgr = new SummaryDataManager(this);
   };
 
   @computed
@@ -223,22 +191,6 @@ export default class AppManager {
   @action setModelsRunLog = runLog => this.modelsRunLog = runLog;
   @action setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
   @action setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
-  @action setDiagnosisYearFilterData = data => {
-    this.diagnosisYearFilterData.ScaleMinYear = data.ScaleMinYear;
-    this.diagnosisYearFilterData.ScaleMaxYear = data.ScaleMaxYear;
-    this.diagnosisYearFilterData.ValueMinYear = data.ValueMinYear;
-    this.diagnosisYearFilterData.ValueMaxYear = data.ValueMaxYear;
-  };
-  @action setDiagnosisYearChartData = data => this.diagnosisYearChartData = data;
-  @action setDiagnosisYearChartCategories = categories => this.diagnosisYearChartCategories = categories;
-  @action setNotifQuarterFilterData = data => {
-    this.notifQuarterFilterData.ScaleMinYear = data.ScaleMinYear;
-    this.notifQuarterFilterData.ScaleMaxYear = data.ScaleMaxYear;
-    this.notifQuarterFilterData.ValueMinYear = data.ValueMinYear;
-    this.notifQuarterFilterData.ValueMaxYear = data.ValueMaxYear;
-  };
-  @action setNotifQuarterChartData = data => this.notifQuarterChartData = data;
-  @action setNotifQuarterChartCategories = categories => this.notifQuarterChartCategories = categories;
 
   @action
   unbindShinyInputs = () => {

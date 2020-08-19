@@ -7,22 +7,9 @@ appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
 appMgr$ReadAggregatedData(fileName = 'D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
-
-groups <- list(
-  list(
-    name = 'TEST',
-    origin = c('REPCOUNTRY')
-  )
-)
-
 # appMgr$ApplyOriginGrouping(type = 'REPCOUNTRY + UNK + OTHER')
 appMgr$ApplyOriginGrouping(groups = list())
 appMgr$GetSummaryData()
-
-ApplyOriginGroupingMap(
-  appMgr$PreProcessedCaseBasedData,
-  groups
-)
 
 # STEP 2 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
 

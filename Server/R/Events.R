@@ -114,16 +114,14 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$originGrouping, {
-    print(input$originGrouping)
     appMgr$ApplyOriginGrouping(input$originGrouping)
 
-    # summaryData <- appMgr$GetSummaryData()
-    # appMgr$SendEventToReact('shinyHandler', list(
-    #   Type = 'SUMMARY_DATA_PREPARED',
-    #   Status = 'SUCCESS',
-    #   Payload = summaryData
-    # ))
-
+    summaryData <- appMgr$GetSummaryData()
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'SUMMARY_DATA_PREPARED',
+      Status = 'SUCCESS',
+      Payload = summaryData
+    ))
   })
 
   observeEvent(input$runAdjustBtn, {

@@ -38,7 +38,6 @@ AppManager <- R6::R6Class(
         OriginGrouping = list(),
         PreProcessedCaseBasedDataStatus = NULL,
 
-        Plots = NULL,
         MICount = 0,
         BSCount = 0,
 
@@ -147,11 +146,28 @@ AppManager <- R6::R6Class(
       plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
 
       # Diagnosis year plot
-      diagYearCounts <- plotDT[,
-        .(Count = .N),
-        keyby = .(Gender, YearOfHIVDiagnosis)
-      ]
+      diagYearCounts <- plotDT[, .(Count = .N), keyby = .(Gender, YearOfHIVDiagnosis)]
       diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
+      diagYearPlotData <- list(
+        filter = list(
+          scaleMinYear = min(diagYearCategories),
+          scaleMaxYear = max(diagYearCategories),
+          valueMinYear = min(diagYearCategories),
+          valueMaxYear = max(diagYearCategories)
+        ),
+        chartCategories = diagYearCategories,
+        chartData = list(
+          list(
+            name = 'Female',
+            data = diagYearCounts[Gender == 'F', Count]
+          ),
+          list(
+            name = 'Male',
+            data = diagYearCounts[Gender == 'M', Count]
+          )
+        )
+      )
+      PrintAlert('Diagnosis year density plot data created')
 
       # Notification quarter plot
       notifQuarterCounts <- plotDT[,
@@ -162,33 +178,15 @@ AppManager <- R6::R6Class(
         )
       ]
       notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
-
-      summaryData <- list(
-        DiagnosisYearFilterData = list(
-          ScaleMinYear = min(diagYearCategories),
-          ScaleMaxYear = max(diagYearCategories),
-          ValueMinYear = min(diagYearCategories),
-          ValueMaxYear = max(diagYearCategories)
+      notifQuarterPlotData <- list(
+        filter = list(
+          scaleMinYear = min(notifQuarterCategories),
+          scaleMaxYear = max(notifQuarterCategories),
+          valueMinYear = min(notifQuarterCategories),
+          valueMaxYear = max(notifQuarterCategories)
         ),
-        DiagnosisYearChartCategories = diagYearCategories,
-        DiagnosisYearChartData = list(
-          list(
-            name = 'Female',
-            data = diagYearCounts[Gender == 'F', Count]
-          ),
-          list(
-            name = 'Male',
-            data = diagYearCounts[Gender == 'M', Count]
-          )
-        ),
-        NotifQuarterFilterData = list(
-          ScaleMinYear = min(notifQuarterCategories),
-          ScaleMaxYear = max(notifQuarterCategories),
-          ValueMinYear = min(notifQuarterCategories),
-          ValueMaxYear = max(notifQuarterCategories)
-        ),
-        NotifQuarterChartCategories = notifQuarterCategories,
-        NotifQuarterChartData = list(
+        chartCategories = notifQuarterCategories,
+        chartData = list(
           list(
             name = 'Female',
             data = notifQuarterCounts[Gender == 'F', Count]
@@ -199,9 +197,12 @@ AppManager <- R6::R6Class(
           )
         )
       )
+      PrintAlert('Notification quarter density plot data created')
 
-      PrintAlert('Diagnosis year density plot created')
-      PrintAlert('Notification quarter density plot created')
+      summaryData <- list(
+        DiagYearPlotData = diagYearPlotData,
+        NotifQuarterPlotData = notifQuarterPlotData
+      )
 
       return(summaryData)
     },
@@ -575,10 +576,6 @@ AppManager <- R6::R6Class(
 
     OriginGrouping = function() {
       return(private$Catalogs$OriginGrouping)
-    },
-
-    Plots = function() {
-      return(private$Catalogs$Plots)
     },
 
     MICount = function() {
