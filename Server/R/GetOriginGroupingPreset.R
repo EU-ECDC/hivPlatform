@@ -1,10 +1,9 @@
-#' GetOriginGroupingMap
+#' GetOriginGroupingPreset
 #'
 #' Get mapping from RegionOfOrigin to GroupOfOrigin
 #'
 #' @param type Grouping type
 #' @param distr Distribution of RegionOfOrigin
-#' @param groups Groups
 #'
 #' @return NULL
 #'
@@ -19,7 +18,7 @@
 #' )
 #'
 #' @export
-GetOriginGroupingMap <- function(type, distr, groups = list())
+GetOriginGroupingPreset <- function(type, distr)
 {
   # Initialize mapping
   map <- c(
@@ -47,13 +46,7 @@ GetOriginGroupingMap <- function(type, distr, groups = list())
           'NORTHAFRMIDEAST', 'NORTHAM', 'CAR', 'LATAM'
         )
       ] <- 'OTHER'
-    },
-    'Custom' = {
-      for (group in groups) {
-        map[map %chin% group$origin] <- group$name
-      }
-    },
-    stop('Unsupported type')
+    }
   )
 
   map <- as.data.table(map, keep.rownames = TRUE)
@@ -67,19 +60,21 @@ GetOriginGroupingMap <- function(type, distr, groups = list())
     map[origin %chin% sepRegions, name := origin]
   }
 
-  # Add count per origin
-  map[distr,
-    originCount := count,
-    on = .(origin)
-  ]
-  map[is.na(originCount), originCount := 0]
+  # # Add count per origin
+  # map[distr,
+  #   originCount := count,
+  #   on = .(origin)
+  # ]
+  # map[is.na(originCount), originCount := 0]
+  #
+  # # Add count per GroupedRegionOfOrigin
+  # map[, groupCount := sum(originCount), by = .(name)]
+  #
+  # map[,
+  #   name := factor(name, levels = unique(name))
+  # ]
 
-  # Add count per GroupedRegionOfOrigin
-  map[, groupCount := sum(originCount), by = .(name)]
-
-  map[,
-    name := factor(name, levels = unique(name))
-  ]
+  map <- ConvertOriginGroupingDtToList(map)
 
   return(map)
 }

@@ -72,13 +72,17 @@ const DefineReactFileInputBinding = (appManager) => {
       };
     }).call(FileProcessor.prototype);
 
-  var ReactFileUploader = function (shinyapp, id, files, el) {
-    this.shinyapp = window.Shiny.shinyapp;
+  var ReactFileUploader = function (shinyapp, id, files, el, progressCallback, binding) {
+    this.shinyapp = shinyapp;
     this.id = id;
     this.el = el;
+    this.progressCallback = progressCallback;
+    this.binding = binding;
     FileProcessor.call(this, files);
   };
+
   $.extend(ReactFileUploader.prototype, FileProcessor.prototype);
+
   (function () {
     this.makeRequest = function (method, args, onSuccess, onFailure, blobs) {
       this.shinyapp.makeRequest(method, args, onSuccess, onFailure, blobs);
@@ -157,10 +161,10 @@ const DefineReactFileInputBinding = (appManager) => {
       // Trigger shiny:inputchanged. Unlike a normal shiny:inputchanged event,
       // it's not possible to modify the information before the values get
       // sent to the server.
-      var evt = jQuery.Event("shiny:inputchanged");
+      var evt = jQuery.Event('shiny:inputchanged');
       evt.name = this.id;
       evt.value = fileInfo;
-      evt.binding = reactFileInputBinding;
+      evt.binding = this.binding;
       evt.el = this.el;
       evt.inputType = 'shiny.fileupload';
       $(document).trigger(evt);
@@ -176,14 +180,14 @@ const DefineReactFileInputBinding = (appManager) => {
     };
     this.onError = function (message) {
       console.log('onError: ', message);
-      appManager.setFileUploadProgress(null);
+      this.progressCallback(null);
     };
     this.onAbort = function () {
       console.log('onAbort');
-      appManager.setFileUploadProgress(null);
+      this.progressCallback(null);
     };
     this.onProgress = function (percentage) {
-      appManager.setFileUploadProgress(percentage);
+      this.progressCallback(percentage);
     };
   }).call(ReactFileUploader.prototype);
 
@@ -193,26 +197,36 @@ const DefineReactFileInputBinding = (appManager) => {
     if (uploader) uploader.abort();
     // Clear data-restore attribute if present.
     $el.removeAttr('data-restore');
-  }
+  };
 
-  function uploadFiles(evt) {
+  function uploadCaseBasedFiles(evt) {
     var $el = $(evt.target);
     abortCurrentUpload($el);
 
     var files = evt.target.files;
-    var id = reactFileInputBinding.getId(evt.target);
+    var id = reactCaseBasedFileInputBinding.getId(evt.target);
 
     if (files.length === 0) {
       return;
     }
 
-    $el.data('currentUploader', new ReactFileUploader(window.Shiny.shinyapp, id, files, evt.target));
-  }
+    $el.data(
+      'currentUploader',
+      new ReactFileUploader(
+        Shiny.shinyapp,
+        id,
+        files,
+        evt.target,
+        appManager.caseBasedDataMgr.setFileUploadProgress,
+        reactCaseBasedFileInputBinding
+      )
+    );
+  };
 
-  var reactFileInputBinding = new Shiny.InputBinding();
-  $.extend(reactFileInputBinding, {
+  var reactCaseBasedFileInputBinding = new Shiny.InputBinding();
+  $.extend(reactCaseBasedFileInputBinding, {
     find: function (scope) {
-      return $(scope).find('.uploadBtn');
+      return $(scope).find('#caseUploadBtn');
     },
     getId: function (el) {
       return Shiny.InputBinding.prototype.getId.call(this, el) || el.name;
@@ -228,15 +242,67 @@ const DefineReactFileInputBinding = (appManager) => {
       return 'shiny.file';
     },
     subscribe: function (el) {
-      $(el).on("change.reactFileInputBinding", uploadFiles);
+      $(el).on('change.reactCaseBasedFileInputBinding', uploadCaseBasedFiles);
     },
 
     unsubscribe: function (el) {
-      $(el).off(".reactFileInputBinding");
+      $(el).off('.reactCaseBasedFileInputBinding');
     }
   });
 
-  window.Shiny.inputBindings.register(reactFileInputBinding, 'shiny.reactFileInputBinding');
+  function uploadAggrFiles(evt) {
+    var $el = $(evt.target);
+    abortCurrentUpload($el);
+
+    var files = evt.target.files;
+    var id = reactAggrFileInputBinding.getId(evt.target);
+
+    if (files.length === 0) {
+      return;
+    }
+
+    $el.data(
+      'currentUploader',
+      new ReactFileUploader(
+        Shiny.shinyapp,
+        id,
+        files,
+        evt.target,
+        appManager.aggrDataMgr.setFileUploadProgress,
+        reactAggrFileInputBinding
+      )
+    );
+  };
+
+  var reactAggrFileInputBinding = new Shiny.InputBinding();
+  $.extend(reactAggrFileInputBinding, {
+    find: function (scope) {
+      return $(scope).find('#aggrUploadBtn');
+    },
+    getId: function (el) {
+      return Shiny.InputBinding.prototype.getId.call(this, el) || el.name;
+    },
+    getValue: function (el) {
+      return $(el).value;
+    },
+    setValue: function () {
+      // Not implemented
+    },
+    getType: function () {
+      // This will be used only when restoring a file from a saved state.
+      return 'shiny.file';
+    },
+    subscribe: function (el) {
+      $(el).on('change.reactAggrFileInputBinding', uploadAggrFiles);
+    },
+
+    unsubscribe: function (el) {
+      $(el).off('.reactAggrFileInputBinding');
+    }
+  });
+
+  Shiny.inputBindings.register(reactCaseBasedFileInputBinding, 'shiny.reactCaseBasedFileInputBinding');
+  Shiny.inputBindings.register(reactAggrFileInputBinding, 'shiny.reactAggrFileInputBinding');
 };
 
 export default DefineReactFileInputBinding;

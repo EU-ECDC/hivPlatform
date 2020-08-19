@@ -42,6 +42,7 @@ const OriginGroupingsWidget = (props) => {
 
   const handleGroupingPresetChange = e => {
     appManager.inputValueSet('groupingPresetSelect', e.target.value);
+    appManager.origGroupMgr.setType(e.target.value);
   };
 
   const handleSelectAllClick = e => {
@@ -79,7 +80,7 @@ const OriginGroupingsWidget = (props) => {
   }
 
   const handleAddClick = () => {
-    appManager.addEmptyGrouping();
+    appManager.origGroupMgr.addEmptyGrouping();
   }
 
   const rowCount = groupings.length;
@@ -93,7 +94,7 @@ const OriginGroupingsWidget = (props) => {
         <InputLabel>
           Preset
       </InputLabel>
-        <Select defaultValue='REPCOUNTRY + UNK + OTHER' onChange={handleGroupingPresetChange}>
+        <Select value={appManager.origGroupMgr.type} onChange={handleGroupingPresetChange}>
           <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
           <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
           <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>

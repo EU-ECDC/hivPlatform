@@ -20,8 +20,8 @@ const AttributeMapping = (props) => {
   const { appManager } = props;
 
   let attrMappingSelectOptions = [];
-  if (appManager.caseBasedDataColumnNames !== null) {
-    attrMappingSelectOptions = appManager.caseBasedDataColumnNames.slice().sort().map(colName => (
+  if (appManager.caseBasedDataMgr.columnNames !== null) {
+    attrMappingSelectOptions = appManager.caseBasedDataMgr.columnNames.slice().sort().map(colName => (
       <MenuItem key={colName} value={colName} dense>{colName}</MenuItem>
     ));
   }

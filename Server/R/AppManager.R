@@ -28,19 +28,21 @@ AppManager <- R6::R6Class(
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
         Mode = mode,
+
         CaseBasedDataPath = NULL,
+        AggregatedDataPath = NULL,
+
         AttributeMapping = NULL,
         AttributeMappingStatus = NULL,
-        PreProcessedCaseBasedDataStatus = NULL,
-        OriginGroupingType = 'REPCOUNTRY + UNK + OTHER',
         OriginDistribution = NULL,
         OriginGrouping = list(),
+        PreProcessedCaseBasedDataStatus = NULL,
+
         Plots = NULL,
         MICount = 0,
         BSCount = 0,
 
         CaseBasedData = NULL,
-        MappedCaseBasedData = NULL,
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
@@ -75,6 +77,15 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
+    ReadAggregatedData = function(fileName) {
+      private$Catalogs$AggregatedDataPath <- fileName
+      private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
+
+      PrintAlert('Aggregated data file {.file {fileName}} loaded')
+
+      return(invisible(self))
+    },
+
     # 2. Apply attribute mapping -------------------------------------------------------------------
     ApplyAttributesMappingToCaseBasedData = function(attrMapping) {
       if (missing(attrMapping)) {
@@ -84,7 +95,7 @@ AppManager <- R6::R6Class(
         private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
       }
 
-      private$Catalogs$MappedCaseBasedData <- ApplyAttributesMapping(
+      private$Catalogs$PreProcessedCaseBasedData <- ApplyAttributesMapping(
         private$Catalogs$CaseBasedData,
         private$Catalogs$AttributeMapping
       )
@@ -96,7 +107,7 @@ AppManager <- R6::R6Class(
 
     # 3. Pre-process case-based data ---------------------------------------------------------------
     PreProcessCaseBasedData = function() {
-      dt <- PreProcessInputDataBeforeSummary(private$Catalogs$MappedCaseBasedData)
+      dt <- PreProcessInputDataBeforeSummary(private$Catalogs$PreProcessedCaseBasedData)
       dtStatus <- GetInputDataValidityStatus(dt$Table)
 
       private$Catalogs$PreProcessedCaseBasedData <- dt
@@ -109,24 +120,15 @@ AppManager <- R6::R6Class(
     },
 
     # 4. Apply origin grouping ---------------------------------------------------------------------
-    ApplyOriginGrouping = function(type, groups) {
-      if (missing(type)) {
-        type <- private$Catalogs$OriginGroupingType
-      } else {
-        private$Catalogs$OriginGroupingType <- type
-      }
+    ApplyOriginGrouping = function(groups, type) {
       if (missing(groups)) {
-        groups <- private$Catalogs$OriginGrouping
-      } else {
-        private$Catalogs$OriginGrouping <- groups
+        groups <- GetOriginGroupingPreset(type, private$Catalogs$OriginDistribution)
       }
-
-      distr <- private$Catalogs$OriginDistribution
-      map <- GetOriginGroupingMap('Custom', distr, groups)
+      private$Catalogs$OriginGrouping <- groups
 
       private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
         private$Catalogs$PreProcessedCaseBasedData,
-        map
+        groups
       )
 
       self$SendEventToReact('shinyHandler', list(
@@ -547,6 +549,10 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$CaseBasedDataPath)
     },
 
+    AggregatedDataPath = function() {
+      return(private$Catalogs$AggregatedDataPath)
+    },
+
     AttributeMapping = function() {
       return(private$Catalogs$AttributeMapping)
     },
@@ -563,27 +569,12 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$PreProcessedCaseBasedDataStatus)
     },
 
-    OriginGroupingType = function(type) {
-      if (missing(type)) {
-        return(private$Catalogs$OriginGroupingType)
-      } else {
-        private$Catalogs$OriginGroupingType <- type
-        return(self)
-      }
-    },
-
-    OriginGrouping = function(originGrouping) {
-      if (missing(originGrouping)) {
-        return(private$Catalogs$OriginGrouping)
-      } else {
-        private$Catalogs$OriginGrouping <- originGrouping
-        #private$Catalogs$OriginGroupingType <- 'Custom'
-        return(self)
-      }
-    },
-
     OriginDistribution = function() {
       return(private$Catalogs$OriginDistribution)
+    },
+
+    OriginGrouping = function() {
+      return(private$Catalogs$OriginGrouping)
     },
 
     Plots = function() {
@@ -600,10 +591,6 @@ AppManager <- R6::R6Class(
 
     CaseBasedData = function() {
       return(private$Catalogs$CaseBasedData)
-    },
-
-    MappedCaseBasedData = function() {
-      return(private$Catalogs$MappedCaseBasedData)
     },
 
     AdjustedCaseBasedData = function() {

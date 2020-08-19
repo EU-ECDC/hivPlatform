@@ -3,6 +3,8 @@ import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
 import OriginGroupingsManager from './OriginGroupingsManager';
+import CaseBasedDataManager from './CaseBasedDataManager';
+import AggrDataManager from './AggrDataManager';
 
 configure({
   enforceActions: 'observed',
@@ -13,6 +15,8 @@ export default class AppManager {
   notificationsMgr = null;
   attrMappingMgr = null;
   origGroupMgr = null;
+  caseBasedDataMgr = null;
+  aggrDataMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -56,34 +60,10 @@ export default class AppManager {
   activeStepId = 0;
 
   @observable
-  fileUploadProgress = null;
-
-  @observable
   mode = 'NONE';
 
   @observable
-  caseBasedDataFileName = null;
-
-  @observable
-  caseBasedDataFileSize = null;
-
-  @observable
-  caseBasedDataFileType = null;
-
-  @observable
-  caseBasedDataPath = null;
-
-  @observable
-  caseBasedDataColumnNames = null;
-
-  @observable
-  caseBasedDataRowCount = null;
-
-  @observable
-  caseBasedDataAttributeMapping = null;
-
-  @observable
-  caseBasedDataAttributeMappingStatus = null;
+  aggrFileUploadProgress = null;
 
   @observable
   adjustmentsRunProgress = null;
@@ -131,22 +111,28 @@ export default class AppManager {
   @observable
   notifQuarterChartCategories = [];
 
-  @observable
-  aggregatedDataFileNames = ['Dead.csv', 'HIV.csv'];
-
   // Shiny custom event handlers
   onShinyEvent = data => {
     console.log(data);
     if (data.Type === 'CASE_BASED_DATA_UPLOADED') {
-      this.setCaseBasedDataFileName(data.Payload.FileName);
-      this.setCaseBasedDataPath(data.Payload.FilePath);
-      this.setCaseBasedDataFileSize(data.Payload.FileSize);
-      this.setCaseBasedDataFileType(data.Payload.FileType);
+      this.caseBasedDataMgr.setFileName(data.Payload.FileName);
+      this.caseBasedDataMgr.setFilePath(data.Payload.FilePath);
+      this.caseBasedDataMgr.setFileSize(data.Payload.FileSize);
+      this.caseBasedDataMgr.setFileType(data.Payload.FileType);
     } else if (data.Type === 'CASE_BASED_DATA_READ') {
-      this.setCaseBasedDataColumnNames(data.Payload.ColumnNames);
-      this.setCaseBasedDataRowCount(data.Payload.RowCount);
+      this.caseBasedDataMgr.setColumnNames(data.Payload.ColumnNames);
+      this.caseBasedDataMgr.setRecordCount(data.Payload.RecordCount);
       this.attrMappingMgr.setMapping(data.Payload.AttributeMapping);
       this.notificationsMgr.setMsg('Case based data uploaded');
+    } else if (data.Type === 'AGGR_DATA_UPLOADED') {
+      this.aggrDataMgr.setFileName(data.Payload.FileName);
+      this.aggrDataMgr.setFilePath(data.Payload.FilePath);
+      this.aggrDataMgr.setFileSize(data.Payload.FileSize);
+      this.aggrDataMgr.setFileType(data.Payload.FileType);
+    } else if (data.Type === 'AGGR_DATA_READ') {
+      this.aggrDataMgr.setDataNames(data.Payload.DataNames);
+      this.aggrDataMgr.setPopulationNames(data.Payload.PopulationNames);
+      this.notificationsMgr.setMsg('Aggregated data uploaded');
     } else if (data.Type === 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START') {
       this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
     } else if (data.Type === 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END') {
@@ -154,6 +140,7 @@ export default class AppManager {
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED') {
       this.origGroupMgr.setDistribution(data.Payload.OriginDistribution);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_SET') {
+      this.origGroupMgr.setType(data.Payload.OriginGroupingType);
       this.origGroupMgr.setGroupings(data.Payload.OriginGrouping);
     } else if (data.Type === 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED') {
       this.notificationsMgr.setMsg('Origin grouping applied');
@@ -192,6 +179,8 @@ export default class AppManager {
 
   constructor() {
     this.notificationsMgr = new NotificationsManager(this);
+    this.caseBasedDataMgr = new CaseBasedDataManager(this);
+    this.aggrDataMgr = new AggrDataManager(this);
     this.attrMappingMgr = new AttrMappingManager(this);
     this.origGroupMgr = new OriginGroupingsManager(this);
   };
@@ -212,20 +201,12 @@ export default class AppManager {
     return JSON.stringify(this.shinyMessage);
   };
 
-  @computed
-  get caseBasedDataColumnNamesString() {
-    if (this.caseBasedDataColumnNames === null) {
-      return '';
-    }
-    return this.caseBasedDataColumnNames.join(', ');
-  };
-
   @action
   setShinyState = state => {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
       DefineReactFileInputBinding(this);
-      window.Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
+      Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
     }
   };
 
@@ -236,13 +217,6 @@ export default class AppManager {
     this.setActiveStepId(1);
   };
 
-  @action setCaseBasedDataFileName = fileName => this.caseBasedDataFileName = fileName;
-  @action setCaseBasedDataFileSize = size => this.caseBasedDataFileSize = size;
-  @action setCaseBasedDataFileType = type => this.caseBasedDataFileType = type;
-  @action setCaseBasedDataPath = path => this.caseBasedDataPath = path;
-  @action setCaseBasedDataColumnNames = columnNames => this.caseBasedDataColumnNames = columnNames;
-  @action setCaseBasedDataRowCount = rowCount => this.caseBasedDataRowCount = rowCount;
-  @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
   @action setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
   @action setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
   @action setModelsRunProgress = progress => this.modelsRunProgress = progress;

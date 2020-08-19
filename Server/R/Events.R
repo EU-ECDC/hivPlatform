@@ -17,15 +17,41 @@ Events <- function(input, output, session, appMgr)
       )
     ))
 
-    appMgr$ReadCaseBasedData(input$caseUploadBtn$datapath)
+    appMgr$ReadCaseBasedData(fileInfo$datapath)
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_READ',
       Status = 'SUCCESS',
       Payload = list(
         ColumnNames = colnames(appMgr$CaseBasedData),
-        RowCount = nrow(appMgr$CaseBasedData),
-        AttributeMapping = appMgr$AttributeMapping,
-        AttributeMappingStatus = appMgr$AttributeMappingStatus
+        RecordCount = nrow(appMgr$CaseBasedData),
+        AttributeMapping = appMgr$AttributeMapping
+      )
+    ))
+  })
+
+  observeEvent(input$aggrUploadBtn, {
+    fileInfo <- input$aggrUploadBtn
+    print(fileInfo)
+
+    # Case based data uploaded
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'AGGR_DATA_UPLOADED',
+      Status = 'SUCCESS',
+      Payload = list(
+        FileName = fileInfo$name[1],
+        FileSize = fileInfo$size[1],
+        FileType = fileInfo$type[1],
+        FilePath = fileInfo$datapath[1]
+      )
+    ))
+
+    appMgr$ReadAggregatedData(fileInfo$datapath)
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'AGGR_DATA_READ',
+      Status = 'SUCCESS',
+      Payload = list(
+        DataNames = names(appMgr$AggregatedData),
+        PopulationNames = names(appMgr$AggregatedData[[1]])[-1]
       )
     ))
   })
@@ -59,40 +85,37 @@ Events <- function(input, output, session, appMgr)
       )
     ))
 
-    type <- appMgr$OriginGroupingType
+    type <- 'REPCOUNTRY + UNK + OTHER'
     distr <- appMgr$OriginDistribution
-    groups <- appMgr$OriginGrouping
-    dtMap <- GetOriginGroupingMap(type, distr, groups)
-    dtList <- ConvertOriginGroupingDtToList(dtMap)
+    groups <- GetOriginGroupingPreset(type, distr)
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
       Status = 'SUCCESS',
       Payload = list(
-        OriginGrouping = dtList
+        OriginGroupingType = type,
+        OriginGrouping = groups
       )
     ))
   })
 
   observeEvent(input$groupingPresetSelect, {
     type <- input$groupingPresetSelect
-    appMgr$OriginGroupingType <- type
     distr <- appMgr$OriginDistribution
-    # groups <- appMgr$OriginGrouping
-    dtMap <- GetOriginGroupingMap(type, distr)
-    dtList <- ConvertOriginGroupingDtToList(dtMap)
+    groups <- GetOriginGroupingPreset(type, distr)
 
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
       Status = 'SUCCESS',
       Payload = list(
-        OriginGrouping = dtList
+        OriginGroupingType = type,
+        OriginGrouping = groups
       )
     ))
   })
 
   observeEvent(input$originGrouping, {
-    appMgr$OriginGrouping <- input$originGrouping
-    appMgr$ApplyOriginGrouping()
+    print(input$originGrouping)
+    appMgr$ApplyOriginGrouping(input$originGrouping)
 
     # summaryData <- appMgr$GetSummaryData()
     # appMgr$SendEventToReact('shinyHandler', list(

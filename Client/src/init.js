@@ -6,7 +6,7 @@ export default appManager => {
   appManager.setMode('ALL-IN-ONE');
   appManager.setActiveStepId(1);
 
-  appManager.setCaseBasedDataColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
+  appManager.caseBasedDataMgr.setColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
 
   appManager.attrMappingMgr.setMapping([
     { attribute: 'RecordId', origColName: 'recordid', defaultValue: null },
@@ -36,7 +36,8 @@ export default appManager => {
         { "name": "UNK", "origin": ["UNK"], "groupCount": [1944] },
         { "name": "OTHER", "origin": ["ABROAD", "AUSTNZ", "CAR", "CENTEUR", "EASTASIAPAC", "EASTEUR", "EUROPE", "LATAM", "NORTHAFRMIDEAST", "NORTHAM", "SOUTHASIA", "SUBAFR", "WESTEUR"], "groupCount": [4113] },
         { "name": "REPCOUNTRY", "origin": ["REPCOUNTRY"], "groupCount": [1562] }
-      ]
+      ],
+      "OriginGroupingType": "REPCOUNTRY + UNK + OTHER"
     }
   }
   appManager.onShinyEvent(temp2);

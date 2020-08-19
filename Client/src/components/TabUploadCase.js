@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -10,16 +9,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import TabPanel from './TabPanel';
 import OriginGroupings from './OriginGroupings';
 import AttributeMapping from './AttributeMapping';
 import Btn from './Btn';
-import FormatBytes from '../utilities/FormatBytes'
+import UploadProgressBar from './UploadProgressBar';
+import FormatBytes from '../utilities/FormatBytes';
 
 const userStyles = makeStyles({
   header: {
@@ -34,11 +31,6 @@ const userStyles = makeStyles({
   }
 });
 
-const UploadProgressBar = (props) => {
-  const { progress } = props;
-  if (progress === null) return null;
-  return <LinearProgress variant='determinate' value={progress * 100} color='secondary'/>
-};
 
 const TabUploadCase = (props) => {
   const { appManager } = props;
@@ -72,7 +64,7 @@ const TabUploadCase = (props) => {
             Maximum file size: 70MB<br />
             Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)
           </Typography>
-          <UploadProgressBar progress={appManager.fileUploadProgress} />
+          <UploadProgressBar progress={appManager.caseBasedDataMgr.fileUploadProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{padding: 10}}>
@@ -82,19 +74,19 @@ const TabUploadCase = (props) => {
                 <Table>
                   <TableBody>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataFileName}</TableCell>
+                      <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileName}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataPath}</TableCell>
+                      <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.filePath}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appManager.caseBasedDataFileSize)}</TableCell>
+                      <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appManager.caseBasedDataMgr.fileSize)}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataFileType}</TableCell>
+                      <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileType}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>Number of records</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataRowCount}</TableCell>
+                      <TableCell className={classes.header}>Number of records</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.recordCount}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -105,7 +97,7 @@ const TabUploadCase = (props) => {
                     <TableRow hover><TableCell className={classes.header}>Column names</TableCell></TableRow>
                     <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
                       <div style={{overflow: 'auto', maxHeight: 164}}>
-                        {appManager.caseBasedDataColumnNamesString}
+                        {appManager.caseBasedDataMgr.columnNamesString}
                       </div>
                     </TableCell></TableRow>
                   </TableBody>

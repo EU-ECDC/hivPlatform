@@ -17,6 +17,9 @@ export default class OriginGroupingsManager {
   @observable
   groupings = [];
 
+  @observable
+  type = 'REPCOUNTRY + UNK + OTHER';
+
   @computed
   get distributionArray() {
     const origins = this.distribution.origin;
@@ -66,18 +69,23 @@ export default class OriginGroupingsManager {
     this.computeGroupCounts();
   };
 
+  @action setType = type => this.type = type;
+
   @action setGroupName = (i, name) => {
     this.groupings[i].name = name;
+    this.type = 'Custom';
   };
 
   @action setGroupOrigin = (i, origin) => {
     this.groupings[i].origin = origin;
     this.computeGroupCounts();
+    this.type = 'Custom';
   };
 
   @action removeGroupings = selectedIds => {
     this.groupings = RemoveElementsFromArray(this.groupings, selectedIds);
     this.computeGroupCounts();
+    this.type = 'Custom';
   };
 
   @action addEmptyGrouping = () => {
@@ -87,6 +95,7 @@ export default class OriginGroupingsManager {
       origin: []
     });
     this.computeGroupCounts();
+    this.type = 'Custom';
   };
 
   @action applyGroupings = () => {

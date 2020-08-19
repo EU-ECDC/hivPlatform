@@ -4,15 +4,13 @@
 \alias{ApplyAttributesMapping}
 \title{ApplyAttributesMapping}
 \usage{
-ApplyAttributesMapping(originalData, attrMapping, defaultValues)
+ApplyAttributesMapping(originalData, attrMapping)
 }
 \arguments{
 \item{originalData}{Original data. Required.}
 
 \item{attrMapping}{List of attributes mapping between original data and internal representation.
 Required.}
-
-\item{defaultValues}{List of default values for non-mapped columns}
 }
 \value{
 data.table
@@ -22,7 +20,7 @@ Applies attributes mapping to original data
 }
 \examples{
 \dontrun{
-ApplyAttributesMapping(originalData, attrMapping, defaultValues)
+ApplyAttributesMapping(originalData, attrMapping)
 }
 
 }
