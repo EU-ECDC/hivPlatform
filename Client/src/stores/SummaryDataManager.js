@@ -42,6 +42,11 @@ export default class SummaryDataManager {
     },
     plot2: {
       chartCategories: ['CD4', 'Migrant', 'Transmission', 'Age'],
+      chartData2: {
+        all: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 0]],
+        female: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1]],
+        male: [[1, 1, 1, 1], [0, 1, 0, 1]]
+      },
       chartData: {
         all: [
           {
@@ -216,4 +221,6 @@ export default class SummaryDataManager {
   get missPlot4Categories() {
     return this.missPlotData.plot4.chartCategories;
   };
+
+  // temp.map((el, i) => ({name: `Layer ${i}`, data: [el.map((el2, j) => ({x: chartCategories[j], y: el2}))]}))
 }
