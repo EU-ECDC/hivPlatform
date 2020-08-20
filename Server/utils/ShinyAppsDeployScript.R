@@ -11,3 +11,11 @@ rsconnect::deployApp(
   contentCategory = 'application',
   forceUpdate = TRUE
 )
+
+# Test callr
+rp1 <- callr::r_bg(function() { for (i in seq_len(10)) {Sys.sleep(1/2); print(i) }; print('Done')}, stdout = 'D:/test.txt')
+for (i in seq_len(15)) {
+  cat(paste(readLines('D:/test.txt'), collapse = '\n'))
+  Sys.sleep(0.5)
+}
+

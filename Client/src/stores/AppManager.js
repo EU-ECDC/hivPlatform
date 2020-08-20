@@ -6,6 +6,7 @@ import OriginGroupingsManager from './OriginGroupingsManager';
 import CaseBasedDataManager from './CaseBasedDataManager';
 import AggrDataManager from './AggrDataManager';
 import SummaryDataManager from './SummaryDataManager';
+import AdjustmentsManager from './AdjustmentsManager';
 
 configure({
   enforceActions: 'observed',
@@ -19,6 +20,7 @@ export default class AppManager {
   caseBasedDataMgr = null;
   aggrDataMgr = null;
   summaryDataMgr = null;
+  adjustMgr = null;
 
   @observable
   shinyState = 'DISCONNECTED';
@@ -151,6 +153,7 @@ export default class AppManager {
     this.attrMappingMgr = new AttrMappingManager(this);
     this.origGroupMgr = new OriginGroupingsManager(this);
     this.summaryDataMgr = new SummaryDataManager(this);
+    this.adjustMgr = new AdjustmentsManager(this);
   };
 
   @computed
