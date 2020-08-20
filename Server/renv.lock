@@ -332,9 +332,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "1cb00a9f8d7695c3bc9f5dc18da11948fc958df9",
+      "RemoteSha": "98c7bfa723db471a0970391be493eef07f13b793",
       "RemoteHost": "api.github.com",
-      "Hash": "63044ea1edc387e38ca3f9d054f0f5a7"
+      "Hash": "2c39431d9021f5803de510423ec5b2e0"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -478,10 +478,10 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.8-31",
+      "Version": "1.8-32",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4bb7e0c4f3557583e1e8d3c9ffb8ba5c"
+      "Hash": "8c15879d93932843512e53c956e4ea04"
     },
     "mice": {
       "Package": "mice",
