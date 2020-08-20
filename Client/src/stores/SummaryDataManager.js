@@ -1,4 +1,6 @@
 import { observable, action, computed, toJS } from 'mobx';
+import padStart from 'lodash/padStart';
+import { PausePresentationRounded } from '@material-ui/icons';
 
 export default class SummaryDataManager {
   rootMgr = null;
@@ -42,72 +44,18 @@ export default class SummaryDataManager {
     },
     plot2: {
       chartCategories: ['CD4', 'Migrant', 'Transmission', 'Age'],
-      chartData2: {
+      chartData: {
         all: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 0]],
         female: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1]],
         male: [[1, 1, 1, 1], [0, 1, 0, 1]]
-      },
-      chartData: {
-        all: [
-          {
-            name: 'Layer 1',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 1 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 2',
-            data: [{ x: 'CD4', y: 0 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 0 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 3',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 0 }, { x: 'Transmission', y: 1 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 4',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 0 }, { x: 'Transmission', y: 0 }, { x: 'Age', y: 0 }]
-          }
-        ],
-        female: [
-          {
-            name: 'Layer 1',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 1 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 2',
-            data: [{ x: 'CD4', y: 0 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 0 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 3',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 0 }, { x: 'Transmission', y: 1 }, { x: 'Age', y: 1 }]
-          },
-        ],
-        male: [
-          {
-            name: 'Layer 1',
-            data: [{ x: 'CD4', y: 1 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 1 }, { x: 'Age', y: 1 }]
-          },
-          {
-            name: 'Layer 2',
-            data: [{ x: 'CD4', y: 0 }, { x: 'Migrant', y: 1 }, { x: 'Transmission', y: 0 }, { x: 'Age', y: 1 }]
-          },
-        ]
       }
     },
     plot3: {
-      chartCategories: ['26.22%', '14.00%', '7.00%', '3.00%'],
       chartData: {
-        all: [
-          { name: 'Present', data: [{ x: 'Layer1', y: 0 }, { x: 'Layer2', y: 0 }, { x: 'Layer3', y: 0 }, { x: 'Layer4', y: 0.2622 }] },
-          { name: 'Missing', data: [{ x: 'Layer1', y: 0.03 }, { x: 'Layer2', y: 0.07 }, { x: 'Layer3', y: 0.14 }, { x: 'Layer4', y: 0 }] }
-        ],
-        female: [
-          { name: 'Present', data: [{ x: 'Layer1', y: 0 }, { x: 'Layer2', y: 0 }, { x: 'Layer3', y: 0.3 }] },
-          { name: 'Missing', data: [{ x: 'Layer1', y: 0.03 }, { x: 'Layer2', y: 0.07 }, { x: 'Layer3', y: 0 }] }
-        ],
-        male: [
-          { name: 'Present', data: [{ x: 'Layer1', y: 0 }, { x: 'Layer2', y: 0.4 }] },
-          { name: 'Missing', data: [{ x: 'Layer1', y: 0.03 }, { x: 'Layer2', y: 0 }] }
-        ]
-      }
+        all: [{ name: 'Missing', y: 0.03 }, { name: 'Missing', y: 0.07 }, { name: 'Missing', y: 0.14 }, { name: 'Present', y: 0.2622 }],
+        female: [{ name: 'Missing', y: 0.07 }, { name: 'Missing', y: 0.14 }, { name: 'Present', y: 0.2622 }],
+        male: [{ name: 'Missing', y: 0.14 }, { name: 'Present', y: 0.2622 }]
+      },
     },
     plot4: {
       chartCategories: [1999, 2000, 2001, 2002, 2003],
@@ -194,12 +142,26 @@ export default class SummaryDataManager {
 
   @computed
   get missPlot2Series() {
-    return this.missPlotData.plot2.chartData[this.missPlotData.selected];
+    const data = this.missPlotData.plot2.chartData[this.missPlotData.selected].map(
+      (layer, i) => ({
+        name: `Layer ${i + 1}`,
+        data: layer.map((cat, j) => ({ x: this.missPlotData.plot2.chartCategories[j], y: cat }))
+      })
+    );
+    return data;
   };
 
   @computed
   get missPlot3Series() {
-    return this.missPlotData.plot3.chartData[this.missPlotData.selected];
+    const data = ['Present', 'Missing'].map(
+      name => ({
+        name: name,
+        data: this.missPlotData.plot3.chartData[this.missPlotData.selected].map(
+          (el, i) => ({ x: `Layer ${i + 1}`, y: el.name === name ? el.y : 0 })
+        )
+      })
+    );
+    return data;
   };
 
   @computed
@@ -214,13 +176,12 @@ export default class SummaryDataManager {
 
   @computed
   get missPlot3Categories() {
-    return this.missPlotData.plot3.chartCategories;
+    const cats = this.missPlotData.plot3.chartData[this.missPlotData.selected].map(el => padStart(`${(el.y * 100).toFixed(2)} %`, 8));
+    return cats;
   };
 
   @computed
   get missPlot4Categories() {
     return this.missPlotData.plot4.chartCategories;
   };
-
-  // temp.map((el, i) => ({name: `Layer ${i}`, data: [el.map((el2, j) => ({x: chartCategories[j], y: el2}))]}))
 }

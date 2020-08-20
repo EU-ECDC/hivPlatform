@@ -8,6 +8,7 @@ import Chart from 'react-apexcharts';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
+import merge from 'lodash/merge';
 import {
   defaultMissChart1Options, defaultMissChart2Options, defaultMissChart3Options,
   defaultMissChart4Options
@@ -16,14 +17,23 @@ import {
 const TabSummaryMissingness = (props) => {
   const { appManager } = props;
 
-  let missChart1Options = defaultMissChart1Options;
-  missChart1Options.xaxis.categories = appManager.summaryDataMgr.missPlotData.plot1.chartCategories;
+  const missChart1Options = merge(
+    {},
+    defaultMissChart1Options,
+    { xaxis: { categories: appManager.summaryDataMgr.missPlotData.plot1.chartCategories } }
+  );
 
-  let missChart3Options = defaultMissChart3Options;
-  missChart3Options.xaxis.categories = appManager.summaryDataMgr.missPlot3Categories;
+  const missChart3Options = merge(
+    {},
+    defaultMissChart3Options,
+    { xaxis: { categories: appManager.summaryDataMgr.missPlot3Categories } }
+  );
 
-  let missChart4Options = defaultMissChart4Options;
-  missChart4Options.xaxis.categories = appManager.summaryDataMgr.missPlot4Categories;
+  const missChart4Options = merge(
+    {},
+    defaultMissChart4Options,
+    { xaxis: { categories: appManager.summaryDataMgr.missPlot4Categories } }
+  );
 
   const handleDataSelection = (e) => appManager.summaryDataMgr.setMissPlotSelection(e.target.value);
 

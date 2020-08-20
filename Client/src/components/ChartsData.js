@@ -232,8 +232,15 @@ export const defaultMissChart1Options = {
     axisTicks: {
       show: false
     },
-    //categories: ['CD4', 'Migrant', 'Transmission', 'Age'],
     tickPlacement: 'between',
+    position: 'bottom',
+    labels: {
+      minHeight: 80,
+      maxHeight: 80,
+      rotate: -45,
+      rotateAlways: true,
+      hideOverlappingLabels: false,
+    }
   },
   yaxis: {
     title: {
@@ -260,6 +267,14 @@ export const defaultMissChart1Options = {
       }
     },
   },
+  states: {
+    hover: {
+      filter: {
+        type: 'darken',
+        value: 0.15,
+      }
+    }
+  }
 };
 
 export const defaultMissChart2Options = {
@@ -277,6 +292,14 @@ export const defaultMissChart2Options = {
     axisTicks: {
       show: false
     },
+    labels: {
+      minHeight: 80,
+      maxHeight: 80,
+      rotate: -45,
+      rotateAlways: true,
+      hideOverlappingLabels: false,
+    },
+    floating: false
   },
   stroke: {
     width: 1
@@ -295,7 +318,9 @@ export const defaultMissChart2Options = {
       show: false
     },
     labels: {
-      show: false
+      show: false,
+      rotateAlways: false,
+      hideOverlappingLabels: false,
     }
   },
   legend: {
@@ -319,6 +344,14 @@ export const defaultMissChart2Options = {
         }],
       }
     }
+  },
+  states: {
+    hover: {
+      filter: {
+        type: 'darken',
+        value: 0.15,
+      }
+    }
   }
 };
 
@@ -331,9 +364,14 @@ export const defaultMissChart3Options = {
     enabled: false
   },
   xaxis: {
-    // categories: ['26.22%', '14.00%', '7.00%', '3.00%'],
+    reversed: true,
     labels: {
-      show: false
+      show: false,
+      minHeight: 52,
+      maxHeight: 52,
+      rotate: -45,
+      rotateAlways: false,
+      hideOverlappingLabels: false,
     },
     axisBorder: {
       show: false,
@@ -350,6 +388,7 @@ export const defaultMissChart3Options = {
   },
   yaxis: {
     opposite: true,
+    reversed: false,
     axisBorder: {
       show: false,
     }
@@ -376,6 +415,14 @@ export const defaultMissChart3Options = {
       }
     },
   },
+  states: {
+    hover: {
+      filter: {
+        type: 'darken',
+        value: 0.15,
+      }
+    }
+  }
 };
 
 export const defaultMissChart4Options = {
