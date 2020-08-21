@@ -31,7 +31,6 @@ const userStyles = makeStyles({
   }
 });
 
-
 const TabUploadCase = (props) => {
   const { appManager } = props;
   const classes = userStyles();
@@ -107,10 +106,18 @@ const TabUploadCase = (props) => {
           </Paper>
         </Grid>
       </Grid>
-      <Divider light style={{ margin: '30px 0' }} />
-      <AttributeMapping appManager={appManager} />
-      <Divider light style={{ margin: '30px 0' }} />
-      <OriginGroupings appManager={appManager}/>
+      { appManager.uiStateMgr.caseBasedAttrMappingStageEnabled &&
+        <React.Fragment>
+          <Divider light style={{ margin: '30px 0' }} />
+          <AttributeMapping appManager={appManager} />
+        </React.Fragment>
+      }
+      { appManager.uiStateMgr.caseBasedOrigGrpngStageEnabled &&
+        <React.Fragment>
+          <Divider light style={{ margin: '30px 0' }} />
+          <OriginGroupings appManager={appManager} />
+        </React.Fragment>
+      }
       <Divider light style={{ margin: '30px 0' }} />
     </TabPanel>
   );

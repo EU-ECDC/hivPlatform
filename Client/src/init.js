@@ -4,17 +4,33 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveStepId(2);
+  appManager.setActiveStepId(1);
 
-  appManager.caseBasedDataMgr.setColumnNames(['recordid', 'reportingcountry', 'age', 'gender', 'placeofresidence']);
+  let event = {
+    "Type": "CASE_BASED_DATA_READ",
+    "Status": "SUCCESS",
+    "Payload": {
+      "ColumnNames": ['recordid', 'reportingcountry', 'age', 'gender'],
+      "RecordCount": 400,
+      "AttributeMapping": [
+        { attribute: 'RecordId', origColName: 'recordid', defaultValue: null },
+        { attribute: 'ReportingCountry', origColName: 'reportingcountry', defaultValue: null },
+        { attribute: 'Age', origColName: 'age', defaultValue: null },
+        { attribute: 'Gender', origColName: 'gender', defaultValue: null },
+        { attribute: 'DateOfArt', origColName: null, defaultValue: null }
+      ]
+    }
+  }
+  appManager.onShinyEvent(event);
 
-  appManager.attrMappingMgr.setMapping([
-    { attribute: 'RecordId', origColName: 'recordid', defaultValue: null },
-    { attribute: 'ReportingCountry', origColName: 'reportingcountry', defaultValue: null },
-    { attribute: 'Age', origColName: 'age', defaultValue: null },
-    { attribute: 'Gender', origColName: 'gender', defaultValue: null },
-    { attribute: 'DateOfArt', origColName: null, defaultValue: null }
-  ]);
+  event = {
+    "Type": "CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START",
+    "Status": "SUCCESS",
+    "Payload": null
+  }
+  appManager.onShinyEvent(event);
+
+    /*
 
   let temp1 = {
     "Type": "CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED",
@@ -60,4 +76,5 @@ export default appManager => {
     }
   };
   appManager.onShinyEvent(summaryDataEvent);
+  */
 };

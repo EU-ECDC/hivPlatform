@@ -1,5 +1,6 @@
 import { observable, action, configure, computed, toJS } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
+import UIStateManager from './UIStateManager'
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
 import OriginGroupingsManager from './OriginGroupingsManager';
@@ -10,10 +11,12 @@ import AdjustmentsManager from './AdjustmentsManager';
 
 configure({
   enforceActions: 'observed',
+  computedRequiresReaction: true,
 });
 
 export default class AppManager {
 
+  uiStateMgr = null;
   notificationsMgr = null;
   attrMappingMgr = null;
   origGroupMgr = null;
@@ -144,9 +147,11 @@ export default class AppManager {
       this.setBootstrapRunProgress(null);
       this.notificationsMgr.setMsg('Bootstrap run finished');
     }
+    this.uiStateMgr.setLastEvent(data.Type);
   };
 
   constructor() {
+    this.uiStateMgr = new UIStateManager(this);
     this.notificationsMgr = new NotificationsManager(this);
     this.caseBasedDataMgr = new CaseBasedDataManager(this);
     this.aggrDataMgr = new AggrDataManager(this);
