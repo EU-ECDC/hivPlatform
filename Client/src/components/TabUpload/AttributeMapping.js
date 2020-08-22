@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
-import Btn from './Btn';
+import Btn from '../Btn';
 
 const AttributeMapping = (props) => {
   const { appManager } = props;

@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import LeftNav from './LeftNav';
 import RightNav from './RightNav';
 import TabWelcome from './TabWelcome';
-import TabUpload from './TabUpload';
+import TabUpload from './TabUpload/TabUpload';
 import TabSummary from './TabSummary';
 import TabAdjustments from './TabAdjustments';
 import TabModelling from './TabModelling';

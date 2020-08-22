@@ -4,7 +4,7 @@ import { EVENT_TO_ENABLED_STAGES_MAP } from '../settings';
 export default class UIStateManager {
 
   @observable
-  lastEvent = 'START';
+  lastEventType = 'START';
 
   rootMgr = null;
 
@@ -12,11 +12,11 @@ export default class UIStateManager {
     this.rootMgr = mgr;
   };
 
-  @action setLastEvent = event => this.lastEvent = event;
+  @action setLastEventType = eventType => this.lastEventType = eventType;
 
   @computed
   get enabledStages() {
-    return EVENT_TO_ENABLED_STAGES_MAP[this.lastEvent];
+    return EVENT_TO_ENABLED_STAGES_MAP[this.lastEventType];
   };
 
   @computed

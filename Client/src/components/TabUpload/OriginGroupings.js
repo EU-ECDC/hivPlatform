@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import GroupIcon from '@material-ui/icons/Group';
-import Btn from './Btn';
+import Btn from '../Btn';
 import OriginGroupingsWidget from './OriginGroupingsWidget';
 
 const OriginGroupings = (props) => {

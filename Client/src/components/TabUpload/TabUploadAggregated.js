@@ -10,10 +10,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import TabPanel from './TabPanel';
-import Btn from './Btn';
-import UploadProgressBar from './UploadProgressBar';
-import FormatBytes from '../utilities/FormatBytes';
+import TabPanel from '../TabPanel';
+import Btn from '../Btn';
+import UploadProgressBar from '../UploadProgressBar';
+import FormatBytes from '../../utilities/FormatBytes';
 
 const userStyles = makeStyles({
   header: {
