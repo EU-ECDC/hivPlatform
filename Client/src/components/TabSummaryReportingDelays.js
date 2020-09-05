@@ -29,9 +29,14 @@ const TabSummaryReportingDelays = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='repDelDataSelection'
-            value={appManager.summaryDataMgr.repDelPlotData.selected}
+            value={appManager.summaryDataMgr.repDelPlotSelection}
             onChange={handleDataSelection}
           >
+            <FormControlLabel
+              value='all'
+              control={<Radio color='primary' size='small' />}
+              label='All'
+            />
             <FormControlLabel
               value='female'
               control={<Radio color='primary' size='small' />}
@@ -41,11 +46,6 @@ const TabSummaryReportingDelays = (props) => {
               value='male'
               control={<Radio color='primary' size='small' />}
               label='Male'
-            />
-            <FormControlLabel
-              value='all'
-              control={<Radio color='primary' size='small' />}
-              label='All'
             />
           </RadioGroup>
         </FormControl>

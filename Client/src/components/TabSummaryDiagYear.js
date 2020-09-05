@@ -66,7 +66,7 @@ const TabSummaryDiagYear = (props) => {
       <Grid item xs={9}>
         <Paper style={{ padding: 10 }}>
           <Typography variant='overline'>Diagnosis year</Typography>
-          <div style={{ padding: '40px 100px 0 50px' }}>
+          <div style={{ padding: '40px 105px 0 65px' }}>
             <Slider
               min={appManager.summaryDataMgr.diagYearPlotData.filter.scaleMinYear}
               max={appManager.summaryDataMgr.diagYearPlotData.filter.scaleMaxYear}

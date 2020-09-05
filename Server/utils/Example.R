@@ -9,7 +9,10 @@ appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
 # appMgr$ApplyOriginGrouping(type = 'REPCOUNTRY + UNK + OTHER')
 appMgr$ApplyOriginGrouping(groups = list())
-appMgr$GetSummaryData()
+
+
+
+dt <- appMgr$GetSummaryData()
 
 # STEP 2 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
 

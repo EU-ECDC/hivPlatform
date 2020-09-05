@@ -33,7 +33,6 @@ export default class SummaryDataManager {
 
   @observable
   missPlotData = {
-    selected: 'all',
     plot1: {
       chartCategories: [],
       chartData: {
@@ -68,8 +67,10 @@ export default class SummaryDataManager {
   };
 
   @observable
+  missPlotSelection = 'all';
+
+  @observable
   repDelPlotData = {
-    selected: 'all',
     chartData: {
       all: [
         { name: 'density', data: [[0, 0.5], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
@@ -82,6 +83,9 @@ export default class SummaryDataManager {
       ]
     }
   };
+
+  @observable
+  repDelPlotSelection = 'all';
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -115,24 +119,24 @@ export default class SummaryDataManager {
   setMissPlotData = data => this.missPlotData = data;
 
   @action
-  setMissPlotSelection = selection => this.missPlotData.selected = selection;
+  setMissPlotSelection = selection => this.missPlotSelection = selection;
 
   @action
-  setRepDelPlotSelection = selection => this.repDelPlotData.selected = selection;
+  setRepDelPlotSelection = selection => this.repDelPlotSelection = selection;
 
   @computed
   get missPlot1Series() {
     return [{
       name: 'Missingness',
-      data: this.missPlotData.plot1.chartData[this.missPlotData.selected]
+      data: this.missPlotData.plot1.chartData[this.missPlotSelection]
     }];
   };
 
   @computed
   get missPlot2Series() {
-    const data = this.missPlotData.plot2.chartData[this.missPlotData.selected].map(
+    const data = this.missPlotData.plot2.chartData[this.missPlotSelection].map(
       (layer, i) => ({
-        name: `Layer ${i + 1}`,
+        name: `Combination ${i + 1}`,
         data: layer.map((cat, j) => ({ x: this.missPlotData.plot2.chartCategories[j], y: cat }))
       })
     );
@@ -144,8 +148,8 @@ export default class SummaryDataManager {
     const data = ['Present', 'Missing'].map(
       name => ({
         name: name,
-        data: this.missPlotData.plot3.chartData[this.missPlotData.selected].map(
-          (el, i) => ({ x: `Layer ${i + 1}`, y: el.name === name ? el.y : 0 })
+        data: this.missPlotData.plot3.chartData[this.missPlotSelection].map(
+          (el, i) => ({ x: `Combination ${i + 1}`, y: el.name === name ? el.y : 0 })
         )
       })
     );
@@ -154,17 +158,19 @@ export default class SummaryDataManager {
 
   @computed
   get missPlot4Series() {
-    return this.missPlotData.plot4.chartData[this.missPlotData.selected];
+    return this.missPlotData.plot4.chartData[this.missPlotSelection];
   };
 
   @computed
   get repDelPlotSeries() {
-    return toJS(this.repDelPlotData.chartData[this.repDelPlotData.selected]);
+    return toJS(this.repDelPlotData.chartData[this.repDelPlotSelection]);
   };
 
   @computed
   get missPlot3Categories() {
-    const cats = this.missPlotData.plot3.chartData[this.missPlotData.selected].map(el => padStart(`${(el.y * 100).toFixed(2)} %`, 8));
+    const cats = this.missPlotData.plot3.
+      chartData[this.missPlotSelection].
+      map(el => `${(el.y * 100).toFixed(2)} %`);
     return cats;
   };
 

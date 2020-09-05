@@ -50,9 +50,14 @@ const TabSummaryMissingness = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='missDataSelection'
-            value={appManager.summaryDataMgr.missPlotData.selected}
+            value={appManager.summaryDataMgr.missPlotSelection}
             onChange={handleDataSelection}
           >
+            <FormControlLabel
+              value='all'
+              control={<Radio color='primary' size='small' />}
+              label='All'
+            />
             <FormControlLabel
               value='female'
               control={<Radio color='primary' size='small' />}
@@ -62,11 +67,6 @@ const TabSummaryMissingness = (props) => {
               value='male'
               control={<Radio color='primary' size='small' />}
               label='Male'
-            />
-            <FormControlLabel
-              value='all'
-              control={<Radio color='primary' size='small' />}
-              label='All'
             />
           </RadioGroup>
         </FormControl>

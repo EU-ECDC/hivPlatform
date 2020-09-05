@@ -199,9 +199,8 @@ AppManager <- R6::R6Class(
       )
       PrintAlert('Notification quarter density plot data created')
 
-      # Testing missing ness data
-      missJSON <- '{"selected":"all","plot1":{"chartCategories":["CD4","Migrant","Transmission","Age"],"chartData":{"all":[0.25,0.23,0.19,0.12],"female":[0.35,0.23,0.19,0.2],"male":[0.45,0.23,0.19,0.1]}},"plot2":{"chartCategories":["CD4","Migrant","Transmission","Age"],"chartData":{"all":[[1,1,1,1],[0,1,0,1],[1,0,1,1],[1,0,0,0]],"female":[[1,1,1,1],[0,1,0,1],[1,0,1,1]],"male":[[1,1,1,1],[0,1,0,1]]}},"plot3":{"chartData":{"all":[{"name":"Missing","y":0.03},{"name":"Missing","y":0.07},{"name":"Missing","y":0.14},{"name":"Present","y":0.2622}],"female":[{"name":"Missing","y":0.07},{"name":"Missing","y":0.14},{"name":"Present","y":0.2622}],"male":[{"name":"Missing","y":0.14},{"name":"Present","y":0.2622}]}},"plot4":{"chartCategories":[1999,2000,2001,2002,2003],"chartData":{"all":[{"name":"CD4","data":[0.2,0.3,0.5,0.2,0.4]},{"name":"Migrant","data":[0.4,0.1,0.09,0.1,0.7]},{"name":"Transmission","data":[0.7,0.5,0.3,0.12,0.44]},{"name":"Age","data":[0.5,0.2,0.55,0.6,0.34]}],"female":[{"name":"CD4","data":[0.2,0.3,0.3,0.2,0.4]},{"name":"Migrant","data":[0.5,0.1,0.09,0.1,0.7]},{"name":"Transmission","data":[0.7,0.5,0.3,0.32,0.44]},{"name":"Age","data":[0.5,0.2,0.55,0.6,0.34]}],"male":[{"name":"CD4","data":[0.2,0.3,0.5,0.2,0.4]},{"name":"Migrant","data":[0.6,0.1,0.09,0.1,0.6]},{"name":"Transmission","data":[0.7,0.5,0.3,0.12,0.44]},{"name":"Age","data":[0.5,0.2,0.45,0.5,0.34]}]}}}'
-      missPlotData <- jsonlite::fromJSON(missJSON, simplifyVector = FALSE)
+      missPlotData <- GetMissingnessPlots(plotDT)
+      PrintAlert('Missingness plot data created')
 
       summaryData <- list(
         DiagYearPlotData = diagYearPlotData,

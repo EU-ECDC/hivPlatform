@@ -69,8 +69,8 @@ export const defaultDiagChartOptions = {
       show: false,
     },
     labels: {
-      minWidth: 40,
-      maxWidth: 40
+      minWidth: 50,
+      maxWidth: 50
     }
   },
   grid: {
@@ -90,6 +90,14 @@ export const defaultDiagChartOptions = {
     enabled: true,
     x: {
       show: true
+    }
+  },
+  states: {
+    hover: {
+      filter: {
+        type: 'darken',
+        value: 0.15,
+      }
     }
   }
 };
@@ -177,8 +185,8 @@ export const defaultNotifChartOptions = {
       show: false,
     },
     labels: {
-      minWidth: 40,
-      maxWidth: 40
+      minWidth: 50,
+      maxWidth: 50
     }
   },
   grid: {
@@ -191,6 +199,14 @@ export const defaultNotifChartOptions = {
       }
     },
   },
+  states: {
+    hover: {
+      filter: {
+        type: 'darken',
+        value: 0.15,
+      }
+    }
+  }
 };
 
 export const defaultMissChart1Options = {
@@ -256,8 +272,14 @@ export const defaultMissChart1Options = {
       show: false,
     },
     labels: {
-      minWidth: 40,
-      maxWidth: 40
+      minWidth: 50,
+      maxWidth: 50,
+      formatter: value => `${(value * 100).toFixed(0)} %`
+    }
+  },
+  tooltip: {
+    y: {
+      formatter: value => `${(value * 100).toFixed(2)} %`
     }
   },
   grid: {
@@ -325,6 +347,11 @@ export const defaultMissChart2Options = {
   },
   legend: {
     show: false,
+  },
+  tooltip: {
+    y: {
+      formatter: value => value === 1 ? 'Present' : 'Missing'
+    }
   },
   plotOptions: {
     heatmap: {
@@ -415,6 +442,11 @@ export const defaultMissChart3Options = {
       }
     },
   },
+  tooltip: {
+    y: {
+      formatter: value => `${(value * 100).toFixed(2)} %`
+    }
+  },
   states: {
     hover: {
       filter: {
@@ -465,6 +497,16 @@ export const defaultMissChart4Options = {
       style: {
         fontWeight: 'normal'
       }
+    },
+    labels: {
+      minWidth: 50,
+      maxWidth: 50,
+      formatter: value => `${(value * 100).toFixed(0)} %`
+    }
+  },
+  tooltip: {
+    y: {
+      formatter: value => `${(value * 100).toFixed(2)} %`
     }
   }
 };
