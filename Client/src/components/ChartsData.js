@@ -516,7 +516,7 @@ export const defaultRepDelChartOptions = {
     parentHeightOffset: 15
   },
   dataLabels: {
-    enabled: false
+    enabled: true
   },
   annotations: {
     xaxis: [{
@@ -547,6 +547,13 @@ export const defaultRepDelChartOptions = {
       },
       offsetY: 10
     },
+    labels: {
+      formatter: value => (value).toFixed(2)
+    },
+    min: 0,
+    max: 3,
+    tickPlacement: 'on',
+    tickAmount: 20,
   },
   yaxis: {
     min: 0,
