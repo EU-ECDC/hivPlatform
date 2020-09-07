@@ -107,6 +107,7 @@ AppManager <- R6::R6Class(
     # 3. Pre-process case-based data ---------------------------------------------------------------
     PreProcessCaseBasedData = function() {
       dt <- PreProcessInputDataBeforeSummary(private$Catalogs$PreProcessedCaseBasedData)
+      PreProcessInputDataBeforeAdjustments(dt$Table)
       dtStatus <- GetInputDataValidityStatus(dt$Table)
 
       private$Catalogs$PreProcessedCaseBasedData <- dt
@@ -202,10 +203,14 @@ AppManager <- R6::R6Class(
       missPlotData <- GetMissingnessPlots(plotDT)
       PrintAlert('Missingness plot data created')
 
+      repDelPlotData <- GetReportingDelaysPlots(plotDT)
+      PrintAlert('Reporting delays plot data created')
+
       summaryData <- list(
         DiagYearPlotData = diagYearPlotData,
         NotifQuarterPlotData = notifQuarterPlotData,
-        MissPlotData = missPlotData
+        MissPlotData = missPlotData,
+        RepDelPlotData = repDelPlotData
       )
 
       return(summaryData)

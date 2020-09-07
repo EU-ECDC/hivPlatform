@@ -8,10 +8,26 @@ import Chart from 'react-apexcharts';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
+import merge from 'lodash/merge';
 import { defaultRepDelChartOptions } from './ChartsData';
 
 const TabSummaryReportingDelays = (props) => {
   const { appManager } = props;
+
+  const repDelChartOptions = merge(
+    {},
+    defaultRepDelChartOptions,
+    {
+      annotations: {
+        xaxis: [{
+          x: appManager.summaryDataMgr.repDelPlot.q95,
+          label: {
+            text: `95% of cases reported by ${appManager.summaryDataMgr.repDelPlot.q95} quarters`,
+          }
+        }]
+      }
+    }
+  );
 
   const handleDataSelection = (e) => appManager.summaryDataMgr.setRepDelPlotSelection(e.target.value);
 
@@ -53,8 +69,8 @@ const TabSummaryReportingDelays = (props) => {
       <Grid item xs={9}>
         <Paper style={{ padding: 10 }}>
           <Chart
-            options={defaultRepDelChartOptions}
-            series={appManager.summaryDataMgr.repDelPlotSeries}
+            options={repDelChartOptions}
+            series={appManager.summaryDataMgr.repDelPlot.series}
             type='area'
             height={400}
           />

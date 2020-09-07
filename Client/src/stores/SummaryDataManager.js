@@ -1,6 +1,4 @@
 import { observable, action, computed, toJS } from 'mobx';
-import padStart from 'lodash/padStart';
-import { PausePresentationRounded } from '@material-ui/icons';
 
 export default class SummaryDataManager {
   rootMgr = null;
@@ -72,15 +70,9 @@ export default class SummaryDataManager {
   @observable
   repDelPlotData = {
     chartData: {
-      all: [
-        { name: 'density', data: [[0, 0.5], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
-      ],
-      female: [
-        { name: 'density', data: [[0, 0.25], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
-      ],
-      male: [
-        { name: 'density', data: [[0, 0.75], [0.25, 0.28], [0.5, 0.4], [0.75, 0.25], [1, 0.16], [1.25, 0.05], [1.5, 0.013], [1.75, 0.007], [2, 0.002], [2.25, 0.001]] }
-      ]
+      all: {q95: 0, series: []},
+      female: { q95: 0, series: []},
+      male: { q95: 0, series: []}
     }
   };
 
@@ -120,6 +112,9 @@ export default class SummaryDataManager {
 
   @action
   setMissPlotSelection = selection => this.missPlotSelection = selection;
+
+  @action
+  setRepDelPlotData = data => this.repDelPlotData = data;
 
   @action
   setRepDelPlotSelection = selection => this.repDelPlotSelection = selection;
@@ -162,8 +157,16 @@ export default class SummaryDataManager {
   };
 
   @computed
-  get repDelPlotSeries() {
-    return toJS(this.repDelPlotData.chartData[this.repDelPlotSelection]);
+  get repDelPlot() {
+    // Applied toJS in order to get rid of mobx error
+    const data = toJS(this.repDelPlotData.chartData[this.repDelPlotSelection]);
+    return {
+      q95: data.q95,
+      series: [{
+        name: 'density',
+        data: data.series
+      }]
+    };
   };
 
   @computed

@@ -10,9 +10,9 @@ appMgr$PreProcessCaseBasedData()
 # appMgr$ApplyOriginGrouping(type = 'REPCOUNTRY + UNK + OTHER')
 appMgr$ApplyOriginGrouping(groups = list())
 
-
-
 dt <- appMgr$GetSummaryData()
+
+jsonlite:::asJSON(dt, keep_vec_names = TRUE)
 
 # STEP 2 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
 

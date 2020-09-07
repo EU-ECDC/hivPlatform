@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Chart from 'react-apexcharts';
+import merge from 'lodash/merge';
 import { defaultNotifChartOptions } from './ChartsData';
 
 const userStyles = makeStyles({
@@ -25,8 +26,11 @@ const TabSummaryNotifQuarter = (props) => {
   const { appManager } = props;
   const classes = userStyles();
 
-  let notifChartOptions = defaultNotifChartOptions;
-  notifChartOptions.categories = appManager.summaryDataMgr.notifQuarterPlotData.chartCategories;
+  const notifChartOptions = merge(
+    {},
+    defaultNotifChartOptions,
+    { xaxis: { categories: appManager.summaryDataMgr.notifQuarterPlotData.chartCategories } }
+  );
 
   const handleNotifQuarterFilterSwitchChange = e =>
     appManager.summaryDataMgr.setNotifQuarterFilterApply(e.target.checked);

@@ -8,7 +8,7 @@
 #' @param labels Labels to be displayed instead of strings in \code{columnNames}. Optional.
 #'   Default = \code{c('Transm.', 'Migrant', 'Gender', 'Age', 'CD4')}
 #'
-#' @return plot object
+#' @return list object
 #'
 #' @examples
 #' \dontrun{

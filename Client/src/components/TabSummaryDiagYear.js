@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Chart from 'react-apexcharts';
+import merge from 'lodash/merge';
 import { defaultDiagChartOptions } from './ChartsData';
 
 const userStyles = makeStyles({
@@ -25,8 +26,11 @@ const TabSummaryDiagYear = (props) => {
   const { appManager } = props;
   const classes = userStyles();
 
-  let diagChartOptions = defaultDiagChartOptions;
-  diagChartOptions.categories = appManager.summaryDataMgr.diagYearPlotData.chartCategories;
+  const diagChartOptions = merge(
+    {},
+    defaultDiagChartOptions,
+    { xaxis: { categories: appManager.summaryDataMgr.diagYearPlotData.chartCategories } }
+  );
 
   const handleDiagYearFilterSwitchChange = e =>
     appManager.summaryDataMgr.setDiagYearFilterApply(e.target.checked);

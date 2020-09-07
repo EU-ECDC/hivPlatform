@@ -52,7 +52,6 @@ export const defaultDiagChartOptions = {
     axisTicks: {
       show: false,
     },
-    categories: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014],
     tickPlacement: 'between',
   },
   yaxis: {
@@ -153,6 +152,7 @@ export const defaultNotifChartOptions = {
     curve: 'stepline'
   },
   xaxis: {
+    type: 'category',
     title: {
       text: 'Notification quarter',
       style: {
@@ -165,11 +165,13 @@ export const defaultNotifChartOptions = {
     axisTicks: {
       show: false
     },
-    categories: [
-      1991.25, 1992.25, 1993.25, 1994.25, 1995.25, 1996.25, 1997.25, 1998.25, 1999.25,
-      1999.75, 2000.75, 2001.75, 2002.75, 2003.75, 2004.75, 2005.75, 2006.75, 2007.75
-    ],
     tickPlacement: 'between',
+    labels: {
+      formatter: value => (value).toFixed(2),
+      style: {
+        fontSize: '9px'
+      }
+    }
   },
   yaxis: {
     title: {
@@ -516,15 +518,13 @@ export const defaultRepDelChartOptions = {
     parentHeightOffset: 15
   },
   dataLabels: {
-    enabled: true
+    enabled: false
   },
   annotations: {
     xaxis: [{
-      x: 1.25,
       borderColor: '#69b023',
       strokeDashArray: 0,
       label: {
-        text: '95% of cases reported by 5 quarters',
         orientation: 'horizontal',
         textAnchor: 'start',
         borderColor: '#69b023',
@@ -536,10 +536,12 @@ export const defaultRepDelChartOptions = {
     }]
   },
   stroke: {
-    width: 2
+    width: 2,
+    curve: 'smooth',
   },
   xaxis: {
     type: 'numeric',
+    categories: [0, 10, 20, 30, 40, 50, 60],
     title: {
       text: 'Notification time in quarters of the year',
       style: {
@@ -547,13 +549,11 @@ export const defaultRepDelChartOptions = {
       },
       offsetY: 10
     },
-    labels: {
-      formatter: value => (value).toFixed(2)
-    },
-    min: 0,
-    max: 3,
     tickPlacement: 'on',
     tickAmount: 20,
+    labels: {
+      formatter: value => (value).toFixed(2)
+    }
   },
   yaxis: {
     min: 0,
@@ -564,5 +564,10 @@ export const defaultRepDelChartOptions = {
       },
       offsetY: 10
     },
+    labels: {
+      minWidth: 50,
+      maxWidth: 50,
+      formatter: value => (value).toFixed(2)
+    }
   }
 };

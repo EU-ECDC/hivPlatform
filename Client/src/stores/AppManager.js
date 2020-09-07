@@ -8,7 +8,6 @@ import CaseBasedDataManager from './CaseBasedDataManager';
 import AggrDataManager from './AggrDataManager';
 import SummaryDataManager from './SummaryDataManager';
 import AdjustmentsManager from './AdjustmentsManager';
-import { FreeBreakfastOutlined } from '@material-ui/icons';
 
 configure({
   enforceActions: 'observed',
@@ -135,6 +134,7 @@ export default class AppManager {
         this.summaryDataMgr.setDiagYearPlotData(event.Payload.DiagYearPlotData);
         this.summaryDataMgr.setNotifQuarterPlotData(event.Payload.NotifQuarterPlotData);
         this.summaryDataMgr.setMissPlotData(event.Payload.MissPlotData);
+        this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
         break;
       case 'ADJUSTMENTS_RUN_STARTED':
         this.setAdjustmentsRunLog(event.Payload.RunLog);
