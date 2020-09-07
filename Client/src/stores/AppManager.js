@@ -145,6 +145,9 @@ export default class AppManager {
         this.setAdjustmentsRunProgress(null);
         this.notificationsMgr.setMsg('Adjustment run finished');
         break;
+      case 'ADJUSTMENTS_RUN_LOG_SET':
+        this.setAdjustmentsRunLog(event.Payload.RunLog);
+        break;
       case 'MODEL_RUN_STARTED':
         this.setModelsRunLog(event.Payload.RunLog);
         this.setModelsRunProgress(1);

@@ -20,7 +20,7 @@ Default = \code{c('Transmission', 'GroupedRegionOfOrigin', 'Gender', 'Age', 'Fir
 Default = \code{c('Transm.', 'Migrant', 'Gender', 'Age', 'CD4')}}
 }
 \value{
-plot object
+list object
 }
 \description{
 Create plot with overview of missing data.

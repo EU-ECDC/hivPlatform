@@ -469,7 +469,7 @@ export const defaultMissChart4Options = {
   xaxis: {
     // categories: [1999, 2000, 2001, 2002, 2003],
     title: {
-      text: 'Year of diagnosis',
+      text: 'Diagnosis year',
       style: {
         fontWeight: 'normal'
       }

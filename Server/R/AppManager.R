@@ -45,6 +45,7 @@ AppManager <- R6::R6Class(
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
+        AdjustmentRunLog = '',
 
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL
@@ -222,7 +223,7 @@ AppManager <- R6::R6Class(
       adjustmentSpecs
     ) {
       if (is.null(miCount)) {
-        miCount <- private$Catalogs$MICount
+        miCount <- isolate(private$Catalogs$MICount)
       } else {
         private$Catalogs$MICount <- miCount
       }
@@ -243,7 +244,7 @@ AppManager <- R6::R6Class(
       ), adjustNames)
 
       private$Catalogs$AdjustedCaseBasedData <- RunAdjustments(
-        data = private$Catalogs$PreProcessedCaseBasedData$Table,
+        data = isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
         adjustmentSpecs = adjustmentSpecs,
         diagYearRange = NULL,
         notifQuarterRange = NULL,
@@ -601,6 +602,10 @@ AppManager <- R6::R6Class(
 
     AdjustedCaseBasedData = function() {
       return(private$Catalogs$AdjustedCaseBasedData)
+    },
+
+    AdjustmentRunLog = function() {
+      return(private$Catalogs$AdjustmentRunLog)
     },
 
     FinalAdjustedCaseBasedData = function() {

@@ -19,7 +19,7 @@ distr <- data.table::data.table(
   origin = c('REPCOUNTRY', 'SUBAFR'),
   count = c(1536, 2237)
 )
-GetOriginGroupingMap(
+GetOriginGroupingPreset(
   type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
   distr = distr
 )

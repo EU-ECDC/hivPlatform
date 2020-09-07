@@ -13,7 +13,6 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import TabPanel from './TabPanel';
