@@ -4,7 +4,7 @@
 \alias{CreateTask}
 \title{CreateTask}
 \usage{
-CreateTask(expr, args = NULL, timeout = 1000L)
+CreateTask(expr, args = NULL, timeout = 1L)
 }
 \arguments{
 \item{expr}{Expression to be executed. Required.}
@@ -12,8 +12,8 @@ CreateTask(expr, args = NULL, timeout = 1000L)
 \item{args}{List object with arguments to be passed to \code{expr}. Optional.
 Default = \code{NULL}}
 
-\item{timeout}{Number of milliseconds between consecutive checks of the task. Optional.
-Default = 1000L}
+\item{timeout}{Number of seconds between consecutive checks of the task. Optional.
+Default = 1L}
 }
 \value{
 Closure
@@ -33,7 +33,7 @@ The return value is a promise-like object with three methods:\cr
 }
 \examples{
 \dontrun{
-task <- CreateTask({
+task <- CreateTask(function() {
   Sys.sleep(5)
   cars[sample(nrow(cars), 10),]
 })
