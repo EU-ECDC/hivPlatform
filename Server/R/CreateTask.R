@@ -23,60 +23,105 @@
 #' \dontrun{
 #' task <- CreateTask(function() {
 #'   Sys.sleep(5)
-#'   cars[sample(nrow(cars), 10),]
+#'   dt <- cars[sample(nrow(cars), 10), ]
+#'   print('Message from another world')
+#'   return(dt)
 #' })
 #' shiny::isolate(task$result())
 #' }
 #'
 #' @export
-CreateTask <- function(expr, args = NULL, timeout = 1L)
+CreateTask <- function(expr, args = list(), timeout = 1L)
 {
-  # shiny::makeReactiveBinding('state')
-  state <- 'running'
+  state <- 'ready'
   result <- NULL
+  runLog <- ''
+  startTime <- NULL
+  cpuTime <- NULL
 
   # Launch the task in a forked process. This always returns
   # immediately, and we get back a handle we can use to monitor
   # or kill the job.
   taskHandle <- callr::r_bg(force(expr), args = args)
+  startTime <- taskHandle$get_start_time()
 
-  # Poll every [timeout] milliseconds until the job completes
-  while (taskHandle$is_alive()) {
-    if (state == 'cancel') {
-      taskHandle$kill()
-    }
-    cat(CollapseTexts(taskHandle$read_output(), collapse = '\n') )
-    Sys.sleep(timeout)
+  if (taskHandle$is_alive()) {
+    state <- 'running'
   }
-  cat(CollapseTexts(taskHandle$read_all_output(), collapse = '\n') )
-
-  res <- try({taskHandle$get_result()})
-  # o$destroy()
-  if (!inherits(res, 'try-error')) {
-    state <- 'success'
-    result <- res
-  } else {
-    state <- 'error'
-    result <- NULL
-  }
-  taskHandle$kill()
 
   return(
     list(
-      completed = function() {
-        state != 'running'
+      isRunning = function() {
+
       },
       cancel = function() {
-        if (state == 'running') {
-          state <- 'cancel'
+        if (is.null(taskHandle$get_exit_status())) {
+          killSuccess <- taskHandle$kill()
+          if (killSuccess && !taskHandle$is_alive()) {
+            state <<- 'cancelled'
+          }
         }
       },
       state = function() {
-        state
+        if (taskHandle$is_alive()) {
+          state <<- 'running'
+        } else {
+          state
+        }
+        return(state)
       },
-      taskHandle = function() {
-        taskHandle
-      }
+      result = function() {
+        if (!taskHandle$is_alive()) {
+          if (taskHandle$get_exit_status() == 0) {
+            res <- try({taskHandle$get_result()})
+            if (!inherits(res, 'try-error')) {
+              state <<- 'success'
+              result <<- res
+            } else {
+              state <<- 'error'
+              result <<- NULL
+            }
+            runLog <<- paste(
+              runLog,
+              CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
+              sep = ''
+            )
+            cpuTime <- taskHandle$get_cpu_times()
+          }
+          # taskHandle$kill()
+        }
+        return(result)
+      },
+      runLog = function() {
+        if (taskHandle$is_alive()) {
+          runLog <<- paste(
+            runLog,
+            CollapseTexts(taskHandle$read_output(), collapse = '\n'),
+            sep = ''
+          )
+        } else {
+          runLog <<- paste(
+            runLog,
+            CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
+            sep = ''
+          )
+        }
+        return(runLog)
+      },
+      taskHandle = function() taskHandle,
+      completed = function() {
+        exitStatus <- taskHandle$get_exit_status()
+        if (!is.null(exitStatus)) {
+          if (exitStatus == 0) {
+            state <<- 'success'
+          } else {
+            state <<- 'error'
+          }
+        }
+        return(!is.null(exitStatus))
+      },
+      startTime = function() startTime,
+      cpuTime = function() cpuTime
     )
   )
 }

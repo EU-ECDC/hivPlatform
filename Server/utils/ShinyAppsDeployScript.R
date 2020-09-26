@@ -13,75 +13,31 @@ rsconnect::deployApp(
 )
 
 # Test callr
-taskHandle <- callr::r_bg(
-  function() {
-    for (i in seq_len(10)) {
-      Sys.sleep(1/2)
-      cat(i, '\n')
-    }
-    cat('Done')
-  }
-)
+task <- CreateTask(function() {
+  print('Start of run')
+  Sys.sleep(5)
+  dt <- cars[sample(nrow(cars), 10), ]
+  print('End of run')
+  return(dt)
+})
 
-taskHandle <- callr::r_bg(
-  function(cars) {
-    Sys.sleep(5)
-    print(cars[sample(nrow(cars), 10), ])
-  },
-  args = list(cars)
-)
+task$completed()
+task$state()
+task$result()
+task$runLog()
+task$startTime()
+task$cpuTime()
+task$cancel()
 
-runLog <- ''
-while (taskHandle$is_alive()) {
-  runLog <- paste(
-    runLog,
-    CollapseTexts(taskHandle$read_output(), collapse = '\n'),
-    sep = ''
-  )
-  Sys.sleep(1)
-}
-runLog <- paste(
-  runLog,
-  CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
-  sep = ''
-)
-cat(runLog)
-
-taskHandle$get_result()
-taskHandle <- NULL
-taskHandle <- callr::r_bg(
-  function(appMgr) {
-    adjustmentSpecs <- hivEstimatesAccuracy2:::GetAdjustmentSpecs(c(
-      'Multiple Imputation using Chained Equations - MICE'
-    ))
-    appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
-  },
-  args = list(appMgr)
-)
-
-runLog <- ''
-while (taskHandle$is_alive()) {
-  cat(CollapseTexts(taskHandle$read_output(), collapse = '\n'))
-  # runLog <- paste(
-  #   runLog,
-  #   CollapseTexts(taskHandle$read_output(), collapse = '\n'),
-  #   sep = ''
-  # )
-  Sys.sleep(1)
-}
-
-
-
-runLog <- paste(
-  runLog,
-  CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
-  sep = ''
-)
-
-taskHandle
-taskHandle$read_all_output()
-cat(taskHandle$read_all_error())
-taskHandle$read_error_lines()
+taskHandle <- task$taskHandle()
 taskHandle$is_alive()
-taskHandle$get_memory_info()
-taskHandle$read_output_lines()
+taskHandle$is_incomplete_error()
+taskHandle$is_incomplete_output()
+taskHandle$get_result()
+taskHandle$kill()
+taskHandle$get_exit_status()
+taskHandle$finalize()
+taskHandle$read_error()
+taskHandle$read_output()
+taskHandle$get_cpu_times()
+taskHandle$get_start_time()

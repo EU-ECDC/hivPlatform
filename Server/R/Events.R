@@ -18,6 +18,10 @@ Events <- function(input, output, session, appMgr)
     ))
 
     appMgr$ReadCaseBasedData(fileInfo$datapath)
+  })
+
+  # Case-based data upload event
+  observeEvent(appMgr$CaseBasedDataPath, {
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_READ',
       Status = 'SUCCESS',

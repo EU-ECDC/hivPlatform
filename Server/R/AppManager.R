@@ -45,12 +45,13 @@ AppManager <- R6::R6Class(
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
-        AdjustmentRunLog = '',
 
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
-        TaskHandle = NULL
+        AdjustmentTaskHandle = NULL,
+        AdjustmentRunLog = '',
+        AdjustmentResult = NULL
       )
     },
 
