@@ -31,7 +31,7 @@ RunAdjustments <- function(
   # Data table performs many operations by reference.
   # We make a copy of the data to make sure the input object is not changed by the adjustment
   # procedures.
-  data <- list(Table = copy(data))
+  data <- list(Table = data.table::copy(data))
   if (!is.null(diagYearRange)) {
     data$Table <- data$Table[
       HIVDiagnosisYear %between% diagYearRange | is.na(DateOfDiagnosis)
@@ -54,16 +54,19 @@ RunAdjustments <- function(
       adjustmentSpec$Key <- caption
     }
 
-    PrintH1('Adjustment {caption}')
+    cat(sprintf('Adjustment %s', caption), '\n\n')
+    # PrintH1('Adjustment {caption}')
 
     # Extract parameters for better visibility.
     parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = "value")
 
-    PrintH2('Parameters')
+    # PrintH2('Parameters')
+    cat('Parameters', '\n')
     print(setNames(as.character(parameters), names(parameters)))
-    cat("\n")
+    cat('\n\n')
 
-    PrintH2('Adjustment text output')
+    cat('Adjustment text output', '\n')
+    # PrintH2('Adjustment text output')
 
     # Run adjustment function
     output <- adjustmentSpec$AdjustmentFunction(inputData = data$Table, parameters = parameters)
@@ -79,14 +82,15 @@ RunAdjustments <- function(
       TimeStamp = GetTimeStamp()
     )
 
-    if ("Imputation" %in% colnames(data$Table)) {
+    if ('Imputation' %in% colnames(data$Table)) {
       setorderv(data$Table, "Imputation")
     }
 
     # Store intermediate results for later reference
     results[[adjustmentSpec$Key]] <- data
 
-    PrintAlert('Done with adjustment {.val {caption}}')
+    cat(sprintf('Done with adjustment %s', caption, '\n'))
+    # PrintAlert('Done with adjustment {.val {caption}}')
   }
 
   return(results)

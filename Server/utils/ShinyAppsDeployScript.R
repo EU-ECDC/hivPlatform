@@ -48,7 +48,7 @@ runLog <- paste(
 cat(runLog)
 
 taskHandle$get_result()
-
+taskHandle <- NULL
 taskHandle <- callr::r_bg(
   function(appMgr) {
     adjustmentSpecs <- hivEstimatesAccuracy2:::GetAdjustmentSpecs(c(
@@ -70,6 +70,8 @@ while (taskHandle$is_alive()) {
   Sys.sleep(1)
 }
 
+
+
 runLog <- paste(
   runLog,
   CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
@@ -78,7 +80,7 @@ runLog <- paste(
 
 taskHandle
 taskHandle$read_all_output()
-taskHandle$read_all_error()
+cat(taskHandle$read_all_error())
 taskHandle$read_error_lines()
 taskHandle$is_alive()
 taskHandle$get_memory_info()

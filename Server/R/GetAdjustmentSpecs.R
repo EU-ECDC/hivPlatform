@@ -1,3 +1,13 @@
+#' GetAdjustmentSpecs
+#'
+#' @param adjustmentNames adjustmentNames
+#'
+#' @return list
+#'
+#' @examples
+#' GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+#'
+#' @export
 GetAdjustmentSpecs <- function(
   adjustmentNames
 ) {

@@ -125,25 +125,26 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$runAdjustBtn, {
+
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'ADJUSTMENTS_RUN_STARTED',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = 'Adjustments run started'
+      )
+    ))
+
+    adjustmentSpecs <- GetAdjustmentSpecs(c(
+      'Multiple Imputation using Chained Equations - MICE'
+    ))
+
     taskHandle <- callr::r_bg(
-      function(appMgr) {
-        adjustmentSpecs <- hivEstimatesAccuracy2:::GetAdjustmentSpecs(c(
-          'Multiple Imputation using Chained Equations - MICE'
-        ))
+      function(appMgr, adjustmentSpecs) {
         appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
       },
-      args = list(appMgr)
+      system_profile = FALSE,
+      args = list(appMgr, adjustmentSpecs)
     )
-
-    # taskHandle <- callr::r_bg(
-    #   function() {
-    #     for (i in seq_len(10)) {
-    #       Sys.sleep(1/2)
-    #       cat(i, '\n')
-    #     }
-    #     cat('Done')
-    #   }
-    # )
 
     runLog <- ''
     while (taskHandle$is_alive()) {
@@ -159,8 +160,9 @@ Events <- function(input, output, session, appMgr)
           RunLog = runLog
         )
       ))
-      Sys.sleep(1)
+      Sys.sleep(2)
     }
+
     runLog <- paste(
       runLog,
       CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
@@ -173,53 +175,14 @@ Events <- function(input, output, session, appMgr)
         RunLog = runLog
       )
     ))
-    runLog <- paste(
-      runLog,
-      CollapseTexts(taskHandle$read_all_error(), collapse = '\n'),
-      sep = ''
-    )
+
     appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'ADJUSTMENTS_RUN_LOG_SET',
+      Type = 'ADJUSTMENTS_RUN_FINISHED',
       Status = 'SUCCESS',
       Payload = list(
         RunLog = runLog
       )
     ))
-
-
-
-    # for (i in seq_len(10)) {
-    #   appMgr$SendEventToReact('shinyHandler', list(
-    #     Type = 'ADJUSTMENTS_RUN_LOG_SET',
-    #     Status = 'SUCCESS',
-    #     Payload = list(
-    #       RunLog = paste('line ', i)
-    #     )
-    #   ))
-    #   Sys.sleep(1)
-    # }
-
-    # appMgr$SendEventToReact('shinyHandler', list(
-    #   Type = 'ADJUSTMENTS_RUN_STARTED',
-    #   Status = 'SUCCESS',
-    #   Payload = list(
-    #     RunLog = 'Adjustments run started'
-    #   )
-    # ))
-    #
-    # adjustmentSpecs <- GetAdjustmentSpecs(c(
-    #   'Multiple Imputation using Chained Equations - MICE'
-    # ))
-    # runLog <- capture.output(appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs))
-    # runLog <- paste(runLog, collapse = '\n')
-    #
-    # appMgr$SendEventToReact('shinyHandler', list(
-    #   Type = 'ADJUSTMENTS_RUN_FINISHED',
-    #   Status = 'SUCCESS',
-    #   Payload = list(
-    #     RunLog = runLog
-    #   )
-    # ))
   })
 
   observeEvent(input$runModelBtn, {
