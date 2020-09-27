@@ -188,7 +188,10 @@ Task <- R6::R6Class(
     IsCancelled = function() {
       return(
         self$IsFinished &&
-          private$Catalogs$TaskHandle$get_exit_status() == 2L
+          (
+            is.na(private$Catalogs$TaskHandle$get_exit_status()) ||
+            private$Catalogs$TaskHandle$get_exit_status() %in% c(2, -9)
+          )
       )
     },
 
