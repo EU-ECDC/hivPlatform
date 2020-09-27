@@ -131,6 +131,7 @@ Events <- function(input, output, session, appMgr)
     ))
 
     appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
+    # appMgr$RunTestTask()
   })
 
   observeEvent(input$runModelBtn, {
@@ -181,7 +182,7 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$cancelAdjustBtn, {
-    appMgr$CancelTestTask()
+    appMgr$CancelAdjustmentTask()
   })
 
   observeEvent(appMgr$AdjustmentTask$RunLog, {

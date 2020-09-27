@@ -246,6 +246,7 @@ AppManager <- R6::R6Class(
 
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
+          devtools::load_all()
           hivEstimatesAccuracy2::RunAdjustments(
             data = data,
             adjustmentSpecs = adjustmentSpecs,
@@ -255,7 +256,7 @@ AppManager <- R6::R6Class(
           )
         },
         args = list(
-          data = private$Catalogs$PreProcessedCaseBasedData$Table,
+          data = isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
           adjustmentSpecs = adjustmentSpecs
         ),
         session = private$Session
@@ -280,10 +281,14 @@ AppManager <- R6::R6Class(
       }, args = list(a = 2, b = 3), session = private$Session)
 
       private$Catalogs$AdjustmentTask$Run()
+
+      return(invisible(self))
     },
 
-    CancelTestTask = function() {
+    CancelAdjustmentTask = function() {
       private$Catalogs$AdjustmentTask$Stop()
+
+      return(invisible(self))
     },
 
     # 6. Fit HIV model to adjusted data ------------------------------------------------------------
