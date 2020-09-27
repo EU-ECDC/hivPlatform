@@ -18,10 +18,7 @@ Events <- function(input, output, session, appMgr)
     ))
 
     appMgr$ReadCaseBasedData(fileInfo$datapath)
-  })
 
-  # Case-based data upload event
-  observeEvent(appMgr$CaseBasedDataPath, {
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'CASE_BASED_DATA_READ',
       Status = 'SUCCESS',
@@ -129,64 +126,11 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$runAdjustBtn, {
-
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'ADJUSTMENTS_RUN_STARTED',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = 'Adjustments run started'
-      )
-    ))
-
     adjustmentSpecs <- GetAdjustmentSpecs(c(
       'Multiple Imputation using Chained Equations - MICE'
     ))
 
-    taskHandle <- callr::r_bg(
-      function(appMgr, adjustmentSpecs) {
-        appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
-      },
-      system_profile = FALSE,
-      args = list(appMgr, adjustmentSpecs)
-    )
-
-    runLog <- ''
-    while (taskHandle$is_alive()) {
-      runLog <- paste(
-        runLog,
-        CollapseTexts(taskHandle$read_output(), collapse = '\n'),
-        sep = ''
-      )
-      appMgr$SendEventToReact('shinyHandler', list(
-        Type = 'ADJUSTMENTS_RUN_LOG_SET',
-        Status = 'SUCCESS',
-        Payload = list(
-          RunLog = runLog
-        )
-      ))
-      Sys.sleep(2)
-    }
-
-    runLog <- paste(
-      runLog,
-      CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
-      sep = ''
-    )
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'ADJUSTMENTS_RUN_LOG_SET',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = runLog
-      )
-    ))
-
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'ADJUSTMENTS_RUN_FINISHED',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = runLog
-      )
-    ))
+    appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
   })
 
   observeEvent(input$runModelBtn, {
@@ -234,5 +178,35 @@ Events <- function(input, output, session, appMgr)
         RunLog = runLog
       )
     ))
+  })
+
+  observeEvent(input$cancelAdjustBtn, {
+    appMgr$CancelTestTask()
+  })
+
+  observeEvent(appMgr$AdjustmentTask$RunLog, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'ADJUSTMENTS_RUN_LOG_SET',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = appMgr$AdjustmentTask$RunLog
+      )
+    ))
+  })
+
+  observeEvent(appMgr$AdjustmentTask$Status, {
+    if (appMgr$AdjustmentTask$Status == 'RUNNING') {
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'ADJUSTMENTS_RUN_STARTED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    } else if (appMgr$AdjustmentTask$Status == 'STOPPED') {
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'ADJUSTMENTS_RUN_FINISHED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    }
   })
 }

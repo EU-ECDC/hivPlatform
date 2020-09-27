@@ -33,67 +33,47 @@
 #' @export
 CreateTask <- function(expr, args = list(), timeout = 1L)
 {
-  state <- 'ready'
   result <- NULL
   runLog <- ''
   startTime <- NULL
   cpuTime <- NULL
 
-  # Launch the task in a forked process. This always returns
-  # immediately, and we get back a handle we can use to monitor
-  # or kill the job.
-  taskHandle <- callr::r_bg(force(expr), args = args)
+  # Launch the task in a forked process. This always returns immediately, and we get back a handle
+  # we can use to monitor or kill the job.
+  taskHandle <- callr::r_bg(
+    force(expr),
+    args = args,
+    supervise = TRUE
+  )
   startTime <- taskHandle$get_start_time()
 
-  if (taskHandle$is_alive()) {
-    state <- 'running'
-  }
+  IsRunning <- function() taskHandle$is_alive()
+  RunFinished <- function() !taskHandle$is_alive() && !is.null(taskHandle$get_exit_status())
+  RunCancelled <- function() RunFinished() && taskHandle$get_exit_status() == 2L
 
   return(
     list(
-      isRunning = function() {
-
-      },
-      cancel = function() {
-        if (is.null(taskHandle$get_exit_status())) {
-          killSuccess <- taskHandle$kill()
-          if (killSuccess && !taskHandle$is_alive()) {
-            state <<- 'cancelled'
-          }
+      IsRunning = IsRunning,
+      RunFinished = RunFinished,
+      RunCancelled = RunCancelled,
+      Cancel = function() {
+        if (IsRunning()) {
+          taskHandle$kill()
         }
       },
-      state = function() {
-        if (taskHandle$is_alive()) {
-          state <<- 'running'
-        } else {
-          state
-        }
-        return(state)
-      },
-      result = function() {
-        if (!taskHandle$is_alive()) {
-          if (taskHandle$get_exit_status() == 0) {
-            res <- try({taskHandle$get_result()})
-            if (!inherits(res, 'try-error')) {
-              state <<- 'success'
-              result <<- res
-            } else {
-              state <<- 'error'
-              result <<- NULL
-            }
-            runLog <<- paste(
-              runLog,
-              CollapseTexts(taskHandle$read_all_output(), collapse = '\n'),
-              sep = ''
-            )
-            cpuTime <- taskHandle$get_cpu_times()
+      Result = function() {
+        if (RunFinished() && !RunCancelled()) {
+          res <- try({taskHandle$get_result()}, silent = TRUE)
+          if (!inherits(res, 'try-error')) {
+            result <<- res
+          } else {
+            result <<- NULL
           }
-          # taskHandle$kill()
         }
         return(result)
       },
-      runLog = function() {
-        if (taskHandle$is_alive()) {
+      RunLog = function() {
+        if (IsRunning()) {
           runLog <<- paste(
             runLog,
             CollapseTexts(taskHandle$read_output(), collapse = '\n'),

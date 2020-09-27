@@ -49,9 +49,7 @@ AppManager <- R6::R6Class(
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
-        AdjustmentTaskHandle = NULL,
-        AdjustmentRunLog = '',
-        AdjustmentResult = NULL
+        AdjustmentTask = NULL
       )
     },
 
@@ -226,7 +224,7 @@ AppManager <- R6::R6Class(
       adjustmentSpecs
     ) {
       if (is.null(miCount)) {
-        miCount <- shiny::isolate(private$Catalogs$MICount)
+        miCount <- private$Catalogs$MICount
       } else {
         private$Catalogs$MICount <- miCount
       }
@@ -246,17 +244,46 @@ AppManager <- R6::R6Class(
         }
       ), adjustNames)
 
-      private$Catalogs$AdjustedCaseBasedData <- RunAdjustments(
-        data = shiny::isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
-        adjustmentSpecs = adjustmentSpecs,
-        diagYearRange = NULL,
-        notifQuarterRange = NULL,
-        seed = NULL
+      private$Catalogs$AdjustmentTask <- Task$new(
+        function(data, adjustmentSpecs) {
+          hivEstimatesAccuracy2::RunAdjustments(
+            data = data,
+            adjustmentSpecs = adjustmentSpecs,
+            diagYearRange = NULL,
+            notifQuarterRange = NULL,
+            seed = NULL
+          )
+        },
+        args = list(
+          data = private$Catalogs$PreProcessedCaseBasedData$Table,
+          adjustmentSpecs = adjustmentSpecs
+        ),
+        session = private$Session
       )
 
-      private$PrepareAggregatedData()
+      private$Catalogs$AdjustmentTask$Run()
 
       return(invisible(self))
+    },
+
+    RunTestTask = function() {
+      private$Catalogs$AdjustmentTask <- Task$new(function(a, b) {
+        cat('Start of run\n')
+        Sys.sleep(1)
+        print(a)
+        Sys.sleep(1)
+        print(b)
+        Sys.sleep(1)
+        cat('End of run\n')
+
+        return(-1)
+      }, args = list(a = 2, b = 3), session = private$Session)
+
+      private$Catalogs$AdjustmentTask$Run()
+    },
+
+    CancelTestTask = function() {
+      private$Catalogs$AdjustmentTask$Stop()
     },
 
     # 6. Fit HIV model to adjusted data ------------------------------------------------------------
@@ -642,6 +669,10 @@ AppManager <- R6::R6Class(
 
     HIVBootstrapStatistics = function() {
       return(private$Catalogs$HIVBootstrapStatistics)
+    },
+
+    AdjustmentTask = function() {
+      return(private$Catalogs$AdjustmentTask)
     }
   )
 )

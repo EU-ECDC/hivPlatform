@@ -11,33 +11,3 @@ rsconnect::deployApp(
   contentCategory = 'application',
   forceUpdate = TRUE
 )
-
-# Test callr
-task <- CreateTask(function() {
-  print('Start of run')
-  Sys.sleep(5)
-  dt <- cars[sample(nrow(cars), 10), ]
-  print('End of run')
-  return(dt)
-})
-
-task$completed()
-task$state()
-task$result()
-task$runLog()
-task$startTime()
-task$cpuTime()
-task$cancel()
-
-taskHandle <- task$taskHandle()
-taskHandle$is_alive()
-taskHandle$is_incomplete_error()
-taskHandle$is_incomplete_output()
-taskHandle$get_result()
-taskHandle$kill()
-taskHandle$get_exit_status()
-taskHandle$finalize()
-taskHandle$read_error()
-taskHandle$read_output()
-taskHandle$get_cpu_times()
-taskHandle$get_start_time()

@@ -21,6 +21,13 @@ adjustmentSpecs <- GetAdjustmentSpecs(c(
   # 'Joint Modelling Multiple Imputation'
 ))
 appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
+appMgr$RunTestTask()
+appMgr$AdjustmentTask$IsRunning
+taskHandle <- appMgr$AdjustmentTask$TaskHandle
+taskHandle$is_incomplete_error()
+taskHandle$read_all_error()
+cat(appMgr$AdjustmentTask$RunLog)
+appMgr$AdjustmentTask$Result
 
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 

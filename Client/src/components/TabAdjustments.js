@@ -33,6 +33,10 @@ const TabAdjustments = (props) => {
     appManager.btnClicked('runAdjustBtn');
   }
 
+  const onCancelAdjustBtnClick = () => {
+    appManager.btnClicked('cancelAdjustBtn');
+  }
+
   return (
     <TabPanel>
       <Grid container spacing={2}>
@@ -78,8 +82,20 @@ const TabAdjustments = (props) => {
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={3}>
-          <Btn onClick={onRunAdjustBtnClick}><DirectionsRunIcon />&nbsp;Run adjustments</Btn>
-          <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
+          <Btn
+            onClick={onRunAdjustBtnClick}
+            disabled={appManager.adjustmentsRunInProgress}
+          >
+            <DirectionsRunIcon />&nbsp;Run adjustments
+          </Btn>
+          <Button
+            onClick={onCancelAdjustBtnClick}
+            color='primary'
+            style={{ marginLeft: 20 }}
+            disabled={!appManager.adjustmentsRunInProgress}
+          >
+            Cancel
+          </Button>
           <AdjustmentsRunProgressBar progress={appManager.adjustmentsRunProgress} />
         </Grid>
         <Grid item xs={9}>

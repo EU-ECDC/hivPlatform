@@ -4,7 +4,7 @@
 \alias{CreateTask}
 \title{CreateTask}
 \usage{
-CreateTask(expr, args = NULL, timeout = 1L)
+CreateTask(expr, args = list(), timeout = 1L)
 }
 \arguments{
 \item{expr}{Expression to be executed. Required.}
@@ -35,7 +35,9 @@ The return value is a promise-like object with three methods:\cr
 \dontrun{
 task <- CreateTask(function() {
   Sys.sleep(5)
-  cars[sample(nrow(cars), 10),]
+  dt <- cars[sample(nrow(cars), 10), ]
+  print('Message from another world')
+  return(dt)
 })
 shiny::isolate(task$result())
 }

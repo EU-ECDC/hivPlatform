@@ -137,11 +137,9 @@ export default class AppManager {
         this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
         break;
       case 'ADJUSTMENTS_RUN_STARTED':
-        this.setAdjustmentsRunLog(event.Payload.RunLog);
         this.setAdjustmentsRunProgress(1);
         break;
       case 'ADJUSTMENTS_RUN_FINISHED':
-        this.setAdjustmentsRunLog(event.Payload.RunLog);
         this.setAdjustmentsRunProgress(null);
         this.notificationsMgr.setMsg('Adjustment run finished');
         break;
@@ -198,6 +196,11 @@ export default class AppManager {
   @computed
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
+  };
+
+  @computed
+  get adjustmentsRunInProgress() {
+    return this.adjustmentsRunProgress !== null;
   };
 
   @action
