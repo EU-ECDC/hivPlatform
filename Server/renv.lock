@@ -116,10 +116,10 @@
     },
     "broom": {
       "Package": "broom",
-      "Version": "0.7.0",
+      "Version": "0.7.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "2ca5ae42f3bfd149504d63c833c2be26"
+      "Hash": "a90dad034a7accd7c1baa603b1455962"
     },
     "callr": {
       "Package": "callr",
@@ -332,9 +332,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "641aa2ecb4c9b3a18d61b7c59684cef21c98b00c",
+      "RemoteSha": "d43f2fdb0c3e10f5d45b8862f8d5dd9c60523e3c",
       "RemoteHost": "api.github.com",
-      "Hash": "be5e6495721efd05301a73061459bf5c"
+      "Hash": "60e343f07db0ef9e0afc9b06d7c5841e"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -639,10 +639,10 @@
     },
     "quantreg": {
       "Package": "quantreg",
-      "Version": "5.67",
+      "Version": "5.73",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5cd37ddc60f523651e84c1332d079ed4"
+      "Hash": "4a1f966bab2298dce07d4d1471e977a1"
     },
     "rcmdcheck": {
       "Package": "rcmdcheck",
@@ -695,10 +695,10 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.3",
+      "Version": "2.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "202260e1b2c410edc086d5b8f1ed946e"
+      "Hash": "ec8febc2bd653b754d5b03c9d4b996bb"
     },
     "roxygen2": {
       "Package": "roxygen2",
@@ -786,10 +786,10 @@
     },
     "survival": {
       "Package": "survival",
-      "Version": "3.2-3",
+      "Version": "3.2-7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3cc6154c577a82f06250254db30a4bfb"
+      "Hash": "39c4ac6d22dad33db0ee37b40810ea12"
     },
     "sys": {
       "Package": "sys",
@@ -870,10 +870,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.17",
+      "Version": "0.18",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5016afba2a931ac92bbb3c6feb03d2c8"
+      "Hash": "d1c0b777b432e4b4c039c8aaecc54e0f"
     },
     "xml2": {
       "Package": "xml2",
