@@ -1,29 +1,31 @@
-import { observable, action, toJS } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 export default class AttrMappingManager {
   rootMgr = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      mapping: observable,
+      valid: observable,
+      msg: observable,
+      setMapping: action,
+      setOrigCol: action,
+      setDefVal: action,
+      applyMapping: action
+    });
   }
 
-  @observable
   mapping = [];
-
-  attrToIdxMap = {};
-
-  @observable
   valid = true;
-
-  @observable
   msg = 'Mapping is valid';
 
-  @action setMapping = mapping => {
+  setMapping = mapping => {
     this.mapping = mapping;
     this.validateMapping();
   };
 
-  @action setOrigCol = (attribute, origCol) => {
+  setOrigCol = (attribute, origCol) => {
     const idx = this.mapping.findIndex(el => el.attribute === attribute);
     if (idx !== -1) {
       this.mapping[idx].origColName = origCol !== '' ? origCol : null;
@@ -33,7 +35,7 @@ export default class AttrMappingManager {
     }
   };
 
-  @action setDefVal = (attribute, defVal) => {
+  setDefVal = (attribute, defVal) => {
     const idx = this.mapping.findIndex(el => el.attribute === attribute);
     if (idx !== -1) {
       this.mapping[idx].defaultValue = defVal !== '' ? defVal : null;
@@ -42,7 +44,7 @@ export default class AttrMappingManager {
     }
   };
 
-  @action applyMapping = () => {
+  applyMapping = () => {
     this.rootMgr.inputValueSet('attrMapping:AttrMappingArray', this.mapping);
   }
 

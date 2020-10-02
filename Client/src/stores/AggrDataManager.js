@@ -1,56 +1,57 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 
 export default class AggrDataManager {
   rootMgr = null;
-
-  @observable
   fileName = null;
-
-  @observable
   fileSize = null;
-
-  @observable
   fileType = null;
-
-  @observable
   filePath = null;
-
-  @observable
   dataNames = [];
-
-  @observable
   populationNames = [];
-
-  @observable
   fileUploadProgress = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      fileName: observable,
+      fileSize: observable,
+      fileType: observable,
+      filePath: observable,
+      dataNames: observable,
+      populationNames: observable,
+      fileUploadProgress: observable,
+      dataNamesString: computed,
+      populationNamesString: computed,
+      setFileName: action,
+      setFileSize: action,
+      setFileType: action,
+      setFilePath: action,
+      setDataNames: action,
+      setPopulationNames: action,
+      setFileUploadProgress: action
+    });
   };
 
-  @action setFileName = fileName => this.fileName = fileName;
-  @action setFileSize = fileSize => this.fileSize = fileSize;
-  @action setFileType = fileType => this.fileType = fileType;
-  @action setFilePath = filePath => this.filePath = filePath;
-  @action setDataNames = dataNames => {
+  setFileName = fileName => this.fileName = fileName;
+  setFileSize = fileSize => this.fileSize = fileSize;
+  setFileType = fileType => this.fileType = fileType;
+  setFilePath = filePath => this.filePath = filePath;
+  setDataNames = dataNames => {
     const arr = Array.isArray(dataNames) ? dataNames : [dataNames];
     this.dataNames = arr;
   };
-  @action setPopulationNames = populationNames => {
+  setPopulationNames = populationNames => {
     const arr = Array.isArray(populationNames) ? populationNames : [populationNames];
     this.populationNames = arr;
   };
-  @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
+  setFileUploadProgress = progress => this.fileUploadProgress = progress;
 
-  @computed
   get dataNamesString() {
     if (this.dataNames === null) {
       return '';
     }
     return this.dataNames.join(', ');
   };
-
-  @computed
   get populationNamesString() {
     if (this.populationNames === null) {
       return '';

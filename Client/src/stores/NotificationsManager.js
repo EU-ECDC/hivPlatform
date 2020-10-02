@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, makeObservable } from 'mobx';
 import GenerateId from '../utilities/GenerateId';
 
 export default class NotificationsManager {
@@ -6,15 +6,19 @@ export default class NotificationsManager {
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      msgInfo: observable,
+      setMsg: action,
+      clearMsg: action,
+      hasMsg: computed,
+    });
   }
 
-  @observable
   msgInfo = {
     key: null,
     msg: null,
   };
 
-  @action
   setMsg = msg => {
     this.msgInfo = {
       msg,
@@ -22,7 +26,6 @@ export default class NotificationsManager {
     };
   };
 
-  @action
   clearMsg = () => {
     this.msgInfo = {
       key: null,
@@ -30,7 +33,6 @@ export default class NotificationsManager {
     };
   };
 
-  @computed
   get hasMsg() {
     return this.msgInfo.msg !== null;
   }

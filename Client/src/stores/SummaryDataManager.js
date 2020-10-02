@@ -1,9 +1,8 @@
-import { observable, action, computed, toJS } from 'mobx';
+import { observable, action, computed, toJS, makeObservable } from 'mobx';
 
 export default class SummaryDataManager {
   rootMgr = null;
 
-  @observable
   diagYearPlotData = {
     filter: {
       scaleMinYear: null,
@@ -16,7 +15,6 @@ export default class SummaryDataManager {
     chartData: [],
   };
 
-  @observable
   notifQuarterPlotData = {
     filter: {
       scaleMinYear: null,
@@ -29,7 +27,6 @@ export default class SummaryDataManager {
     chartData: []
   };
 
-  @observable
   missPlotData = {
     plot1: {
       chartCategories: [],
@@ -64,10 +61,8 @@ export default class SummaryDataManager {
     }
   };
 
-  @observable
   missPlotSelection = 'all';
 
-  @observable
   repDelPlotData = {
     chartData: {
       all: {q95: 0, series: []},
@@ -81,45 +76,47 @@ export default class SummaryDataManager {
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      diagYearPlotData: observable,
+      notifQuarterPlotData: observable,
+      missPlotData: observable,
+      missPlotSelection: observable,
+      repDelPlotData: observable,
+      setDiagYearPlotData: action,
+      setDiagYearFilterApply: action,
+      setDiagYearFilterMinYear: action,
+      setDiagYearFilterMaxYear: action,
+      setNotifQuarterPlotData: action,
+      setNotifQuarterFilterApply: action,
+      setNotifQuarterFilterMinYear: action,
+      setNotifQuarterFilterMaxYear: action,
+      setMissPlotData: action,
+      setMissPlotSelection: action,
+      setRepDelPlotData: action,
+      setRepDelPlotSelection: action,
+      missPlot1Series: computed,
+      missPlot2Series: computed,
+      missPlot3Series: computed,
+      missPlot4Series: computed,
+      repDelPlot: computed,
+      missPlot3Categories: computed,
+      missPlot4Categories: computed,
+    });
   };
 
-  @action
   setDiagYearPlotData = data => this.diagYearPlotData = data;
-
-  @action
   setDiagYearFilterApply = apply => this.diagYearPlotData.filter.applyInAdjustments = apply;
-
-  @action
   setDiagYearFilterMinYear = minYear => this.diagYearPlotData.filter.valueMinYear = minYear;
-
-  @action
   setDiagYearFilterMaxYear = maxYear => this.diagYearPlotData.filter.valueMaxYear = maxYear;
-
-  @action
   setNotifQuarterPlotData = data => this.notifQuarterPlotData = data;
-
-  @action
   setNotifQuarterFilterApply = apply => this.notifQuarterPlotData.filter.applyInAdjustments = apply;
-
-  @action
   setNotifQuarterFilterMinYear = minYear => this.notifQuarterPlotData.filter.valueMinYear = minYear;
-
-  @action
   setNotifQuarterFilterMaxYear = maxYear => this.notifQuarterPlotData.filter.valueMaxYear = maxYear;
-
-  @action
   setMissPlotData = data => this.missPlotData = data;
-
-  @action
   setMissPlotSelection = selection => this.missPlotSelection = selection;
-
-  @action
   setRepDelPlotData = data => this.repDelPlotData = data;
-
-  @action
   setRepDelPlotSelection = selection => this.repDelPlotSelection = selection;
 
-  @computed
   get missPlot1Series() {
     return [{
       name: 'Missingness',
@@ -127,7 +124,6 @@ export default class SummaryDataManager {
     }];
   };
 
-  @computed
   get missPlot2Series() {
     const data = this.missPlotData.plot2.chartData[this.missPlotSelection].map(
       (layer, i) => ({
@@ -138,7 +134,6 @@ export default class SummaryDataManager {
     return data;
   };
 
-  @computed
   get missPlot3Series() {
     const data = ['Present', 'Missing'].map(
       name => ({
@@ -151,12 +146,10 @@ export default class SummaryDataManager {
     return data;
   };
 
-  @computed
   get missPlot4Series() {
     return this.missPlotData.plot4.chartData[this.missPlotSelection];
   };
 
-  @computed
   get repDelPlot() {
     // Applied toJS in order to get rid of mobx error
     const data = toJS(this.repDelPlotData.chartData[this.repDelPlotSelection]);
@@ -169,7 +162,6 @@ export default class SummaryDataManager {
     };
   };
 
-  @computed
   get missPlot3Categories() {
     const cats = this.missPlotData.plot3.
       chartData[this.missPlotSelection].
@@ -177,7 +169,6 @@ export default class SummaryDataManager {
     return cats;
   };
 
-  @computed
   get missPlot4Categories() {
     return this.missPlotData.plot4.chartCategories;
   };

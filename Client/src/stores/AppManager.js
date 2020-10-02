@@ -1,4 +1,4 @@
-import { observable, action, configure, computed, toJS } from 'mobx';
+import { observable, action, configure, computed, toJS, makeObservable } from 'mobx';
 import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 import UIStateManager from './UIStateManager'
 import NotificationsManager from './NotificationsManager';
@@ -25,13 +25,10 @@ export default class AppManager {
   summaryDataMgr = null;
   adjustMgr = null;
 
-  @observable
   shinyState = 'DISCONNECTED';
 
-  @observable
   shinyMessage = {};
 
-  @observable
   steps = [
     { title: 'Welcome', completed: false, disabled: false, subSteps: []},
     {
@@ -63,28 +60,20 @@ export default class AppManager {
     { title: 'Outputs', completed: false, disabled: false, subSteps: []},
   ];
 
-  @observable
   activeStepId = 0;
 
-  @observable
   mode = 'NONE';
 
-  @observable
   adjustmentsRunProgress = null;
 
-  @observable
   adjustmentsRunLog = null;
 
-  @observable
   modelsRunProgress = null;
 
-  @observable
   modelsRunLog = null;
 
-  @observable
   bootstrapRunProgress = null;
 
-  @observable
   bootstrapRunLog = null;
 
   // Shiny custom event handlers
@@ -180,30 +169,59 @@ export default class AppManager {
     this.origGroupMgr = new OriginGroupingsManager(this);
     this.summaryDataMgr = new SummaryDataManager(this);
     this.adjustMgr = new AdjustmentsManager(this);
+    makeObservable(this, {
+      shinyState: observable,
+      shinyMessage: observable,
+      steps: observable,
+      activeStepId: observable,
+      mode: observable,
+      adjustmentsRunProgress: observable,
+      adjustmentsRunLog: observable,
+      modelsRunProgress: observable,
+      modelsRunLog: observable,
+      bootstrapRunProgress: observable,
+      bootstrapRunLog: observable,
+      shinyReady: computed,
+      stepsTitles: computed,
+      jsonShinyMessage: computed,
+      adjustmentsRunInProgress: computed,
+      setShinyState: action,
+      setMode: action,
+      setAdjustmentsRunProgress: action,
+      setAdjustmentsRunLog: action,
+      setModelsRunProgress: action,
+      setModelsRunLog: action,
+      setBootstrapRunProgress: action,
+      setBootstrapRunLog: action,
+      unbindShinyInputs: action,
+      bindShinyInputs: action,
+      btnClicked: action,
+      inputValueSet: action,
+      setActiveStepId: action,
+      setActiveSubStepId: action,
+      setShinyMessage: action
+    });
   };
 
-  @computed
+  // Computed
   get shinyReady() {
     return this.shinyState === 'SESSION_INITIALIZED';
   };
 
-  @computed
   get stepsTitles() {
     const stepTitles = this.steps.map(step => step.title);
     return stepTitles;
   };
 
-  @computed
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
   };
 
-  @computed
   get adjustmentsRunInProgress() {
     return this.adjustmentsRunProgress !== null;
   };
 
-  @action
+  // Actions
   setShinyState = state => {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
@@ -212,21 +230,19 @@ export default class AppManager {
     }
   };
 
-  @action
   setMode = mode => {
     this.mode = mode;
     this.steps[0].completed = true;
     this.setActiveStepId(1);
   };
 
-  @action setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
-  @action setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
-  @action setModelsRunProgress = progress => this.modelsRunProgress = progress;
-  @action setModelsRunLog = runLog => this.modelsRunLog = runLog;
-  @action setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
-  @action setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
+  setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
+  setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
+  setModelsRunProgress = progress => this.modelsRunProgress = progress;
+  setModelsRunLog = runLog => this.modelsRunLog = runLog;
+  setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
+  setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
 
-  @action
   unbindShinyInputs = () => {
     if (this.shinyReady) {
       Shiny.unbindAll();
@@ -235,7 +251,6 @@ export default class AppManager {
     }
   };
 
-  @action
   bindShinyInputs = () => {
     if (this.shinyReady) {
       Shiny.bindAll();
@@ -244,7 +259,6 @@ export default class AppManager {
     }
   };
 
-  @action
   btnClicked = btnId => {
     if (this.shinyReady) {
       Shiny.setInputValue(btnId, '', { priority: 'event' });
@@ -253,7 +267,6 @@ export default class AppManager {
     }
   };
 
-  @action
   inputValueSet = (inputId, value) => {
     if (this.shinyReady) {
       Shiny.setInputValue(inputId, value);
@@ -262,20 +275,17 @@ export default class AppManager {
     }
   };
 
-  @action
   setActiveStepId = stepId => {
     this.steps[stepId].disabled = false;
     this.activeStepId = stepId;
   }
 
-  @action
   setActiveSubStepId = (stepId, subStepId) => {
     this.steps[stepId].disabled = false;
     this.activeStepId = stepId;
     this.steps[stepId].activeSubStepId = subStepId;
   }
 
-  @action
   setShinyMessage = msg => {
     this.shinyMessage = msg;
   }

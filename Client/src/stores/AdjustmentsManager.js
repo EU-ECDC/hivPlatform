@@ -1,12 +1,10 @@
-import { observable, action, computed, toJS } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 export default class AdjustmentsManager {
   rootMgr = null;
 
-  @observable
   miAdjustType = 'none';
 
-  @observable
   miJomoSettings = {
     nimp: 2,
     nburn: 100,
@@ -14,7 +12,6 @@ export default class AdjustmentsManager {
     nsdf: 4
   }
 
-  @observable
   miMiceSettings = {
     nimp: 2,
     nit: 100,
@@ -23,14 +20,28 @@ export default class AdjustmentsManager {
 
   constructor(mgr) {
     this.rootMgr = mgr;
+
+    makeObservable(this, {
+      miAdjustType: observable,
+      miJomoSettings: observable,
+      miMiceSettings: observable,
+      setMIAdjustType: action,
+      setMIJomoNimp: action,
+      setMIJomoNburn: action,
+      setMIJomoNbetween: action,
+      setMIJomoNsdf: action,
+      setMIMiceNimp: action,
+      setMIMiceNit: action,
+      setMIMiceNsdf: action
+    });
   };
 
-  @action setMIAdjustType = type => this.miAdjustType = type;
-  @action setMIJomoNimp = nimp => this.miJomoSettings.nimp = nimp;
-  @action setMIJomoNburn = nburn => this.miJomoSettings.nburn = nburn;
-  @action setMIJomoNbetween = nbetween => this.miJomoSettings.nbetween = nbetween;
-  @action setMIJomoNsdf = nsdf => this.miJomoSettings.nsdf = nsdf;
-  @action setMIMiceNimp = nimp => this.miMiceSettings.nimp = nimp;
-  @action setMIMiceNit = nit => this.miMiceSettings.nit = nit;
-  @action setMIMiceNsdf = nsdf => this.miMiceSettings.nsdf = nsdf;
+  setMIAdjustType = type => this.miAdjustType = type;
+  setMIJomoNimp = nimp => this.miJomoSettings.nimp = nimp;
+  setMIJomoNburn = nburn => this.miJomoSettings.nburn = nburn;
+  setMIJomoNbetween = nbetween => this.miJomoSettings.nbetween = nbetween;
+  setMIJomoNsdf = nsdf => this.miJomoSettings.nsdf = nsdf;
+  setMIMiceNimp = nimp => this.miMiceSettings.nimp = nimp;
+  setMIMiceNit = nit => this.miMiceSettings.nit = nit;
+  setMIMiceNsdf = nsdf => this.miMiceSettings.nsdf = nsdf;
 }

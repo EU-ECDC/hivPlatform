@@ -1,45 +1,49 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 
 export default class CaseBasedDataManager {
   rootMgr = null;
 
-  @observable
   fileName = null;
-
-  @observable
   fileSize = null;
-
-  @observable
   fileType = null;
-
-  @observable
   filePath = null;
-
-  @observable
   columnNames = [];
-
-  @observable
   recordCount = null;
-
-  @observable
   fileUploadProgress = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      fileName: observable,
+      fileSize: observable,
+      fileType: observable,
+      filePath: observable,
+      columnNames: observable,
+      recordCount: observable,
+      fileUploadProgress: observable,
+      setFileName: action,
+      setFileSize: action,
+      setFileType: action,
+      setFilePath: action,
+      setRecordCount: action,
+      setColumnNames: action,
+      setColumnNames: action,
+      setFileUploadProgress: action,
+      columnNamesString: computed
+    });
   };
 
-  @action setFileName = fileName => this.fileName = fileName;
-  @action setFileSize = fileSize => this.fileSize = fileSize;
-  @action setFileType = fileType => this.fileType = fileType;
-  @action setFilePath = filePath => this.filePath = filePath;
-  @action setRecordCount = recordCount => this.recordCount = recordCount;
-  @action setColumnNames = columnNames => {
+  setFileName = fileName => this.fileName = fileName;
+  setFileSize = fileSize => this.fileSize = fileSize;
+  setFileType = fileType => this.fileType = fileType;
+  setFilePath = filePath => this.filePath = filePath;
+  setRecordCount = recordCount => this.recordCount = recordCount;
+  setColumnNames = columnNames => {
     const arr = Array.isArray(columnNames) ? columnNames : [columnNames];
     this.columnNames = arr;
   };
-  @action setFileUploadProgress = progress => this.fileUploadProgress = progress;
+  setFileUploadProgress = progress => this.fileUploadProgress = progress;
 
-  @computed
   get columnNamesString() {
     if (this.columnNames === null) {
       return '';

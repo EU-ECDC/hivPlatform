@@ -1,4 +1,4 @@
-import { observable, computed, action, toJS } from 'mobx';
+import { observable, computed, action, toJS, makeObservable} from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 
 export default class OriginGroupingsManager {
@@ -6,21 +6,35 @@ export default class OriginGroupingsManager {
 
   constructor(mgr) {
     this.rootMgr = mgr;
+    makeObservable(this, {
+      distribution: observable,
+      groupings: observable,
+      type: observable,
+      distributionArray: computed,
+      origins: computed,
+      usedOrigins: computed,
+      unusedOrigins: computed,
+      groupingsJS: computed,
+      setDistribution: action,
+      setGroupings: action,
+      setType: action,
+      setGroupName: action,
+      setGroupOrigin: action,
+      removeGroupings: action,
+      addEmptyGrouping: action,
+      applyGroupings: action,
+    });
   }
 
-  @observable
   distribution = {
     origin: [],
     count: []
   };
 
-  @observable
   groupings = [];
 
-  @observable
   type = 'REPCOUNTRY + UNK + OTHER';
 
-  @computed
   get distributionArray() {
     const origins = this.distribution.origin;
     const counts = this.distribution.count;
@@ -32,29 +46,25 @@ export default class OriginGroupingsManager {
     return map;
   };
 
-  @computed
   get origins() {
     return this.distribution.origin.slice().sort();
   };
 
-  @computed
   get usedOrigins() {
     return [].concat.apply([], this.groupings.map(el => el.origin));
   };
 
-  @computed
   get unusedOrigins() {
     return this.origins.filter(x => !this.usedOrigins.includes(x));
   };
 
-  @computed
   get groupingsJS() {
     return toJS(this.groupings);
   };
 
-  @action setDistribution = distr => this.distribution = distr;
+  setDistribution = distr => this.distribution = distr;
 
-  @action setGroupings = groupings => {
+  setGroupings = groupings => {
     // Make sure that FullRegionsOfOrigin are arrays
     const temp = groupings.map(el => {
       const arr =
@@ -69,26 +79,26 @@ export default class OriginGroupingsManager {
     this.computeGroupCounts();
   };
 
-  @action setType = type => this.type = type;
+  setType = type => this.type = type;
 
-  @action setGroupName = (i, name) => {
+  setGroupName = (i, name) => {
     this.groupings[i].name = name;
     this.type = 'Custom';
   };
 
-  @action setGroupOrigin = (i, origin) => {
+  setGroupOrigin = (i, origin) => {
     this.groupings[i].origin = origin;
     this.computeGroupCounts();
     this.type = 'Custom';
   };
 
-  @action removeGroupings = selectedIds => {
+  removeGroupings = selectedIds => {
     this.groupings = RemoveElementsFromArray(this.groupings, selectedIds);
     this.computeGroupCounts();
     this.type = 'Custom';
   };
 
-  @action addEmptyGrouping = () => {
+  addEmptyGrouping = () => {
     this.groupings.push({
       name: 'New',
       groupeCount: 0,
@@ -98,7 +108,7 @@ export default class OriginGroupingsManager {
     this.type = 'Custom';
   };
 
-  @action applyGroupings = () => {
+  applyGroupings = () => {
     this.rootMgr.inputValueSet('originGrouping:OriginGroupingArray', this.groupings);
   };
 
