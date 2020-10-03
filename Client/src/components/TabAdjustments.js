@@ -43,6 +43,9 @@ const TabAdjustments = (props) => {
           </Box>
         </Grid>
         <TabAdjustmentsMI appManager={appManager} />
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
         <Grid item xs={3}>
           <Typography variant='body1'>
             Reporting Delays adjustment

@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveStepId(0);
+  appManager.setActiveStepId(3);
 
   // 1. Upload data
   appManager.onShinyEvent({
@@ -149,7 +149,7 @@ export default appManager => {
     Type: "ADJUSTMENTS_RUN_LOG_SET",
     Status: "SUCCESS",
     Payload: {
-      RunLog: 'asda sds'
+      RunLog: 'Adjustments run finished'
     }
   });
 

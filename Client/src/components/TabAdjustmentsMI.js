@@ -12,6 +12,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import Skel from './Skeleton';
 
 const TabAdjustmentsMI = (props) => {
   const { appManager } = props;
@@ -21,12 +22,23 @@ const TabAdjustmentsMI = (props) => {
   const handleMIJomoNburnChange = (e) => appManager.adjustMgr.setMIJomoNburn(e.target.value);
   const handleMIJomoNbetweenChange = (e) => appManager.adjustMgr.setMIJomoNbetween(e.target.value);
   const handleMIJomoNsdfChange = (e, value) => appManager.adjustMgr.setMIJomoNsdf(value);
+  const handleMIJomoImputeRDChange = (e, value) => appManager.adjustMgr.setMIJomoImputeRD(value);
   const handleMIMiceNimpChange = (e) => appManager.adjustMgr.setMIMiceNimp(e.target.value);
   const handleMIMiceNitChange = (e) => appManager.adjustMgr.setMIMiceNit(e.target.value);
   const handleMIMiceNsdfChange = (e, value) => appManager.adjustMgr.setMIMiceNsdf(value);
+  const handleMIMiceImputeRDChange = (e, value) => appManager.adjustMgr.setMIMiceImputeRD(value);
+  const handleMIRestoreDefaults = (type) => (e) => appManager.adjustMgr.restoreDefaults(type);
 
   let miEditWidget = null;
-  if (appManager.adjustMgr.miAdjustType === 'jomo') {
+  if (appManager.adjustMgr.miAdjustType === 'none') {
+    miEditWidget =
+      <Paper style={{ padding: 10 }}>
+      <Typography variant='overline'>No parameters</Typography>
+      <Typography>
+        Select adjustment to set its parameters
+      </Typography>
+      </Paper>
+  } else if (appManager.adjustMgr.miAdjustType === 'jomo') {
     miEditWidget =
       <Paper style={{ padding: 10 }}>
         <Typography variant='overline'>Joint Modelling - JOMO parameters</Typography>
@@ -72,12 +84,11 @@ const TabAdjustmentsMI = (props) => {
           />
           <FormGroup row>
             <FormControlLabel
-              control={<Checkbox checked={true} onChange={() => { }} name='check' color='primary' />}
+              control={<Checkbox checked={appManager.adjustMgr.miJomoSettings.imputeRD} onChange={handleMIJomoImputeRDChange} name='check' color='primary' />}
               label='Impute reporting delays inputs'
             />
           </FormGroup>
-          <Button color='primary'>Restore defaults</Button>
-          <Button color='primary'>Apply</Button>
+          <Button color='primary' onClick={handleMIRestoreDefaults('jomo')}>Restore defaults</Button>
         </form>
       </Paper >
   } else if(appManager.adjustMgr.miAdjustType === 'mice') {
@@ -116,12 +127,11 @@ const TabAdjustmentsMI = (props) => {
         />
         <FormGroup row>
           <FormControlLabel
-            control={<Checkbox checked={true} onChange={() => { }} name='check' color='primary' />}
+            control={<Checkbox checked={appManager.adjustMgr.miMiceSettings.imputeRD} onChange={handleMIMiceImputeRDChange} name='check' color='primary' />}
             label='Impute reporting delays inputs'
           />
         </FormGroup>
-        <Button color='primary'>Restore defaults</Button>
-        <Button color='primary'>Apply</Button>
+        <Button color='primary' onClick={handleMIRestoreDefaults('mice')}>Restore defaults</Button>
       </form>
     </Paper >
   }
