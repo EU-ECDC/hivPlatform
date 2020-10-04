@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
-import TabPanel from './TabPanel';
-import Btn from './Btn';
+import TabPanel from '../TabPanel';
+import Btn from '../Btn';
 
 const ModelRunProgressBar = (props) => {
   const { progress } = props;

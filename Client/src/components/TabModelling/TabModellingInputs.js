@@ -10,9 +10,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import TabPanel from './TabPanel';
-import Btn from './Btn';
-import DiagnosisRates from './DiagnosisRates';
+import TabPanel from '../TabPanel';
+import Btn from '../Btn';
+import DiagnosisRates from '../DiagnosisRates';
 
 const TabModellingInputs = props => {
   const { appManager } = props;

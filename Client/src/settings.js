@@ -5,7 +5,7 @@ export const DEBUG = true;
 export const NAME = 'HIV Platform';
 
 // Application version
-export const VERSION = '1.9.14';
+export const VERSION = '1.9.15';
 
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;

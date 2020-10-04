@@ -126,12 +126,23 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$runAdjustBtn, {
-    adjustmentSpecs <- GetAdjustmentSpecs(c(
-      'Multiple Imputation using Chained Equations - MICE'
-    ))
+    params <- input$runAdjustBtn
+    adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)
+    appMgr$AdjustCaseBasedData(adjustmentSpecs)
+  })
 
-    appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
-    # appMgr$RunTestTask()
+  observeEvent(appMgr$AdjustmentTask$RunLog, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'ADJUSTMENTS_RUN_LOG_SET',
+      Status = 'SUCCESS',
+      Payload = list(
+        RunLog = appMgr$AdjustmentTask$RunLog
+      )
+    ))
+  })
+
+  observeEvent(input$cancelAdjustBtn, {
+    appMgr$CancelAdjustmentTask()
   })
 
   observeEvent(input$runModelBtn, {
@@ -177,20 +188,6 @@ Events <- function(input, output, session, appMgr)
       Status = 'SUCCESS',
       Payload = list(
         RunLog = runLog
-      )
-    ))
-  })
-
-  observeEvent(input$cancelAdjustBtn, {
-    appMgr$CancelAdjustmentTask()
-  })
-
-  observeEvent(appMgr$AdjustmentTask$RunLog, {
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'ADJUSTMENTS_RUN_LOG_SET',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = appMgr$AdjustmentTask$RunLog
       )
     ))
   })

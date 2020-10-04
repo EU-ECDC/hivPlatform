@@ -15,7 +15,6 @@ configure({
 });
 
 export default class AppManager {
-
   uiStateMgr = null;
   notificationsMgr = null;
   attrMappingMgr = null;
@@ -42,7 +41,16 @@ export default class AppManager {
       activeSubStepId: 0
     },
     { title: 'Data summary', completed: false, disabled: false, subSteps: []},
-    { title: 'Adjustments', completed: false, disabled: false, subSteps: []},
+    {
+      title: 'Adjustments',
+      completed: false,
+      disabled: false,
+      subSteps: [
+        { title: 'Inputs' },
+        { title: 'Run' },
+      ],
+      activeSubStepId: 0
+    },
     {
       title: 'Modelling',
       completed: false,
@@ -259,11 +267,11 @@ export default class AppManager {
     }
   };
 
-  btnClicked = btnId => {
+  btnClicked = (btnId, value = '') => {
     if (this.shinyReady) {
-      Shiny.setInputValue(btnId, '', { priority: 'event' });
+      Shiny.setInputValue(btnId, value, { priority: 'event' });
     } else {
-      console.log('btnClicked: Shiny is not available');
+      console.log('btnClicked: Shiny is not available', btnId, toJS(value));
     }
   };
 

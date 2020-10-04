@@ -220,33 +220,12 @@ AppManager <- R6::R6Class(
 
     # 5. Adjust case-based data --------------------------------------------------------------------
     AdjustCaseBasedData = function(
-      miCount = NULL,
       adjustmentSpecs
     ) {
-      if (is.null(miCount)) {
-        miCount <- private$Catalogs$MICount
-      } else {
-        private$Catalogs$MICount <- miCount
-      }
-
-      adjustNames <- names(adjustmentSpecs)
-      miTypes <- sapply(adjustmentSpecs, '[[', 'Type') == 'MULTIPLE_IMPUTATIONS'
-      adjustmentSpecs <- setNames(lapply(
-        seq_along(miTypes),
-        function(i) {
-          miType <- miTypes[i]
-          as <- adjustmentSpecs[[i]]
-          if (miType) {
-            as$Parameters$nimp$value <- miCount
-          }
-
-          return(as)
-        }
-      ), adjustNames)
-
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
           devtools::load_all()
+          options(width = 150)
           hivEstimatesAccuracy2::RunAdjustments(
             data = data,
             adjustmentSpecs = adjustmentSpecs,

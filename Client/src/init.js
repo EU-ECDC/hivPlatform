@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveStepId(3);
+  appManager.setActiveStepId(4);
 
   // 1. Upload data
   appManager.onShinyEvent({

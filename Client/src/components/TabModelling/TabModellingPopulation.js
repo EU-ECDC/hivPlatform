@@ -4,9 +4,9 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import TabPanel from './TabPanel';
-import CreatePopulations from './CreatePopulations';
-import PopulationCombinations from './PopulationCombinations';
+import TabPanel from '../TabPanel';
+import CreatePopulations from '../CreatePopulations';
+import PopulationCombinations from '../PopulationCombinations';
 
 const TabModellingPopulation = props => {
   const { appManager } = props;
