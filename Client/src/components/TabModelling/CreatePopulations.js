@@ -1,40 +1,29 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
+import Checkbox from '@material-ui/core/Checkbox';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import OriginGroupingRow from './OriginGroupingRow';
+import CreatePopulationRow from './CreatePopulationRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
-const OriginGroupingsWidget = (props) => {
+const CreatePopulations = (props) => {
   const { appManager } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const groupings = appManager.origGroupMgr.groupingsJS;
-
-  const handleGroupingPresetChange = e => {
-    appManager.inputValueSet('groupingPresetSelect', e.target.value);
-    appManager.origGroupMgr.setType(e.target.value);
-  };
+  const populations = appManager.popMgr.populationsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = groupings.map((el, i) => i);
+      const newSelectedIds = populations.map((el, i) => i);
       setSelected(newSelectedIds);
       return;
     }
     setSelected([]);
-  }
+  };
 
   const handleSelectClick = i => e => {
     const selectedIndex = selected.indexOf(i);
@@ -56,34 +45,21 @@ const OriginGroupingsWidget = (props) => {
     setSelected(newSelected);
   };
 
+  const handleAddClick = () => {
+    appManager.popMgr.addEmptyPopulation();
+  };
+
   const handleDeleteClick = () => {
-    appManager.origGroupMgr.removeGroupings(selected);
+    appManager.popMgr.removePopulations(selected);
     setSelected([]);
   }
 
-  const handleAddClick = () => {
-    appManager.origGroupMgr.addEmptyGrouping();
-  }
-
-  const rowCount = groupings.length;
+  const rowCount = populations.length;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
-    <Paper style={{ padding: 10 }}>
-      <Typography variant='overline'>Migrant variable regrouping</Typography>
-      <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
-        <InputLabel>
-          Preset
-      </InputLabel>
-        <Select value={appManager.origGroupMgr.type} onChange={handleGroupingPresetChange}>
-          <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
-          <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
-          <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
-          <MenuItem value='Custom' dense>Custom</MenuItem>
-        </Select>
-        <FormHelperText>Select regrouping preset</FormHelperText>
-      </FormControl>
+    <Paper>
       <Table>
         <TableHead>
           <TableRow>
@@ -95,18 +71,18 @@ const OriginGroupingsWidget = (props) => {
                 checked={rowCount > 0 && selectedCount === rowCount}
               />
             </TableCell>
-            <TableCell padding='none'>GroupedRegionOfOrigin</TableCell>
-            <TableCell width='60%'>FullRegionOfOrigin</TableCell>
-            <TableCell align='right' width='10%'>Count</TableCell>
+            <TableCell padding='none'>Stratification name</TableCell>
+            <TableCell width='30%'>Selected variables</TableCell>
+            <TableCell width='40%'>Defined populations</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {
-            groupings.map((el, i) => (
-              <OriginGroupingRow
+            populations.map((el, i) => (
+              <CreatePopulationRow
                 key={i}
                 i={i}
-                grouping={el}
+                population={el}
                 appManager={appManager}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
@@ -124,4 +100,4 @@ const OriginGroupingsWidget = (props) => {
   )
 };
 
-export default observer(OriginGroupingsWidget);
+export default observer(CreatePopulations);

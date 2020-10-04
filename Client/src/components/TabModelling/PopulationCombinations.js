@@ -10,9 +10,9 @@ import Chip from '@material-ui/core/Chip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import TableToolbar from './TableToolbar';
+import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
-const CreatePopulations = () => (
+const PopulationCombinations = () => (
   <Paper>
     <Table>
       <TableHead>
@@ -22,9 +22,8 @@ const CreatePopulations = () => (
               color='primary'
             />
           </TableCell>
-          <TableCell padding='none'>Stratification name</TableCell>
-          <TableCell width='30%'>Selected variables</TableCell>
-          <TableCell width='40%'>Defined populations</TableCell>
+          <TableCell width='30%' padding='none'>Combination name</TableCell>
+          <TableCell>Selected populations</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -33,7 +32,7 @@ const CreatePopulations = () => (
             <Checkbox inputProps={{ 'aria-labelledby': 'labelId1' }} color='primary' />
           </TableCell>
           <TableCell id='labelId1' scope='row' padding='none'>
-            <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Gender only' />
+            <Input style={{ width: '100%', fontSize: '0.75rem' }} value='All' />
           </TableCell>
           <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
             <Select
@@ -49,22 +48,23 @@ const CreatePopulations = () => (
                   ))}
                 </div>
               )}
-              value={['Gender']}
+              value={['F', 'M']}
               style={{ width: '100%', fontSize: '0.75rem' }}
               disableUnderline
             >
-              <MenuItem value='Gender' dense>Gender</MenuItem>
-              <MenuItem value='Transmission' dense>Transmission</MenuItem>
+              <MenuItem value='F' dense>F</MenuItem>
+              <MenuItem value='M' dense>M</MenuItem>
+              <MenuItem value='IDU' dense>IDU</MenuItem>
+              <MenuItem value='MSM' dense>MSM</MenuItem>
             </Select>
           </TableCell>
-          <TableCell>F, M</TableCell>
         </TableRow>
-        <TableRow hover>
+        <TableRow hover role='checkbox'>
           <TableCell padding='checkbox'>
-            <Checkbox inputProps={{ 'aria-labelledby': 'labelId2' }} color='primary' />
+            <Checkbox inputProps={{ 'aria-labelledby': 'labelId1' }} color='primary' />
           </TableCell>
-          <TableCell id='labelId2' scope='row' padding='none'>
-            <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Transmission only' />
+          <TableCell id='labelId1' scope='row' padding='none'>
+            <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Male only' />
           </TableCell>
           <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
             <Select
@@ -80,51 +80,21 @@ const CreatePopulations = () => (
                   ))}
                 </div>
               )}
-              value={['Transmission']}
+              value={['M']}
               style={{ width: '100%', fontSize: '0.75rem' }}
               disableUnderline
             >
-              <MenuItem value='Gender' dense>Gender</MenuItem>
-              <MenuItem value='Transmission' dense>Transmission</MenuItem>
+              <MenuItem value='F' dense>F</MenuItem>
+              <MenuItem value='M' dense>M</MenuItem>
+              <MenuItem value='IDU' dense>IDU</MenuItem>
+              <MenuItem value='MSM' dense>MSM</MenuItem>
             </Select>
           </TableCell>
-          <TableCell>IDU, MSM</TableCell>
-        </TableRow>
-        <TableRow hover>
-          <TableCell padding='checkbox'>
-            <Checkbox inputProps={{ 'aria-labelledby': 'labelId2' }} color='primary' />
-          </TableCell>
-          <TableCell id='labelId2' scope='row' padding='none'>
-            <Input style={{ width: '100%', fontSize: '0.75rem' }} value='Gender and Transmission' />
-          </TableCell>
-          <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
-            <Select
-              multiple
-              renderValue={(selected) => (
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                  {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={value}
-                      style={{ margin: 2 }}
-                    />
-                  ))}
-                </div>
-              )}
-              value={['Gender', 'Transmission']}
-              style={{ width: '100%', fontSize: '0.75rem' }}
-              disableUnderline
-            >
-              <MenuItem value='Gender' dense>Gender</MenuItem>
-              <MenuItem value='Transmission' dense>Transmission</MenuItem>
-            </Select>
-          </TableCell>
-          <TableCell>F_IDU, F_MSM, M_IDU, M_MSM</TableCell>
         </TableRow>
       </TableBody>
     </Table>
-    <TableToolbar numSelected={0} />
+    <EnhancedTableToolbar selectedCount={0} />
   </Paper>
 );
 
-export default CreatePopulations;
+export default PopulationCombinations;

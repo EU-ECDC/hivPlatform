@@ -144,7 +144,7 @@ export default appManager => {
     }
   });
 
-  // 6. Prepare summary data
+  // 7. Adjustments run log set
   appManager.onShinyEvent({
     Type: "ADJUSTMENTS_RUN_LOG_SET",
     Status: "SUCCESS",

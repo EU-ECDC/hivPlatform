@@ -7,7 +7,7 @@ import Input from '@material-ui/core/Input';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import TableToolbar from './TableToolbar';
+import EnhancedTableToolbar from './EnhancedTableToolbar';
 
 const DiagnosisRates = () => (
   <Paper>
@@ -89,7 +89,7 @@ const DiagnosisRates = () => (
         </TableRow>
       </TableBody>
     </Table>
-    <TableToolbar numSelected={0} />
+    <EnhancedTableToolbar selectedCount={0} />
   </Paper>
 );
 

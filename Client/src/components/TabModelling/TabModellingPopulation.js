@@ -5,8 +5,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import TabPanel from '../TabPanel';
-import CreatePopulations from '../CreatePopulations';
-import PopulationCombinations from '../PopulationCombinations';
+import CreatePopulations from './CreatePopulations';
+import PopulationCombinations from './PopulationCombinations';
 
 const TabModellingPopulation = props => {
   const { appManager } = props;
@@ -25,7 +25,7 @@ const TabModellingPopulation = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <CreatePopulations />
+          <CreatePopulations appManager={appManager} />
         </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />

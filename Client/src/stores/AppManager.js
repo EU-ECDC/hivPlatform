@@ -8,6 +8,7 @@ import CaseBasedDataManager from './CaseBasedDataManager';
 import AggrDataManager from './AggrDataManager';
 import SummaryDataManager from './SummaryDataManager';
 import AdjustmentsManager from './AdjustmentsManager';
+import PopulationsManager from './PopulationsManager';
 
 configure({
   enforceActions: 'observed',
@@ -23,6 +24,7 @@ export default class AppManager {
   aggrDataMgr = null;
   summaryDataMgr = null;
   adjustMgr = null;
+  popMgr = null;
 
   shinyState = 'DISCONNECTED';
 
@@ -177,6 +179,7 @@ export default class AppManager {
     this.origGroupMgr = new OriginGroupingsManager(this);
     this.summaryDataMgr = new SummaryDataManager(this);
     this.adjustMgr = new AdjustmentsManager(this);
+    this.popMgr = new PopulationsManager(this);
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,
