@@ -7,18 +7,19 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import CreatePopulationRow from './CreatePopulationRow';
+import DiagnosisRatesRow from './DiagnosisRatesRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
-const CreatePopulations = (props) => {
+const DiagnosisRates = (props) => {
+
   const { appManager } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const populations = appManager.popMgr.populationsJS;
+  const intervals = appManager.timeIntMgr.intervalsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = populations.map((el, i) => i);
+      const newSelectedIds = intervals.map((el, i) => i);
       setSelected(newSelectedIds);
       return;
     }
@@ -46,15 +47,15 @@ const CreatePopulations = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.popMgr.addEmptyPopulation();
+    appManager.timeIntMgr.addEmptyInterval();
   };
 
   const handleDeleteClick = () => {
-    appManager.popMgr.removePopulations(selected);
+    appManager.timeIntMgr.removeIntervals(selected);
     setSelected([]);
   }
 
-  const rowCount = populations.length;
+  const rowCount = intervals.length;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
@@ -69,20 +70,21 @@ const CreatePopulations = (props) => {
                 color='primary'
                 onClick={handleSelectAllClick}
                 checked={rowCount > 0 && selectedCount === rowCount}
-              />
-            </TableCell>
-            <TableCell width='30%' padding='none'>Stratification name</TableCell>
-            <TableCell width='30%'>Selected variables</TableCell>
-            <TableCell width='40%'>Defined populations</TableCell>
+              />            </TableCell>
+            <TableCell width='15%' padding='none' >Start year</TableCell>
+            <TableCell width='15%' >End year</TableCell>
+            <TableCell>Jump</TableCell>
+            <TableCell>Change by CD4 count</TableCell>
+            <TableCell>Change in interval</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {
-            populations.map((el, i) => (
-              <CreatePopulationRow
+            intervals.map((el, i) => (
+              <DiagnosisRatesRow
                 key={i}
                 i={i}
-                population={el}
+                interval={el}
                 appManager={appManager}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
@@ -100,4 +102,4 @@ const CreatePopulations = (props) => {
   )
 };
 
-export default observer(CreatePopulations);
+export default observer(DiagnosisRates);

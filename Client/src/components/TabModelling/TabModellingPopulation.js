@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import TabPanel from '../TabPanel';
 import CreatePopulations from './CreatePopulations';
-import PopulationCombinations from './PopulationCombinations';
+import CombinePopulations from './CombinePopulations';
 
 const TabModellingPopulation = props => {
   const { appManager } = props;
@@ -36,7 +36,7 @@ const TabModellingPopulation = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <PopulationCombinations />
+          <CombinePopulations appManager={appManager} />
         </Grid>
       </Grid>
     </TabPanel>

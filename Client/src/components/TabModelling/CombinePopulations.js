@@ -7,18 +7,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import CreatePopulationRow from './CreatePopulationRow';
+import CombinePopulationsRow from './CombinePopulationsRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
-const CreatePopulations = (props) => {
+const CombinePopulations = (props) => {
   const { appManager } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const populations = appManager.popMgr.populationsJS;
+  const combinations = appManager.popCombMgr.combinationsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = populations.map((el, i) => i);
+      const newSelectedIds = combinations.map((el, i) => i);
       setSelected(newSelectedIds);
       return;
     }
@@ -46,15 +46,15 @@ const CreatePopulations = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.popMgr.addEmptyPopulation();
+    appManager.popCombMgr.addEmptyCombination();
   };
 
   const handleDeleteClick = () => {
-    appManager.popMgr.removePopulations(selected);
+    appManager.popCombMgr.removeCombinations(selected);
     setSelected([]);
   }
 
-  const rowCount = populations.length;
+  const rowCount = combinations.length;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
@@ -71,18 +71,17 @@ const CreatePopulations = (props) => {
                 checked={rowCount > 0 && selectedCount === rowCount}
               />
             </TableCell>
-            <TableCell width='30%' padding='none'>Stratification name</TableCell>
-            <TableCell width='30%'>Selected variables</TableCell>
-            <TableCell width='40%'>Defined populations</TableCell>
+            <TableCell width='30%' padding='none'>Combination name</TableCell>
+            <TableCell width='70%' >Selected populations</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {
-            populations.map((el, i) => (
-              <CreatePopulationRow
+            combinations.map((el, i) => (
+              <CombinePopulationsRow
                 key={i}
                 i={i}
-                population={el}
+                combination={el}
                 appManager={appManager}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
@@ -100,4 +99,4 @@ const CreatePopulations = (props) => {
   )
 };
 
-export default observer(CreatePopulations);
+export default observer(CombinePopulations);

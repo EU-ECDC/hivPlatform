@@ -15,6 +15,7 @@ export default class PopulationsManager {
       setPopulationStrata: action,
       populationsJS: computed,
       availableStrataNames: computed,
+      definedPopulations: computed,
     });
   }
 
@@ -23,22 +24,11 @@ export default class PopulationsManager {
     Transmission: ['IDU', 'MSM']
   };
 
-  populations = [
-    {
-      name: 'Gender only',
-      strata: ['Gender'],
-      populations: ['F', 'M']
-    },
-    {
-      name: 'Transmission only',
-      strata: ['Transmission'],
-      populations: ['IDU', 'MSM']
-    }
-  ];
+  populations = [];
 
   addEmptyPopulation = () => {
     this.populations.push({
-      name: 'New',
+      name: 'Strata',
       strata: [],
       populations: []
     });
@@ -63,6 +53,10 @@ export default class PopulationsManager {
 
   get availableStrataNames() {
     return Object.keys(this.availableStrata);
+  };
+
+  get definedPopulations() {
+    return [...new Set(this.populations.map(el => el.populations).flat())];
   };
 
   recreatePopulations = (i) => {

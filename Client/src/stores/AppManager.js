@@ -9,6 +9,8 @@ import AggrDataManager from './AggrDataManager';
 import SummaryDataManager from './SummaryDataManager';
 import AdjustmentsManager from './AdjustmentsManager';
 import PopulationsManager from './PopulationsManager';
+import PopCombinationsManager from './PopCombinationsManager';
+import TimeIntervalsManager from './TimeIntervalsManager';
 
 configure({
   enforceActions: 'observed',
@@ -25,6 +27,8 @@ export default class AppManager {
   summaryDataMgr = null;
   adjustMgr = null;
   popMgr = null;
+  popCombMgr = null;
+  timeIntMgr = null;
 
   shinyState = 'DISCONNECTED';
 
@@ -180,6 +184,9 @@ export default class AppManager {
     this.summaryDataMgr = new SummaryDataManager(this);
     this.adjustMgr = new AdjustmentsManager(this);
     this.popMgr = new PopulationsManager(this);
+    this.popCombMgr = new PopCombinationsManager(this);
+    this.timeIntMgr = new TimeIntervalsManager(this);
+
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,

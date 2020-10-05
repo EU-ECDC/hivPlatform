@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -12,7 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
-import DiagnosisRates from '../DiagnosisRates';
+import DiagnosisRates from './DiagnosisRates';
 
 const TabModellingInputs = props => {
   const { appManager } = props;
@@ -66,11 +67,11 @@ const TabModellingInputs = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <DiagnosisRates />
+          <DiagnosisRates appManager={appManager} />
         </Grid>
       </Grid>
     </TabPanel>
   );
 };
 
-export default TabModellingInputs;
+export default observer(TabModellingInputs);
