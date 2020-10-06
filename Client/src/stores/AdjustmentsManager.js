@@ -40,6 +40,10 @@ export default class AdjustmentsManager {
     stratMigr: false
   };
 
+  adjustmentsRunProgress = null;
+
+  adjustmentsRunLog = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
 
@@ -50,9 +54,12 @@ export default class AdjustmentsManager {
       rdAdjustType: observable,
       rdWithoutTrendSettings: observable,
       rdWithTrendSettings: observable,
+      adjustmentsRunProgress: observable,
+      adjustmentsRunLog: observable,
       miParams: computed,
       rdParams: computed,
       adjustmentSelected: computed,
+      adjustmentsRunInProgress: computed,
       setMIAdjustType: action,
       setRDAdjustType: action,
       setMIJomoNimp: action,
@@ -79,6 +86,9 @@ export default class AdjustmentsManager {
       setRDWithStratTrans: action,
       setRDWithStratMigr: action,
       runAdjustments: action,
+      cancelAdjustments: action,
+      setAdjustmentsRunProgress: action,
+      setAdjustmentsRunLog: action
     });
   };
 
@@ -104,6 +114,10 @@ export default class AdjustmentsManager {
 
   get adjustmentSelected() {
     return (this.miAdjustType !== 'none' || this.rdAdjustType !== 'none');
+  };
+
+  get adjustmentsRunInProgress() {
+    return this.adjustmentsRunProgress !== null;
   };
 
   setMIAdjustType = type => this.miAdjustType = type;
@@ -180,8 +194,9 @@ export default class AdjustmentsManager {
     });
   };
 
-  cancelAdjustments = () => {
-    this.rootMgr.btnClicked('cancelAdjustBtn');
-  };
+  cancelAdjustments = () => this.rootMgr.btnClicked('cancelAdjustBtn');
 
+  setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
+
+  setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
 }

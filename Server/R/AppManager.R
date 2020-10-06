@@ -49,7 +49,8 @@ AppManager <- R6::R6Class(
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
-        AdjustmentTask = NULL
+        AdjustmentTask = NULL,
+        ModelTask = NULL
       )
     },
 
@@ -224,15 +225,16 @@ AppManager <- R6::R6Class(
     ) {
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
-          devtools::load_all()
-          options(width = 150)
-          hivEstimatesAccuracy2::RunAdjustments(
+          suppressMessages(devtools::load_all())
+          options(width = 130)
+          result <- hivEstimatesAccuracy2::RunAdjustments(
             data = data,
             adjustmentSpecs = adjustmentSpecs,
             diagYearRange = NULL,
             notifQuarterRange = NULL,
             seed = NULL
           )
+          return(result)
         },
         args = list(
           data = isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
@@ -240,7 +242,6 @@ AppManager <- R6::R6Class(
         ),
         session = private$Session
       )
-
       private$Catalogs$AdjustmentTask$Run()
 
       return(invisible(self))
@@ -275,36 +276,48 @@ AppManager <- R6::R6Class(
       settings = list(),
       parameters = list()
     ) {
-      aggregatedDataSets <- private$Catalogs$AggregatedData
+      aggregatedDataSets <- isolate(private$Catalogs$AggregatedData)
 
-      results <- list()
-      for (i in seq_along(aggregatedDataSets)) {
-        context <- hivModelling::GetRunContext(
-          data = aggregatedDataSets[[i]],
+      private$Catalogs$ModelTask <- Task$new(
+        function(aggregatedDataSets, settings, parameters) {
+          options(width = 130)
+
+          results <- list()
+          for (i in seq_along(aggregatedDataSets)) {
+            context <- hivModelling::GetRunContext(
+              data = aggregatedDataSets[[i]],
+              settings = settings,
+              parameters = parameters
+            )
+            data <- hivModelling::GetPopulationData(context)
+
+            startTime <- Sys.time()
+            fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
+            runTime <- Sys.time() - startTime
+
+            results[[i]] <- list(
+              Context = context,
+              Data = data,
+              Results = fitResults,
+              RunTime = runTime
+            )
+          }
+          return(results)
+        },
+        args = list(
+          aggregatedDataSets = aggregatedDataSets,
           settings = settings,
           parameters = parameters
-        )
-        data <- hivModelling::GetPopulationData(context)
+        ),
+        session = private$Session
+      )
+      private$Catalogs$ModelTask$Run()
 
-        startTime <- Sys.time()
-        fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
-        runTime <- Sys.time() - startTime
+      return(invisible(self))
+    },
 
-        results[[i]] <- list(
-          Context = context,
-          Data = data,
-          Results = fitResults,
-          RunTime = runTime
-        )
-
-        PrintAlert(
-          'Fit to data set {.val {i}} done |',
-          'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
-          type = 'success'
-        )
-      }
-
-      private$Catalogs$HIVModelResults <- results
+    CancelModelTask = function() {
+      private$Catalogs$ModelTask$Stop()
 
       return(invisible(self))
     },
@@ -614,8 +627,13 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$CaseBasedData)
     },
 
-    AdjustedCaseBasedData = function() {
-      return(private$Catalogs$AdjustedCaseBasedData)
+    AdjustedCaseBasedData = function(dt) {
+      if (missing(dt)) {
+        return(private$Catalogs$AdjustedCaseBasedData)
+      } else {
+        private$Catalogs$AdjustedCaseBasedData <- dt
+        private$PrepareAggregatedData()
+      }
     },
 
     AdjustmentRunLog = function() {
@@ -639,8 +657,12 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$BootstrapAggregatedDataSets)
     },
 
-    HIVModelResults = function() {
-      return(private$Catalogs$HIVModelResults)
+    HIVModelResults = function(dt) {
+      if (missing(dt)) {
+        return(private$Catalogs$HIVModelResults)
+      } else {
+        private$Catalogs$HIVModelResults <- dt
+      }
     },
 
     HIVBootstrapModelResults = function() {
@@ -657,6 +679,11 @@ AppManager <- R6::R6Class(
 
     AdjustmentTask = function() {
       return(private$Catalogs$AdjustmentTask)
+    },
+
+    ModelTask = function() {
+      return(private$Catalogs$ModelTask)
     }
+
   )
 )

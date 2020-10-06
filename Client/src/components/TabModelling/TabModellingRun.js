@@ -21,13 +21,13 @@ const ModelRunProgressBar = (props) => {
 const TabModellingRun = props => {
   const { appManager } = props;
 
-  const onRunModelsBtnClick = () => {
-    appManager.btnClicked('runModelBtn');
-  }
+  const handleRunModelsBtnClick = () => {
+    appManager.modelMgr.runModels();
+  };
 
-  const onRunBootstrapBtnClick = () => {
-    appManager.btnClicked('runBootstrapBtn');
-  }
+  const handleCancelModelsBtnClick = () => {
+    appManager.modelMgr.cancelModels();
+  };
 
   return (
     <TabPanel>
@@ -38,23 +38,36 @@ const TabModellingRun = props => {
           </Box>
         </Grid>
         <Grid item xs={3}>
-          <Btn onClick={onRunModelsBtnClick}><DirectionsRunIcon />&nbsp;Run main model</Btn>
-          <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
-          <ModelRunProgressBar progress={appManager.modelsRunProgress} />
+          <Btn
+            onClick={handleRunModelsBtnClick}
+            disabled={appManager.modelMgr.modelsRunInProgress}
+          >
+            &nbsp;Run main model
+          </Btn>
+          <Button
+            onClick={handleCancelModelsBtnClick}
+            color='primary'
+            style={{ marginLeft: 20 }}
+            disabled={!appManager.modelMgr.modelsRunInProgress}
+          >
+            Cancel
+          </Button>
+          <ModelRunProgressBar progress={appManager.modelMgr.modelsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
-            <pre>
-              {appManager.modelsRunLog}
-            </pre>
+            <pre
+              dangerouslySetInnerHTML={{ __html: appManager.modelMgr.modelsRunLog }}
+              style={{ overflowX: 'auto' }}
+            />
           </Paper>
         </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={3}>
-          <Btn onClick={onRunBootstrapBtnClick}><DirectionsRunIcon />&nbsp;Run bootstrap</Btn>
+          <Btn><DirectionsRunIcon />&nbsp;Run bootstrap</Btn>
           <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
           <ModelRunProgressBar progress={appManager.bootstrapRunProgress} />
         </Grid>

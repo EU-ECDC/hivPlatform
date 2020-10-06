@@ -45,7 +45,8 @@ Task <- R6::R6Class(
       taskHandle <- callr::r_bg(
         force(private$Expr),
         args = private$Args,
-        supervise = TRUE
+        supervise = TRUE,
+        stderr = '2>&1'
       )
 
       private$Catalogs$Status <- 'CREATED'
@@ -91,6 +92,21 @@ Task <- R6::R6Class(
       }
     },
 
+    CollectRunLog = function() {
+      log <- ''
+      if (self$IsRunning) {
+        log <- private$Catalogs$TaskHandle$read_output()
+      } else if (self$IsFinished) {
+        if (!self$IsCancelled) {
+          log <- private$Catalogs$TaskHandle$read_all_output()
+        } else if (!private$CancellProcessed) {
+          log <- '\nTask cancelled'
+          private$CancellProcessed <- TRUE
+        }
+      }
+      return(log)
+    },
+
     AddToRunLog = function(log) {
       private$Catalogs$RunLog <- paste0(
         private$Catalogs$RunLog,
@@ -117,6 +133,18 @@ Task <- R6::R6Class(
             o$destroy()
           }
         })
+      } else {
+        while (self$IsRunning) {
+          private$Catalogs$Status <- 'RUNNING'
+          log <- private$CollectRunLog()
+          cat(log)
+          private$AddToRunLog(log)
+          Sys.sleep(1)
+        }
+        private$Catalogs$Status <- 'STOPPED'
+        log <- private$CollectRunLog()
+        cat(log)
+        private$AddToRunLog(log)
       }
     }
   ),
@@ -137,21 +165,13 @@ Task <- R6::R6Class(
     },
 
     RunLog = function() {
-      log <- ''
-      if (self$IsRunning) {
-        log <- private$Catalogs$TaskHandle$read_output()
-      } else if (self$IsFinished) {
-        if (!self$IsCancelled) {
-          log <- private$Catalogs$TaskHandle$read_all_output()
-        } else if (!private$CancellProcessed) {
-          log <- '\nTask cancelled'
-          private$CancellProcessed <- TRUE
-        }
-      }
-
-      private$AddToRunLog(log)
+      private$AddToRunLog(private$CollectRunLog())
 
       return(private$Catalogs$RunLog)
+    },
+
+    HTMLRunLog = function() {
+      return(fansi::sgr_to_html(private$Catalogs$RunLog, warn = FALSE))
     },
 
     TaskHandle = function() {

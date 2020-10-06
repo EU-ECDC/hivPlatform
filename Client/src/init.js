@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveSubStepId(4, 1);
+  appManager.setActiveSubStepId(4, 3);
 
   // 1. Upload data
   appManager.onShinyEvent({
@@ -153,4 +153,148 @@ export default appManager => {
     }
   });
 
+  // 8. Model run log set
+  appManager.onShinyEvent({
+    Type: "MODELS_RUN_LOG_SET",
+    Status: "SUCCESS",
+    Payload: {
+      RunLog: `<span style='color: #00BBBB;'>--</span><span> </span><span style='font-weight: bold;'>1. Context</span><span> </span><span style='color: #00BBBB;'>-------------------------------------------------------------------------------------------------------------------------------------------------------</span><span>
+
+-- </span><span style='font-weight: bold;'>1.1. Model file</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> No model file found. Parameters will be determined from data
+
+-- </span><span style='font-weight: bold;'>1.3. Data preprocessing</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Data set is being prepared for a combination of populations: </span><span style='color: #0000BB;'>'Count'</span><span>
+
+</span><span style='color: #00BBBB;'>--</span><span> </span><span style='font-weight: bold;'>2. Main fit</span><span> </span><span style='color: #00BBBB;'>------------------------------------------------------------------------------------------------------------------------------------------------------</span><span>
+
+-- </span><span style='font-weight: bold;'>2.1. Info</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Run type: </span><span style='color: #0000BB;'>'MAIN'</span><span> - all initial parameters will be determined from object </span><span style='color: #000000;background-color: #BBBBBB;'>'context'</span><span>
+
+-- </span><span style='font-weight: bold;'>2.2. Iterations</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Number of spline weights to estimate: </span><span style='color: #0000BB;'>6</span><span>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'01'</span><span>: </span><span style='color: #0000BB;'>'SCALE'</span><span>  | Run time: 80ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'02'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 650ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'03'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 540ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'04'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 923ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'05'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 560ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'06'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 365ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'07'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 693ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'08'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 463ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'09'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 405ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'10'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 473ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'11'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 355ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'12'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 385ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'13'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 365ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'14'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 367ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'15'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 353ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'16'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 359ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'17'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 343ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'18'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 352ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'19'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 390ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'20'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 726ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'21'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 486ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'22'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 451ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'23'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 706ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'24'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 443ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'25'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 410ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'26'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 446ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'27'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 357ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'28'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 333ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'29'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 385ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'30'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 345ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'31'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 361ms>
+</span><span style='color: #00BBBB;'>i</span><span> Total run time: 14.1s
+</span><span style='color: #00BB00;'>v</span><span> Fit converged, goodness-of-fit: </span><span style='color: #0000BB;'>86.7217924461426</span><span>
+
+-- </span><span style='font-weight: bold;'>2.3. Results</span><span> --
+
+* beta[1]: </span><span style='color: #0000BB;'>0.133100</span><span>
+* beta[2]: </span><span style='color: #0000BB;'>0.324182</span><span>
+* beta[3]: </span><span style='color: #0000BB;'>-0.120483</span><span>
+* beta[4]: </span><span style='color: #0000BB;'>0.079503</span><span>
+* theta[1]: </span><span style='color: #0000BB;'>0.000000</span><span> - FIXED
+* theta[2]: </span><span style='color: #0000BB;'>31294.784114</span><span> - NOT FIXED
+* theta[3]: </span><span style='color: #0000BB;'>4806.685027</span><span> - NOT FIXED
+* theta[4]: </span><span style='color: #0000BB;'>-1235.106287</span><span> - NOT FIXED
+* theta[5]: </span><span style='color: #0000BB;'>1325.747772</span><span> - NOT FIXED
+* theta[6]: </span><span style='color: #0000BB;'>94.684717</span><span> - NOT FIXED
+* theta[7]: </span><span style='color: #0000BB;'>47.343330</span><span> - NOT FIXED
+* theta[8]: </span><span style='color: #0000BB;'>0.000000</span><span> - FIXED
+
+</span><span style='color: #00BBBB;'>--</span><span> </span><span style='font-weight: bold;'>1. Context</span><span> </span><span style='color: #00BBBB;'>-------------------------------------------------------------------------------------------------------------------------------------------------------</span><span>
+
+-- </span><span style='font-weight: bold;'>1.1. Model file</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> No model file found. Parameters will be determined from data
+
+-- </span><span style='font-weight: bold;'>1.3. Data preprocessing</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Data set is being prepared for a combination of populations: </span><span style='color: #0000BB;'>'Count'</span><span>
+
+</span><span style='color: #00BBBB;'>--</span><span> </span><span style='font-weight: bold;'>2. Main fit</span><span> </span><span style='color: #00BBBB;'>------------------------------------------------------------------------------------------------------------------------------------------------------</span><span>
+
+-- </span><span style='font-weight: bold;'>2.1. Info</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Run type: </span><span style='color: #0000BB;'>'MAIN'</span><span> - all initial parameters will be determined from object </span><span style='color: #000000;background-color: #BBBBBB;'>'context'</span><span>
+
+-- </span><span style='font-weight: bold;'>2.2. Iterations</span><span> --
+
+</span><span style='color: #00BBBB;'>i</span><span> Number of spline weights to estimate: </span><span style='color: #0000BB;'>6</span><span>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'01'</span><span>: </span><span style='color: #0000BB;'>'SCALE'</span><span>  | Run time: 73ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'02'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 630ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'03'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 530ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'04'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 973ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'05'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 545ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'06'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 351ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'07'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 646ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'08'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 460ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'09'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 399ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'10'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 462ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'11'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 356ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'12'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 369ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'13'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 362ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'14'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 364ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'15'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 345ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'16'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 337ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'17'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 343ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'18'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 343ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'19'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 346ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'20'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 719ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'21'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 484ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'22'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 469ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'23'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 680ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'24'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 423ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'25'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 401ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'26'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 435ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'27'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 344ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'28'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 322ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'29'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 341ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'30'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 344ms>
+</span><span style='color: #00BB00;'>v</span><span> Iteration </span><span style='color: #0000BB;'>'31'</span><span>: </span><span style='color: #0000BB;'>'AMOEBA'</span><span> | Run time: 358ms>
+</span><span style='color: #00BBBB;'>i</span><span> Total run time: 13.8s
+</span><span style='color: #00BB00;'>v</span><span> Fit converged, goodness-of-fit: </span><span style='color: #0000BB;'>86.7217924461426</span><span>
+
+-- </span><span style='font-weight: bold;'>2.3. Results</span><span> --
+
+* beta[1]: </span><span style='color: #0000BB;'>0.133100</span><span>
+* beta[2]: </span><span style='color: #0000BB;'>0.324182</span><span>
+* beta[3]: </span><span style='color: #0000BB;'>-0.120483</span><span>
+* beta[4]: </span><span style='color: #0000BB;'>0.079503</span><span>
+* theta[1]: </span><span style='color: #0000BB;'>0.000000</span><span> - FIXED
+* theta[2]: </span><span style='color: #0000BB;'>31294.784114</span><span> - NOT FIXED
+* theta[3]: </span><span style='color: #0000BB;'>4806.685027</span><span> - NOT FIXED
+* theta[4]: </span><span style='color: #0000BB;'>-1235.106287</span><span> - NOT FIXED
+* theta[5]: </span><span style='color: #0000BB;'>1325.747772</span><span> - NOT FIXED
+* theta[6]: </span><span style='color: #0000BB;'>94.684717</span><span> - NOT FIXED
+* theta[7]: </span><span style='color: #0000BB;'>47.343330</span><span> - NOT FIXED
+* theta[8]: </span><span style='color: #0000BB;'>0.000000</span><span> - FIXED
+</span>
+      `
+    }
+  });
 };

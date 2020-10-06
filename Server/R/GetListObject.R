@@ -24,7 +24,7 @@ GetListObject <- function(fileName, section = NULL, includeFileName = TRUE)
   stopifnot(!missing(fileName))
 
   # Get entire list
-  listObject <- eval(expr = parse(file = fileName))
+  listObject <- eval(expr = parse(file = fileName), envir = .GlobalEnv)
   if (includeFileName) {
     listObject$FileName <- fileName
   }

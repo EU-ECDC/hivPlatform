@@ -19,6 +19,7 @@ Imports:
     cli (>= 2.0.2),
     devtools (>= 2.3.2),
     data.table (>= 1.12.8),
+    fansi (>= 0.4.1),
     hivModelling (>= 0.9.14),
     jomo (>= 2.6-10),
     knitr (>= 1.28),

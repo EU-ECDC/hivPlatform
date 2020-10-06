@@ -9,9 +9,7 @@ appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
 # appMgr$ApplyOriginGrouping(type = 'REPCOUNTRY + UNK + OTHER')
 appMgr$ApplyOriginGrouping(groups = list())
-
 dt <- appMgr$GetSummaryData()
-
 jsonlite:::asJSON(dt, keep_vec_names = TRUE)
 
 # STEP 2 - Perform MI as usual to obtain M pseudo-complete datasets --------------------------------
@@ -20,18 +18,18 @@ adjustmentSpecs <- GetAdjustmentSpecs(c(
   'Multiple Imputation using Chained Equations - MICE'
   # 'Joint Modelling Multiple Imputation'
 ))
-appMgr$AdjustCaseBasedData(miCount = 2, adjustmentSpecs)
-appMgr$RunTestTask()
-appMgr$AdjustmentTask$IsRunning
-taskHandle <- appMgr$AdjustmentTask$TaskHandle
-taskHandle$is_incomplete_error()
-taskHandle$read_all_error()
+appMgr$AdjustCaseBasedData(adjustmentSpecs)
+appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
+
 cat(appMgr$AdjustmentTask$RunLog)
-appMgr$AdjustmentTask$Result
+cat(appMgr$AdjustmentTask$HTMLRunLog)
 
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 
-appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = FALSE))
+appMgr$FitHIVModelToAdjustedData()
+
+cat(appMgr$ModelTask$RunLog)
+cat(appMgr$ModelTask$HTMLRunLog)
 
 # STEP 4 - Fit the model to M x B pseudo-complete bootstrapped datasets get the estimates ----------
 

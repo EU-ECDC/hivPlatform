@@ -38,7 +38,7 @@ const TabAdjustmentsRun = props => {
         <Grid item xs={3}>
           <Btn
             onClick={handleRunAdjustBtnClick}
-            disabled={!appManager.adjustMgr.adjustmentSelected || appManager.adjustmentsRunInProgress}
+            disabled={!appManager.adjustMgr.adjustmentSelected || appManager.adjustMgr.adjustmentsRunInProgress}
           >
             <DirectionsRunIcon />&nbsp;Run adjustments
           </Btn>
@@ -46,18 +46,19 @@ const TabAdjustmentsRun = props => {
             onClick={handleCancelAdjustBtnClick}
             color='primary'
             style={{ marginLeft: 20 }}
-            disabled={!appManager.adjustmentsRunInProgress}
+            disabled={!appManager.adjustMgr.adjustmentsRunInProgress}
           >
             Cancel
           </Button>
-          <AdjustmentsRunProgressBar progress={appManager.adjustmentsRunProgress} />
+          <AdjustmentsRunProgressBar progress={appManager.adjustMgr.adjustmentsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
-            <pre>
-              {appManager.adjustmentsRunLog}
-            </pre>
+            <pre
+              dangerouslySetInnerHTML={{ __html: appManager.adjustMgr.adjustmentsRunLog }}
+              style={{ overflowX: 'auto' }}
+            />
           </Paper>
         </Grid>
       </Grid>

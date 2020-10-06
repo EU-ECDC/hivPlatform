@@ -29,7 +29,7 @@ RunAdjustments <- function(
   stopifnot(!missing(data))
 
   if (is.null(adjustmentSpecs) || length(adjustmentSpecs) == 0) {
-    cat('No adjustments to process')
+    PrintAlert('No adjustments to process')
   }
 
   # Data table performs many operations by reference.
@@ -58,18 +58,20 @@ RunAdjustments <- function(
       adjustmentSpec$Key <- caption
     }
 
-    cat(sprintf('Adjustment %s', caption), '\n\n')
-    # PrintH1('Adjustment {caption}')
+    PrintH1('Adjustment {caption}')
+    cat('\n')
 
     startTime <- Sys.time()
-    cat(sprintf('Start time: %s', startTime), '\n\n')
+    PrintAlert('Start time: {startTime}')
 
     # Extract parameters for better visibility.
     parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = "value")
 
-    # PrintH2('Parameters')
-    cat('Parameters', '\n')
+    PrintH2('Parameters')
     print(setNames(as.character(parameters), names(parameters)))
+    cat('\n')
+
+    PrintH2('Executing')
 
     # Run adjustment function
     output <- adjustmentSpec$AdjustmentFunction(inputData = data$Table, parameters = parameters)
@@ -94,12 +96,9 @@ RunAdjustments <- function(
 
     endTime <- Sys.time()
     cat('\n')
-    cat(sprintf('Done with adjustment %s', caption), '\n')
-    cat(sprintf('End time: %s', Sys.time()), '\n')
-    cat(sprintf('Elapsed time: %s', prettyunits::pretty_dt(endTime - startTime)), '\n\n\n')
-
-
-    # PrintAlert('Done with adjustment {.val {caption}}')
+    PrintH2('Done')
+    PrintAlert('End time: {endTime}')
+    PrintAlert('Elapsed time: {.timestamp {prettyunits::pretty_dt(endTime - startTime)}}')
   }
 
   return(results)

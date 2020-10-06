@@ -11,6 +11,7 @@ import AdjustmentsManager from './AdjustmentsManager';
 import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
 import TimeIntervalsManager from './TimeIntervalsManager';
+import ModelsManager from './ModelsManager';
 
 configure({
   enforceActions: 'observed',
@@ -29,6 +30,7 @@ export default class AppManager {
   popMgr = null;
   popCombMgr = null;
   timeIntMgr = null;
+  modelMgr = null
 
   shinyState = 'DISCONNECTED';
 
@@ -77,14 +79,6 @@ export default class AppManager {
   activeStepId = 0;
 
   mode = 'NONE';
-
-  adjustmentsRunProgress = null;
-
-  adjustmentsRunLog = null;
-
-  modelsRunProgress = null;
-
-  modelsRunLog = null;
 
   bootstrapRunProgress = null;
 
@@ -140,22 +134,23 @@ export default class AppManager {
         this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
         break;
       case 'ADJUSTMENTS_RUN_STARTED':
-        this.setAdjustmentsRunProgress(1);
+        this.adjustMgr.setAdjustmentsRunProgress(1);
         break;
       case 'ADJUSTMENTS_RUN_FINISHED':
-        this.setAdjustmentsRunProgress(null);
+        this.adjustMgr.setAdjustmentsRunProgress(null);
         this.notificationsMgr.setMsg('Adjustment run finished');
         break;
       case 'ADJUSTMENTS_RUN_LOG_SET':
-        this.setAdjustmentsRunLog(event.Payload.RunLog);
+        this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
         break;
-      case 'MODEL_RUN_STARTED':
-        this.setModelsRunLog(event.Payload.RunLog);
-        this.setModelsRunProgress(1);
+      case 'MODELS_RUN_STARTED':
+        this.modelMgr.setModelsRunProgress(1);
         break;
-      case 'MODEL_RUN_FINISHED':
-        this.setModelsRunLog(event.Payload.RunLog);
-        this.setModelsRunProgress(null);
+      case 'MODELS_RUN_LOG_SET':
+        this.modelMgr.setModelsRunLog(event.Payload.RunLog);
+        break;
+      case 'MODELS_RUN_FINISHED':
+        this.modelMgr.setModelsRunProgress(null);
         this.notificationsMgr.setMsg('Model run finished');
         break;
       case 'BOOTSTRAP_RUN_STARTED':
@@ -186,6 +181,7 @@ export default class AppManager {
     this.popMgr = new PopulationsManager(this);
     this.popCombMgr = new PopCombinationsManager(this);
     this.timeIntMgr = new TimeIntervalsManager(this);
+    this.modelMgr = new ModelsManager(this);
 
     makeObservable(this, {
       shinyState: observable,
@@ -193,22 +189,13 @@ export default class AppManager {
       steps: observable,
       activeStepId: observable,
       mode: observable,
-      adjustmentsRunProgress: observable,
-      adjustmentsRunLog: observable,
-      modelsRunProgress: observable,
-      modelsRunLog: observable,
       bootstrapRunProgress: observable,
       bootstrapRunLog: observable,
       shinyReady: computed,
       stepsTitles: computed,
       jsonShinyMessage: computed,
-      adjustmentsRunInProgress: computed,
       setShinyState: action,
       setMode: action,
-      setAdjustmentsRunProgress: action,
-      setAdjustmentsRunLog: action,
-      setModelsRunProgress: action,
-      setModelsRunLog: action,
       setBootstrapRunProgress: action,
       setBootstrapRunLog: action,
       unbindShinyInputs: action,
@@ -235,10 +222,6 @@ export default class AppManager {
     return JSON.stringify(this.shinyMessage);
   };
 
-  get adjustmentsRunInProgress() {
-    return this.adjustmentsRunProgress !== null;
-  };
-
   // Actions
   setShinyState = state => {
     this.shinyState = state;
@@ -254,10 +237,6 @@ export default class AppManager {
     this.setActiveStepId(1);
   };
 
-  setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
-  setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
-  setModelsRunProgress = progress => this.modelsRunProgress = progress;
-  setModelsRunLog = runLog => this.modelsRunLog = runLog;
   setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
   setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
 

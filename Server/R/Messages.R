@@ -16,10 +16,7 @@ PrintH1 <- function(
   .envir = parent.frame(),
   local = FALSE
 ) {
-
   cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir)
-
-  # cat(paste(capture.output(cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir)), collapse = '\n'))
 
   invisible(NULL)
 }
@@ -41,7 +38,7 @@ PrintH2 <- function(
   collapse = ' ',
   .envir = parent.frame()
 ) {
-  cat(paste(capture.output(cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir)), collapse = '\n'))
+  cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir)
 
   invisible(NULL)
 }

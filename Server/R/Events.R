@@ -131,14 +131,31 @@ Events <- function(input, output, session, appMgr)
     appMgr$AdjustCaseBasedData(adjustmentSpecs)
   })
 
-  observeEvent(appMgr$AdjustmentTask$RunLog, {
+  observeEvent(appMgr$AdjustmentTask$HTMLRunLog, {
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'ADJUSTMENTS_RUN_LOG_SET',
       Status = 'SUCCESS',
       Payload = list(
-        RunLog = appMgr$AdjustmentTask$RunLog
+        RunLog = appMgr$AdjustmentTask$HTMLRunLog
       )
     ))
+  })
+
+  observeEvent(appMgr$AdjustmentTask$Status, {
+    if (appMgr$AdjustmentTask$Status == 'RUNNING') {
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'ADJUSTMENTS_RUN_STARTED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    } else if (appMgr$AdjustmentTask$Status == 'STOPPED') {
+      appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'ADJUSTMENTS_RUN_FINISHED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    }
   })
 
   observeEvent(input$cancelAdjustBtn, {
@@ -146,27 +163,40 @@ Events <- function(input, output, session, appMgr)
   })
 
   observeEvent(input$runModelBtn, {
+    appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = TRUE))
+  })
+
+  observeEvent(appMgr$ModelTask$HTMLRunLog, {
     appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'MODEL_RUN_STARTED',
+      Type = 'MODELS_RUN_LOG_SET',
       Status = 'SUCCESS',
       Payload = list(
-        RunLog = 'Model run started'
-      )
-    ))
-
-    runLog <- capture.output({
-      appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = TRUE))
-    })
-    runLog <- paste(runLog, collapse = '\n')
-
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'MODEL_RUN_FINISHED',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = runLog
+        RunLog = appMgr$ModelTask$HTMLRunLog
       )
     ))
   })
+
+  observeEvent(appMgr$ModelTask$Status, {
+    if (appMgr$ModelTask$Status == 'RUNNING') {
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'MODELS_RUN_STARTED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    } else if (appMgr$ModelTask$Status == 'STOPPED') {
+      appMgr$HIVModelResults <- appMgr$ModelTask$Result
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'MODELS_RUN_FINISHED',
+        Status = 'SUCCESS',
+        Payload = list()
+      ))
+    }
+  })
+
+  observeEvent(input$cancelModelBtn, {
+    appMgr$CancelModelTask()
+  })
+
 
   observeEvent(input$runBootstrapBtn, {
     appMgr$SendEventToReact('shinyHandler', list(
@@ -190,21 +220,5 @@ Events <- function(input, output, session, appMgr)
         RunLog = runLog
       )
     ))
-  })
-
-  observeEvent(appMgr$AdjustmentTask$Status, {
-    if (appMgr$AdjustmentTask$Status == 'RUNNING') {
-      appMgr$SendEventToReact('shinyHandler', list(
-        Type = 'ADJUSTMENTS_RUN_STARTED',
-        Status = 'SUCCESS',
-        Payload = list()
-      ))
-    } else if (appMgr$AdjustmentTask$Status == 'STOPPED') {
-      appMgr$SendEventToReact('shinyHandler', list(
-        Type = 'ADJUSTMENTS_RUN_FINISHED',
-        Status = 'SUCCESS',
-        Payload = list()
-      ))
-    }
   })
 }
