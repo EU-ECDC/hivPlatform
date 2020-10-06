@@ -155,6 +155,15 @@ Events <- function(input, output, session, appMgr)
         Status = 'SUCCESS',
         Payload = list()
       ))
+
+      availableStrata <- GetAvailableStrata(appMgr$FinalAdjustedCaseBasedData$Table)
+      appMgr$SendEventToReact('shinyHandler', list(
+        Type = 'AVAILABLE_STRATA_SET',
+        Status = 'SUCCESS',
+        Payload = list(
+          AvailableStrata = availableStrata
+        )
+      ))
     }
   })
 

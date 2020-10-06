@@ -34,6 +34,8 @@ export default class PopulationsManager {
     });
   };
 
+  setAvailableStrata = strata => this.availableStrata = strata;
+
   removePopulations = selectedIds => {
     this.populations = RemoveElementsFromArray(this.populations, selectedIds);
   };

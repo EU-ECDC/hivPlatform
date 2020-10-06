@@ -24,6 +24,13 @@ appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
 cat(appMgr$AdjustmentTask$RunLog)
 cat(appMgr$AdjustmentTask$HTMLRunLog)
 
+test <- appMgr$FinalAdjustedCaseBasedData$Table
+
+colNames <- c('Gender', 'Transmission')
+setNames(lapply(colNames, function(attr) {
+  test[Imputation != 0, as.character(unique(get(attr)))]
+}), colNames)
+
 # STEP 3 - Fit the model to M pseudo-complete datasets get the estimates ---------------------------
 
 appMgr$FitHIVModelToAdjustedData()
