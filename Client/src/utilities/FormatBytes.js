@@ -1,5 +1,7 @@
+import IsNull from './IsNull';
+
 export default (bytes, decimals = 2) => {
-  if (typeof bytes === 'undefined' || bytes === null) return '';
+  if (IsNull(bytes)) return '';
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;

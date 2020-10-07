@@ -1,4 +1,5 @@
 import { observable, action, computed, makeObservable } from 'mobx';
+import EnsureArray from '../utilities/EnsureArray';
 
 export default class CaseBasedDataManager {
   rootMgr = null;
@@ -38,10 +39,7 @@ export default class CaseBasedDataManager {
   setFileType = fileType => this.fileType = fileType;
   setFilePath = filePath => this.filePath = filePath;
   setRecordCount = recordCount => this.recordCount = recordCount;
-  setColumnNames = columnNames => {
-    const arr = Array.isArray(columnNames) ? columnNames : [columnNames];
-    this.columnNames = arr;
-  };
+  setColumnNames = columnNames => this.columnNames = EnsureArray(columnNames);
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
 
   get columnNamesString() {

@@ -1,5 +1,6 @@
 import { observable, computed, action, toJS, makeObservable } from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import GetNextId from '../utilities/GetNextId';
 
 export default class PopulationsManager {
   rootMgr = null;
@@ -13,28 +14,32 @@ export default class PopulationsManager {
       removePopulations: action,
       setPopulationName: action,
       setPopulationStrata: action,
+      setAvailableStrata: action,
       populationsJS: computed,
       availableStrataNames: computed,
       definedPopulations: computed,
+      populationsNames: computed,
     });
   }
 
-  availableStrata = {
-    Gender : ['F', 'M'],
-    Transmission: ['IDU', 'MSM']
-  };
+  availableStrata = {};
 
   populations = [];
 
   addEmptyPopulation = () => {
     this.populations.push({
-      name: 'Strata',
+      name: `Strata ${GetNextId('Strata ', this.populationsNames)}`,
       strata: [],
       populations: []
     });
   };
 
-  setAvailableStrata = strata => this.availableStrata = strata;
+  setAvailableStrata = strata => {
+    if (strata == null) {
+      strata = {};
+    }
+    this.availableStrata = strata;
+  }
 
   removePopulations = selectedIds => {
     this.populations = RemoveElementsFromArray(this.populations, selectedIds);
@@ -55,6 +60,10 @@ export default class PopulationsManager {
 
   get availableStrataNames() {
     return Object.keys(this.availableStrata);
+  };
+
+  get populationsNames() {
+    return this.populations.map(el => el.name);
   };
 
   get definedPopulations() {

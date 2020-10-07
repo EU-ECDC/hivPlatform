@@ -1,5 +1,6 @@
 import { observable, computed, action, toJS, makeObservable, autorun } from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import GetNextId from '../utilities/GetNextId';
 
 export default class PopCombinationsManager {
   rootMgr = null;
@@ -14,6 +15,7 @@ export default class PopCombinationsManager {
       setCombinationPopulations: action,
       filterPopulations: action,
       combinationsJS: computed,
+      combinationsNames: computed,
     });
 
     autorun(() => {
@@ -25,7 +27,7 @@ export default class PopCombinationsManager {
 
   addEmptyCombination = () => {
     this.combinations.push({
-      name: 'Combination',
+      name: `Combination ${GetNextId('Combination ', this.combinationsNames)}`,
       populations: []
     });
   };
@@ -42,11 +44,15 @@ export default class PopCombinationsManager {
     this.combinations[i].populations = populations;
   };
 
+  filterPopulations = (definedPopulations) =>
+    this.combinations.forEach(el => { el.populations = el.populations.filter(value => definedPopulations.includes(value)) });
+
   get combinationsJS() {
     return toJS(this.combinations);
   };
 
-  filterPopulations = (definedPopulations) =>
-    this.combinations.forEach(el => { el.populations = el.populations.filter(value => definedPopulations.includes(value)) });
+  get combinationsNames() {
+    return this.combinations.map(el => el.name);
+  };
 
 }

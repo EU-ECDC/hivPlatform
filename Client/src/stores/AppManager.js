@@ -143,6 +143,9 @@ export default class AppManager {
       case 'ADJUSTMENTS_RUN_LOG_SET':
         this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
         break;
+      case 'AVAILABLE_STRATA_SET':
+        this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
+        break;
       case 'MODELS_RUN_STARTED':
         this.modelMgr.setModelsRunProgress(1);
         break;
