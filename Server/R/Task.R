@@ -46,6 +46,7 @@ Task <- R6::R6Class(
         force(private$Expr),
         args = private$Args,
         supervise = TRUE,
+        package = TRUE,
         stderr = '2>&1'
       )
 

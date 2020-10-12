@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.2",
+    "Version": "4.0.3",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -123,10 +123,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.4.4",
+      "Version": "3.5.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e56fe17ffeddfdcfcef40981e41e1c40"
+      "Hash": "dea3322c701bbb5dd31c353a72a1ebf9"
     },
     "cellranger": {
       "Package": "cellranger",
@@ -137,10 +137,10 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "2.0.2",
+      "Version": "2.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ff0becff7bfdfe3f75d29aff8f3172dd"
+      "Hash": "0b316487b21d21f99ebf98abe179b1ea"
     },
     "codetools": {
       "Package": "codetools",
@@ -298,10 +298,10 @@
     },
     "globals": {
       "Package": "globals",
-      "Version": "0.13.0",
+      "Version": "0.13.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "0195566df9ebe00c615c097a778fe943"
+      "Hash": "3eb799a11cf9d28314691e44a2eaaa14"
     },
     "glue": {
       "Package": "glue",
@@ -332,9 +332,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "5ee62c7d9913d83dbf3dbe785cecaed97c5f20f4",
+      "RemoteSha": "0d04fd270d084b98a361632b8af500392b74124e",
       "RemoteHost": "api.github.com",
-      "Hash": "bd81f2066f78b9547c70cb6934810aac"
+      "Hash": "24968d859d20ae2951a930e9448cdfeb"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -366,10 +366,10 @@
     },
     "igraph": {
       "Package": "igraph",
-      "Version": "1.2.5",
+      "Version": "1.2.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3878c30ce67cdb7f2d7f72554e37f476"
+      "Hash": "7b1f856410253d56ea67ad808f7cdff6"
     },
     "isoband": {
       "Package": "isoband",
@@ -688,10 +688,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.7",
+      "Version": "0.4.8",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c06d2a6887f4b414f8e927afd9ee976a"
+      "Hash": "843a6af51414bce7f8a8e372f11d6cd0"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
@@ -807,10 +807,10 @@
     },
     "tibble": {
       "Package": "tibble",
-      "Version": "3.0.3",
+      "Version": "3.0.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "08bd36bd34b20d4f7971d49e81deaab0"
+      "Hash": "71dffd8544691c520dd8e41ed2d7e070"
     },
     "tidyr": {
       "Package": "tidyr",
