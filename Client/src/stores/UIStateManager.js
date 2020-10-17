@@ -19,14 +19,17 @@ export default class UIStateManager {
     });
   };
 
-  setLastEventType = eventType => this.lastEventType = eventType;
+  setLastEventType = eventType => {
+    console.log('setLastEventType', this.enabledStages);
+    this.lastEventType = eventType;
+  }
 
   get enabledStages() {
     return EVENT_TO_ENABLED_STAGES_MAP[this.lastEventType];
   };
 
   get caseBasedUploadStageEnabled() {
-    return this.enabledStages.indexOf['CASE_BASED_UPLOAD'] !== -1;
+    return this.enabledStages.indexOf('CASE_BASED_UPLOAD') !== -1;
   };
 
   get caseBasedAttrMappingStageEnabled() {
