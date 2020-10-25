@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveSubStepId(4, 0);
+  appManager.setActiveSubStepId(4, 1);
 
   // 1. Upload data
   appManager.onShinyEvent({
@@ -153,7 +153,7 @@ export default appManager => {
     }
   });
 
-  // 9. Available strata set
+  // 8. Available strata set
   appManager.onShinyEvent({
     Type: "AVAILABLE_STRATA_SET",
     Status: "SUCCESS",
@@ -164,7 +164,7 @@ export default appManager => {
     }
   });
 
-  // 10. Model run log set
+  // 9. Model run log set
   appManager.onShinyEvent({
     Type: "MODELS_RUN_LOG_SET",
     Status: "SUCCESS",

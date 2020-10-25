@@ -13,6 +13,18 @@ const DiagnosisRatesRow = (props) => {
   const handleChangeInIntervalChange = e => appManager.timeIntMgr.setIntervalChangeInInterval(i, e.target.checked);
   const handleDiffByCD4Change = e => appManager.timeIntMgr.setIntervalDiffByCD4(i, e.target.checked);
 
+  let startYearWidget = null;
+  if (i === 0) {
+    startYearWidget = el.startYear;
+  } else {
+    startYearWidget = <Input
+      style={{ width: '100%', fontSize: '0.75rem' }}
+      value={el.startYear}
+      type='number'
+      onChange={handleStartYearChange}
+    />
+  }
+
   return (
     <TableRow hover role='checkbox'>
       <TableCell padding='checkbox'>
@@ -23,14 +35,7 @@ const DiagnosisRatesRow = (props) => {
           onClick={onSelectClick}
         />
       </TableCell>
-      <TableCell id='labelId1' scope='row' padding='none'>
-        <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
-          value={el.startYear}
-          type='number'
-          onChange={handleStartYearChange}
-        />
-      </TableCell>
+      <TableCell id='labelId1' scope='row' padding='none'>{startYearWidget}</TableCell>
       <TableCell>{el.endYear}</TableCell>
       <TableCell padding='checkbox'><Checkbox color='primary' checked={el.jump} onChange={handleJumpChange} /></TableCell>
       <TableCell padding='checkbox'><Checkbox color='primary' checked={el.changeInInterval} onChange={handleChangeInIntervalChange}/></TableCell>
