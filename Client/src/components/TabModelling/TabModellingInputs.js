@@ -18,6 +18,10 @@ import DiagnosisRates from './DiagnosisRates';
 const TabModellingInputs = props => {
   const { appManager } = props;
 
+  const handleModelUploadChange = e => {
+    appManager.modelMgr.setModelsParamFileName(e.nativeEvent.target.files[0])
+  };
+
   return (
     <TabPanel>
       <Grid container spacing={2}>
@@ -32,7 +36,7 @@ const TabModellingInputs = props => {
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <input style={{ display: 'none' }} id='modelUploadBtn' type='file' />
+          <input style={{ display: 'none' }} id='modelUploadBtn' type='file' onChange={handleModelUploadChange} />
           <label htmlFor='modelUploadBtn'>
             <Btn><CloudUploadIcon />&nbsp;Upload data</Btn>
           </label>

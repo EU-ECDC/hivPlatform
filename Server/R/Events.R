@@ -171,6 +171,10 @@ Events <- function(input, output, session, appMgr)
     appMgr$CancelAdjustmentTask()
   })
 
+  observeEvent(input$modelsParameters, {
+    print(input$modelsParameters)
+  })
+
   observeEvent(input$runModelBtn, {
     appMgr$FitHIVModelToAdjustedData(settings = list(Verbose = TRUE))
   })
