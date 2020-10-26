@@ -19,7 +19,6 @@
 #' @importFrom utils adist head modifyList tail unzip zip
 #' @import shiny
 #' @import data.table
-#' @import ggplot2
 #'
 NULL
 

@@ -17,3 +17,12 @@ list
 \description{
 Get available strata
 }
+\examples{
+dt <- data.table::data.table(
+  Imputation = c(0, 1, 2),
+  Gender = c('F', 'F', 'M'),
+  Transmission = c('IDU', 'IDU', 'MSM')
+)
+GetAvailableStrata(dt, colNames = c('Gender', 'Transmission'))
+
+}
