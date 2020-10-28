@@ -46,6 +46,7 @@ AppManager <- R6::R6Class(
         AdjustedCaseBasedData = NULL,
         AggregatedData = NULL,
 
+        HIVModelParameters = NULL,
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
@@ -662,6 +663,14 @@ AppManager <- R6::R6Class(
         return(private$Catalogs$HIVModelResults)
       } else {
         private$Catalogs$HIVModelResults <- dt
+      }
+    },
+
+    HIVModelParameters = function(xmlModel) {
+      if (missing(xmlModel)) {
+        return(private$Catalogs$HIVModelParameters)
+      } else {
+        private$Catalogs$HIVModelParameters <- ParseXMLModel(xmlModel)
       }
     },
 

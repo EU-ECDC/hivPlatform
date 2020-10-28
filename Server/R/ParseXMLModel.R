@@ -14,8 +14,7 @@
 ParseXMLModel <- function(
   xml
 ) {
-  root <- xml2::read_xml(xml)
-  params <- xml2::as_list(root)
+  params <- xml2::as_list(xml2::read_xml(xml))
 
   # params$Model$FileVersion[[1]]
   # params$Model$Meta$Name[[1]]
@@ -31,16 +30,25 @@ ParseXMLModel <- function(
 
   timeIntervals <- lapply(unname(params$Model$IncidenceModel$DiagnosisRates), function(el) {
     list(
-      StartYear = as.integer(el$StartYear[[1]]),
-      Jump = as.logical(el$Jump[[1]]),
-      ChangingInInterval = as.logical(el$ChangingInInterval[[1]]),
-      DifferentByCD4 = as.logical(el$ChangingInInterval[[1]])
+      startYear = as.integer(el$StartYear[[1]]),
+      jump = as.logical(el$Jump[[1]]),
+      changeInInterval = as.logical(el$ChangingInInterval[[1]]),
+      diffByCD4 = as.logical(el$ChangingInInterval[[1]])
     )
   })
 
+  timeIntervals <- lapply(seq_along(timeIntervals), function(i) {
+    timeIntervals[[i]]$endYear <- ifelse(
+      i < length(timeIntervals),
+      timeIntervals[[i + 1]]$startYear,
+      as.integer(params$Model$IncidenceModel$MaxYear[[1]])
+    )
+    return(timeIntervals[[i]])
+  })
+
   settings <- list(
-    MinYear = as.integer(params$Model$IncidenceModel$MinYear[[1]]),
-    MaxYear = as.integer(params$Model$IncidenceModel$MaxYear[[1]]),
+    minYear = as.integer(params$Model$IncidenceModel$MinYear[[1]]),
+    maxYear = as.integer(params$Model$IncidenceModel$MaxYear[[1]]),
     MinFitPos = as.integer(params$Model$IncidenceModel$MinFitPos[[1]]),
     MaxFitPos = as.integer(params$Model$IncidenceModel$MaxFitPos[[1]]),
     MinFitCD4 = as.integer(params$Model$IncidenceModel$MinFitCD4[[1]]),
@@ -52,13 +60,21 @@ ParseXMLModel <- function(
     Country = params$Model$IncidenceModel$Country[[1]],
     KnotsCount = as.integer(params$Model$IncidenceModel$KnotsCount[[1]]),
     StartIncZero = as.logical(params$Model$IncidenceModel$StartIncZero[[1]]),
-    DistributionFit = ifelse(params$Model$IncidenceModel$DistributionFit[[1]] == 'Negative binomial', 'NEGATIVE_BINOMIAL', 'POISSON'),
+    DistributionFit = ifelse(
+      params$Model$IncidenceModel$DistributionFit[[1]] == 'Negative binomial',
+      'NEGATIVE_BINOMIAL',
+      'POISSON'
+    ),
     RDisp = as.integer(params$Model$IncidenceModel$RDisp[[1]]),
     Delta4Fac = as.integer(params$Model$IncidenceModel$Delta4Fac[[1]]),
     MaxIncCorr = as.logical(params$Model$IncidenceModel$MaxIncCorr[[1]]),
-    SplineType = ifelse(params$Model$IncidenceModel$SplineType[[1]] == 'B-splines', 'B-SPLINE', 'M-SPLINE'),
+    SplineType = ifelse(
+      params$Model$IncidenceModel$SplineType[[1]] == 'B-splines',
+      'B-SPLINE',
+      'M-SPLINE'
+    ),
     FullData = as.logical(params$Model$IncidenceModel$FullData[[1]]),
-    TimeIntervals = timeIntervals
+    timeIntervals = timeIntervals
   )
 
   return(settings)

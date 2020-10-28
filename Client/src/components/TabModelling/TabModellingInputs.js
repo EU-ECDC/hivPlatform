@@ -18,9 +18,7 @@ import DiagnosisRates from './DiagnosisRates';
 const TabModellingInputs = props => {
   const { appManager } = props;
 
-  const handleModelUploadChange = e => {
-    appManager.modelMgr.setModelsParamFileName(e.nativeEvent.target.files[0])
-  };
+  const handleModelUploadChange = e => appManager.modelMgr.setModelsParamFile(e.nativeEvent.target.files[0]);
 
   return (
     <TabPanel>
@@ -47,14 +45,14 @@ const TabModellingInputs = props => {
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
-            <Typography variant='overline'>Uploaded files details</Typography>
+            <Typography variant='overline'>Uploaded file details</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Table>
                   <TableBody>
                     <TableRow hover>
-                      <TableCell width={100}>File names</TableCell>
-                      <TableCell>Model.xml</TableCell>
+                      <TableCell width={100}>File name</TableCell>
+                      <TableCell>{appManager.modelMgr.modelsParamFileName}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>

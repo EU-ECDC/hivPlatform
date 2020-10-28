@@ -146,6 +146,12 @@ export default class AppManager {
       case 'AVAILABLE_STRATA_SET':
         this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
         break;
+      case 'MODELS_PARAMS_SET':
+        let minYear = event.Payload.Params.minYear;
+        let maxYear = event.Payload.Params.maxYear;
+        let timeIntervals = event.Payload.Params.timeIntervals;
+        this.timeIntMgr.setIntervals(minYear, maxYear, timeIntervals);
+        break;
       case 'MODELS_RUN_STARTED':
         this.modelMgr.setModelsRunProgress(1);
         break;
@@ -278,15 +284,15 @@ export default class AppManager {
   setActiveStepId = stepId => {
     this.steps[stepId].disabled = false;
     this.activeStepId = stepId;
-  }
+  };
 
   setActiveSubStepId = (stepId, subStepId) => {
     this.steps[stepId].disabled = false;
     this.activeStepId = stepId;
     this.steps[stepId].activeSubStepId = subStepId;
-  }
+  };
 
   setShinyMessage = msg => {
     this.shinyMessage = msg;
-  }
+  };
 }

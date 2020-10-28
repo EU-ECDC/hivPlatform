@@ -10,6 +10,7 @@ export default class TimeIntervalsManager {
       intervals: observable,
       minYear: observable,
       maxYear: observable,
+      setIntervals: action,
       addEmptyInterval: action,
       removeIntervals: action,
       setIntervalStartYear: action,
@@ -20,7 +21,7 @@ export default class TimeIntervalsManager {
       maxStartYear: computed,
     });
 
-    this.createIntervals(1980, 2018, 4, 1984);
+    // this.createIntervals(1980, 2018, 4, 1984);
   };
 
   intervals = [];
@@ -28,6 +29,12 @@ export default class TimeIntervalsManager {
   minYear = null;
 
   maxYear = null;
+
+  setIntervals = (minYear, maxYear, intervals) => {
+    this.minYear = minYear;
+    this.maxYear = maxYear;
+    this.intervals = intervals;
+  };
 
   createIntervals = (minYear, maxYear, numIntervals, firstIntervalEndYear = 0) => {
     if (numIntervals > 0) {

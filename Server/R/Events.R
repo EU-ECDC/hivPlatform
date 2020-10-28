@@ -171,8 +171,18 @@ Events <- function(input, output, session, appMgr)
     appMgr$CancelAdjustmentTask()
   })
 
-  observeEvent(input$modelsParameters, {
-    print(input$modelsParameters)
+  observeEvent(input$xmlModel, {
+    appMgr$HIVModelParameters <- input$xmlModel
+  })
+
+  observeEvent(appMgr$HIVModelParameters, {
+    appMgr$SendEventToReact('shinyHandler', list(
+      Type = 'MODELS_PARAMS_SET',
+      Status = 'SUCCESS',
+      Payload = list(
+        Params = appMgr$HIVModelParameters
+      )
+    ))
   })
 
   observeEvent(input$runModelBtn, {
