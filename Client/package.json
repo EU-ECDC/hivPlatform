@@ -1,7 +1,7 @@
 {
   "name": "hiv-estimates-accuracy",
-  "version": "0.0.1",
-  "description": "HIV Estimates Accuracy Client",
+  "version": "1.9.19",
+  "description": "HIV Estimates Accuracy platform",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
@@ -38,11 +38,11 @@
     "clean-webpack-plugin": "3.0.0",
     "copyfiles": "2.4.0",
     "cross-env": "7.0.2",
-    "file-loader": "6.1.1",
+    "file-loader": "6.2.0",
     "html-webpack-plugin": "4.5.0",
     "react-hot-loader": "4.13.0",
-    "webpack": "4.44.2",
-    "webpack-cli": "3.3.12",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "3.11.0",
     "webpack-hot-middleware": "2.25.0",
     "webpack-merge": "5.2.0"

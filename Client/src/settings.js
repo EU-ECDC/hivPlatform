@@ -1,3 +1,6 @@
+//const { version } = require('../package.json');
+import { version } from '../package.json';
+
 // DEBUG mode
 export const DEBUG = false;
 
@@ -5,7 +8,7 @@ export const DEBUG = false;
 export const NAME = 'HIV Platform';
 
 // Application version
-export const VERSION = '1.9.19';
+export const VERSION = version;
 
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;
