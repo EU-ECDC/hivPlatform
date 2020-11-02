@@ -548,12 +548,15 @@ AppManager <- R6::R6Class(
     },
 
     PrepareAggregatedData = function(strata = NULL) {
-      miData <- shiny::isolate(self$FinalAdjustedCaseBasedData$Table)[Imputation != 0]
-      private$Catalogs$AggregatedData <- PrepareDataSetsForModel(
-        miData,
-        splitBy = 'Imputation',
-        strata = strata
-      )
+      dt <- shiny::isolate(self$FinalAdjustedCaseBasedData$Table)
+      if (!is.null(dt)) {
+        miData <- dt[Imputation != 0]
+        private$Catalogs$AggregatedData <- PrepareDataSetsForModel(
+          miData,
+          splitBy = 'Imputation',
+          strata = strata
+        )
+      }
 
       return(invisible(self))
     },
@@ -632,8 +635,10 @@ AppManager <- R6::R6Class(
       if (missing(dt)) {
         return(private$Catalogs$AdjustedCaseBasedData)
       } else {
-        private$Catalogs$AdjustedCaseBasedData <- dt
-        private$PrepareAggregatedData()
+        if (!is.null(dt)) {
+          private$Catalogs$AdjustedCaseBasedData <- dt
+          private$PrepareAggregatedData()
+        }
       }
     },
 
@@ -642,8 +647,15 @@ AppManager <- R6::R6Class(
     },
 
     FinalAdjustedCaseBasedData = function() {
-      finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
-      return(private$Catalogs$AdjustedCaseBasedData[[finalIdx]])
+      dt <- private$Catalogs$AdjustedCaseBasedData
+      if (!is.null(dt)) {
+        finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
+        result <- private$Catalogs$AdjustedCaseBasedData[[finalIdx]]
+      } else {
+        result <- NULL
+      }
+
+      return(result)
     },
 
     AggregatedData = function() {
