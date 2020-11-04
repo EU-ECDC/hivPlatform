@@ -7,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import TabPanel from '../TabPanel';
 import CreatePopulations from './CreatePopulations';
 import CombinePopulations from './CombinePopulations';
+import AggregatedDataPopulations from './AggregatedDataPopulations';
 
 const TabModellingPopulation = props => {
   const { appManager } = props;
@@ -37,6 +38,17 @@ const TabModellingPopulation = props => {
         </Grid>
         <Grid item xs={9}>
           <CombinePopulations appManager={appManager} />
+        </Grid>
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
+        <Grid item xs={3}>
+          <Typography color='textSecondary'>
+            Use aggregated populations
+          </Typography>
+        </Grid>
+        <Grid item xs={9}>
+          <AggregatedDataPopulations appManager={appManager} />
         </Grid>
       </Grid>
     </TabPanel>

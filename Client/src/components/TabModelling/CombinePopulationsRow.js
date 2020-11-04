@@ -36,7 +36,29 @@ const CombinePopulationsRow = (props) => {
           onChange={handleCombinationNameChange}
         />
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+        <Select
+          multiple
+          renderValue={selected => (
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {selected.map(value => (
+                <Chip key={value} label={value} style={{ margin: 2 }} />
+              ))}
+            </div>
+          )}
+          value={el.populations}
+          style={{ width: '100%', fontSize: '0.75rem' }}
+          onChange={handlePopulationsChange}
+          disableUnderline
+        >
+          {
+            appManager.popMgr.definedPopulations.map((el2, j) => (
+              <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
+            ))
+          }
+        </Select>
+      </TableCell>
+      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
         <Select
           multiple
           renderValue={selected => (

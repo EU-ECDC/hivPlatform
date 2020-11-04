@@ -72,7 +72,8 @@ const CombinePopulations = (props) => {
               />
             </TableCell>
             <TableCell width='30%' padding='none'>Combination name</TableCell>
-            <TableCell width='70%' >Selected populations</TableCell>
+            <TableCell width='35%'>Case-based populations</TableCell>
+            <TableCell width='35%'>Aggregated populations</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
