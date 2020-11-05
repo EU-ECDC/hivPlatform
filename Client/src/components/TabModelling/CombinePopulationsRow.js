@@ -19,6 +19,10 @@ const CombinePopulationsRow = (props) => {
     appManager.popCombMgr.setCombinationPopulations(i, e.target.value);
   };
 
+  const handleAggrPopulationsChange = e => {
+    appManager.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
+  };
+
   return (
     <TableRow hover role='checkbox'>
       <TableCell padding='checkbox'>
@@ -68,12 +72,13 @@ const CombinePopulationsRow = (props) => {
               ))}
             </div>
           )}
-          value={appManager.popCombMgr.aggrCombinationsJS}
+          value={el.aggrPopulations}
+          onChange={handleAggrPopulationsChange}
           style={{ width: '100%', fontSize: '0.75rem' }}
           disableUnderline
         >
           {
-            appManager.popCombMgr.aggrCombinationsJS.map((el2, j) => (
+            appManager.aggrDataMgr.populationNames.map((el2, j) => (
               <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
             ))
           }

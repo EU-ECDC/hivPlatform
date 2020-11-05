@@ -6,7 +6,7 @@ export default appManager => {
   appManager.setMode('ALL-IN-ONE');
   appManager.setActiveSubStepId(4, 0);
 
-  // 1. Upload data
+  // 1a. Upload case-based data
   appManager.onShinyEvent({
     Type: "CASE_BASED_DATA_UPLOADED",
     Status: "SUCCESS",
@@ -15,6 +15,16 @@ export default appManager => {
       FilePath: 'asds',
       FileSize: 4000,
       FileType: 'asdas'
+    }
+  });
+
+  // 2a. Upload aggregated data
+  appManager.onShinyEvent({
+    Type: "AGGR_DATA_READ",
+    Status: "SUCCESS",
+    Payload: {
+      DataNames: ['Dead', 'AIDS', 'HIVAIDS'],
+      PopulationNames: ['pop_0', 'pop_1', 'pop_2'],
     }
   });
 

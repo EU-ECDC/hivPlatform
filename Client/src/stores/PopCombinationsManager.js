@@ -9,11 +9,11 @@ export default class PopCombinationsManager {
     this.rootMgr = mgr;
     makeObservable(this, {
       combinations: observable,
-      aggrCombinations: observable,
       addEmptyCombination: action,
       removeCombinations: action,
       setCombinationName: action,
       setCombinationPopulations: action,
+      setAggrCombinationPopulations: action,
       filterPopulations: action,
       combinationsJS: computed,
       combinationsNames: computed,
@@ -26,12 +26,12 @@ export default class PopCombinationsManager {
   }
 
   combinations = [];
-  aggrCombinations = ['pop_0', 'pop_1'];
 
   addEmptyCombination = () => {
     this.combinations.push({
       name: `Combination ${GetNextId('Combination ', this.combinationsNames)}`,
-      populations: []
+      populations: [],
+      aggrPopulations: []
     });
   };
 
@@ -45,6 +45,10 @@ export default class PopCombinationsManager {
 
   setCombinationPopulations = (i, populations) => {
     this.combinations[i].populations = populations;
+  };
+
+  setAggrCombinationPopulations = (i, populations) => {
+    this.combinations[i].aggrPopulations = populations;
   };
 
   filterPopulations = (definedPopulations) =>
