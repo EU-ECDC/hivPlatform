@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TabPanel from '../TabPanel';
-import AdvancedParameters from '../AdvancedParameters';
+import AdvancedParameters from './AdvancedParameters';
 
 const TabModellingAdvanced = props => {
   const { appManager } = props;

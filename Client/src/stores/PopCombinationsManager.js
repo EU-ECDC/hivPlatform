@@ -9,6 +9,7 @@ export default class PopCombinationsManager {
     this.rootMgr = mgr;
     makeObservable(this, {
       combinations: observable,
+      aggrCombinations: observable,
       addEmptyCombination: action,
       removeCombinations: action,
       setCombinationName: action,
@@ -16,6 +17,7 @@ export default class PopCombinationsManager {
       filterPopulations: action,
       combinationsJS: computed,
       combinationsNames: computed,
+      aggrCombinationsJS: computed,
     });
 
     autorun(() => {
@@ -24,6 +26,7 @@ export default class PopCombinationsManager {
   }
 
   combinations = [];
+  aggrCombinations = ['pop_0', 'pop_1'];
 
   addEmptyCombination = () => {
     this.combinations.push({
@@ -53,6 +56,10 @@ export default class PopCombinationsManager {
 
   get combinationsNames() {
     return this.combinations.map(el => el.name);
+  };
+
+  get aggrCombinationsJS() {
+    return toJS(this.aggrCombinations);
   };
 
 }

@@ -44,7 +44,10 @@ const TabModellingPopulation = props => {
         </Grid>
         <Grid item xs={3}>
           <Typography color='textSecondary'>
-            Use aggregated populations
+            Select aggregated populations data sets
+          </Typography>
+          <Typography variant='body2' color='textSecondary' style={{ marginTop: 10 }}>
+            Only years present in the aggregated data set will overwrite case-based derived data.
           </Typography>
         </Grid>
         <Grid item xs={9}>

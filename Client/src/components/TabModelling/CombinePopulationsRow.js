@@ -68,13 +68,12 @@ const CombinePopulationsRow = (props) => {
               ))}
             </div>
           )}
-          value={el.populations}
+          value={appManager.popCombMgr.aggrCombinationsJS}
           style={{ width: '100%', fontSize: '0.75rem' }}
-          onChange={handlePopulationsChange}
           disableUnderline
         >
           {
-            appManager.popMgr.definedPopulations.map((el2, j) => (
+            appManager.popCombMgr.aggrCombinationsJS.map((el2, j) => (
               <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
             ))
           }

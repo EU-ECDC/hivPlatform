@@ -19,7 +19,7 @@ const TabAdjustmentsInputsMI = (props) => {
   return (
     <React.Fragment>
       <Grid item xs={3}>
-        <Typography variant='body1'>
+        <Typography color='textSecondary'>
           Multiple Imputations adjustment
         </Typography>
         <FormControl component='fieldset'>

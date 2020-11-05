@@ -19,7 +19,7 @@ const TabAdjustmentsInputsRD = (props) => {
   return (
     <React.Fragment>
       <Grid item xs={3}>
-        <Typography variant='body1'>
+        <Typography color='textSecondary'>
           Reporting Delays adjustment
         </Typography>
         <FormControl component='fieldset'>
