@@ -107,7 +107,7 @@ export default class AppManager {
         this.aggrDataMgr.setFileType(event.Payload.FileType);
         break;
       case 'AGGR_DATA_READ':
-        this.aggrDataMgr.setDataNames(event.Payload.DataNames);
+        this.aggrDataMgr.setDataFiles(event.Payload.DataFiles);
         this.aggrDataMgr.setPopulationNames(event.Payload.PopulationNames);
         this.notificationsMgr.setMsg('Aggregated data uploaded');
         break;

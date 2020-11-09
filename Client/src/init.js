@@ -23,7 +23,11 @@ export default appManager => {
     Type: "AGGR_DATA_READ",
     Status: "SUCCESS",
     Payload: {
-      DataNames: ['Dead', 'AIDS', 'HIVAIDS'],
+      DataFiles: [
+        { name: 'Dead', use: true, years: [1990, 2015] },
+        { name: 'AIDS', use: true, years: [1991, 2014] },
+        { name: 'HIVAIDS', use: true, years: [1992, 2013] }
+      ],
       PopulationNames: ['pop_0', 'pop_1', 'pop_2'],
     }
   });

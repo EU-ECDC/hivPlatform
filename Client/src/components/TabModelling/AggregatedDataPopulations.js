@@ -6,12 +6,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Slider from '@material-ui/core/Slider';
-import Switch from '@material-ui/core/Switch';
+import AggregatedDataPopulationsRow from './AggregatedDataPopulationsRow';
 
 const AggregatedDataPopulations = (props) => {
   const { appManager } = props;
-
 
   return (
     <Paper>
@@ -24,42 +22,24 @@ const AggregatedDataPopulations = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell>AIDS</TableCell>
-            <TableCell><Switch color='primary' defaultChecked size='small' /></TableCell>
-            <TableCell>
-              <Slider
-                min={1975}
-                max={2025}
-                marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
-                defaultValue={[1980, 2015]}
-                valueLabelDisplay='auto'
-                valueLabelFormat={value => value.toFixed()}
-                aria-labelledby='range-slider'
-                getAriaLabel={index => index.toFixed()}
-                getAriaValueText={value => value.toFixed()}
-                color='secondary'
+          {
+            appManager.aggrDataMgr.dataFilesDead.map((dataFile, i) => (
+              <AggregatedDataPopulationsRow
+                key={i}
+                dataFile={dataFile}
+                appManager={appManager}
               />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Dead</TableCell>
-            <TableCell><Switch color='primary' defaultChecked size='small' /></TableCell>
-            <TableCell>
-              <Slider
-                min={1975}
-                max={2025}
-                marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
-                defaultValue={[1980, 2015]}
-                valueLabelDisplay='auto'
-                valueLabelFormat={value => value.toFixed()}
-                aria-labelledby='range-slider'
-                getAriaLabel={index => index.toFixed()}
-                getAriaValueText={value => value.toFixed()}
-                color='secondary'
+            ))
+          }
+          {
+            appManager.aggrDataMgr.dataFilesNonDead.map((dataFile, i) => (
+              <AggregatedDataPopulationsRow
+                key={i}
+                dataFile={dataFile}
+                appManager={appManager}
               />
-            </TableCell>
-          </TableRow>
+            ))
+          }
         </TableBody>
       </Table>
     </Paper>

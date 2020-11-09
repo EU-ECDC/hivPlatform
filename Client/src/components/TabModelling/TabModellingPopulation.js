@@ -22,11 +22,25 @@ const TabModellingPopulation = props => {
         </Grid>
         <Grid item xs={3}>
           <Typography color='textSecondary'>
-            Create populations
+            Case-based data: Create populations
           </Typography>
         </Grid>
         <Grid item xs={9}>
           <CreatePopulations appManager={appManager} />
+        </Grid>
+        <Grid item xs={12}>
+          <Divider light style={{ margin: '30px 0' }} />
+        </Grid>
+        <Grid item xs={3}>
+          <Typography color='textSecondary'>
+            Aggregated data: Select data
+          </Typography>
+          <Typography variant='body2' color='textSecondary' style={{ marginTop: 10 }}>
+            Only years present in the aggregated data set will overwrite case-based derived data.
+          </Typography>
+        </Grid>
+        <Grid item xs={9}>
+          <AggregatedDataPopulations appManager={appManager} />
         </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
@@ -38,20 +52,6 @@ const TabModellingPopulation = props => {
         </Grid>
         <Grid item xs={9}>
           <CombinePopulations appManager={appManager} />
-        </Grid>
-        <Grid item xs={12}>
-          <Divider light style={{ margin: '30px 0' }} />
-        </Grid>
-        <Grid item xs={3}>
-          <Typography color='textSecondary'>
-            Select aggregated populations data sets
-          </Typography>
-          <Typography variant='body2' color='textSecondary' style={{ marginTop: 10 }}>
-            Only years present in the aggregated data set will overwrite case-based derived data.
-          </Typography>
-        </Grid>
-        <Grid item xs={9}>
-          <AggregatedDataPopulations appManager={appManager} />
         </Grid>
       </Grid>
     </TabPanel>

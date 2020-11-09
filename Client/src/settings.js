@@ -2,7 +2,7 @@
 import { version } from '../package.json';
 
 // DEBUG mode
-export const DEBUG = true;
+export const DEBUG = false;
 
 // Application name
 export const NAME = 'HIV Platform';

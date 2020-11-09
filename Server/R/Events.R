@@ -47,11 +47,23 @@ Events <- function(input, output, session, appMgr)
     ))
 
     appMgr$ReadAggregatedData(fileInfo$datapath)
+    dataNames <- names(appMgr$AggregatedData)
+    dataFiles <- lapply(
+      dataNames,
+      function(dataName) {
+        dt <- appMgr$AggregatedData[[dataName]]
+        list(
+          name = dataName,
+          use = TRUE,
+          years = c(min(dt$Year), max(dt$Year))
+        )
+      }
+    )
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'AGGR_DATA_READ',
       Status = 'SUCCESS',
       Payload = list(
-        DataNames = names(appMgr$AggregatedData),
+        DataFiles = dataFiles,
         PopulationNames = names(appMgr$AggregatedData[[1]])[-1]
       )
     ))
@@ -173,7 +185,7 @@ Events <- function(input, output, session, appMgr)
         AvailableStrata = result
       )
     ))
-  }, ignoreNULL = FALSE)
+  }, ignoreNULL = TRUE)
 
   observeEvent(input$cancelAdjustBtn, {
     appMgr$CancelAdjustmentTask()
