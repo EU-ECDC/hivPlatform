@@ -74,7 +74,7 @@ const TabWelcome = props => {
       routinely collected at national public health systems.
     </p>
     <p>
-      A complete instruction <a href='#'>manuel</a> will guide you through the tool. The manual can
+      A complete instruction <a href='#'>manual</a> will guide you through the tool. The manual can
       also be consulted to interpret the outputs. The outputs include results in the form of a
       report containing tables and graphs, and datasets in various file formats, in which the
       corrections have been incorporated and are ready for further analysis.

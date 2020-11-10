@@ -1,4 +1,4 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable, toJS } from 'mobx';
 import EnsureArray from '../utilities/EnsureArray';
 
 export default class AggrDataManager {
@@ -23,6 +23,7 @@ export default class AggrDataManager {
       populationNames: observable,
       fileUploadProgress: observable,
       dataNames: computed,
+      dataNamesNonDead: computed,
       dataNamesString: computed,
       populationNamesString: computed,
       setFileName: action,
@@ -46,13 +47,15 @@ export default class AggrDataManager {
     this.dataFileNameToIdxMap = new Map(this.dataFiles.map((el, i) => [el.name, i]));
   }
   setDataFileUse = (name, use) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].use = use;
-  setDataFileYears = (name, years) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].years = years;
+  setDataFileYears = (name, years) => {
+    if (name.toUpperCase() === 'DEAD') {
+      this.dataFiles[this.dataFileNameToIdxMap.get(name)].years = years;
+    } else {
+      this.dataFilesNonDead.forEach(el => el.years = years);
+    }
+  }
   setPopulationNames = populationNames => this.populationNames = EnsureArray(populationNames).sort();
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
-
-  get dataNames() {
-    return this.dataFiles.map(el => el.name);
-  };
 
   get dataFilesDead() {
     return this.dataFiles.filter(el => el.name.toUpperCase() === 'DEAD');
@@ -60,6 +63,14 @@ export default class AggrDataManager {
 
   get dataFilesNonDead() {
     return this.dataFiles.filter(el => el.name.toUpperCase() !== 'DEAD');
+  };
+
+  get dataNames() {
+    return this.dataFiles.map(el => el.name);
+  };
+
+  get dataNamesNonDead() {
+    return this.dataFilesNonDead.map(el => el.name);
   };
 
   get dataNamesString() {

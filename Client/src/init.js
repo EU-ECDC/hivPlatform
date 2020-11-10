@@ -26,7 +26,13 @@ export default appManager => {
       DataFiles: [
         { name: 'Dead', use: true, years: [1990, 2015] },
         { name: 'AIDS', use: true, years: [1991, 2014] },
-        { name: 'HIVAIDS', use: true, years: [1992, 2013] }
+        { name: 'HIV', use: true, years: [1992, 2013] },
+        { name: 'HIVAIDS', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_1', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_2', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_3', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_4', use: true, years: [1992, 2013] }
+
       ],
       PopulationNames: ['pop_0', 'pop_1', 'pop_2'],
     }

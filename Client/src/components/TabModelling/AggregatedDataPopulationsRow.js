@@ -6,7 +6,7 @@ import Switch from '@material-ui/core/Switch';
 import Slider from '@material-ui/core/Slider';
 
 const AggregatedDataPopulationsRow = (props) => {
-  const { dataFile, appManager } = props;
+  const { i, rowCount, dataFile, appManager } = props;
 
   const handleUseChange = e => {
     appManager.aggrDataMgr.setDataFileUse(dataFile.name, e.target.checked);
@@ -16,13 +16,10 @@ const AggregatedDataPopulationsRow = (props) => {
     appManager.aggrDataMgr.setDataFileYears(dataFile.name, years);
   };
 
-  return (
-    <TableRow>
-      <TableCell>{dataFile.name}</TableCell>
-      <TableCell>
-        <Switch color='primary' checked={dataFile.use} onChange={handleUseChange} size='small' />
-      </TableCell>
-      <TableCell>
+  let lastColumn = null;
+  if (i === 0) {
+    lastColumn =
+      <TableCell rowSpan={rowCount}>
         <Slider
           min={1975}
           max={2025}
@@ -37,6 +34,15 @@ const AggregatedDataPopulationsRow = (props) => {
           color='secondary'
         />
       </TableCell>
+  }
+
+  return (
+    <TableRow>
+      <TableCell>{dataFile.name}</TableCell>
+      <TableCell>
+        <Switch color='primary' checked={dataFile.use} onChange={handleUseChange} size='small' />
+      </TableCell>
+      { lastColumn }
     </TableRow>
   )
 };

@@ -26,6 +26,8 @@ const AggregatedDataPopulations = (props) => {
             appManager.aggrDataMgr.dataFilesDead.map((dataFile, i) => (
               <AggregatedDataPopulationsRow
                 key={i}
+                i={i}
+                rowCount={appManager.aggrDataMgr.dataFilesDead.length}
                 dataFile={dataFile}
                 appManager={appManager}
               />
@@ -35,6 +37,8 @@ const AggregatedDataPopulations = (props) => {
             appManager.aggrDataMgr.dataFilesNonDead.map((dataFile, i) => (
               <AggregatedDataPopulationsRow
                 key={i}
+                i={i}
+                rowCount={appManager.aggrDataMgr.dataFilesNonDead.length}
                 dataFile={dataFile}
                 appManager={appManager}
               />
