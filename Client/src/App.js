@@ -51,6 +51,11 @@ const theme = createMuiTheme({
       head: {
         fontWeight: 'bold !important'
       }
+    },
+    MuiSlider: {
+      marked: {
+        marginBottom: 0
+      }
     }
   }
 });
