@@ -80,7 +80,18 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
+    # 2. Read aggregated data ----------------------------------------------------------------------
     ReadAggregatedData = function(fileName) {
+      private$Catalogs$AggregatedDataPath <- fileName
+      private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
+
+      PrintAlert('Aggregated data file {.file {fileName}} loaded')
+
+      return(invisible(self))
+    },
+
+    # 3. Read HIV model parameters ---------------------------------------------------------------------
+    ReadHIVModelParameters = function(fileName) {
       private$Catalogs$AggregatedDataPath <- fileName
       private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
 
@@ -221,9 +232,7 @@ AppManager <- R6::R6Class(
     },
 
     # 5. Adjust case-based data --------------------------------------------------------------------
-    AdjustCaseBasedData = function(
-      adjustmentSpecs
-    ) {
+    AdjustCaseBasedData = function(adjustmentSpecs) {
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
           suppressMessages(devtools::load_all())
@@ -273,10 +282,7 @@ AppManager <- R6::R6Class(
     },
 
     # 6. Fit HIV model to adjusted data ------------------------------------------------------------
-    FitHIVModelToAdjustedData = function(
-      settings = list(),
-      parameters = list()
-    ) {
+    FitHIVModelToAdjustedData = function(settings = list(), parameters = list()) {
       aggregatedDataSets <- isolate(private$Catalogs$AggregatedData)
 
       private$Catalogs$ModelTask <- Task$new(
@@ -324,11 +330,7 @@ AppManager <- R6::R6Class(
     },
 
     # 7. Perform non-parametric bootstrap ----------------------------------------------------------
-    FitHIVModelToBootstrapData = function(
-      bsCount = NULL,
-      verbose = FALSE,
-      maxRunTimeFactor = 3
-    ) {
+    FitHIVModelToBootstrapData = function(bsCount = NULL, verbose = FALSE, maxRunTimeFactor = 3) {
       if (is.null(bsCount)) {
         bsCount <- private$Catalogs$BSCount
       } else {

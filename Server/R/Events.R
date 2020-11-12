@@ -173,19 +173,19 @@ Events <- function(input, output, session, appMgr)
   observeEvent(appMgr$FinalAdjustedCaseBasedData$Table, {
     dt <- appMgr$FinalAdjustedCaseBasedData$Table
     if (!is.null(dt)) {
-      result <- appMgr$FinalAdjustedCaseBasedData$Table
+      availableStrata <- GetAvailableStrata(appMgr$FinalAdjustedCaseBasedData$Table)
     } else {
-      result <- NULL
+      availableStrata <- NULL
     }
-    availableStrata <- GetAvailableStrata(appMgr$FinalAdjustedCaseBasedData$Table)
+
     appMgr$SendEventToReact('shinyHandler', list(
       Type = 'AVAILABLE_STRATA_SET',
       Status = 'SUCCESS',
       Payload = list(
-        AvailableStrata = result
+        AvailableStrata = availableStrata
       )
     ))
-  }, ignoreNULL = TRUE)
+  }, ignoreNULL = FALSE)
 
   observeEvent(input$cancelAdjustBtn, {
     appMgr$CancelAdjustmentTask()

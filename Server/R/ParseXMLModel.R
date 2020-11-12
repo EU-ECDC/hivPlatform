@@ -49,31 +49,31 @@ ParseXMLModel <- function(
   settings <- list(
     minYear = as.integer(params$Model$IncidenceModel$MinYear[[1]]),
     maxYear = as.integer(params$Model$IncidenceModel$MaxYear[[1]]),
-    MinFitPos = as.integer(params$Model$IncidenceModel$MinFitPos[[1]]),
-    MaxFitPos = as.integer(params$Model$IncidenceModel$MaxFitPos[[1]]),
-    MinFitCD4 = as.integer(params$Model$IncidenceModel$MinFitCD4[[1]]),
-    MaxFitCD4 = as.integer(params$Model$IncidenceModel$MaxFitCD4[[1]]),
-    MinFitAIDS = as.integer(params$Model$IncidenceModel$MinFitAIDS[[1]]),
-    MaxFitAIDS = as.integer(params$Model$IncidenceModel$MaxFitAIDS[[1]]),
-    MinFitHIVAIDS = as.integer(params$Model$IncidenceModel$MinFitHIVAIDS[[1]]),
-    MaxFitHIVAIDS = as.integer(params$Model$IncidenceModel$MaxFitHIVAIDS[[1]]),
-    Country = params$Model$IncidenceModel$Country[[1]],
-    KnotsCount = as.integer(params$Model$IncidenceModel$KnotsCount[[1]]),
-    StartIncZero = as.logical(params$Model$IncidenceModel$StartIncZero[[1]]),
-    DistributionFit = ifelse(
+    minFitPos = as.integer(params$Model$IncidenceModel$MinFitPos[[1]]),
+    maxFitPos = as.integer(params$Model$IncidenceModel$MaxFitPos[[1]]),
+    minFitCD4 = as.integer(params$Model$IncidenceModel$MinFitCD4[[1]]),
+    maxFitCD4 = as.integer(params$Model$IncidenceModel$MaxFitCD4[[1]]),
+    minFitAIDS = as.integer(params$Model$IncidenceModel$MinFitAIDS[[1]]),
+    maxFitAIDS = as.integer(params$Model$IncidenceModel$MaxFitAIDS[[1]]),
+    minFitHIVAIDS = as.integer(params$Model$IncidenceModel$MinFitHIVAIDS[[1]]),
+    maxFitHIVAIDS = as.integer(params$Model$IncidenceModel$MaxFitHIVAIDS[[1]]),
+    country = params$Model$IncidenceModel$Country[[1]],
+    knotsCount = as.integer(params$Model$IncidenceModel$KnotsCount[[1]]),
+    startIncZero = as.logical(params$Model$IncidenceModel$StartIncZero[[1]]),
+    distributionFit = ifelse(
       params$Model$IncidenceModel$DistributionFit[[1]] == 'Negative binomial',
       'NEGATIVE_BINOMIAL',
       'POISSON'
     ),
-    RDisp = as.integer(params$Model$IncidenceModel$RDisp[[1]]),
-    Delta4Fac = as.integer(params$Model$IncidenceModel$Delta4Fac[[1]]),
-    MaxIncCorr = as.logical(params$Model$IncidenceModel$MaxIncCorr[[1]]),
-    SplineType = ifelse(
+    rDisp = as.integer(params$Model$IncidenceModel$RDisp[[1]]),
+    delta4Fac = as.integer(params$Model$IncidenceModel$Delta4Fac[[1]]),
+    maxIncCorr = as.logical(params$Model$IncidenceModel$MaxIncCorr[[1]]),
+    splineType = ifelse(
       params$Model$IncidenceModel$SplineType[[1]] == 'B-splines',
       'B-SPLINE',
       'M-SPLINE'
     ),
-    FullData = as.logical(params$Model$IncidenceModel$FullData[[1]]),
+    fullData = as.logical(params$Model$IncidenceModel$FullData[[1]]),
     timeIntervals = timeIntervals
   )
 

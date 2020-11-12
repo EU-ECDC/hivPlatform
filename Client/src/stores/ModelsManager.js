@@ -1,51 +1,147 @@
 import { observable, action, computed, makeObservable, autorun } from 'mobx';
+import TimeIntervalsManager from './TimeIntervalsManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 
 export default class ModelsManager {
-  rootMgr = null;
+  parentMgr = null;
+  timeIntMgr = null;
 
   constructor(mgr) {
-    this.rootMgr = mgr;
+    this.parentMgr = mgr;
+    this.timeIntMgr = new TimeIntervalsManager(this);
 
     makeObservable(this, {
-      modelsRunProgress: observable,
-      modelsRunLog: observable,
       modelsParamFile: observable,
       modelsParamFileName: observable,
       modelsParamFileContent: observable,
+      minYear: observable,
+      maxYear: observable,
+      minFitPos: observable,
+      maxFitPos: observable,
+      minFitCD4: observable,
+      maxFitCD4: observable,
+      minFitAIDS: observable,
+      maxFitAIDS: observable,
+      minFitHIVAIDS: observable,
+      maxFitHIVAIDS: observable,
+      country: observable,
+      knotsCount: observable,
+      startIncZero: observable,
+      distributionFit: observable,
+      rDisp: observable,
+      delta4Fac: observable,
+      maxIncCorr: observable,
+      splineType: observable,
+      fullData: observable,
+      modelsRunProgress: observable,
+      modelsRunLog: observable,
+      setModelsParamFile: action,
+      setModelsParamFileName: action,
+      setMinYear: action,
+      setMaxYear: action,
+      setMinFitPos: action,
+      setMaxFitPos: action,
+      setMinFitCD4: action,
+      setMaxFitCD4: action,
+      setMinFitAIDS: action,
+      setMaxFitAIDS: action,
+      setMinFitHIVAIDS: action,
+      setMaxFitHIVAIDS: action,
+      setFullData: action,
+      setKnotsCount: action,
+      setStartIncZero: action,
+      setMaxIncCorr: action,
+      setDistributionFit: action,
+      setDelta4Fac: action,
+      setCountry: action,
+      setRDisp: action,
+      setSplineType: action,
       runModels: action,
       cancelModels: action,
       setModelsRunProgress: action,
       setModelsRunLog: action,
-      setModelsParamFile: action,
       modelsRunInProgress: computed,
     });
 
     autorun(() => {
-      this.rootMgr.inputValueSet('xmlModel', this.modelsParamFileContent);
+      this.parentMgr.inputValueSet('xmlModel', this.modelsParamFileContent);
     });
+
+    autorun(() => {
+      this.timeIntMgr.setMinYear(this.minYear);
+    });
+
+    autorun(() => {
+      this.timeIntMgr.setMaxYear(this.maxYear);
+    });
+
   };
 
-  modelsRunProgress = null;
-  modelsRunLog = null;
+  // File details
   modelsParamFile = null;
   modelsParamFileName = '';
   modelsParamFileContent = null;
 
-  runModels = () => this.rootMgr.btnClicked('runModelBtn');
-  cancelModels = () => this.rootMgr.btnClicked('cancelModelBtn');
-  setModelsRunProgress = progress => this.modelsRunProgress = progress;
-  setModelsRunLog = runLog => this.modelsRunLog = runLog;
+  // Parameters
+  minYear = 1980;
+  maxYear = 2016;
+  minFitPos = 1979;
+  maxFitPos = 1979;
+  minFitCD4 = 1984;
+  maxFitCD4 = 2016;
+  minFitAIDS = 1980;
+  maxFitAIDS = 1995;
+  minFitHIVAIDS = 1996;
+  maxFitHIVAIDS = 2016;
+  fullData = true;
+  knotsCount = 4;
+  startIncZero = true;
+  maxIncCorr = true;
+  distributionFit = 'POISSON';
+  delta4Fac = 0;
+  country = 'OTHER';
+  rDisp = 50;
+  splineType = 'B-SPLINE';
+
+  // Run details
+  modelsRunProgress = null;
+  modelsRunLog = null;
+
   setModelsParamFile = paramFile => {
     if (paramFile) {
       this.modelsParamFile = paramFile;
       this.modelsParamFileName = paramFile.name;
       LoadTxtFile(this.modelsParamFile).then(
-        action("success", content => this.modelsParamFileContent = content),
-        action("error", error => console.log(error))
+        action('success', content => this.modelsParamFileContent = content),
+        action('error', error => console.log(error))
       );
     }
   };
+  setModelsParamFileName = fileName => this.modelsParamFileName = fileName;
+  setMinYear = minYear => this.minYear = minYear;
+  setMaxYear = maxYear => this.maxYear = maxYear;
+  setMinFitPos = minFitPos => this.minFitPos = minFitPos;
+  setMaxFitPos = maxFitPos => this.maxFitPos = maxFitPos;
+  setMinFitCD4 = minFitCD4 => this.minFitCD4 = minFitCD4;
+  setMaxFitCD4 = maxFitCD4 => this.maxFitCD4 = maxFitCD4;
+  setMinFitAIDS = minFitAIDS => this.minFitAIDS = minFitAIDS;
+  setMaxFitAIDS = maxFitAIDS => this.maxFitAIDS = maxFitAIDS;
+  setMinFitHIVAIDS = minFitHIVAIDS => this.minFitHIVAIDS = minFitHIVAIDS;
+  setMaxFitHIVAIDS = maxFitHIVAIDS => this.maxFitHIVAIDS = maxFitHIVAIDS;
+  setFullData = fullData => this.fullData = fullData;
+  setKnotsCount = knotsCount => this.knotsCount = knotsCount;
+  setStartIncZero = startIncZero => this.startIncZero = startIncZero;
+  setMaxIncCorr = maxIncCorr => this.maxIncCorr = maxIncCorr;
+  setDistributionFit = distributionFit => this.distributionFit = distributionFit;
+  setDelta4Fac = delta4Fac => this.delta4Fac = delta4Fac;
+  setCountry = country => this.country = country;
+  setRDisp = rDisp => this.rDisp = rDisp;
+  setSplineType = splineType => this.splineType = splineType;
+
+  setModelsRunProgress = progress => this.modelsRunProgress = progress;
+  setModelsRunLog = runLog => this.modelsRunLog = runLog;
+  runModels = () => this.rootMgr.btnClicked('runModelBtn');
+  cancelModels = () => this.rootMgr.btnClicked('cancelModelBtn');
 
   get modelsRunInProgress() {
     return this.modelsRunProgress !== null;

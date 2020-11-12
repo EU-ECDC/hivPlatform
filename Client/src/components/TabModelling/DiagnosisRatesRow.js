@@ -8,10 +8,10 @@ import Input from '@material-ui/core/Input';
 const DiagnosisRatesRow = (props) => {
   const { i, isSelected, onSelectClick, interval: el, appManager } = props;
 
-  const handleStartYearChange = e => appManager.timeIntMgr.setIntervalStartYear(i, e.target.value);
-  const handleJumpChange = e => appManager.timeIntMgr.setIntervalJump(i, e.target.checked);
-  const handleChangeInIntervalChange = e => appManager.timeIntMgr.setIntervalChangeInInterval(i, e.target.checked);
-  const handleDiffByCD4Change = e => appManager.timeIntMgr.setIntervalDiffByCD4(i, e.target.checked);
+  const handleStartYearChange = e => appManager.modelMgr.timeIntMgr.setIntervalStartYear(i, e.target.value);
+  const handleJumpChange = e => appManager.modelMgr.timeIntMgr.setIntervalJump(i, e.target.checked);
+  const handleChangeInIntervalChange = e => appManager.modelMgr.timeIntMgr.setIntervalChangeInInterval(i, e.target.checked);
+  const handleDiffByCD4Change = e => appManager.modelMgr.timeIntMgr.setIntervalDiffByCD4(i, e.target.checked);
 
   let startYearWidget = null;
   if (i === 0) {

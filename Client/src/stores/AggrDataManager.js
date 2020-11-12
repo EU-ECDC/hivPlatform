@@ -45,6 +45,10 @@ export default class AggrDataManager {
   setDataFiles = dataFiles => {
     this.dataFiles = EnsureArray(dataFiles).sort((a, b) => a.name < b.name ? -1 : 1);
     this.dataFileNameToIdxMap = new Map(this.dataFiles.map((el, i) => [el.name, i]));
+
+    const minYear = Math.min.apply(Infinity, this.dataFilesNonDead.map(el => el.years[0]));
+    const maxYear = Math.max.apply(-Infinity, this.dataFilesNonDead.map(el => el.years[1]));
+    this.setDataFileYears('OTHER', [minYear, maxYear]);
   }
   setDataFileUse = (name, use) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].use = use;
   setDataFileYears = (name, years) => {

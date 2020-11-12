@@ -5,6 +5,7 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 appMgr$ReadCaseBasedData(fileName = 'D:/VirtualBox_Shared/dummy_miss1.zip')
 appMgr$ReadAggregatedData(fileName = 'D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+
 appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
 # appMgr$ApplyOriginGrouping(type = 'REPCOUNTRY + UNK + OTHER')

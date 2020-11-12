@@ -23,7 +23,7 @@ const TabModellingAdvanced = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <AdvancedParameters />
+          <AdvancedParameters appManager={appManager} />
         </Grid>
       </Grid>
     </TabPanel>

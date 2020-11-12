@@ -10,7 +10,6 @@ import SummaryDataManager from './SummaryDataManager';
 import AdjustmentsManager from './AdjustmentsManager';
 import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
-import TimeIntervalsManager from './TimeIntervalsManager';
 import ModelsManager from './ModelsManager';
 
 configure({
@@ -29,7 +28,6 @@ export default class AppManager {
   adjustMgr = null;
   popMgr = null;
   popCombMgr = null;
-  timeIntMgr = null;
   modelMgr = null
 
   shinyState = 'DISCONNECTED';
@@ -147,10 +145,30 @@ export default class AppManager {
         this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
         break;
       case 'MODELS_PARAMS_SET':
-        let minYear = event.Payload.Params.minYear;
-        let maxYear = event.Payload.Params.maxYear;
-        let timeIntervals = event.Payload.Params.timeIntervals;
-        this.timeIntMgr.setIntervals(minYear, maxYear, timeIntervals);
+        this.modelMgr.setMinYear(event.Payload.Params.minYear);
+        this.modelMgr.setMaxYear(event.Payload.Params.maxYear);
+        this.modelMgr.setMinFitPos(event.Payload.Params.minFitPos);
+        this.modelMgr.setMaxFitPos(event.Payload.Params.maxFitPos);
+        this.modelMgr.setMinFitCD4(event.Payload.Params.minFitCD4);
+        this.modelMgr.setMaxFitCD4(event.Payload.Params.maxFitCD4);
+        this.modelMgr.setMinFitAIDS(event.Payload.Params.minFitAIDS);
+        this.modelMgr.setMaxFitAIDS(event.Payload.Params.maxFitAIDS);
+        this.modelMgr.setMinFitHIVAIDS(event.Payload.Params.minFitHIVAIDS);
+        this.modelMgr.setMaxFitHIVAIDS(event.Payload.Params.maxFitHIVAIDS);
+        this.modelMgr.setFullData(event.Payload.Params.fullData);
+        this.modelMgr.setKnotsCount(event.Payload.Params.knotsCount);
+        this.modelMgr.setStartIncZero(event.Payload.Params.startIncZero);
+        this.modelMgr.setMaxIncCorr(event.Payload.Params.maxIncCorr);
+        this.modelMgr.setDistributionFit(event.Payload.Params.distributionFit);
+        this.modelMgr.setDelta4Fac(event.Payload.Params.delta4Fac);
+        this.modelMgr.setCountry(event.Payload.Params.country);
+        this.modelMgr.setRDisp(event.Payload.Params.rDisp);
+        this.modelMgr.setSplineType(event.Payload.Params.splineType);
+        this.modelMgr.timeIntMgr.setIntervals(
+          event.Payload.Params.minYear,
+          event.Payload.Params.maxYear,
+          event.Payload.Params.timeIntervals
+        );
         break;
       case 'MODELS_RUN_STARTED':
         this.modelMgr.setModelsRunProgress(1);
@@ -189,7 +207,6 @@ export default class AppManager {
     this.adjustMgr = new AdjustmentsManager(this);
     this.popMgr = new PopulationsManager(this);
     this.popCombMgr = new PopCombinationsManager(this);
-    this.timeIntMgr = new TimeIntervalsManager(this);
     this.modelMgr = new ModelsManager(this);
 
     makeObservable(this, {

@@ -15,7 +15,7 @@ const DiagnosisRates = (props) => {
   const { appManager } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const intervals = appManager.timeIntMgr.intervalsJS;
+  const intervals = appManager.modelMgr.timeIntMgr.intervalsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
@@ -47,11 +47,11 @@ const DiagnosisRates = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.timeIntMgr.addEmptyInterval();
+    appManager.modelMgr.timeIntMgr.addEmptyInterval();
   };
 
   const handleDeleteClick = () => {
-    appManager.timeIntMgr.removeIntervals(selected);
+    appManager.modelMgr.timeIntMgr.removeIntervals(selected);
     setSelected([]);
   }
 
