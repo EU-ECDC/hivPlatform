@@ -23,6 +23,61 @@ const CombinePopulationsRow = (props) => {
     appManager.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
   };
 
+  let name = null;
+  let caseBasedPopulations = null;
+  let aggrPopulations = null;
+  if (el.name === 'ALL') {
+    name = 'ALL'
+    caseBasedPopulations = 'All data available'
+    aggrPopulations = 'All data available'
+  } else {
+    name = <Input
+      style={{ width: '100%', fontSize: '0.75rem' }}
+      value={el.name}
+      onChange={handleCombinationNameChange}
+    />
+    caseBasedPopulations = <Select
+      multiple
+      renderValue={selected => (
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {selected.map(value => (
+            <Chip key={value} label={value} style={{ margin: 2 }} />
+          ))}
+        </div>
+      )}
+      value={el.populations}
+      style={{ width: '100%', fontSize: '0.75rem' }}
+      onChange={handlePopulationsChange}
+      disableUnderline
+    >
+      {
+        appManager.popMgr.definedPopulations.map((el2, j) => (
+          <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
+        ))
+      }
+    </Select>
+    aggrPopulations = <Select
+      multiple
+      renderValue={selected => (
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {selected.map(value => (
+            <Chip key={value} label={value} style={{ margin: 2 }} />
+          ))}
+        </div>
+      )}
+      value={el.aggrPopulations}
+      onChange={handleAggrPopulationsChange}
+      style={{ width: '100%', fontSize: '0.75rem' }}
+      disableUnderline
+    >
+      {
+        appManager.aggrDataMgr.populationNames.map((el2, j) => (
+          <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
+        ))
+      }
+    </Select>
+  }
+
   return (
     <TableRow hover role='checkbox'>
       <TableCell padding='checkbox'>
@@ -34,55 +89,13 @@ const CombinePopulationsRow = (props) => {
         />
       </TableCell>
       <TableCell id={`labelId${i}`} scope='row' padding='none'>
-        <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
-          value={el.name}
-          onChange={handleCombinationNameChange}
-        />
+        {name}
       </TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        <Select
-          multiple
-          renderValue={selected => (
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {selected.map(value => (
-                <Chip key={value} label={value} style={{ margin: 2 }} />
-              ))}
-            </div>
-          )}
-          value={el.populations}
-          style={{ width: '100%', fontSize: '0.75rem' }}
-          onChange={handlePopulationsChange}
-          disableUnderline
-        >
-          {
-            appManager.popMgr.definedPopulations.map((el2, j) => (
-              <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
-            ))
-          }
-        </Select>
+        {caseBasedPopulations}
       </TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        <Select
-          multiple
-          renderValue={selected => (
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {selected.map(value => (
-                <Chip key={value} label={value} style={{ margin: 2 }} />
-              ))}
-            </div>
-          )}
-          value={el.aggrPopulations}
-          onChange={handleAggrPopulationsChange}
-          style={{ width: '100%', fontSize: '0.75rem' }}
-          disableUnderline
-        >
-          {
-            appManager.aggrDataMgr.populationNames.map((el2, j) => (
-              <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
-            ))
-          }
-        </Select>
+        {aggrPopulations}
       </TableCell>
     </TableRow>
   )

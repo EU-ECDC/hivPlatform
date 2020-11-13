@@ -65,7 +65,8 @@ export default class AppManager {
         { title: 'Populations' },
         { title: 'Inputs' },
         { title: 'Advanced' },
-        { title: 'Run' },
+        { title: 'Run Main Fit' },
+        { title: 'Run Bootstrap' },
         { title: 'Tables and charts' }
       ],
       activeSubStepId: 0

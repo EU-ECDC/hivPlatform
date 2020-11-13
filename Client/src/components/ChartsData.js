@@ -571,3 +571,62 @@ export const defaultRepDelChartOptions = {
     }
   }
 };
+
+export const defaultHIVOutput1ChartOptions = {
+  chart: {
+    parentHeightOffset: 15
+  },
+  dataLabels: {
+    enabled: false
+  },
+  annotations: {
+    xaxis: [{
+      borderColor: '#69b023',
+      strokeDashArray: 0,
+      label: {
+        orientation: 'horizontal',
+        textAnchor: 'start',
+        borderColor: '#69b023',
+        style: {
+          color: 'white',
+          background: '#69b023'
+        }
+      }
+    }]
+  },
+  stroke: {
+    width: 2,
+    curve: 'smooth',
+  },
+  xaxis: {
+    type: 'numeric',
+    //categories: [0, 10, 20, 30, 40, 50, 60],
+    title: {
+      text: 'Year',
+      style: {
+        fontWeight: 'normal'
+      },
+      offsetY: 10
+    },
+    tickPlacement: 'on',
+    tickAmount: 20,
+    labels: {
+      formatter: value => (value).toFixed(2)
+    }
+  },
+  yaxis: {
+    min: 0,
+    title: {
+      text: 'Count',
+      style: {
+        fontWeight: 'normal'
+      },
+      offsetY: 10
+    },
+    labels: {
+      minWidth: 50,
+      maxWidth: 50,
+      formatter: value => (value).toFixed(2)
+    }
+  }
+};

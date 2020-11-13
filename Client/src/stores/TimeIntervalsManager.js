@@ -6,6 +6,11 @@ export default class TimeIntervalsManager {
 
   constructor(mgr) {
     this.parentMgr = mgr;
+    this.createIntervals(
+      this.parentMgr.minYear,
+      this.parentMgr.maxYear,
+      5
+    )
     makeObservable(this, {
       intervals: observable,
       minYear: observable,
@@ -32,6 +37,7 @@ export default class TimeIntervalsManager {
 
   setMinYear = minYear => {
     this.minYear = minYear;
+    this.intervals.forEach(el => el.startYear = Math.max(this.minYear, el.startYear));
     this.reinitializeEndYears();
   };
 
@@ -88,6 +94,9 @@ export default class TimeIntervalsManager {
   };
 
   removeIntervals = selectedIds => {
+    if (selectedIds.length === this.intervals.length) {
+      selectedIds = RemoveElementsFromArray(selectedIds, 0);
+    }
     this.intervals = RemoveElementsFromArray(this.intervals, selectedIds);
     this.reinitializeEndYears();
   };
@@ -115,7 +124,7 @@ export default class TimeIntervalsManager {
   };
 
   reinitializeEndYears = () => {
-    let numIntervals = this.intervals.length;
+    const numIntervals = this.intervals.length;
     if (numIntervals > 0) {
       this.intervals[0].startYear = this.minYear;
       this.intervals.sort((a, b) => a.startYear < b.startYear ? -1 : 1);
@@ -127,5 +136,5 @@ export default class TimeIntervalsManager {
       }
       this.intervals[numIntervals - 1].endYear = this.maxYear;
     }
-  }
+  };
 }

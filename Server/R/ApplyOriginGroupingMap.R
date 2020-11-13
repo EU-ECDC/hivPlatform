@@ -17,7 +17,7 @@ ApplyOriginGroupingMap <- function(inputData, map)
 {
   data <- copy(inputData$Table)
   if (length(map) > 0) {
-    dtMap <- ConvertOriginGroupingListToDt(map)
+    dtMap <- ConvertListToDt(map)
   } else {
     origin <- data[, sort(unique(FullRegionOfOrigin))]
     dtMap <- data.table(

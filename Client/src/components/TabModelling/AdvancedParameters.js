@@ -75,6 +75,8 @@ const AdvancedParameters = (props) => {
 
   const handleCountryChange = e => appManager.modelMgr.setCountry(e.target.value);
 
+  const handleSelectedPopCombName = e => appManager.popCombMgr.setSelectedCombinationName(e.target.value);
+
   return (
     <Paper>
       <Grid container>
@@ -236,6 +238,48 @@ const AdvancedParameters = (props) => {
             </Grid>
           </Box>
         </Grid>
+        <Grid item xs={12}>
+          <Box style={{ padding: 10 }}>
+            <Typography variant='overline'>11. Population</Typography>
+            <Grid container>
+              <Grid item xs={6}>Selected population</Grid>
+              <Grid item xs={6}>
+                <Select
+                  value={appManager.popCombMgr.selectedCombinationName}
+                  onChange={handleSelectedPopCombName}
+                  style={{ width: '100%', fontSize: '0.75rem' }}
+                >
+                  {appManager.popCombMgr.combinationsNames.map((combName, i) =>
+                    <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
+                  )}
+                </Select>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box style={{ padding: 10 }}>
+            <Typography variant='overline'>12. Bootstrap</Typography>
+            <Grid container>
+              <Grid item xs={6}>Number of iterations</Grid>
+              <Grid item xs={6}>
+                <Input
+                  style={{ width: '100%', fontSize: '0.75rem' }}
+                  defaultValue={100}
+                  type='number'
+                />
+              </Grid>
+              <Grid item xs={6}>Type</Grid>
+              <Grid item xs={6}>
+                <RadioGroup row defaultValue='CASE-BASED'>
+                  <FormControlLabel value='CASE-BASED' control={<Radio color="primary" />} label='Case-based' />
+                  <FormControlLabel value='AGGREGATED' control={<Radio color="primary" />} label='Aggregated' />
+                </RadioGroup>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+
       </Grid>
     </Paper>
   )

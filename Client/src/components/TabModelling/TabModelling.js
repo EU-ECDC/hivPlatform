@@ -3,7 +3,8 @@ import { observer } from 'mobx-react';
 import TabModellingPopulation from './TabModellingPopulation';
 import TabModellingInputs from './TabModellingInputs';
 import TabModellingAdvanced from './TabModellingAdvanced';
-import TabModellingRun from './TabModellingRun';
+import TabModellingRunMain from './TabModellingRunMain';
+import TabModellingRunBootstrap from './TabModellingRunBootstrap';
 import TabModellingTables from './TabModellingTables';
 
 const TabModelling = (props) => {
@@ -16,8 +17,9 @@ const TabModelling = (props) => {
       {activeSubStepId === 0 && <TabModellingPopulation {...props} />}
       {activeSubStepId === 1 && <TabModellingInputs {...props} />}
       {activeSubStepId === 2 && <TabModellingAdvanced {...props} />}
-      {activeSubStepId === 3 && <TabModellingRun {...props} />}
-      {activeSubStepId === 4 && <TabModellingTables {...props} />}
+      {activeSubStepId === 3 && <TabModellingRunMain {...props} />}
+      {activeSubStepId === 4 && <TabModellingRunBootstrap {...props} />}
+      {activeSubStepId === 5 && <TabModellingTables {...props} />}
     </React.Fragment>
   );
 };

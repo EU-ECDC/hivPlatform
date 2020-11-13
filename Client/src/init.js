@@ -185,42 +185,42 @@ export default appManager => {
   });
 
   // 9. Read model parameters
-  appManager.onShinyEvent({
-    Type: "MODELS_PARAMS_SET",
-    Status: "SUCCESS",
-    Payload: {
-      Params: {
-        "minYear": 1980,
-        "maxYear": 2016,
-        "minFitPos": 1979,
-        "maxFitPos": 1979,
-        "minFitCD4": 1984,
-        "maxFitCD4": 2016,
-        "minFitAIDS": 1984,
-        "maxFitAIDS": 1995,
-        "minFitHIVAIDS": 1996,
-        "maxFitHIVAIDS": 2016,
-        "country": "NL",
-        "knotsCount": 6,
-        "startIncZero": true,
-        "distributionFit": "NEGATIVE_BINOMIAL",
-        "rDisp": 50,
-        "delta4Fac": 0,
-        "maxIncCorr": true,
-        "splineType": "B-SPLINE",
-        "fullData": true,
-        "timeIntervals": [
-          { "startYear": 1980, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 1984 },
-          { "startYear": 1984, "jump": true,  "changeInInterval": false, "diffByCD4": false, "endYear": 1996 },
-          { "startYear": 1996, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2000 },
-          { "startYear": 2000, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2005 },
-          { "startYear": 2005, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2010 },
-          { "startYear": 2010, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2016 }
-        ]
-      }
-    }
-  });
-  appManager.modelMgr.setModelsParamFileName('Partial data model.xml');
+  // appManager.onShinyEvent({
+  //   Type: "MODELS_PARAMS_SET",
+  //   Status: "SUCCESS",
+  //   Payload: {
+  //     Params: {
+  //       "minYear": 1980,
+  //       "maxYear": 2016,
+  //       "minFitPos": 1979,
+  //       "maxFitPos": 1979,
+  //       "minFitCD4": 1984,
+  //       "maxFitCD4": 2016,
+  //       "minFitAIDS": 1984,
+  //       "maxFitAIDS": 1995,
+  //       "minFitHIVAIDS": 1996,
+  //       "maxFitHIVAIDS": 2016,
+  //       "country": "NL",
+  //       "knotsCount": 6,
+  //       "startIncZero": true,
+  //       "distributionFit": "NEGATIVE_BINOMIAL",
+  //       "rDisp": 50,
+  //       "delta4Fac": 0,
+  //       "maxIncCorr": true,
+  //       "splineType": "B-SPLINE",
+  //       "fullData": true,
+  //       "timeIntervals": [
+  //         { "startYear": 1980, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 1984 },
+  //         { "startYear": 1984, "jump": true,  "changeInInterval": false, "diffByCD4": false, "endYear": 1996 },
+  //         { "startYear": 1996, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2000 },
+  //         { "startYear": 2000, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2005 },
+  //         { "startYear": 2005, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2010 },
+  //         { "startYear": 2010, "jump": false, "changeInInterval": false, "diffByCD4": false, "endYear": 2016 }
+  //       ]
+  //     }
+  //   }
+  // });
+  // appManager.modelMgr.setModelsParamFileName('Partial data model.xml');
 
   // 10. Model run log set
   appManager.onShinyEvent({
