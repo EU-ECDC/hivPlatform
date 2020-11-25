@@ -1,7 +1,9 @@
-import { observable, action, computed, makeObservable, toJS } from 'mobx';
+import { observable, action, computed, makeObservable } from 'mobx';
 import EnsureArray from '../utilities/EnsureArray';
+import { nonGroupedDataNames } from '../settings'
 
 export default class AggrDataManager {
+
   rootMgr = null;
   fileName = null;
   fileSize = null;
@@ -19,11 +21,14 @@ export default class AggrDataManager {
       fileSize: observable,
       fileType: observable,
       filePath: observable,
-      dataFiles: observable,
       populationNames: observable,
       fileUploadProgress: observable,
+      dataFiles: observable,
+      dataFilesGrouped: computed,
+      dataFilesNonGrouped: computed,
       dataNames: computed,
-      dataNamesNonDead: computed,
+      dataNamesGrouped: computed,
+      dataNamesNonGrouped: computed,
       dataNamesString: computed,
       populationNamesString: computed,
       setFileName: action,
@@ -43,38 +48,42 @@ export default class AggrDataManager {
   setFileType = fileType => this.fileType = fileType;
   setFilePath = filePath => this.filePath = filePath;
   setDataFiles = dataFiles => {
-    this.dataFiles = EnsureArray(dataFiles).sort((a, b) => a.name < b.name ? -1 : 1);
+    this.dataFiles = EnsureArray(dataFiles);
     this.dataFileNameToIdxMap = new Map(this.dataFiles.map((el, i) => [el.name, i]));
 
-    const minYear = Math.min.apply(Infinity, this.dataFilesNonDead.map(el => el.years[0]));
-    const maxYear = Math.max.apply(-Infinity, this.dataFilesNonDead.map(el => el.years[1]));
-    this.setDataFileYears('OTHER', [minYear, maxYear]);
+    const minYear = Math.min.apply(Infinity, this.dataFilesGrouped.map(el => el.years[0]));
+    const maxYear = Math.max.apply(-Infinity, this.dataFilesGrouped.map(el => el.years[1]));
+    this.setDataFileYears('GROUPED', [minYear, maxYear]);
   }
   setDataFileUse = (name, use) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].use = use;
   setDataFileYears = (name, years) => {
-    if (name.toUpperCase() === 'DEAD') {
+    if (this.dataNamesNonGrouped.includes(name)) {
       this.dataFiles[this.dataFileNameToIdxMap.get(name)].years = years;
     } else {
-      this.dataFilesNonDead.forEach(el => el.years = years);
+      this.dataFilesGrouped.forEach(el => el.years = years);
     }
   }
   setPopulationNames = populationNames => this.populationNames = EnsureArray(populationNames).sort();
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
 
-  get dataFilesDead() {
-    return this.dataFiles.filter(el => el.name.toUpperCase() === 'DEAD');
+  get dataFilesNonGrouped() {
+    return this.dataFiles.filter(el => nonGroupedDataNames.includes(el.name.toUpperCase()));
   };
 
-  get dataFilesNonDead() {
-    return this.dataFiles.filter(el => el.name.toUpperCase() !== 'DEAD');
+  get dataFilesGrouped() {
+    return this.dataFiles.filter(el => !nonGroupedDataNames.includes(el.name.toUpperCase()));
   };
 
   get dataNames() {
     return this.dataFiles.map(el => el.name);
   };
 
-  get dataNamesNonDead() {
-    return this.dataFilesNonDead.map(el => el.name);
+  get dataNamesGrouped() {
+    return this.dataFilesGrouped.map(el => el.name);
+  };
+
+  get dataNamesNonGrouped() {
+    return this.dataFilesNonGrouped.map(el => el.name);
   };
 
   get dataNamesString() {

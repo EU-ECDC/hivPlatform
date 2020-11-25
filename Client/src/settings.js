@@ -13,6 +13,9 @@ export const VERSION = version;
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;
 
+// Vector of names of aggregated data sets to not group in the Modelling -> Populations tab
+export const nonGroupedDataNames = ['DEAD', 'AIDS'];
+
 // List of stages
 export const STAGES = [
   'START',

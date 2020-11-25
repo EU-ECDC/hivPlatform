@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  appManager.setActiveSubStepId(4, 2);
+  appManager.setActiveSubStepId(4, 0);
 
   // 1a. Upload case-based data
   appManager.onShinyEvent({
@@ -20,8 +20,8 @@ export default appManager => {
 
   // 2a. Upload aggregated data
   appManager.onShinyEvent({
-    Type: "AGGR_DATA_READ",
-    Status: "SUCCESS",
+    Type: 'AGGR_DATA_READ',
+    Status: 'SUCCESS',
     Payload: {
       DataFiles: [
         { name: 'Dead', use: true, years: [1990, 2015] },

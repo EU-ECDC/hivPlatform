@@ -17,7 +17,7 @@ const AggregatedDataPopulationsRow = (props) => {
   };
 
   let lastColumn = null;
-  if (i === 0) {
+  if (rowCount === 1 || (rowCount > 1 && i === 0)) {
     lastColumn =
       <TableCell rowSpan={rowCount}>
         <Slider
