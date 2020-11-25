@@ -27,9 +27,16 @@ const CombinePopulationsRow = (props) => {
   let caseBasedPopulations = null;
   let aggrPopulations = null;
   if (el.name === 'ALL') {
-    name = 'ALL'
-    caseBasedPopulations = 'All data available'
-    aggrPopulations = 'All data available'
+    name = 'ALL';
+    caseBasedPopulations = 'All data available';
+    aggrPopulations =
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {
+          appManager.aggrDataMgr.populationNames.map((value, i) => (
+            <Chip key={value} label={value} style={{ margin: 2 }} />
+          ))
+        }
+      </div>
   } else {
     name = <Input
       style={{ width: '100%', fontSize: '0.75rem' }}

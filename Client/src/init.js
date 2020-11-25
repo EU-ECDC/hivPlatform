@@ -34,7 +34,7 @@ export default appManager => {
         { name: 'HIV_CD4_4', use: true, years: [1992, 2013] }
 
       ],
-      PopulationNames: ['pop_0', 'pop_1', 'pop_2'],
+      PopulationNames: ['pop_0', 'pop_1'],
     }
   });
 

@@ -16,7 +16,9 @@ export default class PopCombinationsManager {
       setSelectedCombinationName: action,
       setCombinationPopulations: action,
       setAggrCombinationPopulations: action,
-      filterPopulations: action,
+      syncPopulations: action,
+      syncAggrPopulations: action,
+      combinationAll: computed,
       combinationsJS: computed,
       combinationsNames: computed,
       aggrCombinationsJS: computed,
@@ -25,16 +27,22 @@ export default class PopCombinationsManager {
     this.combinations.push({
       name: 'ALL',
       populations: [],
-      aggrPopulations: []
+      aggrPopulations: [],
+    });
+
+    this.setSelectedCombinationName('ALL');
+
+    autorun(() => {
+      this.syncPopulations(this.parentMgr.popMgr.definedPopulations);
     });
 
     autorun(() => {
-      this.filterPopulations(this.parentMgr.popMgr.definedPopulations);
+      this.syncAggrPopulations(this.parentMgr.aggrDataMgr.populationNames);
     });
   }
 
   combinations = [];
-  selectedCombinationName = 'ALL';
+  selectedCombinationName = '';
 
   addEmptyCombination = () => {
     this.combinations.push({
@@ -64,8 +72,17 @@ export default class PopCombinationsManager {
     this.combinations[i].aggrPopulations = populations;
   };
 
-  filterPopulations = (definedPopulations) =>
+  syncPopulations = (definedPopulations) => {
     this.combinations.forEach(el => { el.populations = el.populations.filter(value => definedPopulations.includes(value)) });
+  };
+
+  syncAggrPopulations = (definedPopulations) => {
+    this.combinationAll.forEach(el => el.aggrPopulations = definedPopulations);
+  };
+
+  get combinationAll() {
+    return this.combinations.filter(el => el.name.toUpperCase() === 'ALL');
+  };
 
   get combinationsJS() {
     return toJS(this.combinations);
