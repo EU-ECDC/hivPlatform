@@ -1,17 +1,21 @@
 import { observable, computed, action, toJS, makeObservable } from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import GenerateId from '../utilities/GenerateId';
 
 export default class TimeIntervalsManager {
   parentMgr = null;
 
   constructor(mgr) {
     this.parentMgr = mgr;
+    this.id = GenerateId('timeIntervals');
     this.createIntervals(
       this.parentMgr.minYear,
       this.parentMgr.maxYear,
       5
     )
     makeObservable(this, {
+      id: observable,
+      name: observable,
       intervals: observable,
       minYear: observable,
       maxYear: observable,
@@ -20,6 +24,8 @@ export default class TimeIntervalsManager {
       setIntervals: action,
       addEmptyInterval: action,
       removeIntervals: action,
+      setId: action,
+      setName: action,
       setIntervalStartYear: action,
       setIntervalJump: action,
       setIntervalChangeInInterval: action,
@@ -29,11 +35,19 @@ export default class TimeIntervalsManager {
     });
   };
 
+  id = null;
+
+  name = '';
+
   intervals = [];
 
   minYear = null;
 
   maxYear = null;
+
+  setId = id => this.id = id;
+
+  setName = name => this.name = name;
 
   setMinYear = minYear => {
     this.minYear = minYear;

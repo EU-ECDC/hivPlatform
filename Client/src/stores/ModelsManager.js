@@ -1,5 +1,5 @@
 import { observable, action, computed, makeObservable, autorun } from 'mobx';
-import TimeIntervalsManager from './TimeIntervalsManager';
+import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 
 export default class ModelsManager {
@@ -8,7 +8,7 @@ export default class ModelsManager {
 
   constructor(mgr) {
     this.parentMgr = mgr;
-    this.timeIntMgr = new TimeIntervalsManager(this);
+    this.timeIntCollMgr = new TimeIntervalsCollectionManager(this);
 
     makeObservable(this, {
       modelsParamFile: observable,
@@ -74,7 +74,6 @@ export default class ModelsManager {
     autorun(() => {
       this.timeIntMgr.setMaxYear(this.maxYear);
     });
-
   };
 
   // File details
