@@ -12,10 +12,12 @@ import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
 const DiagnosisRates = (props) => {
 
-  const { appManager } = props;
+  const { timeIntCollMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const intervals = appManager.modelMgr.timeIntMgr.intervalsJS;
+  const collection = timeIntCollMgr.selectedCollection;
+
+  const intervals = collection.intervals;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
@@ -47,11 +49,11 @@ const DiagnosisRates = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.modelMgr.timeIntMgr.addEmptyInterval();
+    collection.addEmptyInterval();
   };
 
   const handleDeleteClick = () => {
-    appManager.modelMgr.timeIntMgr.removeIntervals(selected);
+    collection.removeIntervals(selected);
     setSelected([]);
   }
 
@@ -85,7 +87,7 @@ const DiagnosisRates = (props) => {
                 key={i}
                 i={i}
                 interval={el}
-                appManager={appManager}
+                collection={collection}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
               />

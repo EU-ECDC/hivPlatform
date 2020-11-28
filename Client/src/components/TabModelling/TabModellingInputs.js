@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,6 +16,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import DiagnosisRates from './DiagnosisRates';
+import DiagnosisRatesSelect from './DiagnosisRatesSelect';
 
 const TabModellingInputs = props => {
   const { appManager } = props;
@@ -67,9 +70,10 @@ const TabModellingInputs = props => {
           <Typography color='textSecondary'>
             Time intervals and diagnosis rates modelling
           </Typography>
+          <DiagnosisRatesSelect timeIntCollMgr={appManager.modelMgr.timeIntCollMgr} />
         </Grid>
         <Grid item xs={9}>
-          <DiagnosisRates appManager={appManager} />
+          <DiagnosisRates timeIntCollMgr={appManager.modelMgr.timeIntCollMgr} />
         </Grid>
       </Grid>
     </TabPanel>

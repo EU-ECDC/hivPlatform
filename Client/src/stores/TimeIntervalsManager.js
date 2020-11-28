@@ -1,18 +1,26 @@
 import { observable, computed, action, toJS, makeObservable } from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 import GenerateId from '../utilities/GenerateId';
+import IsNull from '../utilities/IsNull';
 
 export default class TimeIntervalsManager {
   parentMgr = null;
 
-  constructor(mgr) {
+  constructor(mgr, name, intervals = null) {
     this.parentMgr = mgr;
     this.id = GenerateId('timeIntervals');
-    this.createIntervals(
-      this.parentMgr.minYear,
-      this.parentMgr.maxYear,
-      5
-    )
+    this.name = name;
+    this.minYear = mgr.minYear;
+    this.maxYear = mgr.maxYear;
+    if (IsNull(intervals)) {
+      this.createIntervals(
+        this.minYear,
+        this.maxYear,
+        5
+      )
+    } else {
+      this.intervals = intervals;
+    }
     makeObservable(this, {
       id: observable,
       name: observable,
@@ -73,7 +81,7 @@ export default class TimeIntervalsManager {
       let lastEndYear = minYear;
       for (let i = 0; i < numIntervals; ++i) {
         let startYear = lastEndYear;
-        let step = Math.max(Math.floor((maxYear - startYear) / (numIntervals - i)), 1);
+        const step = Math.max(Math.floor((maxYear - startYear) / (numIntervals - i)), 1);
         let endYear = Math.min(startYear + step, maxYear);
 
         if ((i === 0) && (firstIntervalEndYear > 0) && (firstIntervalEndYear >= minYear)) {

@@ -4,7 +4,7 @@ import LoadTxtFile from '../utilities/LoadTxtFile';
 
 export default class ModelsManager {
   parentMgr = null;
-  timeIntMgr = null;
+  timeIntCollMgr = null;
 
   constructor(mgr) {
     this.parentMgr = mgr;
@@ -68,11 +68,11 @@ export default class ModelsManager {
     });
 
     autorun(() => {
-      this.timeIntMgr.setMinYear(this.minYear);
+      this.timeIntCollMgr.setMinYear(this.minYear);
     });
 
     autorun(() => {
-      this.timeIntMgr.setMaxYear(this.maxYear);
+      this.timeIntCollMgr.setMaxYear(this.maxYear);
     });
   };
 
