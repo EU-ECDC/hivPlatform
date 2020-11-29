@@ -75,8 +75,6 @@ const AdvancedParameters = (props) => {
 
   const handleCountryChange = e => appManager.modelMgr.setCountry(e.target.value);
 
-  const handleSelectedPopCombName = e => appManager.popCombMgr.setSelectedCombinationName(e.target.value);
-
   return (
     <Paper>
       <Grid container>
@@ -240,26 +238,7 @@ const AdvancedParameters = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Box style={{ padding: 10 }}>
-            <Typography variant='overline'>11. Population</Typography>
-            <Grid container>
-              <Grid item xs={6}>Selected population</Grid>
-              <Grid item xs={6}>
-                <Select
-                  value={appManager.popCombMgr.selectedCombinationName}
-                  onChange={handleSelectedPopCombName}
-                  style={{ width: '100%', fontSize: '0.75rem' }}
-                >
-                  {appManager.popCombMgr.combinationsNames.map((combName, i) =>
-                    <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
-                  )}
-                </Select>
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Box style={{ padding: 10 }}>
-            <Typography variant='overline'>12. Bootstrap</Typography>
+            <Typography variant='overline'>11. Bootstrap</Typography>
             <Grid container>
               <Grid item xs={6}>Number of iterations</Grid>
               <Grid item xs={6}>

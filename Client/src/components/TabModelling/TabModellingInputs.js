@@ -39,7 +39,7 @@ const TabModellingInputs = props => {
         <Grid item xs={3}>
           <input style={{ display: 'none' }} id='modelUploadBtn' type='file' onChange={handleModelUploadChange} />
           <label htmlFor='modelUploadBtn'>
-            <Btn><CloudUploadIcon />&nbsp;Upload data</Btn>
+            <Btn><CloudUploadIcon />&nbsp;Upload model</Btn>
           </label>
           <Typography variant='body2' color='textSecondary' style={{ marginTop: 10 }}>
             Parameters loaded from model file override those determined from data.<br />

@@ -6,6 +6,11 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 
@@ -25,6 +30,10 @@ const TabModellingRunMain = props => {
 
   const handleCancelModelsBtnClick = () => {
     appManager.modelMgr.cancelModels();
+  };
+
+  const handleSelectedPopCombName = e => {
+    appManager.popCombMgr.setSelectedCombinationName(e.target.value);
   };
 
   return (
@@ -51,6 +60,18 @@ const TabModellingRunMain = props => {
             Cancel
           </Button>
           <ModelRunProgressBar progress={appManager.modelMgr.modelsRunProgress} />
+          <FormControl style={{ width: '100%', marginTop: 20}}>
+            <Select
+              value={appManager.popCombMgr.selectedCombinationName}
+              onChange={handleSelectedPopCombName}
+              style={{ width: '100%', fontSize: '0.75rem' }}
+            >
+              {appManager.popCombMgr.combinationsNames.map((combName, i) =>
+                <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
+              )}
+            </Select>
+            <FormHelperText>Select population</FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
