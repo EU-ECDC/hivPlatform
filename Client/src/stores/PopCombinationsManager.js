@@ -22,15 +22,16 @@ export default class PopCombinationsManager {
       combinationsJS: computed,
       combinationsNames: computed,
       aggrCombinationsJS: computed,
+      selectedCombination: computed,
     });
 
     this.combinations.push({
-      name: 'ALL',
+      name: 'All',
       populations: [],
       aggrPopulations: [],
     });
 
-    this.setSelectedCombinationName('ALL');
+    this.setSelectedCombinationName('All');
 
     autorun(() => {
       this.syncPopulations(this.parentMgr.popMgr.definedPopulations);
@@ -95,5 +96,9 @@ export default class PopCombinationsManager {
   get aggrCombinationsJS() {
     return toJS(this.aggrCombinations);
   };
+
+  get selectedCombination() {
+    return this.combinations.filter(el => el.name === this.selectedCombinationName)[0];
+  }
 
 }

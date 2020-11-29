@@ -25,7 +25,8 @@ ConvertHIVModelParams <- function(
     FitDistribution = x$distributionFit,
     Delta4Fac = x$delta4Fac,
     Country = x$country,
-    Intervals = intervals
+    Intervals = intervals,
+    PopCombination = x$popCombination
   )
 
   return(params)

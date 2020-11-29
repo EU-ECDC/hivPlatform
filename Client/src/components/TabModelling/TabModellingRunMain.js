@@ -20,7 +20,6 @@ const ModelRunProgressBar = (props) => {
   return <LinearProgress color='secondary' variant='determinate' value={progress} />
 };
 
-
 const TabModellingRunMain = props => {
   const { appManager } = props;
 
@@ -34,6 +33,10 @@ const TabModellingRunMain = props => {
 
   const handleSelectedPopCombName = e => {
     appManager.popCombMgr.setSelectedCombinationName(e.target.value);
+  };
+
+  const handleSelectedCollectionId = e => {
+    appManager.modelMgr.timeIntCollMgr.setSelectedRunCollectionId(e.target.value);
   };
 
   return (
@@ -71,6 +74,18 @@ const TabModellingRunMain = props => {
               )}
             </Select>
             <FormHelperText>Select population</FormHelperText>
+          </FormControl>
+          <FormControl style={{ width: '100%', marginTop: 20 }}>
+            <Select
+              value={appManager.modelMgr.timeIntCollMgr.selectedRunCollectionId}
+              onChange={handleSelectedCollectionId}
+              style={{ width: '100%', fontSize: '0.75rem' }}
+            >
+              {appManager.modelMgr.timeIntCollMgr.collectionsArray.map((el, i) =>
+                <MenuItem key={i} value={el.id} dense>{el.name}</MenuItem>
+              )}
+            </Select>
+            <FormHelperText>Select time intervals and diagnosis rates modelling matrix</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={9}>

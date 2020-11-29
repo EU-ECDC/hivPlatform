@@ -207,6 +207,7 @@ Events <- function(input, output, session, appMgr)
 
   observeEvent(input$runModelBtn, {
     params <- input$runModelBtn
+    print(params)
     appMgr$FitHIVModelToAdjustedData(
       settings = list(Verbose = TRUE),
       parameters = params

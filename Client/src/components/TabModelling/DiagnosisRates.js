@@ -15,7 +15,7 @@ const DiagnosisRates = (props) => {
   const { timeIntCollMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const collection = timeIntCollMgr.selectedCollection;
+  const collection = timeIntCollMgr.selectedEditCollection;
 
   const intervals = collection.intervals;
 

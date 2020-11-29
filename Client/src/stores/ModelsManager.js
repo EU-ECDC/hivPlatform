@@ -159,7 +159,8 @@ export default class ModelsManager {
     country: this.country,
     rDisp: this.rDisp,
     splineType: this.splineType,
-    timeIntervals: this.timeIntMgr.intervals
+    timeIntervals: this.timeIntCollMgr.selectedRunCollection.intervals,
+    popCombination: this.parentMgr.popCombMgr.selectedCombination
   });
   cancelModels = () => this.parentMgr.btnClicked('cancelModelBtn');
 

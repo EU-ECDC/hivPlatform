@@ -11,21 +11,25 @@ export default class TimeIntervalsCollectionManager {
     this.minYear = mgr.minYear;
     this.maxYear = mgr.maxYear;
 
-    this.addCollection();
+    this.addNewCollection();
+    this.selectedRunCollectionId = this.selectedEditCollection.id;
 
     makeObservable(this, {
-      collections: observable,
-      selectedCollectionId: observable,
       minYear: observable,
       maxYear: observable,
+      collections: observable,
+      selectedEditCollectionId: observable,
+      selectedRunCollectionId: observable,
       setMinYear: action,
       setMaxYear: action,
-      addCollection: action,
-      setSelectedCollectionId: action,
-      deleteSelectedCollection: action,
-      selectedCollection: computed,
+      addNewCollection: action,
+      setSelectedEditCollectionId: action,
+      setSelectedRunCollectionId: action,
+      deleteSelectedEditCollection: action,
+      selectedEditCollection: computed,
+      selectedRunCollection: computed,
       collectionsArray: computed,
-      defaultSelected: computed,
+      defaultEditCollectionSelected: computed,
       collectionsNames: computed,
     });
 
@@ -44,13 +48,14 @@ export default class TimeIntervalsCollectionManager {
 
   maxYear = 2016;
 
-  selectedCollectionId = null;
+  selectedEditCollectionId = null;
+  selectedRunCollectionId = null;
 
   setMinYear = minYear => this.minYear = minYear;
 
   setMaxYear = maxYear => this.maxYear = maxYear;
 
-  addCollection = (name = null, intervals = null) => {
+  addNewCollection = (name = null, intervals = null) => {
     if (IsNull(name)) {
       if (this.collections.size === 0) {
         name = 'Default';
@@ -63,31 +68,43 @@ export default class TimeIntervalsCollectionManager {
       collection.id,
       collection
     );
-    this.selectedCollectionId = collection.id;
+    this.selectedEditCollectionId = collection.id;
   };
 
-  deleteSelectedCollection = () => {
-    if (this.collections.has(this.selectedCollectionId)) {
-      this.collections.delete(this.selectedCollectionId);
+  deleteSelectedEditCollection = () => {
+    if (this.collections.has(this.selectedEditCollectionId)) {
+      this.collections.delete(this.selectedEditCollectionId);
     }
     const ids = keys(this.collections);
-    this.selectedCollectionId = ids[ids.length - 1];
+    this.selectedEditCollectionId = ids[ids.length - 1];
   };
 
-  setSelectedCollectionId = id => {
-    this.selectedCollectionId = id;
+  setSelectedEditCollectionId = id => {
+    this.selectedEditCollectionId = id;
   };
 
-  get selectedCollection() {
+  setSelectedRunCollectionId = id => {
+    this.selectedRunCollectionId = id;
+  };
+
+  get selectedEditCollection() {
     let result = null;
-    if (this.collections.has(this.selectedCollectionId)) {
-      result = this.collections.get(this.selectedCollectionId);
+    if (this.collections.has(this.selectedEditCollectionId)) {
+      result = this.collections.get(this.selectedEditCollectionId);
     }
     return result;
   };
 
-  get defaultSelected() {
-    return this.selectedCollection.name.toUpperCase() === 'DEFAULT';
+  get selectedRunCollection() {
+    let result = null;
+    if (this.collections.has(this.selectedRunCollectionId)) {
+      result = this.collections.get(this.selectedRunCollectionId);
+    }
+    return result;
+  };
+
+  get defaultEditCollectionSelected() {
+    return this.selectedEditCollection.name.toUpperCase() === 'DEFAULT';
   };
 
   get collectionsArray() {

@@ -56,6 +56,12 @@ const theme = createMuiTheme({
       marked: {
         marginBottom: 0
       }
+    },
+    MuiSelect: {
+      root: {
+        paddingLeft: 16,
+        paddingBottom: 5
+      }
     }
   }
 });

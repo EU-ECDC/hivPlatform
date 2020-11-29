@@ -7,18 +7,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 const DiagnosisRatesSelect = props => {
   const { timeIntCollMgr } = props;
 
-  const deleteDisabled = timeIntCollMgr.defaultSelected;
+  const deleteDisabled = timeIntCollMgr.defaultEditCollectionSelected;
 
-  const handleAddClick = () => timeIntCollMgr.addCollection();
+  const handleAddClick = () => timeIntCollMgr.addNewCollection();
 
-  const handleDeleteClick = () => timeIntCollMgr.deleteSelectedCollection();
+  const handleDeleteClick = () => timeIntCollMgr.deleteSelectedEditCollection();
 
-  const handleCollectionChange = e => timeIntCollMgr.setSelectedCollectionId(e.target.value);
+  const handleCollectionChange = e => timeIntCollMgr.setSelectedEditCollectionId(e.target.value);
 
   return (
     <React.Fragment>
       <Select
-        value={timeIntCollMgr.selectedCollectionId}
+        value={timeIntCollMgr.selectedEditCollectionId}
         onChange={handleCollectionChange}
         style={{ width: '100%', fontSize: '0.75rem' }}
       >
