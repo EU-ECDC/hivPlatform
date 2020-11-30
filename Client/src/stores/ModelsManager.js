@@ -35,6 +35,10 @@ export default class ModelsManager {
       fullData: observable,
       modelsRunProgress: observable,
       modelsRunLog: observable,
+      bootstrapRunProgress: observable,
+      bootstrapRunLog: observable,
+      bootstrapCount: observable,
+      bootstrapType: observable,
       setModelsParamFile: action,
       setModelsParamFileName: action,
       setMinYear: action,
@@ -56,10 +60,14 @@ export default class ModelsManager {
       setCountry: action,
       setRDisp: action,
       setSplineType: action,
+      setBootstrapCount: action,
+      setBootstrapType: action,
       runModels: action,
       cancelModels: action,
       setModelsRunProgress: action,
       setModelsRunLog: action,
+      runBootstrap: action,
+      cancelBootstrap: action,
       modelsRunInProgress: computed,
     });
 
@@ -101,10 +109,14 @@ export default class ModelsManager {
   country = 'OTHER';
   rDisp = 50;
   splineType = 'B-SPLINE';
+  bootstrapCount = 100;
+  bootstrapType = 'CASE-BASED';
 
   // Run details
   modelsRunProgress = null;
   modelsRunLog = null;
+  bootstrapRunProgress = null;
+  bootstrapRunLog = null;
 
   setModelsParamFile = paramFile => {
     if (paramFile) {
@@ -136,6 +148,8 @@ export default class ModelsManager {
   setCountry = country => this.country = country;
   setRDisp = rDisp => this.rDisp = rDisp;
   setSplineType = splineType => this.splineType = splineType;
+  setBootstrapCount = bootstrapCount => this.bootstrapCount = bootstrapCount;
+  setBootstrapType = bootstrapType => this.bootstrapType = bootstrapType;
 
   setModelsRunProgress = progress => this.modelsRunProgress = progress;
   setModelsRunLog = runLog => this.modelsRunLog = runLog;
@@ -162,10 +176,21 @@ export default class ModelsManager {
     timeIntervals: this.timeIntCollMgr.selectedRunCollection.intervals,
     popCombination: this.parentMgr.popCombMgr.selectedCombination
   });
+
   cancelModels = () => this.parentMgr.btnClicked('cancelModelBtn');
+
+  setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
+
+  setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
+
+  runBootstrap = () => this.parentMgr.btnClicked('runBootstrapBtn', {
+    count: this.bootstrapCount,
+    type: this.bootstrapType
+  });
+
+  cancelBootstrap = () => this.parentMgr.btnClicked('cancelBootstrapBtn');
 
   get modelsRunInProgress() {
     return this.modelsRunProgress !== null;
   };
-
 }

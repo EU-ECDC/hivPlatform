@@ -79,10 +79,6 @@ export default class AppManager {
 
   mode = 'NONE';
 
-  bootstrapRunProgress = null;
-
-  bootstrapRunLog = null;
-
   // Shiny custom event handlers
   onShinyEvent = event => {
     console.log(event);
@@ -182,15 +178,15 @@ export default class AppManager {
         this.notificationsMgr.setMsg('Model run finished');
         break;
       case 'BOOTSTRAP_RUN_STARTED':
-        this.setBootstrapRunLog(event.Payload.RunLog);
-        this.setBootstrapRunProgress(1);
+        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
+        this.modelMgr.setBootstrapRunProgress(1);
         break;
       case 'BOOTSTRAP_RUN_PROGRESSES':
-        this.setBootstrapRunProgress(event.Payload.Progress);
+        this.modelMgr.setBootstrapRunProgress(event.Payload.Progress);
         break;
       case 'BOOTSTRAP_RUN_FINISHED':
-        this.setBootstrapRunLog(event.Payload.RunLog);
-        this.setBootstrapRunProgress(null);
+        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
+        this.modelMgr.setBootstrapRunProgress(null);
         this.notificationsMgr.setMsg('Bootstrap run finished');
         break
     };
@@ -216,15 +212,11 @@ export default class AppManager {
       steps: observable,
       activeStepId: observable,
       mode: observable,
-      bootstrapRunProgress: observable,
-      bootstrapRunLog: observable,
       shinyReady: computed,
       stepsTitles: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
       setMode: action,
-      setBootstrapRunProgress: action,
-      setBootstrapRunLog: action,
       unbindShinyInputs: action,
       bindShinyInputs: action,
       btnClicked: action,
@@ -263,9 +255,6 @@ export default class AppManager {
     this.steps[0].completed = true;
     this.setActiveStepId(1);
   };
-
-  setBootstrapRunProgress = progress => this.bootstrapRunProgress = progress;
-  setBootstrapRunLog = runLog => this.bootstrapRunLog = runLog;
 
   unbindShinyInputs = () => {
     if (this.shinyReady) {

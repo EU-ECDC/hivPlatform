@@ -247,26 +247,32 @@ Events <- function(input, output, session, appMgr)
 
 
   observeEvent(input$runBootstrapBtn, {
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'BOOTSTRAP_RUN_STARTED',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = 'Bootstrap run started'
-      )
-    ))
+    params <- input$runBootstrapBtn
+    print(params)
+    # appMgr$SendEventToReact('shinyHandler', list(
+    #   Type = 'BOOTSTRAP_RUN_STARTED',
+    #   Status = 'SUCCESS',
+    #   Payload = list(
+    #     RunLog = 'Bootstrap run started'
+    #   )
+    # ))
+    #
+    # runLog <- capture.output({
+    #   appMgr$FitHIVModelToBootstrapData(bsCount = 5, verbose = FALSE)
+    #   appMgr$ComputeHIVBootstrapStatistics()
+    # })
+    # runLog <- paste(runLog, collapse = '\n')
+    #
+    # appMgr$SendEventToReact('shinyHandler', list(
+    #   Type = 'BOOTSTRAP_RUN_FINISHED',
+    #   Status = 'SUCCESS',
+    #   Payload = list(
+    #     RunLog = runLog
+    #   )
+    # ))
+  })
 
-    runLog <- capture.output({
-      appMgr$FitHIVModelToBootstrapData(bsCount = 5, verbose = FALSE)
-      appMgr$ComputeHIVBootstrapStatistics()
-    })
-    runLog <- paste(runLog, collapse = '\n')
-
-    appMgr$SendEventToReact('shinyHandler', list(
-      Type = 'BOOTSTRAP_RUN_FINISHED',
-      Status = 'SUCCESS',
-      Payload = list(
-        RunLog = runLog
-      )
-    ))
+  observeEvent(input$cancelBootstrapBtn, {
+    print('CANCEL')
   })
 }
