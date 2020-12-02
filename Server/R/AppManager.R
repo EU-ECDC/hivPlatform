@@ -44,7 +44,11 @@ AppManager <- R6::R6Class(
         CaseBasedData = NULL,
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
+        CaseBasedAggrData = NULL,
+
         AggregatedData = NULL,
+
+        CombinedAggrData = NULL,
 
         HIVModelParameters = NULL,
         HIVModelResults = NULL,
@@ -92,15 +96,13 @@ AppManager <- R6::R6Class(
 
     # 3. Read HIV model parameters ---------------------------------------------------------------------
     ReadHIVModelParameters = function(fileName) {
-      private$Catalogs$AggregatedDataPath <- fileName
-      private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
 
-      PrintAlert('Aggregated data file {.file {fileName}} loaded')
+      PrintAlert('Not implemented')
 
       return(invisible(self))
     },
 
-    # 2. Apply attribute mapping -------------------------------------------------------------------
+    # 4. Apply attribute mapping -------------------------------------------------------------------
     ApplyAttributesMappingToCaseBasedData = function(attrMapping) {
       if (missing(attrMapping)) {
         private$DetermineAttributeMapping()
@@ -119,7 +121,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 3. Pre-process case-based data ---------------------------------------------------------------
+    # 5. Pre-process case-based data ---------------------------------------------------------------
     PreProcessCaseBasedData = function() {
       dt <- PreProcessInputDataBeforeSummary(private$Catalogs$PreProcessedCaseBasedData)
       PreProcessInputDataBeforeAdjustments(dt$Table)
@@ -129,12 +131,14 @@ AppManager <- R6::R6Class(
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
       private$Catalogs$OriginDistribution <- GetOriginDistribution(dt$Table)
 
+      private$PrepareCaseBasedAggrData()
+
       PrintAlert('Case-based data has been pre-processed')
 
       return(invisible(self))
     },
 
-    # 4. Apply origin grouping ---------------------------------------------------------------------
+    # 6. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(groups, type) {
       if (missing(groups)) {
         groups <- GetOriginGroupingPreset(type, private$Catalogs$OriginDistribution)
@@ -157,7 +161,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 4. Create plots ------------------------------------------------------------------------------
+    # 7. Create plots ------------------------------------------------------------------------------
     GetSummaryData = function() {
       plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
 
@@ -231,7 +235,7 @@ AppManager <- R6::R6Class(
       return(summaryData)
     },
 
-    # 5. Adjust case-based data --------------------------------------------------------------------
+    # 8. Adjust case-based data --------------------------------------------------------------------
     AdjustCaseBasedData = function(adjustmentSpecs) {
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
@@ -281,9 +285,9 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 6. Fit HIV model to adjusted data ------------------------------------------------------------
+    # 9. Fit HIV model to adjusted data ------------------------------------------------------------
     FitHIVModelToAdjustedData = function(settings = list(), parameters = list()) {
-      aggregatedDataSets <- isolate(private$Catalogs$AggregatedData)
+      aggregatedDataSets <- isolate(private$Catalogs$CaseBasedAggrData)
 
       private$Catalogs$ModelTask <- Task$new(
         function(aggregatedDataSets, settings, parameters) {
@@ -329,7 +333,7 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 7. Perform non-parametric bootstrap ----------------------------------------------------------
+    # 10. Perform non-parametric bootstrap ---------------------------------------------------------
     FitHIVModelToBootstrapData = function(bsCount = NULL, verbose = FALSE, maxRunTimeFactor = 3) {
       if (is.null(bsCount)) {
         bsCount <- private$Catalogs$BSCount
@@ -549,15 +553,23 @@ AppManager <- R6::R6Class(
       private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
     },
 
-    PrepareAggregatedData = function(strata = NULL) {
+    PrepareCaseBasedAggrData = function(strata = NULL) {
       dt <- shiny::isolate(self$FinalAdjustedCaseBasedData$Table)
       if (!is.null(dt)) {
         miData <- dt[Imputation != 0]
-        private$Catalogs$AggregatedData <- PrepareDataSetsForModel(
+        private$Catalogs$CaseBasedAggrData <- PrepareDataSetsForModel(
           miData,
           splitBy = 'Imputation',
           strata = strata
         )
+      } else {
+        dt <- shiny::isolate(self$PreProcessedCaseBasedData$Table)
+        if (!is.null(dt)) {
+          private$Catalogs$CaseBasedAggrData <- PrepareDataSetsForModel(
+            dt,
+            strata = strata
+          )
+        }
       }
 
       return(invisible(self))
@@ -639,7 +651,7 @@ AppManager <- R6::R6Class(
       } else {
         if (!is.null(dt)) {
           private$Catalogs$AdjustedCaseBasedData <- dt
-          private$PrepareAggregatedData()
+          private$PrepareCaseBasedAggrData()
         }
       }
     },
@@ -658,6 +670,10 @@ AppManager <- R6::R6Class(
       }
 
       return(result)
+    },
+
+    CaseBasedAggrData = function() {
+      return(private$Catalogs$CaseBasedAggrData)
     },
 
     AggregatedData = function() {

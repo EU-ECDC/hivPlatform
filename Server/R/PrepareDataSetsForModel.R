@@ -98,6 +98,14 @@ PrepareDataSetsForModel <- function(
       }
       return(d)
     })
+    if (length(cd4) == 0) {
+      cd4 <- list(
+        HIV_CD4_1 = data.table(Year = integer(), Count = numeric()),
+        HIV_CD4_2 = data.table(Year = integer(), Count = numeric()),
+        HIV_CD4_3 = data.table(Year = integer(), Count = numeric()),
+        HIV_CD4_4 = data.table(Year = integer(), Count = numeric())
+      )
+    }
 
     # Dead file
     dead <- dt[!is.na(YearOfDeath), .(Count = .N), keyby = c('YearOfDeath', strata)]
@@ -138,7 +146,7 @@ PrepareDataSetsForModel <- function(
     return(dataSet)
   }
 
-  if (!is.null(splitBy)) {
+  if (!is.null(splitBy) && nrow(dt) > 0) {
     if (splitBy %in% colnames(dt)) {
       dataSets <- lapply(split(dt, by = splitBy), WorkFunc)
     } else if (!is.null(listIndex)) {

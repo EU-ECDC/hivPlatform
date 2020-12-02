@@ -110,7 +110,7 @@ export default class ModelsManager {
   rDisp = 50;
   splineType = 'B-SPLINE';
   bootstrapCount = 100;
-  bootstrapType = 'CASE-BASED';
+  bootstrapType = 'NON-PARAMETRIC';
 
   // Run details
   modelsRunProgress = null;
