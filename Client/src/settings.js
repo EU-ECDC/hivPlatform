@@ -1,5 +1,5 @@
 //const { version } = require('../package.json');
-import { version } from '../package.json';
+import packageInfo from '../package.json';
 
 // DEBUG mode
 export const DEBUG = process.env.NODE_ENV === 'development';
@@ -8,7 +8,7 @@ export const DEBUG = process.env.NODE_ENV === 'development';
 export const NAME = 'HIV Platform';
 
 // Application version
-export const VERSION = version;
+export const VERSION = packageInfo.version;
 
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;

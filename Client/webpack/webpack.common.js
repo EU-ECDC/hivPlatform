@@ -14,11 +14,6 @@ module.exports = {
         include: /src/
       },
       {
-        test: /\.(js|jsx)$/,
-        use: 'react-hot-loader/webpack',
-        include: /node_modules/
-      },
-      {
         test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
@@ -63,8 +58,4 @@ module.exports = {
     maxEntrypointSize: 2048000,
     maxAssetSize: 2048000
   },
-  node: {
-    Buffer: false,
-    process: false
-  }
 };

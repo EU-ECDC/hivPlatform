@@ -30,3 +30,5 @@ ReactDOM.render(
     runInit(appManager);
   },
 );
+
+module.hot.accept();

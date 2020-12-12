@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -75,4 +74,4 @@ const App = () => (
   </MuiThemeProvider>
 );
 
-export default hot(App);
+export default App;
