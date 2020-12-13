@@ -33,7 +33,7 @@ ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
 
   # Iterate over defined transformations
   # columnName <- names(columnDefs)[22]
-  for (columnName in names(columnDefs)) {
+  for (columnName in ?names(columnDefs)) {
 
     columnDef <- columnDefs[[columnName]]
 

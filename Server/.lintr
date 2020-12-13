@@ -2,5 +2,6 @@ linters: with_defaults(
   line_length_linter = line_length_linter(120),
   object_name_linter = object_name_linter(c('CamelCase', 'camelCase')),
   cyclocomp_linter = cyclocomp_linter(30),
-  single_quotes_linter = NULL
+  single_quotes_linter = NULL,
+  object_usage_linter=NULL
   )

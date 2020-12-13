@@ -14,8 +14,7 @@
 #' @export
 GetReportingDelaysPlots <- function(
   inputData
-)
-{
+) {
   stopifnot(!missing(inputData))
 
   densData <- inputData[!is.na(VarX)][VarX >= 0]

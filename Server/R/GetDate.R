@@ -19,45 +19,45 @@ GetDate <- function(
   w = NA,
   d = NA
 ) {
-  temp_d <- d
-  temp_w <- w
-  temp_m <- m
-  temp_q <- q
-  temp_y <- y
-  temp_Date <- as.Date(temp_w, '%Y-%W')
+  tempD <- d
+  tempW <- w
+  tempM <- m
+  tempQ <- q
+  tempY <- y
+  tempDate <- as.Date(tempW, '%Y-%W')
 
   # Day and month missing but week observed
-  temp_d <- ifelse(
-    is.na(temp_d) & is.na(temp_m) & !(is.na(temp_w) | temp_w == ''),
-    as.numeric(strftime(temp_Date, '%d')),
-    temp_d
+  tempD <- ifelse(
+    is.na(tempD) & is.na(tempM) & !(is.na(tempW) | tempW == ''),
+    as.numeric(strftime(tempDate, '%d')),
+    tempD
   )
-  temp_m <- ifelse(
-    is.na(temp_m) & !(is.na(temp_w) | temp_w == ''),
-    as.numeric(strftime(temp_Date, '%m')),
-    temp_m
+  tempM <- ifelse(
+    is.na(tempM) & !(is.na(tempW) | tempW == ''),
+    as.numeric(strftime(tempDate, '%m')),
+    tempM
   )
 
   # Day, week, month missing but quarter observed
   # Q1
-  temp_d <- ifelse(is.na(temp_m) & temp_q == 1, 14, temp_d)
-  temp_m <- ifelse(is.na(temp_m) & temp_q == 1, 2, temp_m)
+  tempD <- ifelse(is.na(tempM) & tempQ == 1, 14, tempD)
+  tempM <- ifelse(is.na(tempM) & tempQ == 1, 2, tempM)
   # Q2
-  temp_d <- ifelse(is.na(temp_m) & temp_q == 2, 16, temp_d)
-  temp_m <- ifelse(is.na(temp_m) & temp_q == 2, 5, temp_m)
+  tempD <- ifelse(is.na(tempM) & tempQ == 2, 16, tempD)
+  tempM <- ifelse(is.na(tempM) & tempQ == 2, 5, tempM)
   # Q3
-  temp_d <- ifelse(is.na(temp_m) & temp_q == 3, 15, temp_d)
-  temp_m <- ifelse(is.na(temp_m) & temp_q == 3, 8, temp_m)
+  tempD <- ifelse(is.na(tempM) & tempQ == 3, 15, tempD)
+  tempM <- ifelse(is.na(tempM) & tempQ == 3, 8, tempM)
   # Q4
-  temp_d <- ifelse(is.na(temp_m) & temp_q == 4, 15, temp_d)
-  temp_m <- ifelse(is.na(temp_m) & temp_q == 4, 11, temp_m)
+  tempD <- ifelse(is.na(tempM) & tempQ == 4, 15, tempD)
+  tempM <- ifelse(is.na(tempM) & tempQ == 4, 11, tempM)
 
   # Day missing, not missing month
-  temp_d <- ifelse(is.na(temp_d) & !is.na(temp_m), 15, temp_d)
+  tempD <- ifelse(is.na(tempD) & !is.na(tempM), 15, tempD)
 
   # Day and month missing
-  temp_m <- ifelse(is.na(temp_d) & is.na(temp_m), 7, temp_m)
-  temp_d <- ifelse(is.na(temp_d), 1, temp_d)
+  tempM <- ifelse(is.na(tempD) & is.na(tempM), 7, tempM)
+  tempD <- ifelse(is.na(tempD), 1, tempD)
 
-  return(as.Date(ISOdate(temp_y, temp_m, temp_d)))
+  return(as.Date(ISOdate(tempY, tempM, tempD)))
 }
