@@ -5,8 +5,6 @@ module.exports = {
   mode: 'development',
 
   devServer: {
-    contentBase: commonPaths.outputPath,
-    publicPath: '/',
     compress: false,
     hot: true,
     open: true,
