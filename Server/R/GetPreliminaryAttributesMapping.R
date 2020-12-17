@@ -14,8 +14,10 @@
 #' }
 #'
 #' @export
-GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
-{
+GetPreliminaryAttributesMapping <- function(
+  origData,
+  maxDistance = 4
+) {
   stopifnot(!missing(origData))
 
   # Get required columns
@@ -37,10 +39,8 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
   )
 
   # 1. Fixed matching first
-  # requiredColumnName <- requiredColumnNames[1]
   for (requiredColumnName in requiredColumnNames) {
     fixedColNames <- columnSpecs[[requiredColumnName]]$candidateOrigColNames
-    # fixedColName <- fixedColNames[1]
     for (fixedColName in fixedColNames) {
       if (fixedColName %in% origColNames) {
         attrMapping[[requiredColumnName]]$origColName <- fixedColName
@@ -70,7 +70,6 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
   )
 
   # 3. Fuzzy matching third
-  # requiredColumnName <- requiredColumnNames[1]
   for (requiredColumnName in requiredColumnNames) {
     # Fuzzy string matching
     distance <- as.vector(adist(requiredColumnName, origColNames, ignore.case = TRUE))
@@ -85,5 +84,5 @@ GetPreliminaryAttributesMapping <- function(origData, maxDistance = 4)
     }
   }
 
-  return(unname(attrMapping))
+  return(attrMapping)
 }

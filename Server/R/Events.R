@@ -25,7 +25,7 @@ Events <- function(input, output, session, appMgr)
       Payload = list(
         ColumnNames = colnames(appMgr$CaseBasedData),
         RecordCount = nrow(appMgr$CaseBasedData),
-        AttributeMapping = appMgr$AttributeMapping
+        AttributeMapping = unname(appMgr$AttributeMapping)
       )
     ))
   })

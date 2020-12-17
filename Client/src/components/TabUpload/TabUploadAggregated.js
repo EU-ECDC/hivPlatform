@@ -34,10 +34,11 @@ const TabUploadAggregated = props => {
 
   React.useEffect(
     () => {
+      console.log('Entering TabUploadAggregated');
       appManager.unbindShinyInputs();
       appManager.bindShinyInputs();
 
-      return () => appManager.unbindShinyInputs();
+      //return () => appManager.unbindShinyInputs();
     }
   );
 

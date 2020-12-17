@@ -14,8 +14,10 @@
 #' }
 #'
 #' @export
-ApplyAttributesMapping <- function(originalData, attrMapping)
-{
+ApplyAttributesMapping <- function(
+  originalData,
+  attrMapping
+) {
   stopifnot(!missing(originalData))
   stopifnot(!missing(attrMapping))
 

@@ -9,6 +9,7 @@ import AttributeMapping from './AttributeMapping';
 const TabUploadCase = (props) => {
   const { appManager } = props;
 
+  /*
   React.useEffect(
     () => {
       appManager.unbindShinyInputs();
@@ -17,6 +18,7 @@ const TabUploadCase = (props) => {
       return () => appManager.unbindShinyInputs();
     }
   );
+  */
 
   const divider = <Divider light style={{ margin: '30px 0' }} />;
 

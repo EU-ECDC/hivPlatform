@@ -23,8 +23,12 @@
 #' sapply(object, class)
 #'
 #' @export
-ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
-{
+ConvertDataTableColumns <- function(
+  object,
+  columnDefs,
+  levelsFunc = NULL,
+  ...
+) {
   if (!is.data.table(object)) {
     stop('Input object must be of class data.table')
   }
@@ -32,9 +36,7 @@ ConvertDataTableColumns <- function(object, columnDefs, levelsFunc = NULL, ...)
   objectColNames <- colnames(object)
 
   # Iterate over defined transformations
-  # columnName <- names(columnDefs)[22]
-  for (columnName in ?names(columnDefs)) {
-
+  for (columnName in names(columnDefs)) {
     columnDef <- columnDefs[[columnName]]
 
     # Transformation as new class name

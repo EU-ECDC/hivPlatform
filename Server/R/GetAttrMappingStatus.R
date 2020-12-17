@@ -13,8 +13,9 @@
 #' }
 #'
 #' @export
-GetAttrMappingStatus <- function(attrMapping)
-{
+GetAttrMappingStatus <- function(
+  attrMapping
+) {
   # 1. Find not-mapped attributes
   nonMappedAnalysisAttrs <- names(Filter(function(el) IsEmptyString(el$origColName), attrMapping))
 

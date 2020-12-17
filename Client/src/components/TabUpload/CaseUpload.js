@@ -33,10 +33,11 @@ const CaseUpload = (props) => {
 
   React.useEffect(
     () => {
+      console.log('Entering CaseUpload');
       appManager.unbindShinyInputs();
       appManager.bindShinyInputs();
 
-      return () => appManager.unbindShinyInputs();
+      //return () => appManager.unbindShinyInputs();
     }
   );
 
