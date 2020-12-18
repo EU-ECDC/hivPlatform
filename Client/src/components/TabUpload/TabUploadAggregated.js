@@ -34,11 +34,15 @@ const TabUploadAggregated = props => {
 
   React.useEffect(
     () => {
-      console.log('Entering TabUploadAggregated');
       appManager.unbindShinyInputs();
+      if (appManager.shinyReady) {
+        Shiny
+          .inputBindings.bindingNames['shiny.reactAggrFileInputBinding']
+          .binding.subscribe('#aggrUploadBtn');
+      }
       appManager.bindShinyInputs();
 
-      //return () => appManager.unbindShinyInputs();
+      return () => appManager.unbindShinyInputs();
     }
   );
 

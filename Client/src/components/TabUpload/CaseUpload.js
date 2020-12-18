@@ -33,11 +33,15 @@ const CaseUpload = (props) => {
 
   React.useEffect(
     () => {
-      console.log('Entering CaseUpload');
       appManager.unbindShinyInputs();
+      if (appManager.shinyReady) {
+        Shiny
+          .inputBindings.bindingNames['shiny.reactCaseBasedFileInputBinding']
+          .binding.subscribe('#caseUploadBtn');
+      }
       appManager.bindShinyInputs();
 
-      //return () => appManager.unbindShinyInputs();
+      return () => appManager.unbindShinyInputs();
     }
   );
 

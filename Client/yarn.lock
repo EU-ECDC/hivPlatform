@@ -2710,10 +2710,10 @@ html-minifier-terser@^5.0.1:
     relateurl "^0.2.7"
     terser "^4.6.3"
 
-html-webpack-plugin@^5.0.0-alpha.17:
-  version "5.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-5.0.0-alpha.17.tgz#42598fe4609efad3725c26d085c9d64197fa1587"
-  integrity sha512-r0QS/ZX+pEE/OrpX1bOrtO31TuRiAdvopLmP47NXcqnzolKoTMneKoB6drm2UnvRgv+AlA5NzSaKG4d6gwyd8Q==
+html-webpack-plugin@^5.0.0-beta.1:
+  version "5.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-5.0.0-beta.1.tgz#a4e5a6e51433d9aa15c688de9601f9311de7d712"
+  integrity sha512-EkROYPaPa3x5OYZZ6ixAp+ma9rNNEIBhW2HbBuvUB5h3KrFibiVWWrVUizSJ92AlPZ4iF2hAuKoXGBkkLgZYdw==
   dependencies:
     "@types/html-minifier-terser" "^5.0.0"
     html-minifier-terser "^5.0.1"
@@ -4661,7 +4661,7 @@ webpack-dev-middleware@^4.0.2:
     range-parser "^1.2.1"
     schema-utils "^3.0.0"
 
-webpack-dev-server@4.0.0-beta.0:
+webpack-dev-server@^4.0.0-beta.0:
   version "4.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.0.0-beta.0.tgz#39065e19b0df793314c02cd72474bb54312ebc06"
   integrity sha512-mVD4Hn3bsMdcq6qE0y8xvH6KAu9NwS6F0NNgFe+n6gbsTQ7YgffUDydvy2iieyyKjAcBJDT5PZexv9tKv8kTNQ==
@@ -4719,10 +4719,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.10.3:
-  version "5.10.3"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.10.3.tgz#933cbd5e79d62040d988049ff0f515a6dc333006"
-  integrity sha512-KFPEbpNKfNU4t2CDsUZJ7KpuUbzDqGUCZqLmz4667KSUWMc9BuR3a8jpa72Emv7JUbdGwISD9OZjoI9S5BnHig==
+webpack@^5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.11.0.tgz#1647abc060441d86d01d8835b8f0fc1dae2fe76f"
+  integrity sha512-ubWv7iP54RqAC/VjixgpnLLogCFbAfSOREcSWnnOlZEU8GICC5eKmJSu6YEnph2N2amKqY9rvxSwgyHxVqpaRw==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.45"

@@ -258,7 +258,7 @@ export default class AppManager {
 
   unbindShinyInputs = () => {
     if (this.shinyReady) {
-      Shiny.unbindAll(document);
+      Shiny.unbindAll();
     } else {
       console.log('unbindShinyInputs: Shiny is not available');
     }
@@ -266,8 +266,8 @@ export default class AppManager {
 
   bindShinyInputs = () => {
     if (this.shinyReady) {
-      DefineReactFileInputBinding(this);
-      Shiny.bindAll(document);
+      Shiny.initializeInputs();
+      Shiny.bindAll();
     } else {
       console.log('bindShinyInputs: Shiny is not available');
     }
