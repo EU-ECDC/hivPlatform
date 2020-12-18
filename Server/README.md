@@ -1,7 +1,3 @@
-# Status
-
-[![R-CMD-check](https://github.com/nextpagesoft/hivEstimatesAccuracy2/workflows/R-CMD-check/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions)
-
 # European Centre for Disease Prevention and Control
 
 An agency of the European Union
