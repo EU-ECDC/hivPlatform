@@ -4,6 +4,8 @@
 ^workspace\.code-workspace$
 ^\.Rproj\.user$
 ^\.travis\.yml$
+^\.lintr$
 ^app\.R$
 ^rsconnect$
 ^utils$
+^\.github$

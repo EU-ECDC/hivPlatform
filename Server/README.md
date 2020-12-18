@@ -1,6 +1,6 @@
 # Status
 
-[![Build Status](https://travis-ci.org/nextpagesoft/hivEstimatesAccuracy2.svg?branch=master)](https://travis-ci.org/nextpagesoft/hivEstimatesAccuracy2)
+[![R-CMD-check](https://github.com/nextpagesoft/hivEstimatesAccuracy2/workflows/R-CMD-check/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions)
 
 # European Centre for Disease Prevention and Control
 

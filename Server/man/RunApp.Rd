@@ -4,10 +4,15 @@
 \alias{RunApp}
 \title{RunApp}
 \usage{
-RunApp(launchBrowser = getOption("shiny.launch.browser", interactive()))
+RunApp(
+  launchBrowser = getOption("shiny.launch.browser", interactive()),
+  trace = FALSE
+)
 }
 \arguments{
 \item{launchBrowser}{Logical indicating to open the app in a newly open web browser}
+
+\item{trace}{Logical indicating to output detailed debug info in R session}
 }
 \value{
 NULL (invisibly)

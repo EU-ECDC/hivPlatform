@@ -15,7 +15,7 @@
 #' Creator: Daniel Lewandowski \email{<daniel@@nextpagesoft.net>}
 #'
 #' @importFrom grDevices dev.control dev.off hcl pdf recordPlot
-#' @importFrom stats as.formula coef coefficients setNames vcov
+#' @importFrom stats as.formula coef coefficients setNames vcov density quantile
 #' @importFrom utils adist head modifyList tail unzip zip
 #' @import shiny
 #' @import data.table

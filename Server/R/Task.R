@@ -2,7 +2,7 @@
 #'
 #' R6 class for representing a background task
 #'
-#' @name AppManager
+#' @name Task
 #' @examples
 #' \dontrun{
 #' tast <- Task$new()

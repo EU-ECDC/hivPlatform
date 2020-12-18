@@ -4,7 +4,7 @@
 \alias{PrintH1}
 \title{PrintH1}
 \usage{
-PrintH1(..., collapse = " ", .envir = parent.frame(), local = FALSE)
+PrintH1(..., collapse = " ", .envir = parent.frame())
 }
 \arguments{
 \item{...}{Text to be printed}

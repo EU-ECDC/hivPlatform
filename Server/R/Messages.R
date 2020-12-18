@@ -13,8 +13,7 @@
 PrintH1 <- function(
   ...,
   collapse = ' ',
-  .envir = parent.frame(),
-  local = FALSE
+  .envir = parent.frame()
 ) {
   cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir)
 
@@ -112,7 +111,7 @@ StartProcess <- function(
 
 #' EndProcess
 #'
-#' @param processId Process Id
+#' @param procList List of processes
 #' @param ... Text to be printed
 #' @param collapse String to be used for concatenating texts
 #' @param .envir Environment for lookup of variables referenced in the text

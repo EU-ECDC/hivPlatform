@@ -239,7 +239,7 @@ AppManager <- R6::R6Class(
     AdjustCaseBasedData = function(adjustmentSpecs) {
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
-          suppressMessages(devtools::load_all())
+          suppressMessages(pkgload::load_all())
           options(width = 130)
           result <- hivEstimatesAccuracy2::RunAdjustments(
             data = data,
