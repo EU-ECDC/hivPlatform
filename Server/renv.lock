@@ -346,9 +346,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "f00bbea4d3f058ab63e3a178d71659a74699ef0f",
+      "RemoteSha": "5d682841cc621db2038a5f3ed1afa995bb7ff05d",
       "RemoteHost": "api.github.com",
-      "Hash": "233a748a1f82e3f90cd520e4904e31c9"
+      "Hash": "14bf1504a7cd95166e31a3306525e9c0"
     },
     "htmltools": {
       "Package": "htmltools",
