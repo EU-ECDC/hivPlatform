@@ -1,5 +1,5 @@
 external.libraries: D:/Documents/R/win-library/4.0/
-ignored.packages:
+ignored.packages: rsconnect
 package.dependency.fields: Imports, LinkingTo, Depends
 snapshot.type: packrat
 use.cache: TRUE

@@ -41,9 +41,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - name: Install remotes
+      - name: Install R development packages
         run: |
           install.packages('remotes')
+          install.packages('rcmdcheck')
         shell: Rscript {0}
         working-directory: Server
 
@@ -84,7 +85,7 @@ jobs:
           sudo apt-get install -y libcurl4-openssl-dev
         working-directory: Server
 
-      - name: Install dependencies
+      - name: Install R production packages
         run: |
           if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
           renv::restore()

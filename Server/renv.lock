@@ -86,13 +86,6 @@
       "Repository": "CRAN",
       "Hash": "fbe4ac267bf42a91e495cc68ad3f8b63"
     },
-    "askpass": {
-      "Package": "askpass",
-      "Version": "1.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "e8a22846fff485f0be3770c2da758713"
-    },
     "assertthat": {
       "Package": "assertthat",
       "Version": "0.2.1",
@@ -197,13 +190,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "0d57bc8e27b7ba9e45dba825ebc0de6b"
-    },
-    "curl": {
-      "Package": "curl",
-      "Version": "4.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "2b7d10581cc730804e9ed178c8374bd6"
     },
     "data.table": {
       "Package": "data.table",
@@ -518,26 +504,12 @@
       "Repository": "CRAN",
       "Hash": "df58958f293b166e4ab885ebcad90e02"
     },
-    "openssl": {
-      "Package": "openssl",
-      "Version": "1.4.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a399e4773075fc2375b71f45fca186c4"
-    },
     "ordinal": {
       "Package": "ordinal",
       "Version": "2019.12-10",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "62e921c39cffbf990a6d8266c35b2f93"
-    },
-    "packrat": {
-      "Package": "packrat",
-      "Version": "0.5.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "2ebd34a38f4248281096cc723535b66d"
     },
     "parallelly": {
       "Package": "parallelly",
@@ -679,13 +651,6 @@
       "Repository": "CRAN",
       "Hash": "249d8cd1e74a8f6a26194a91b47f21d1"
     },
-    "rsconnect": {
-      "Package": "rsconnect",
-      "Version": "0.8.16",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "3924a1c20ce2479e89a08b0ca4c936c6"
-    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.13",
@@ -741,13 +706,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "39c4ac6d22dad33db0ee37b40810ea12"
-    },
-    "sys": {
-      "Package": "sys",
-      "Version": "3.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b227d13e29222b4574486cfcbde077fa"
     },
     "testthat": {
       "Package": "testthat",
