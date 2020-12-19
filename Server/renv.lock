@@ -72,6 +72,20 @@
       "Repository": "CRAN",
       "Hash": "125dc7a0ed375eb68c0ce533b48d291f"
     },
+    "RcppArmadillo": {
+      "Package": "RcppArmadillo",
+      "Version": "0.10.1.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1a885965adade4b8629c478a3b3c2cf7"
+    },
+    "RcppEigen": {
+      "Package": "RcppEigen",
+      "Version": "0.3.3.9.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ddfa72a87fdf4c80466a20818be91d00"
+    },
     "SparseM": {
       "Package": "SparseM",
       "Version": "1.78",
@@ -190,6 +204,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "6d80a9fc3c0c8473153b54fa54719dfd"
+    },
+    "cpp11": {
+      "Package": "cpp11",
+      "Version": "0.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ba66e5a750d39067d888aa7af797fed2"
     },
     "crayon": {
       "Package": "crayon",
@@ -356,6 +377,13 @@
       "RemoteSha": "5d682841cc621db2038a5f3ed1afa995bb7ff05d",
       "RemoteHost": "api.github.com",
       "Hash": "14bf1504a7cd95166e31a3306525e9c0"
+    },
+    "hms": {
+      "Package": "hms",
+      "Version": "0.5.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "726671f634529d470545f9fd1a9d1869"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -643,6 +671,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "22aab6098cb14edd0a5973a8438b569b"
+    },
+    "progress": {
+      "Package": "progress",
+      "Version": "1.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "14dc9f7a3c91ebb14ec5bb9208a07061"
     },
     "promises": {
       "Package": "promises",
