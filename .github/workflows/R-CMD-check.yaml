@@ -44,6 +44,8 @@ jobs:
       - name: Install remotes
         run: |
           install.packages('remotes')
+        shell: Rscript {0}
+        working-directory: Server
 
       - name: Setup Linux R cache
         uses: actions/cache@v2
