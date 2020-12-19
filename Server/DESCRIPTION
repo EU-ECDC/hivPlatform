@@ -15,6 +15,7 @@ Description: Improves the accuracy of HIV estimates in EU/EEA countries.
 License: file LICENSE
 Depends: R (>= 3.1.0)
 Imports:
+    BH (>= 1.72.0-3),
     callr (>= 3.4.3),
     cli (>= 2.0.2),
     data.table (>= 1.12.8),
