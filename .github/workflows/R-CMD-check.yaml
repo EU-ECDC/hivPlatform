@@ -41,21 +41,30 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - uses: actions/cache@v2
+      - name: Install remotes
+        run: |
+          install.packges('remotes')
+
+      - name: Setup Linux R cache
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.local/share/renv
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
-      - uses: actions/cache@v2
+
+      - name: Setup MacOS R cache
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Application Support/renv
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
-      - uses: actions/cache@v2
+
+      - name: Setup Windows R cache
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\renv
