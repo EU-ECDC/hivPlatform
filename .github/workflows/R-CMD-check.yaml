@@ -81,7 +81,7 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
-          apt-get install -y libcurl4-openssl-dev
+          sudo apt-get install -y libcurl4-openssl-dev
         working-directory: Server
 
       - name: Install dependencies
@@ -94,6 +94,9 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          _R_CHECK_FORCE_SUGGESTS_: false
+          _R_CHECK_LICENSE_: false
+          _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
         run: rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
         working-directory: Server
