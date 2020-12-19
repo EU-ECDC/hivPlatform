@@ -5,7 +5,7 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^\.lintr$
+^\.renvignore$
 ^app\.R$
 ^rsconnect$
 ^utils$
-
