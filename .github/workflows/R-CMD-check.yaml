@@ -43,7 +43,7 @@ jobs:
 
       - name: Install remotes
         run: |
-          install.packges('remotes')
+          install.packages('remotes')
 
       - name: Setup Linux R cache
         uses: actions/cache@v2
