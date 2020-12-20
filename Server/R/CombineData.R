@@ -18,7 +18,9 @@
 #'   AggrPopulations = c()
 #' )
 #' aggrDataSelection <- data.table(
-#'   DataType = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
+#'   DataType = c(
+#'     'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
+#'   ),
 #'   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
 #'   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
 #'   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
@@ -33,6 +35,10 @@ CombineData <- function(
   popCombination,
   aggrDataSelection
 ) {
+  if (!is.data.table(aggrDataSelection) && is.list(aggrDataSelection)) {
+    aggrDataSelection <- ConvertListToDt(aggrDataSelection)
+  }
+
   # 1. Filter case based data
   if (length(popCombination$CaseBasedPopulations) > 0) {
     listObj <- strsplit(popCombination$CaseBasedPopulations, '_')
@@ -69,55 +75,62 @@ CombineData <- function(
   })
 
   # 2b. Filter aggregated data on the use flag
-  set2 <- setNames(lapply(names(set2), function(dataType) {
-    if (dataType %in% aggrDataSelection[Use == TRUE, DataType]) {
-      set2[[dataType]]
+  set2 <- setNames(lapply(names(set2), function(dataName) {
+    if (dataName %in% aggrDataSelection[Use == TRUE, Name]) {
+      set2[[dataName]]
     } else {
       data.table(Year = integer(), Count = numeric())
     }
   }), names(aggregatedData))
 
   # 2c. Filter aggregated data on the years
-  set2 <- setNames(lapply(names(set2), function(dataType) {
-    # dataType <- 'AIDS'
-    years <- aggrDataSelection[DataType == dataType, c(MinYear, MaxYear)]
+  set2 <- setNames(lapply(names(set2), function(dataName) {
+    years <- aggrDataSelection[Name == dataName, c(MinYear, MaxYear)]
     if (length(years) == 2) {
-      set2[[dataType]][Year %between% c(years)]
+      set2[[dataName]][Year %between% c(years)]
     } else {
-      set2[[dataType]]
+      set2[[dataName]]
     }
   }), names(set2))
 
   # 3. Combine data sets together
-  dataTypes <- c('AIDS', 'Dead', 'HIV', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4', 'HIVAIDS')
   WorkFunc <- function(set1) {
-    set1DataTypes <- names(set1)
-    set2DataTypes <- names(set2)
-    allDataTypes <- union(set1DataTypes, set2DataTypes)
-    finalSet <- setNames(lapply(allDataTypes, function(dataType) {
-      if (is.null(set1[[dataType]])) {
-        set1[[dataType]] <- data.table(Year = integer(), Count = numeric())
+    set1DataNames <- names(set1)
+    set2DataNames <- names(set2)
+    allDataNames <- union(set1DataNames, set2DataNames)
+    finalSet <- setNames(lapply(allDataNames, function(dataName) {
+      if (is.null(set1[[dataName]])) {
+        set1[[dataName]] <- data.table(Year = integer(), Count = numeric())
       }
-      if (is.null(set2[[dataType]])) {
-        set2[[dataType]] <- data.table(Year = integer(), Count = numeric())
+      if (is.null(set2[[dataName]])) {
+        set2[[dataName]] <- data.table(Year = integer(), Count = numeric())
       }
       result <- merge(
-        set1[[dataType]],
-        set2[[dataType]],
+        set1[[dataName]],
+        set2[[dataName]],
         by = c('Year'),
         all = TRUE,
         suffixes = c('.CaseBased', '.Aggregated')
       )
-      result <- result[, .(Count = na.zero(Count.CaseBased) + na.zero(Count.Aggregated)), keyby = .(Year)]
-    }), allDataTypes)
+      result <- result[,
+        .(Count = na.zero(Count.CaseBased) + na.zero(Count.Aggregated)),
+        keyby = .(Year)
+      ]
+    }), allDataNames)
     return(finalSet)
   }
 
   # Check if this is a single set
-  if (any(dataTypes %in% names(set1))) {
-    finalSet <- WorkFunc(set1)
+  if (!is.null(set1)) {
+    dataNames <-
+      c('AIDS', 'Dead', 'HIV', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4', 'HIVAIDS')
+    if (any(dataNames %in% names(set1))) {
+      finalSet <- list(WorkFunc(set1))
+    } else {
+      finalSet <- lapply(set1, WorkFunc)
+    }
   } else {
-    finalSet <- lapply(set1, WorkFunc)
+    finalSet <- list(set2)
   }
 
   return(finalSet)

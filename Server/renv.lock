@@ -735,6 +735,13 @@
       "Repository": "CRAN",
       "Hash": "6ea435c354e8448819627cf686f66e0a"
     },
+    "tinytest": {
+      "Package": "tinytest",
+      "Version": "1.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f6db1906139f7771e34de5cf1cd31aed"
+    },
     "tinytex": {
       "Package": "tinytex",
       "Version": "0.28",

@@ -44,18 +44,19 @@ AppManager <- R6::R6Class(
         CaseBasedData = NULL,
         PreProcessedCaseBasedData = NULL,
         AdjustedCaseBasedData = NULL,
-        CaseBasedAggrData = NULL,
 
         AggregatedData = NULL,
+        AggregatedDataSelection = NULL,
 
-        CombinedAggrData = NULL,
+        PopulationCombination = list(CaseBasedPopulations = c(), AggrPopulations = c()),
+        CombinedData = NULL,
 
         HIVModelParameters = NULL,
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
         AdjustmentTask = NULL,
-        ModelTask = NULL
+        HIVModelTask = NULL
       )
     },
 
@@ -88,6 +89,10 @@ AppManager <- R6::R6Class(
     ReadAggregatedData = function(fileName) {
       private$Catalogs$AggregatedDataPath <- fileName
       private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
+      private$Catalogs$AggregatedDataSelection <-
+        GetPrelimAggrDataSelection(private$Catalogs$AggregatedData)
+      private$Catalogs$PopulationCombination$AggrPopulations <-
+        names(private$Catalogs$AggregatedData[[1]])[-1]
 
       PrintAlert('Aggregated data file {.file {fileName}} loaded')
 
@@ -130,8 +135,6 @@ AppManager <- R6::R6Class(
       private$Catalogs$PreProcessedCaseBasedData <- dt
       private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
       private$Catalogs$OriginDistribution <- GetOriginDistribution(dt$Table)
-
-      private$PrepareCaseBasedAggrData()
 
       PrintAlert('Case-based data has been pre-processed')
 
@@ -261,42 +264,43 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    RunTestTask = function() {
-      private$Catalogs$AdjustmentTask <- Task$new(function(a, b) {
-        cat('Start of run\n')
-        Sys.sleep(1)
-        print(a)
-        Sys.sleep(1)
-        print(b)
-        Sys.sleep(1)
-        cat('End of run\n')
-
-        return(-1)
-      }, args = list(a = 2, b = 3), session = private$Session)
-
-      private$Catalogs$AdjustmentTask$Run()
-
-      return(invisible(self))
-    },
-
     CancelAdjustmentTask = function() {
       private$Catalogs$AdjustmentTask$Stop()
 
       return(invisible(self))
     },
 
-    # 9. Fit HIV model to adjusted data ------------------------------------------------------------
-    FitHIVModelToAdjustedData = function(settings = list(), parameters = list()) {
-      aggregatedDataSets <- isolate(private$Catalogs$CaseBasedAggrData)
+    CombineData = function(popCombination, aggrDataSelection) {
+      if (!missing(popCombination)) {
+        private$Catalogs$PopulationCombination <- popCombination
+      }
 
-      private$Catalogs$ModelTask <- Task$new(
-        function(aggregatedDataSets, settings, parameters) {
-          options(width = 130)
+      if (!missing(aggrDataSelection)) {
+        private$Catalogs$AggregatedDataSelection <- aggrDataSelection
+      }
+
+      private$Catalogs$CombinedData <- CombineData(
+        copy(self$FinalAdjustedCaseBasedData$Table),
+        copy(private$Catalogs$AggregatedData),
+        private$Catalogs$PopulationCombination,
+        private$Catalogs$AggregatedDataSelection
+      )
+
+      return(self)
+    },
+
+    # 9. Fit HIV model -----------------------------------------------------------------------------
+    FitHIVModel = function(settings = list(), parameters = list()) {
+      dataSets <- isolate(private$Catalogs$CombinedData)
+
+      private$Catalogs$HIVModelTask <- Task$new(
+        function(dataSets, settings, parameters) {
+          options(width = 100)
 
           results <- list()
-          for (i in seq_along(aggregatedDataSets)) {
+          for (i in seq_along(dataSets)) {
             context <- hivModelling::GetRunContext(
-              data = aggregatedDataSets[[i]],
+              data = dataSets[[i]],
               settings = settings,
               parameters = parameters
             )
@@ -316,19 +320,19 @@ AppManager <- R6::R6Class(
           return(results)
         },
         args = list(
-          aggregatedDataSets = aggregatedDataSets,
+          dataSets = dataSets,
           settings = settings,
           parameters = parameters
         ),
         session = private$Session
       )
-      private$Catalogs$ModelTask$Run()
+      private$Catalogs$HIVModelTask$Run()
 
       return(invisible(self))
     },
 
-    CancelModelTask = function() {
-      private$Catalogs$ModelTask$Stop()
+    CancelHIVModelFit = function() {
+      private$Catalogs$HIVModelTask$Stop()
 
       return(invisible(self))
     },
@@ -415,7 +419,7 @@ AppManager <- R6::R6Class(
             jSucc <- jSucc + 1
           }
 
-          progress <- (jSucc + (i - 1) * bsCount)/(miCount * bsCount) * 100
+          progress <- (jSucc + (i - 1) * bsCount) / (miCount * bsCount) * 100
           self$SendEventToReact('shinyHandler', list(
             Type = 'BOOTSTRAP_RUN_PROGRESSES',
             Status = 'SUCCESS',
@@ -553,28 +557,6 @@ AppManager <- R6::R6Class(
       private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
     },
 
-    PrepareCaseBasedAggrData = function(strata = NULL) {
-      dt <- shiny::isolate(self$FinalAdjustedCaseBasedData$Table)
-      if (!is.null(dt)) {
-        miData <- dt[Imputation != 0]
-        private$Catalogs$CaseBasedAggrData <- PrepareDataSetsForModel(
-          miData,
-          splitBy = 'Imputation',
-          strata = strata
-        )
-      } else {
-        dt <- shiny::isolate(self$PreProcessedCaseBasedData$Table)
-        if (!is.null(dt)) {
-          private$Catalogs$CaseBasedAggrData <- PrepareDataSetsForModel(
-            dt,
-            strata = strata
-          )
-        }
-      }
-
-      return(invisible(self))
-    },
-
     PrepareBootstrapAggregatedData = function(strata = NULL) {
       bootCaseBasedDataSets <- private$Catalogs$BootstrapCaseBasedDataSets
       bootAggregatedDataSets <- lapply(
@@ -651,7 +633,6 @@ AppManager <- R6::R6Class(
       } else {
         if (!is.null(dt)) {
           private$Catalogs$AdjustedCaseBasedData <- dt
-          private$PrepareCaseBasedAggrData()
         }
       }
     },
@@ -672,12 +653,20 @@ AppManager <- R6::R6Class(
       return(result)
     },
 
-    CaseBasedAggrData = function() {
-      return(private$Catalogs$CaseBasedAggrData)
-    },
-
     AggregatedData = function() {
       return(private$Catalogs$AggregatedData)
+    },
+
+    AggregatedDataSelection = function() {
+      return(private$Catalogs$AggregatedDataSelection)
+    },
+
+    PopulationCombination = function() {
+      return(private$Catalogs$PopulationCombination)
+    },
+
+    CombinedData = function() {
+      return(private$Catalogs$CombinedData)
     },
 
     BootstrapCaseBasedDataSets = function() {
@@ -720,9 +709,8 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$AdjustmentTask)
     },
 
-    ModelTask = function() {
-      return(private$Catalogs$ModelTask)
+    HIVModelTask = function() {
+      return(private$Catalogs$HIVModelTask)
     }
-
   )
 )

@@ -1,5 +1,9 @@
-Events <- function(input, output, session, appMgr)
-{
+Events <- function(
+  input,
+  output,
+  session,
+  appMgr
+) {
   # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn

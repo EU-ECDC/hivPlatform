@@ -14,7 +14,7 @@ Maintainer: Daniel Lewandowski <daniel@nextpagesoft.net>
 Description: Improves the accuracy of HIV estimates in EU/EEA countries.
 License: file LICENSE
 Depends: R (>= 3.1.0)
-Imports:
+Imports: 
     callr (>= 3.4.3),
     cli (>= 2.0.2),
     data.table (>= 1.12.8),
@@ -38,3 +38,4 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: tinytest

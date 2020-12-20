@@ -14,13 +14,16 @@
 #' @examples
 #' \dontrun{
 #' GetListObject(fileName)
-#' GetListObject(fileName, section = "Name")
-#' GetListObject(fileName, section = "Parameters")
+#' GetListObject(fileName, section = 'Name')
+#' GetListObject(fileName, section = 'Parameters')
 #' }
 #'
 #' @export
-GetListObject <- function(fileName, section = NULL, includeFileName = TRUE)
-{
+GetListObject <- function(
+  fileName,
+  section = NULL,
+  includeFileName = TRUE
+) {
   stopifnot(!missing(fileName))
 
   # Get entire list
