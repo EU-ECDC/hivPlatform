@@ -319,15 +319,15 @@
     },
     "hivModelling": {
       "Package": "hivModelling",
-      "Version": "0.9.16",
+      "Version": "0.9.17",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "5d682841cc621db2038a5f3ed1afa995bb7ff05d",
+      "RemoteSha": "8e973933f322f975cc1b4bbb9aa2459d18b59de4",
       "RemoteHost": "api.github.com",
-      "Hash": "14bf1504a7cd95166e31a3306525e9c0"
+      "Hash": "5f33f81ecec614ee5c97095f68247308"
     },
     "hms": {
       "Package": "hms",
