@@ -13,8 +13,10 @@
 #' }
 #'
 #' @export
-PreProcessInputDataBeforeSummary <- function(inputData, seed = NULL)
-{
+PreProcessInputDataBeforeSummary <- function(
+  inputData,
+  seed = NULL
+) {
   stopifnot(!missing(inputData))
 
   if (is.null(inputData)) {
@@ -133,8 +135,8 @@ PreProcessInputDataBeforeSummary <- function(inputData, seed = NULL)
 
   # Create helper columns for filtering data on diagnosis and notification time
   inputData[, ':='(
-    NotificationTime = year(DateOfNotification) + 1/4 * quarter(DateOfNotification),
-    DiagnosisTime = YearOfHIVDiagnosis + 1/4 * quarter(DateOfHIVDiagnosis)
+    NotificationTime = year(DateOfNotification) + 1 / 4 * quarter(DateOfNotification),
+    DiagnosisTime = YearOfHIVDiagnosis + 1 / 4 * quarter(DateOfHIVDiagnosis)
   )]
 
   # Transform columns to factor

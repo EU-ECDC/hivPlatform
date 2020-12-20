@@ -31,7 +31,7 @@ PrepareDataSetsForModel <- function(
 
   WorkFunc <- function(dt) {
     dt[is.na(DateOfFirstCD4Count), DateOfFirstCD4Count := DateOfHIVDiagnosis]
-    dt[, ':='(
+    dt[, ':=' (
       CD4Category = sprintf('HIV_CD4_%d', findInterval(FirstCD4Count, c(0, 200, 350, 500, Inf))),
       HIVToAIDSDaysCount = as.integer(DateOfAIDSDiagnosis - DateOfHIVDiagnosis),
       HIVToFirstCD4DaysCount = as.integer(DateOfFirstCD4Count - DateOfHIVDiagnosis),

@@ -138,6 +138,8 @@ list(
 
       ConvertDataTableColumns(mi, c(Imputation = function(x) as.integer(as.character(x))))
 
+      mi[, FirstCD4Count := SqCD4^2]
+
       return(list(Table = mi, Artifacts = artifacts))
     }
 
@@ -151,34 +153,14 @@ list(
     dataSets <- split(inputData, by = c('Gender'))
 
     # 4. Execute the worker function per data set
-#     if (parameters$runInParallel) {
-#       # Run in parallel
-#       cl <- parallel::makeCluster(2)
-#       parallel::clusterExport(cl, c('libPaths', 'mice.impute.pmm', 'mice.impute.pmm',
-#                                     'mice.impute.polyreg', 'mice.impute.logreg',
-#                                     'ConvertDataTableColumns', 'dataSets'))
-#       parallel::clusterEvalQ(cl, {
-# 				.libPaths(libPaths)
-#         library(data.table)
-#       })
-#       outputData <- parallel::parLapply(cl,
-#                                         seq_along(dataSets),
-#                                         workerFunction,
-#                                         nit = parameters$nit,
-#                                         nimp = parameters$nimp,
-#                                         nsdf = parameters$nsdf)
-#       parallel::stopCluster(cl)
-#     } else {
-      # Run sequentially
-      outputData <- lapply(
-        seq_along(dataSets),
-        workerFunction,
-        nit = parameters$nit,
-        nimp = parameters$nimp,
-        nsdf = parameters$nsdf,
-        imputeRD = parameters$imputeRD
-      )
-    # }
+    outputData <- lapply(
+      seq_along(dataSets),
+      workerFunction,
+      nit = parameters$nit,
+      nimp = parameters$nimp,
+      nsdf = parameters$nsdf,
+      imputeRD = parameters$imputeRD
+    )
 
     # 5. Combine all data sets
     names(outputData) <- names(dataSets)

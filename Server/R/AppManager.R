@@ -270,12 +270,12 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    CombineData = function(popCombination, aggrDataSelection) {
-      if (!missing(popCombination)) {
+    CombineData = function(popCombination = NULL, aggrDataSelection = NULL) {
+      if (!is.null(popCombination)) {
         private$Catalogs$PopulationCombination <- popCombination
       }
 
-      if (!missing(aggrDataSelection)) {
+      if (!is.null(aggrDataSelection)) {
         private$Catalogs$AggregatedDataSelection <- aggrDataSelection
       }
 
@@ -338,7 +338,12 @@ AppManager <- R6::R6Class(
     },
 
     # 10. Perform non-parametric bootstrap ---------------------------------------------------------
-    FitHIVModelToBootstrapData = function(bsCount = NULL, verbose = FALSE, maxRunTimeFactor = 3) {
+    RunBootstrap = function(
+      bsCount = NULL,
+      type = 'PARAMETRIC',
+      verbose = FALSE,
+      maxRunTimeFactor = 3
+    ) {
       if (is.null(bsCount)) {
         bsCount <- private$Catalogs$BSCount
       } else {
@@ -541,6 +546,14 @@ AppManager <- R6::R6Class(
 
     SetBSCount = function(count) {
       private$Catalogs$BSCount <- max(count, 0)
+    },
+
+    SetPopulationCombination = function(populationCombination) {
+      private$Catalogs$PopulationCombination <- PopulationCombination
+    },
+
+    SetAggregatedDataSelection = function(aggregatedDataSelection) {
+      private$Catalogs$AggregatedDataSelection <- aggregatedDataSelection
     }
   ),
 

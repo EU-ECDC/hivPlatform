@@ -53,8 +53,8 @@ RunAdjustments <- function(
   for (i in seq_along(adjustmentSpecs)) {
     adjustmentSpec <- adjustmentSpecs[[i]]
 
-    caption <- sprintf("%d. %s", i, adjustmentSpec$Name)
-    if (!"Key" %in% names(adjustmentSpec)) {
+    caption <- sprintf('%d. %s', i, adjustmentSpec$Name)
+    if (!('Key' %in% names(adjustmentSpec))) {
       adjustmentSpec$Key <- caption
     }
 
@@ -65,7 +65,7 @@ RunAdjustments <- function(
     PrintAlert('Start time: {startTime}')
 
     # Extract parameters for better visibility.
-    parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = "value")
+    parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = 'value')
 
     PrintH2('Parameters')
     print(setNames(as.character(parameters), names(parameters)))
@@ -88,7 +88,7 @@ RunAdjustments <- function(
     )
 
     if ('Imputation' %in% colnames(data$Table)) {
-      setorderv(data$Table, "Imputation")
+      setorderv(data$Table, 'Imputation')
     }
 
     # Store intermediate results for later reference
