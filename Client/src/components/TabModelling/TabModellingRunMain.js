@@ -47,6 +47,33 @@ const TabModellingRunMain = props => {
           </Box>
         </Grid>
         <Grid item xs={3}>
+          <Typography color='textSecondary'>
+            Perform main fit of HIV model
+          </Typography>
+          <FormControl style={{ width: '100%', marginTop: 20 }}>
+            <Select
+              value={appManager.popCombMgr.selectedCombinationName}
+              onChange={handleSelectedPopCombName}
+              style={{ width: '100%', fontSize: '0.75rem' }}
+            >
+              {appManager.popCombMgr.combinationsNames.map((combName, i) =>
+                <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
+              )}
+            </Select>
+            <FormHelperText>Select population</FormHelperText>
+          </FormControl>
+          <FormControl style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
+            <Select
+              value={appManager.modelMgr.timeIntCollMgr.selectedRunCollectionId}
+              onChange={handleSelectedCollectionId}
+              style={{ width: '100%', fontSize: '0.75rem' }}
+            >
+              {appManager.modelMgr.timeIntCollMgr.collectionsArray.map((el, i) =>
+                <MenuItem key={i} value={el.id} dense>{el.name}</MenuItem>
+              )}
+            </Select>
+            <FormHelperText>Select time intervals and diagnosis rates modelling matrix</FormHelperText>
+          </FormControl>
           <Btn
             onClick={handleRunModelsBtnClick}
             disabled={appManager.modelMgr.modelsRunInProgress}
@@ -62,30 +89,6 @@ const TabModellingRunMain = props => {
             Cancel
           </Button>
           <ModelRunProgressBar progress={appManager.modelMgr.modelsRunProgress} />
-          <FormControl style={{ width: '100%', marginTop: 20}}>
-            <Select
-              value={appManager.popCombMgr.selectedCombinationName}
-              onChange={handleSelectedPopCombName}
-              style={{ width: '100%', fontSize: '0.75rem' }}
-            >
-              {appManager.popCombMgr.combinationsNames.map((combName, i) =>
-                <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
-              )}
-            </Select>
-            <FormHelperText>Select population</FormHelperText>
-          </FormControl>
-          <FormControl style={{ width: '100%', marginTop: 20 }}>
-            <Select
-              value={appManager.modelMgr.timeIntCollMgr.selectedRunCollectionId}
-              onChange={handleSelectedCollectionId}
-              style={{ width: '100%', fontSize: '0.75rem' }}
-            >
-              {appManager.modelMgr.timeIntCollMgr.collectionsArray.map((el, i) =>
-                <MenuItem key={i} value={el.id} dense>{el.name}</MenuItem>
-              )}
-            </Select>
-            <FormHelperText>Select time intervals and diagnosis rates modelling matrix</FormHelperText>
-          </FormControl>
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>

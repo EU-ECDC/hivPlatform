@@ -112,7 +112,7 @@ const RootElem = props => {
           <TabModelling appManager={appManager} />
         </StepPanel>
         <StepPanel panelId={5} activePanelId={appManager.activeStepId}>
-          <TabReports />
+          <TabReports appManager={appManager}/>
         </StepPanel>
         <StepPanel panelId={6} activePanelId={appManager.activeStepId}>
           <TabOutputs />

@@ -19,7 +19,9 @@ import Btn from '../Btn';
 
 const userStyles = makeStyles({
   btRoot: {
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 20,
+    width: '100%'
   },
   btOption: {
     '& span': {
@@ -57,15 +59,9 @@ const TabModellingRunBootstrap = props => {
           </Box>
         </Grid>
         <Grid item xs={3}>
-          <Btn onClick={handleRunBootstrapBtnClick}><DirectionsRunIcon />&nbsp;Run bootstrap</Btn>
-          <Button
-            onClick={handleCancelBootstrapBtnClick}
-            color='primary'
-            style={{ marginLeft: 20 }}
-          >
-            Cancel
-          </Button>
-          <ModelRunProgressBar progress={appManager.modelMgr.bootstrapRunProgress} />
+          <Typography color='textSecondary'>
+            Perform bootstrap fit of HIV model
+          </Typography>
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Input
               style={{ width: '100%', fontSize: '0.75rem' }}
@@ -83,7 +79,7 @@ const TabModellingRunBootstrap = props => {
             >
               <FormControlLabel
                 value='NON-PARAMETRIC'
-                control={<Radio color="primary"/>}
+                control={<Radio color="primary" />}
                 label='Non-parametric'
                 className={classes.btOption}
               />
@@ -96,13 +92,23 @@ const TabModellingRunBootstrap = props => {
             </RadioGroup>
             <FormHelperText>Set the bootstrap type</FormHelperText>
           </FormControl>
+          <Btn onClick={handleRunBootstrapBtnClick}><DirectionsRunIcon />&nbsp;Run bootstrap</Btn>
+          <Button
+            onClick={handleCancelBootstrapBtnClick}
+            color='primary'
+            style={{ marginLeft: 20 }}
+          >
+            Cancel
+          </Button>
+          <ModelRunProgressBar progress={appManager.modelMgr.bootstrapRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
-            <pre>
-              {appManager.modelMgr.bootstrapRunLog}
-            </pre>
+            <pre
+              dangerouslySetInnerHTML={{ __html: appManager.modelMgr.bootstrapRunLog }}
+              style={{ overflowX: 'auto' }}
+            />
           </Paper>
         </Grid>
       </Grid>

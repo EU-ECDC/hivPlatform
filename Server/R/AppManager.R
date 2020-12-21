@@ -46,17 +46,20 @@ AppManager <- R6::R6Class(
         AdjustedCaseBasedData = NULL,
 
         AggregatedData = NULL,
-        AggregatedDataSelection = NULL,
 
+        AggregatedDataSelection = NULL,
         PopulationCombination = list(CaseBasedPopulations = c(), AggrPopulations = c()),
-        CombinedData = NULL,
 
         HIVModelParameters = NULL,
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
 
         AdjustmentTask = NULL,
-        HIVModelTask = NULL
+        HIVModelTask = NULL,
+        BootstrapTask = NULL,
+        ReportTask = NULL,
+
+        Report = NULL
       )
     },
 
@@ -270,28 +273,19 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    CombineData = function(popCombination = NULL, aggrDataSelection = NULL) {
-      if (!is.null(popCombination)) {
-        private$Catalogs$PopulationCombination <- popCombination
-      }
-
-      if (!is.null(aggrDataSelection)) {
-        private$Catalogs$AggregatedDataSelection <- aggrDataSelection
-      }
-
-      private$Catalogs$CombinedData <- CombineData(
+    # 9. Fit HIV model -----------------------------------------------------------------------------
+    FitHIVModel = function(
+      settings = list(),
+      parameters = list(),
+      popCombination = NULL,
+      aggrDataSelection = NULL
+    ) {
+      dataSets <- CombineData(
         copy(self$FinalAdjustedCaseBasedData$Table),
         copy(private$Catalogs$AggregatedData),
         private$Catalogs$PopulationCombination,
         private$Catalogs$AggregatedDataSelection
       )
-
-      return(self)
-    },
-
-    # 9. Fit HIV model -----------------------------------------------------------------------------
-    FitHIVModel = function(settings = list(), parameters = list()) {
-      dataSets <- isolate(private$Catalogs$CombinedData)
 
       private$Catalogs$HIVModelTask <- Task$new(
         function(dataSets, settings, parameters) {
@@ -340,9 +334,9 @@ AppManager <- R6::R6Class(
     # 10. Perform non-parametric bootstrap ---------------------------------------------------------
     RunBootstrap = function(
       bsCount = NULL,
-      type = 'PARAMETRIC',
-      verbose = FALSE,
-      maxRunTimeFactor = 3
+      maxRunTimeFactor = 3,
+      type = 'NON-PARAMETRIC',
+      verbose = FALSE
     ) {
       if (is.null(bsCount)) {
         bsCount <- private$Catalogs$BSCount
@@ -355,89 +349,120 @@ AppManager <- R6::R6Class(
 
       PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
 
-      miCount <- length(private$Catalogs$HIVModelResults)
-      results <- list()
-      for (i in seq_len(miCount)) {
+      private$Catalogs$BootstrapTask <- Task$new(
+        function(
+          bsCount,
+          maxRunTime,
+          hivModelResultsList,
+          finalAdjustedCaseBasedData,
+          aggregatedData,
+          populationCombination,
+          aggregatedDataSelection,
+          verbose
+        ) {
+          suppressMessages(pkgload::load_all())
+          options(width = 100)
+          miCount <- length(hivModelResultsList)
+          results <- list()
+          for (i in seq_len(miCount)) {
 
-        PrintH2('Adjusted data {.val {i}}')
+            bootResults <- list()
+            PrintH2('Data set {.val {i}}')
 
-        hivModelResults <- private$Catalogs$HIVModelResults[[i]]
+            hivModelResults <- hivModelResultsList[[i]]
 
-        context <- hivModelResults$Context
-        param <- hivModelResults$Results$Param
-        info <- hivModelResults$Results$Info
+            context <- hivModelResults$Context
+            param <- hivModelResults$Results$Param
+            info <- hivModelResults$Results$Info
 
-        context$Settings <- modifyList(
-          context$Settings,
-          list(
-            ModelFilePath = NULL,
-            InputDataPath = NULL,
-            Verbose = verbose
-          ),
-          keep.null = TRUE
-        )
-
-        mainCaseBasedDataSet <- self$FinalAdjustedCaseBasedData$Table[Imputation == i]
-
-        bootResults <- list()
-        jSucc <- 1
-        j <- 0
-        while (jSucc <= bsCount) {
-          j <- j + 1
-
-          # Bootstrap data set
-          indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
-          bootCaseBasedDataSet <- mainCaseBasedDataSet[indices]
-          bootAggregatedData <- PrepareDataSetsForModel(bootCaseBasedDataSet)
-
-          bootContext <- hivModelling::GetRunContext(
-            parameters = context$Parameters,
-            settings = context$Settings,
-            data = bootAggregatedData
-          )
-
-          bootData <- hivModelling::GetPopulationData(bootContext)
-
-          startTime <- Sys.time()
-          bootResult <- hivModelling::PerformMainFit(
-            bootContext, bootData, param = param, info = info, attemptSimplify = FALSE,
-            maxRunTime = maxRunTime
-          )
-          runTime <- Sys.time() - startTime
-
-          msgType <- ifelse(bootResult$Converged, 'success', 'danger')
-
-          PrintAlert(
-            'Fit to data set {.val {jSucc}} done |',
-            'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
-            type = msgType
-          )
-
-          bootResults[[j]] <- list(
-            Context = bootContext,
-            Data = bootData,
-            Results = bootResult,
-            RunTime = runTime
-          )
-
-          if (bootResult$Converged) {
-            jSucc <- jSucc + 1
-          }
-
-          progress <- (jSucc + (i - 1) * bsCount) / (miCount * bsCount) * 100
-          self$SendEventToReact('shinyHandler', list(
-            Type = 'BOOTSTRAP_RUN_PROGRESSES',
-            Status = 'SUCCESS',
-            Payload = list(
-              Progress = progress
+            context$Settings <- modifyList(
+              context$Settings,
+              list(
+                ModelFilePath = NULL,
+                InputDataPath = NULL,
+                Verbose = verbose
+              ),
+              keep.null = TRUE
             )
-          ))
-        }
 
-        results[[i]] <- bootResults
-      }
+            mainCaseBasedDataSet <- finalAdjustedCaseBasedData$Table[Imputation == (i - 1)]
 
-      private$Catalogs$HIVBootstrapModelResults <- results
+            jSucc <- 1
+            j <- 0
+            while (jSucc <= bsCount) {
+              j <- j + 1
+
+              # Bootstrap data set
+              indices <- sample.int(nrow(mainCaseBasedDataSet), replace = TRUE)
+              bootCaseBasedDataSet <- mainCaseBasedDataSet[indices]
+              bootAggregatedData <- CombineData(
+                copy(bootCaseBasedDataSet),
+                copy(aggregatedData),
+                populationCombination,
+                aggregatedDataSelection
+              )[[1]]
+
+              bootContext <- hivModelling::GetRunContext(
+                data = bootAggregatedData,
+                parameters = context$Parameters,
+                settings = context$Settings
+              )
+
+              bootData <- hivModelling::GetPopulationData(bootContext)
+
+              startTime <- Sys.time()
+              bootResult <- hivModelling::PerformMainFit(
+                bootContext, bootData,
+                param = param, info = info, attemptSimplify = FALSE,
+                maxRunTime = maxRunTime
+              )
+              runTime <- Sys.time() - startTime
+
+              msgType <- ifelse(bootResult$Converged, 'success', 'danger')
+
+              PrintAlert(
+                'Fit to data set {.val {jSucc}} done |',
+                'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
+                type = msgType
+              )
+
+              bootResults[[j]] <- list(
+                Context = bootContext,
+                Data = bootData,
+                Results = bootResult,
+                RunTime = runTime
+              )
+
+              if (bootResult$Converged) {
+                  jSucc <- jSucc + 1
+              }
+
+              progress <- (jSucc + (i - 1) * bsCount) / (miCount * bsCount) * 100
+            }
+
+            results[[i]] <- bootResults
+          }
+          return(results)
+        },
+        args = list(
+          bsCount = bsCount,
+          maxRunTime = maxRunTime,
+          hivModelResultsList = private$Catalogs$HIVModelResults,
+          finalAdjustedCaseBasedData = self$FinalAdjustedCaseBasedData,
+          aggregatedData = private$Catalogs$AggregatedData,
+          populationCombination = private$Catalogs$PopulationCombination,
+          aggregatedDataSelection = private$Catalogs$AggregatedDataSelection,
+          verbose = verbose
+        ),
+        session = private$Session
+      )
+      private$Catalogs$BootstrapTask$Run()
+
+      return(invisible(self))
+    },
+
+    CancelBootstrapTask = function() {
+      private$Catalogs$BootstrapTask$Stop()
 
       return(invisible(self))
     },
@@ -554,6 +579,26 @@ AppManager <- R6::R6Class(
 
     SetAggregatedDataSelection = function(aggregatedDataSelection) {
       private$Catalogs$AggregatedDataSelection <- aggregatedDataSelection
+    },
+
+    GenerateReport = function() {
+      private$Catalogs$ReportTask <- Task$new(
+        function() {
+          results <- "<h1>Title</h1><p>Text set in R</p>"
+          return(results)
+        },
+        args = list(),
+        session = private$Session
+      )
+      private$Catalogs$ReportTask$Run()
+
+      return(invisible(self))
+    },
+
+    CancelReportTask = function() {
+      private$Catalogs$ReportTask$Stop()
+
+      return(invisible(self))
     }
   ),
 
@@ -678,10 +723,6 @@ AppManager <- R6::R6Class(
       return(private$Catalogs$PopulationCombination)
     },
 
-    CombinedData = function() {
-      return(private$Catalogs$CombinedData)
-    },
-
     BootstrapCaseBasedDataSets = function() {
       return(private$Catalogs$BootstrapCaseBasedDataSets)
     },
@@ -706,8 +747,14 @@ AppManager <- R6::R6Class(
       }
     },
 
-    HIVBootstrapModelResults = function() {
-      return(private$Catalogs$HIVBootstrapModelResults)
+    HIVBootstrapModelResults = function(dt) {
+      if (missing(dt)) {
+        return(private$Catalogs$HIVBootstrapModelResults)
+      } else {
+        if (!is.null(dt)) {
+          private$Catalogs$HIVBootstrapModelResults <- dt
+        }
+      }
     },
 
     FlatHIVBootstrapModelResults = function() {
@@ -724,6 +771,24 @@ AppManager <- R6::R6Class(
 
     HIVModelTask = function() {
       return(private$Catalogs$HIVModelTask)
+    },
+
+    BootstrapTask = function() {
+      return(private$Catalogs$BootstrapTask)
+    },
+
+    ReportTask = function() {
+      return(private$Catalogs$ReportTask)
+    },
+
+    Report = function(report) {
+      if (missing(report)) {
+        return(private$Catalogs$Report)
+      } else {
+        if (!is.null(report)) {
+          private$Catalogs$Report <- report
+        }
+      }
     }
   )
 )

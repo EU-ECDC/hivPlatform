@@ -18,9 +18,8 @@
 #' @export
 GetAvailableStrata <- function(
   dt,
-  colNames
+  colNames = c('Gender', 'Transmission', 'GroupedRegionOfOrigin', 'PlaceOfResidence')
 ) {
-  colNames <- c('Gender', 'Transmission')
   result <- setNames(lapply(colNames, function(attr) {
     dt[Imputation != 0, as.character(unique(get(attr)))]
   }), colNames)

@@ -79,6 +79,8 @@ export default class AppManager {
 
   mode = 'NONE';
 
+  report = '';
+
   // Shiny custom event handlers
   onShinyEvent = event => {
     console.log(event);
@@ -178,17 +180,18 @@ export default class AppManager {
         this.notificationsMgr.setMsg('Model run finished');
         break;
       case 'BOOTSTRAP_RUN_STARTED':
-        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
         this.modelMgr.setBootstrapRunProgress(1);
         break;
-      case 'BOOTSTRAP_RUN_PROGRESSES':
-        this.modelMgr.setBootstrapRunProgress(event.Payload.Progress);
+      case 'BOOTSTRAP_RUN_LOG_SET':
+        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
         break;
       case 'BOOTSTRAP_RUN_FINISHED':
-        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
         this.modelMgr.setBootstrapRunProgress(null);
         this.notificationsMgr.setMsg('Bootstrap run finished');
         break
+      case 'REPORT_SET':
+        this.setReport(event.Payload.Report);
+        break;
     };
     this.uiStateMgr.setLastEventType(event.Type);
   };
@@ -255,6 +258,8 @@ export default class AppManager {
     this.steps[0].completed = true;
     this.setActiveStepId(1);
   };
+
+  setReport = report => this.report = report;
 
   unbindShinyInputs = () => {
     if (this.shinyReady) {

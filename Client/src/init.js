@@ -4,7 +4,7 @@ export default appManager => {
   if (!DEBUG) return;
 
   appManager.setMode('ALL-IN-ONE');
-  //appManager.setActiveSubStepId(1, 1);
+  appManager.setActiveSubStepId(5, 0);
 
   // 1a. Upload case-based data
   appManager.onShinyEvent({
