@@ -15,7 +15,7 @@ summaryDataJson <- jsonlite:::asJSON(summaryData, keep_vec_names = TRUE)
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c(
-  "Multiple Imputation using Chained Equations - MICE"
+  'Multiple Imputation using Chained Equations - MICE'
 ))
 appMgr$AdjustCaseBasedData(adjustmentSpecs)
 appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
