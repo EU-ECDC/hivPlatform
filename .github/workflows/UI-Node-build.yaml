@@ -33,5 +33,6 @@ jobs:
 
     - name: Build UI
       run: |
+        yarn install
         yarn build
       working-directory: Client
