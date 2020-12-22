@@ -63,7 +63,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.11.0"],
             ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.2.0"],
             ["webpack-dev-server", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-beta.0"],
-            ["webpack-merge", "npm:5.7.2"]
+            ["webpack-merge", "npm:5.7.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -5312,7 +5312,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.11.0"],
             ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.2.0"],
             ["webpack-dev-server", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-beta.0"],
-            ["webpack-merge", "npm:5.7.2"]
+            ["webpack-merge", "npm:5.7.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -8874,10 +8874,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:5.7.2", {
-          "packageLocation": "./.yarn/cache/webpack-merge-npm-5.7.2-010199a62c-7e3b16448c.zip/node_modules/webpack-merge/",
+        ["npm:5.7.3", {
+          "packageLocation": "./.yarn/cache/webpack-merge-npm-5.7.3-f596ce4401-5e28f66f59.zip/node_modules/webpack-merge/",
           "packageDependencies": [
-            ["webpack-merge", "npm:5.7.2"],
+            ["webpack-merge", "npm:5.7.3"],
             ["clone-deep", "npm:4.0.1"],
             ["wildcard", "npm:2.0.0"]
           ],

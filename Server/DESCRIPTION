@@ -1,8 +1,8 @@
 Package: hivEstimatesAccuracy2
 Type: Package
 Title: Improves Accuracy of HIV Estimates in EU/EEA Countries
-Version: 2.0.0
-Date: 2020-10-04
+Version: 1.9.24
+Date: 2020-12-22
 Authors@R: c(person("Magdalena", "Rosinska", email = "mrosinska@pzh.gov.pl",
     role = c("aut", "cph")), person("Nikos", "Pantazis", email =
     "npantaz@med.uoa.gr", role = c("aut")), person("Daniel", "Lewandowski",
@@ -14,7 +14,7 @@ Maintainer: Daniel Lewandowski <daniel@nextpagesoft.net>
 Description: Improves the accuracy of HIV estimates in EU/EEA countries.
 License: file LICENSE
 Depends: R (>= 3.1.0)
-Imports: 
+Imports:
     callr (>= 3.4.3),
     cli (>= 2.0.2),
     data.table (>= 1.12.8),
