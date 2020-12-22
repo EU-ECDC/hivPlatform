@@ -36,3 +36,9 @@ jobs:
         yarn install
         yarn build
       working-directory: Client
+
+    - name: Upload build
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-upload
+        path: Client/build
