@@ -4,7 +4,10 @@
 \alias{GetAvailableStrata}
 \title{GetAvailableStrata}
 \usage{
-GetAvailableStrata(dt, colNames)
+GetAvailableStrata(
+  dt,
+  colNames = c("Gender", "Transmission", "GroupedRegionOfOrigin", "PlaceOfResidence")
+)
 }
 \arguments{
 \item{dt}{dt}

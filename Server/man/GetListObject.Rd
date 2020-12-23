@@ -25,8 +25,8 @@ Returns list object stored as text in R script file.
 \examples{
 \dontrun{
 GetListObject(fileName)
-GetListObject(fileName, section = "Name")
-GetListObject(fileName, section = "Parameters")
+GetListObject(fileName, section = 'Name')
+GetListObject(fileName, section = 'Parameters')
 }
 
 }
