@@ -40,6 +40,7 @@ jobs:
         run: |
           install.packages('remotes')
           install.packages('rsconnect')
+          install.packages('renv')
         shell: Rscript {0}
         working-directory: Server
 
@@ -53,7 +54,6 @@ jobs:
 
       - name: Install R production packages
         run: |
-          if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')
           renv::restore()
         shell: Rscript {0}
         working-directory: Server

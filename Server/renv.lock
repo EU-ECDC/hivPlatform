@@ -4,7 +4,7 @@
     "Repositories": [
       {
         "Name": "CRAN",
-        "URL": "https://cran.rstudio.com"
+        "URL": "https://cloud.r-project.org"
       }
     ]
   },
@@ -324,10 +324,10 @@
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
-      "RemoteRef": "master",
-      "RemoteSha": "3753221b0b3cfd9ca0da9191ca933fad9bfb2dd1",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "2fb64de0a02828a03d887aba92c371c893ca963d",
       "RemoteHost": "api.github.com",
-      "Hash": "e425e8921d612ae48110f547edd4f160"
+      "Hash": "73a4d715794605b6991f2bcad8376f9d"
     },
     "hms": {
       "Package": "hms",
