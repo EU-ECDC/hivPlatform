@@ -4,12 +4,17 @@ rVersion <- '4.0'
 repoPath <- 'd:/_DEPLOYMENT/hivEstimatesAccuracy2/repo'
 repoCRAN <- 'https://cran.r-project.org/'
 
-pkgs <- c(
-  'cli', 'data.table', 'ggplot2', 'jomo', 'knitr', 'mice', 'mitools', 'pkgload',
-  'plotly', 'quantreg', 'R6', 'readxl', 'rmarkdown', 'rstudioapi', 'shiny', 'SparseM',
-  'utils', 'stats'
+descr <- as.data.frame(read.dcf('DESCRIPTION'))
+packageVersions <- strsplit(gsub('\n', '', descr$Imports), ',')[[1]]
+pkgs <- unname(sapply(
+  packageVersions, function(packageVersion) {
+    gsub("(\\w+) .*", "\\1", packageVersion)
+  }
+))
+pkgs <- setdiff(
+  pkgs,
+  c('R', 'hivModelling', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
 )
-pkgs <- setdiff(pkgs, c('grid', 'graphics', 'parallel', 'stats', 'tools', 'utils'))
 pkgList <- pkgDep(pkgs, repos = repoCRAN, type = 'source', suggests = FALSE)
 
 if (dir.exists(repoPath)) {
