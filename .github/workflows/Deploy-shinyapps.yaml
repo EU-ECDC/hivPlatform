@@ -36,9 +36,8 @@ jobs:
         run: |
           sudo apt-get install -y libcurl4-openssl-dev
 
-      - name: Install R development packages
+      - name: Install R deployment packages
         run: |
-          install.packages('remotes')
           install.packages('rsconnect')
           install.packages('renv')
         shell: Rscript {0}
@@ -54,6 +53,7 @@ jobs:
 
       - name: Install R production packages
         run: |
+          renv::activate()
           renv::restore()
         shell: Rscript {0}
         working-directory: Server
