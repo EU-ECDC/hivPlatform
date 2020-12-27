@@ -3,7 +3,7 @@ on:
     paths:
     - 'Server/**'
 
-name: Check R
+name: Check server
 
 jobs:
   check:
