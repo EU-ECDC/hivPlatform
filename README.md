@@ -1,6 +1,7 @@
 # Status
 
-[![R-CMD-check](https://github.com/nextpagesoft/hivEstimatesAccuracy2/workflows/R-CMD-check/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions)
+![Check server](https://github.com/nextpagesoft/hivEstimatesAccuracy2/workflows/Check%20server/badge.svg)
+![Deploy application](https://github.com/nextpagesoft/hivEstimatesAccuracy2/workflows/Deploy%20application/badge.svg)
 
 # European Centre for Disease Prevention and Control
 

@@ -1,7 +1,7 @@
 on:
   workflow_dispatch
 
-name: Deploy
+name: Deploy application
 
 jobs:
   deploy:
