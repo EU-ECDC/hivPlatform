@@ -19,7 +19,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+          path: Server/inst/app/
+
       - uses: r-lib/actions/setup-r@v1
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get install -y libcurl4-openssl-dev
+        working-directory: Server
 
       - name: Install R development packages
         run: |
