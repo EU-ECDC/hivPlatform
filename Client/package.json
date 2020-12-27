@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve",
-    "build": "cross-env NODE_ENV=production webpack && copyfiles -u 1 build/* build/js/* ../Server/inst/app/www/"
+    "build": "cross-env NODE_ENV=production webpack && copyfiles -u 1 build/* build/js/* www/* www/img/* ../Server/inst/app/www/",
   },
   "repository": "",
   "author": "NextPage Software Daniel Lewandowski",
