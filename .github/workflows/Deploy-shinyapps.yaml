@@ -47,4 +47,5 @@ jobs:
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
         run: |
-          Rscript Server/utils/ShinyAppsDeployScript.R
+          Rscript utils/ShinyAppsDeployScript.R
+        working-directory: Server
