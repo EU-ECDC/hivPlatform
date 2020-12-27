@@ -325,9 +325,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "master",
-      "RemoteSha": "8e973933f322f975cc1b4bbb9aa2459d18b59de4",
+      "RemoteSha": "3753221b0b3cfd9ca0da9191ca933fad9bfb2dd1",
       "RemoteHost": "api.github.com",
-      "Hash": "5f33f81ecec614ee5c97095f68247308"
+      "Hash": "e425e8921d612ae48110f547edd4f160"
     },
     "hms": {
       "Package": "hms",
@@ -734,13 +734,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "6ea435c354e8448819627cf686f66e0a"
-    },
-    "tinytest": {
-      "Package": "tinytest",
-      "Version": "1.2.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "f6db1906139f7771e34de5cf1cd31aed"
     },
     "tinytex": {
       "Package": "tinytex",

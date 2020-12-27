@@ -17,8 +17,8 @@ jobs:
         config:
           - {os: windows-latest, r: 'release'}
           - {os: macOS-latest, r: 'release'}
-          - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-          - {os: ubuntu-20.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
+          - {os: ubuntu-20.04, r: 'release', rspm: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
+          - {os: ubuntu-20.04, r: 'devel', rspm: 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -74,13 +74,13 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements('ubuntu', '20.04'))')
           sudo apt-get install -y libcurl4-openssl-dev
         working-directory: Server
 
       - name: Install R production packages
         run: |
-          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')
           renv::restore()
         shell: Rscript {0}
         working-directory: Server
@@ -91,7 +91,7 @@ jobs:
           _R_CHECK_FORCE_SUGGESTS_: false
           _R_CHECK_LICENSE_: false
           _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
         shell: Rscript {0}
         working-directory: Server
 
