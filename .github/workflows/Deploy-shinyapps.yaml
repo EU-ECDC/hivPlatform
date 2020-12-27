@@ -35,17 +35,16 @@ jobs:
       - name: Install R system dependencies
         run: |
           sudo apt-get install -y libcurl4-openssl-dev
-        working-directory: Server
 
       - name: Install rsconnect R package
         run: |
           install.packages('rsconnect')
         shell: Rscript {0}
-        working-directory: Server
 
       - name: Deploy
+        env:
+          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
         run: |
-          rsconnect::setAccountInfo(name = ${{ secrets.SHINYAPPS_ACCOUNT }}, token = ${{ secrets.SHINYAPPS_TOKEN }}, secret = ${{ secrets.SHINYAPPS_SECRET }})
-          rsconnect::deployApp(account = ${{ secrets.SHINYAPPS_ACCOUNT }}, appName = 'hivEstimatesAccuracy2', appFiles = c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'R/', 'man/', 'inst/', 'data/'), contentCategory = 'application', forceUpdate = TRUE)
-        shell: Rscript {0}
-        working-directory: Server
+          Rscript Server/utils/ShinyAppsDeployScript.R
