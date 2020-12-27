@@ -12,20 +12,40 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - name: Set up Node 14
+        uses: actions/setup-node@v2
         with:
-          name: my-artifact
-          path: Server/inst/app/
+          node-version: '14'
+          architecture: 'x64'
+
+      - name: Install yarn2
+        run: |
+          npm install -g yarn
+          yarn set version berry
+        working-directory: Client
+
+      - name: Build UI
+        run: |
+          yarn install
+          yarn build
+        working-directory: Client
 
       - uses: r-lib/actions/setup-r@v1
 
-      - name: Install system dependencies
+      - name: Install R system dependencies
         run: |
           sudo apt-get install -y libcurl4-openssl-dev
         working-directory: Server
 
-      - name: Install R development packages
+      - name: Install rsconnect R package
         run: |
           install.packages('rsconnect')
+        shell: Rscript {0}
+        working-directory: Server
+
+      - name: Deploy
+        run: |
+          rsconnect::setAccountInfo(name = ${{ secrets.SHINYAPPS_ACCOUNT }}, token = ${{ secrets.SHINYAPPS_TOKEN }}, secret = ${{ secrets.SHINYAPPS_SECRET }})
+          rsconnect::deployApp(account = ${{ secrets.SHINYAPPS_ACCOUNT }}, appName = 'hivEstimatesAccuracy2', appFiles = c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'R/', 'man/', 'inst/', 'data/'), contentCategory = 'application', forceUpdate = TRUE)
         shell: Rscript {0}
         working-directory: Server
