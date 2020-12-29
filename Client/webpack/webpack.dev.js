@@ -5,10 +5,11 @@ module.exports = {
   mode: 'development',
 
   devServer: {
+    host: 'localhost',
+    port: 8080,
     compress: false,
     hot: true,
-    open: true,
-    port: 8080
+    open: true
   },
 
   output: {
