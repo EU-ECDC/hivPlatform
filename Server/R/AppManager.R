@@ -301,7 +301,7 @@ AppManager <- R6::R6Class(
             data <- hivModelling::GetPopulationData(context)
 
             startTime <- Sys.time()
-            fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = FALSE)
+            fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = TRUE)
             runTime <- Sys.time() - startTime
 
             results[[i]] <- list(

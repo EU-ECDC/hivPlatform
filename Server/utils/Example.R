@@ -31,6 +31,7 @@ cat(appMgr$HIVModelTask$HTMLRunLog)
 # STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$RunBootstrap(bsCount = 5)
 appMgr$HIVBootstrapModelResults <- appMgr$BootstrapTask$Result
+cat(appMgr$BootstrapTask$RunLog)
 
 # STEP 7 - Calculate statistics for every output column --------------------------------------------
 appMgr$ComputeHIVBootstrapStatistics()

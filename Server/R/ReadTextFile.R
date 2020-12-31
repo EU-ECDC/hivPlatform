@@ -13,8 +13,10 @@
 #' }
 #'
 #' @export
-ReadTextFile <- function(fileName, ...)
-{
+ReadTextFile <- function(
+  fileName,
+  ...
+) {
   stopifnot(!missing(fileName))
 
   data <- data.table::fread(input = fileName, ...)
