@@ -125,7 +125,7 @@ CaseDataManager <- R6::R6Class(
     },
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
-    ApplyOriginGrouping = function(originGrouping, type) {
+    ApplyOriginGrouping = function(originGrouping, type = 'CUSTOM') {
       if (private$Catalogs$LastStep < 2) {
         PrintAlert(
           'Atrributes mapping must be applied before applying origin grouping',
@@ -140,10 +140,9 @@ CaseDataManager <- R6::R6Class(
       status <- 'SUCCESS'
       tryCatch({
         if (missing(originGrouping)) {
-          if (missing(type)) {
-            type <- 'REPCOUNTRY + UNK + OTHER'
-          }
           originGrouping <- GetOriginGroupingPreset(type, originDistribution)
+        } else {
+          type <- 'CUSTOM'
         }
         ApplyOriginGrouping(data, originGrouping)
       },
@@ -163,43 +162,49 @@ CaseDataManager <- R6::R6Class(
       }
 
       return(invisible(self))
+    },
+
+    # 4. Adjust data -------------------------------------------------------------------------------
+    RunAdjustments = function(adjustmentSpecs) {
+      if (private$Catalogs$LastStep < 3) {
+        PrintAlert(
+          'Origing grouping must be applied before running adjustments',
+          type = 'danger'
+        )
+        return(invisible(self))
+      }
+
+      data <- private$Catalogs$Data
+
+      private$Catalogs$AdjustmentTask <- Task$new(
+        function(data, adjustmentSpecs) {
+          suppressMessages(pkgload::load_all())
+          options(width = 100)
+          result <- hivEstimatesAccuracy2::RunAdjustments(
+            data = data,
+            adjustmentSpecs = adjustmentSpecs,
+            diagYearRange = NULL,
+            notifQuarterRange = NULL,
+            seed = NULL
+          )
+          return(result)
+        },
+        args = list(data = data, adjustmentSpecs = adjustmentSpecs),
+        successCallback = function() {
+          PrintAlert('Hey, I\'m done')
+        },
+        session = private$Session
+      )
+      private$Catalogs$AdjustmentTask$Run()
+
+      return(invisible(self))
+    },
+
+    CancelAdjustments = function() {
+      private$Catalogs$AdjustmentTask$Stop()
+
+      return(invisible(self))
     }
-
-    # # 5. Adjust case-based data --------------------------------------------------------------------
-    # AdjustCaseBasedData = function(adjustmentSpecs) {
-    #   private$Catalogs$AdjustmentTask <- Task$new(
-    #     function(data, adjustmentSpecs) {
-    #       suppressMessages(pkgload::load_all())
-    #       options(width = 100)
-    #       result <- hivEstimatesAccuracy2::RunAdjustments(
-    #         data = data,
-    #         adjustmentSpecs = adjustmentSpecs,
-    #         diagYearRange = NULL,
-    #         notifQuarterRange = NULL,
-    #         seed = NULL
-    #       )
-    #       return(result)
-    #     },
-    #     args = list(
-    #       data = isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
-    #       adjustmentSpecs = adjustmentSpecs
-    #     ),
-    #     session = private$Session
-    #   )
-    #   private$Catalogs$AdjustmentTask$Run()
-
-    #   return(invisible(self))
-    # },
-
-    # CancelAdjustmentTask = function() {
-    #   private$Catalogs$AdjustmentTask$Stop()
-
-    #   return(invisible(self))
-    # },
-
-    # SetMICount = function(count) {
-    #   private$Catalogs$MICount <- max(count, 0)
-    # }
   ),
 
   private = list(
@@ -364,6 +369,11 @@ CaseDataManager <- R6::R6Class(
       return(private$Catalogs$Summary)
     },
 
+    SummaryJSON = function() {
+      summaryJSON <- jsonlite:::asJSON(private$Catalogs$Summary, keep_vec_names = TRUE)
+      return(summaryJSON)
+    },
+
     DataStatus = function() {
       return(private$Catalogs$DataStatus)
     },
@@ -374,6 +384,10 @@ CaseDataManager <- R6::R6Class(
 
     LastStep = function() {
       return(private$Catalogs$LastStep)
+    },
+
+    AdjustmentTask = function() {
+      return(private$Catalogs$AdjustmentTask)
     }
 
     # MICount = function() {

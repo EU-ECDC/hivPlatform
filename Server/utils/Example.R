@@ -3,15 +3,14 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 appMgr$ReadAggregatedData('D:/VirtualBox_Shared/HIV test files/Data/test NL - 2 populations.zip')
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
-appMgr$ApplyAttributesMappingToCaseBasedData()
-appMgr$PreProcessCaseBasedData()
-appMgr$ApplyOriginGrouping(groups = list())
-summaryData <- appMgr$GetSummaryData()
-summaryDataJson <- jsonlite:::asJSON(summaryData, keep_vec_names = TRUE)
+appMgr$CaseMgr$ApplyAttributesMapping()
+appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
+appMgr$CaseMgr$Summary
+appMgr$CaseMgr$SummaryJSON
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c(
@@ -57,11 +56,14 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 appMgr$GenerateReport()
 appMgr$Report <- appMgr$ReportTask$Result
 
+# Case data manager only  --------------------------------------------------------------------------
 caseMgr <- CaseDataManager$new()
 caseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 caseMgr$ApplyAttributesMapping()
-caseMgr$ApplyOriginGrouping(type = 'asds')
-
+caseMgr$ApplyOriginGrouping()
+caseMgr$AdjustData(
+  GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+)
 caseMgr$FileName
 caseMgr$OriginalData
 caseMgr$AttrMapping

@@ -20,12 +20,14 @@ Task <- R6::R6Class(
     initialize = function(
       expr,
       args = list(),
+      successCallback = NULL,
       session = NULL
     ) {
 
       private$Session <- session
       private$Expr <- expr
       private$Args <- args
+      private$SuccessCallback <- successCallback
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
 
@@ -79,6 +81,9 @@ Task <- R6::R6Class(
     # Arguments for the expression
     Args = NULL,
 
+    # On-success callback function
+    SuccessCallback = NULL,
+
     CancellProcessed = FALSE,
 
     InitializeCatalogs = function(skipRunLog = FALSE) {
@@ -126,7 +131,7 @@ Task <- R6::R6Class(
           if (self$IsRunning) {
             private$Catalogs$Status <- 'RUNNING'
             self$RunLog
-            shiny::invalidateLater(1000)
+            shiny::invalidateLater(2000)
           } else {
             private$Catalogs$Status <- 'STOPPED'
             self$Result
@@ -140,12 +145,15 @@ Task <- R6::R6Class(
           log <- private$CollectRunLog()
           cat(log)
           private$AddToRunLog(log)
-          Sys.sleep(1)
+          Sys.sleep(2)
         }
         private$Catalogs$Status <- 'STOPPED'
         log <- private$CollectRunLog()
         cat(log)
         private$AddToRunLog(log)
+      }
+      if (is.function(private$SuccessCallback)) {
+        private$SuccessCallback()
       }
     }
   ),
@@ -157,7 +165,7 @@ Task <- R6::R6Class(
           private$Catalogs$TaskHandle$get_result(),
           silent = TRUE
         )
-        if (inherits(result, 'try-error')) {
+        if (IsError(result)) {
           result <- NULL
         }
         private$Catalogs$Result <- result
