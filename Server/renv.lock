@@ -193,10 +193,10 @@
     },
     "data.table": {
       "Package": "data.table",
-      "Version": "1.13.4",
+      "Version": "1.13.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "626afb25b020646f53105e6485e695c6"
+      "Hash": "813fa8857aaa949b243e2e0b4abb8592"
     },
     "desc": {
       "Package": "desc",
@@ -284,10 +284,10 @@
     },
     "ggplot2": {
       "Package": "ggplot2",
-      "Version": "3.3.2",
+      "Version": "3.3.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4ded8b439797f7b1693bd3d238d0106b"
+      "Hash": "3eb6477d01eb5bbdc03f7d5f70f2733e"
     },
     "globals": {
       "Package": "globals",
@@ -319,15 +319,15 @@
     },
     "hivModelling": {
       "Package": "hivModelling",
-      "Version": "0.9.17",
+      "Version": "0.9.18",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "HEAD",
-      "RemoteSha": "72774449415f02f731a31e9851c91cabf5dccb12",
+      "RemoteSha": "661af1a4d3da1b0441318f175b441e25de39bdd0",
       "RemoteHost": "api.github.com",
-      "Hash": "ef1f25448e613dec0ce0e7a8beabab9d"
+      "Hash": "2f224780d8922fc2a6fbe428c7ee2bbf"
     },
     "hms": {
       "Package": "hms",
@@ -632,10 +632,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.9",
+      "Version": "0.4.10",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9d7aba7bed9a79e2403b4777428a2b12"
+      "Hash": "599df23c40a4fce9c7b4764f28c37857"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
