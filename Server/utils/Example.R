@@ -57,16 +57,19 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 appMgr$GenerateReport()
 appMgr$Report <- appMgr$ReportTask$Result
 
-
 caseMgr <- CaseDataManager$new()
 caseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 caseMgr$ApplyAttributesMapping()
-caseMgr$ApplyOriginGrouping()
-caseMgr$OriginalDataPath
+caseMgr$ApplyOriginGrouping(type = 'asds')
+
+caseMgr$FileName
 caseMgr$OriginalData
-caseMgr$AttributeMapping
-caseMgr$AttributeMappingStatus
+caseMgr$AttrMapping
+caseMgr$AttrMappingStatus
+caseMgr$PreProcessArtifacts
 caseMgr$OriginDistribution
 caseMgr$OriginGrouping
+caseMgr$Summary
 caseMgr$DataStatus
-caseMgr$Data$Table[]
+caseMgr$Data
+caseMgr$LastStep

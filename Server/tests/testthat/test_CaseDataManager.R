@@ -1,0 +1,76 @@
+context('CaseDataManager')
+
+test_that('creating the manager object is correct', {
+  caseMgr <- CaseDataManager$new()
+
+  expect_equal(caseMgr$LastStep, 0)
+})
+
+test_that('reading data is correct', {
+  caseMgr$ReadData(system.file('TestData', 'dummy_miss1.zip', package = 'hivEstimatesAccuracy2'))
+
+  expect_equal(basename(caseMgr$FileName), 'dummy_miss1.zip')
+  expect_is(caseMgr$OriginalData, 'data.table')
+  expect_equal(nrow(caseMgr$OriginalData), 7619)
+  expect_equal(length(caseMgr$AttrMapping), 25)
+  expect_true(caseMgr$AttrMappingStatus$Valid)
+  expect_null(caseMgr$PreProcessArtifacts)
+  expect_null(caseMgr$OriginDistribution)
+  expect_is(caseMgr$OriginGrouping, 'list')
+  expect_length(caseMgr$OriginGrouping, 0)
+  expect_null(caseMgr$Summary)
+  expect_null(caseMgr$DataStatus)
+  expect_null(caseMgr$Data)
+  expect_equal(caseMgr$LastStep, 1)
+})
+
+test_that('applying atrributes mapping is correct', {
+  caseMgr$ApplyAttributesMapping()
+
+  expect_is(caseMgr$OriginalData, 'data.table')
+  expect_equal(nrow(caseMgr$OriginalData), 7619)
+  expect_equal(length(caseMgr$AttrMapping), 25)
+  expect_true(caseMgr$AttrMappingStatus$Valid)
+  expect_is(caseMgr$PreProcessArtifacts, 'list')
+  expect_setequal(names(caseMgr$PreProcessArtifacts), c('MissGenderReplaced', 'MissGenderImputed'))
+  expect_is(caseMgr$OriginDistribution, 'data.table')
+  expect_setequal(colnames(caseMgr$OriginDistribution), c('origin', 'count'))
+  expect_is(caseMgr$OriginGrouping, 'list')
+  expect_length(caseMgr$OriginGrouping, 0)
+  expect_is(caseMgr$DataStatus, 'list')
+  expect_true(caseMgr$DataStatus$Valid)
+  expect_equal(length(caseMgr$DataStatus$CheckStatus), 25)
+  expect_is(caseMgr$Data, 'data.table')
+  expect_equal(nrow(caseMgr$Data), 7619)
+  expect_true(caseMgr$Data[, all(Imputation == 0)])
+  expect_null(caseMgr$Summary)
+  expect_equal(caseMgr$LastStep, 2)
+})
+
+test_that('applying origin grouping is correct', {
+  caseMgr$ApplyOriginGrouping()
+
+  expect_is(caseMgr$OriginalData, 'data.table')
+  expect_equal(nrow(caseMgr$OriginalData), 7619)
+  expect_equal(length(caseMgr$AttrMapping), 25)
+  expect_true(caseMgr$AttrMappingStatus$Valid)
+  expect_is(caseMgr$PreProcessArtifacts, 'list')
+  expect_setequal(names(caseMgr$PreProcessArtifacts), c('MissGenderReplaced', 'MissGenderImputed'))
+  expect_is(caseMgr$OriginDistribution, 'data.table')
+  expect_setequal(colnames(caseMgr$OriginDistribution), c('origin', 'count'))
+  expect_is(caseMgr$OriginGrouping, 'list')
+  expect_is(caseMgr$DataStatus, 'list')
+  expect_true(caseMgr$DataStatus$Valid)
+  expect_equal(length(caseMgr$DataStatus$CheckStatus), 25)
+  expect_is(caseMgr$Data, 'data.table')
+  expect_equal(nrow(caseMgr$Data), 7619)
+  expect_true(caseMgr$Data[, all(Imputation == 0)])
+  expect_is(caseMgr$OriginGrouping, 'list')
+  expect_equal(length(caseMgr$OriginGrouping), 3)
+  expect_is(caseMgr$Summary, 'list')
+  expect_setequal(
+    names(caseMgr$Summary),
+    c('DiagYearPlotData', 'NotifQuarterPlotData', 'MissPlotData', 'RepDelPlotData')
+  )
+  expect_equal(caseMgr$LastStep, 3)
+})

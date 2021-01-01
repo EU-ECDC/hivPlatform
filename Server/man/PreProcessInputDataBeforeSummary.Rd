@@ -12,7 +12,7 @@ PreProcessInputDataBeforeSummary(inputData, seed = NULL)
 \item{seed}{Random seed. Optional. Default = NULL}
 }
 \value{
-data.table object
+list object
 }
 \description{
 Pre-processes input data before making data summary and passing it to adjustment scripts.

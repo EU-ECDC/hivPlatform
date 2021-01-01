@@ -5,7 +5,7 @@
 #' @param inputData Input data. Required.
 #' @param seed Random seed. Optional. Default = NULL
 #'
-#' @return data.table object
+#' @return list object
 #'
 #' @examples
 #' \dontrun{
@@ -144,13 +144,10 @@ PreProcessInputDataBeforeSummary <- function(
   inputData[, Gender := droplevels(Gender)]
   inputData[, Transmission := factor(Transmission)]
 
-  results <- list(
-    Table = inputData,
-    Artifacts = list(
-      MissGenderReplaced = sum(selGenderReplaced),
-      MissGenderImputed = sum(selGenderImputed)
-    )
+  artifacts <- list(
+    MissGenderReplaced = sum(selGenderReplaced),
+    MissGenderImputed = sum(selGenderImputed)
   )
 
-  return(results)
+  return(artifacts)
 }

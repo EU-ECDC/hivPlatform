@@ -21,16 +21,22 @@ CaseDataManager <- R6::R6Class(
       private$Session <- session
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
-        OriginalDataPath = NULL,
+        FileName = NULL,
         OriginalData = NULL,
 
-        AttributeMapping = NULL,
-        AttributeMappingStatus = NULL,
+        AttrMapping = NULL,
+        AttrMappingStatus = NULL,
+        PreProcessArtifacts = NULL,
         OriginDistribution = NULL,
         OriginGrouping = list(),
+        Summary = NULL,
 
         Data = NULL,
-        DataStatus = NULL
+        DataStatus = NULL,
+
+        LastStep = 0L,
+
+        AdjustmentTask = NULL
       )
     },
 
@@ -42,142 +48,122 @@ CaseDataManager <- R6::R6Class(
 
     # 1. Read case-based data ----------------------------------------------------------------------
     ReadData = function(fileName) {
-      private$Initialize('ReadData')
+      if (private$Catalogs$LastStep < 0) {
+        PrintAlert('Object is not initialized properly before reading data', type = 'danger')
+        return(invisible(self))
+      }
 
-      private$Catalogs$OriginalDataPath <- fileName
-      private$Catalogs$OriginalData <- ReadDataFile(fileName)
+      status <- 'SUCCESS'
+      tryCatch({
+        originalData <- ReadDataFile(fileName)
+        attrMapping <- GetPreliminaryAttributesMapping(originalData)
+        attrMappingStatus <- GetAttrMappingStatus(attrMapping)
+      },
+      error = function(e) {
+        status <- 'FAIL'
+      })
 
-      # Initialize attribute mapping
-      private$DetermineAttributeMapping()
-
-      PrintAlert('Data file {.file {fileName}} loaded')
+      if (status == 'SUCCESS') {
+        private$Reinitialize('ReadData')
+        private$Catalogs$FileName <- fileName
+        private$Catalogs$OriginalData <- originalData
+        private$Catalogs$AttrMapping <- attrMapping
+        private$Catalogs$AttrMappingStatus <- attrMappingStatus
+        private$Catalogs$LastStep <- 1L
+        PrintAlert('Data file {.file {fileName}} loaded')
+      } else {
+        PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
+      }
 
       return(invisible(self))
     },
 
     # 2. Apply attribute mapping -------------------------------------------------------------------
     ApplyAttributesMapping = function(attrMapping) {
-      private$Initialize('ApplyAttributesMapping')
-
-      if (missing(attrMapping)) {
-        private$DetermineAttributeMapping()
-      } else {
-        private$Catalogs$AttributeMapping <- attrMapping
-        private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
+      if (private$Catalogs$LastStep < 1) {
+        PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
+        return(invisible(self))
       }
 
-      if (private$Catalogs$AttributeMappingStatus$Valid) {
-        private$Catalogs$Data <- ApplyAttributesMapping(
-          private$Catalogs$OriginalData,
-          private$Catalogs$AttributeMapping
-        )
+      originalData <- private$Catalogs$OriginalData
+      status <- 'SUCCESS'
+      tryCatch({
+        if (missing(attrMapping)) {
+          attrMapping <- GetPreliminaryAttributesMapping(originalData)
+        }
+        attrMappingStatus <- GetAttrMappingStatus(attrMapping)
+
+        if (attrMappingStatus$Valid) {
+          data <- ApplyAttributesMapping(originalData, attrMapping)
+          preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
+          PreProcessInputDataBeforeAdjustments(data)
+          dataStatus <- GetInputDataValidityStatus(data)
+          if (dataStatus$Valid) {
+            originDistribution <- GetOriginDistribution(data)
+          }
+        }
+      },
+      error = function(e) {
+        status <- 'FAIL'
+      })
+
+      if (status == 'SUCCESS' && attrMappingStatus$Valid && dataStatus$Valid) {
+        private$Reinitialize('ApplyAttributesMapping')
+        private$Catalogs$AttrMapping <- attrMapping
+        private$Catalogs$AttrMappingStatus <- attrMappingStatus
+        private$Catalogs$OriginDistribution <- originDistribution
+        private$Catalogs$PreProcessArtifacts <- preProcessArtifacts
+        private$Catalogs$Data <- data
+        private$Catalogs$DataStatus <- dataStatus
+        private$Catalogs$LastStep <- 2L
         PrintAlert('Attribute mapping has been applied')
-        private$PreProcessData()
       } else {
-        PrintAlert(
-          'Attribute mapping is not valid and cannot be applied',
-          type = 'danger'
-        )
+        PrintAlert('Attribute mapping is not valid and cannot be applied', type = 'danger')
       }
 
       return(invisible(self))
     },
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
-    ApplyOriginGrouping = function(groups, type) {
-      private$Initialize('ApplyOriginGrouping')
-
-      if (missing(groups)) {
-        if (missing(type)) {
-          type <- 'REPCOUNTRY + UNK + OTHER'
-        }
-        groups <- GetOriginGroupingPreset(type, private$Catalogs$OriginDistribution)
+    ApplyOriginGrouping = function(originGrouping, type) {
+      if (private$Catalogs$LastStep < 2) {
+        PrintAlert(
+          'Atrributes mapping must be applied before applying origin grouping',
+          type = 'danger'
+        )
+        return(invisible(self))
       }
-      private$Catalogs$OriginGrouping <- groups
 
-      private$Catalogs$Data <- ApplyOriginGrouping(
-        private$Catalogs$Data,
-        groups
-      )
+      originDistribution <- private$Catalogs$OriginDistribution
+      data <- private$Catalogs$Data
 
-      PrintAlert('Origin grouping {.val {type}} has been applied')
+      status <- 'SUCCESS'
+      tryCatch({
+        if (missing(originGrouping)) {
+          if (missing(type)) {
+            type <- 'REPCOUNTRY + UNK + OTHER'
+          }
+          originGrouping <- GetOriginGroupingPreset(type, originDistribution)
+        }
+        ApplyOriginGrouping(data, originGrouping)
+      },
+      error = function(e) {
+        status <- 'FAIL'
+      })
+
+      if (status == 'SUCCESS') {
+        private$Reinitialize('ApplyOriginGrouping')
+        private$Catalogs$OriginGrouping <- originGrouping
+        private$Catalogs$Data <- data
+        private$Catalogs$LastStep <- 3L
+        PrintAlert('Origin grouping {.val {type}} has been applied')
+        private$ComputeSummary()
+      } else {
+        PrintAlert('Origin grouping cannot be applied', type = 'danger')
+      }
 
       return(invisible(self))
-    },
-
-    # # 4. Get summary data --------------------------------------------------------------------------
-    # GetSummaryData = function() {
-    #   plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
-
-    #   # Diagnosis year plot
-    #   diagYearCounts <- plotDT[, .(Count = .N), keyby = .(Gender, YearOfHIVDiagnosis)]
-    #   diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
-    #   diagYearPlotData <- list(
-    #     filter = list(
-    #       scaleMinYear = min(diagYearCategories),
-    #       scaleMaxYear = max(diagYearCategories),
-    #       valueMinYear = min(diagYearCategories),
-    #       valueMaxYear = max(diagYearCategories)
-    #     ),
-    #     chartCategories = diagYearCategories,
-    #     chartData = list(
-    #       list(
-    #         name = 'Female',
-    #         data = diagYearCounts[Gender == 'F', Count]
-    #       ),
-    #       list(
-    #         name = 'Male',
-    #         data = diagYearCounts[Gender == 'M', Count]
-    #       )
-    #     )
-    #   )
-    #   PrintAlert('Diagnosis year density plot data created')
-
-    #   # Notification quarter plot
-    #   notifQuarterCounts <- plotDT[,
-    #     .(Count = .N),
-    #     keyby = .(
-    #       Gender,
-    #       QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
-    #     )
-    #   ]
-    #   notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
-    #   notifQuarterPlotData <- list(
-    #     filter = list(
-    #       scaleMinYear = min(notifQuarterCategories),
-    #       scaleMaxYear = max(notifQuarterCategories),
-    #       valueMinYear = min(notifQuarterCategories),
-    #       valueMaxYear = max(notifQuarterCategories)
-    #     ),
-    #     chartCategories = notifQuarterCategories,
-    #     chartData = list(
-    #       list(
-    #         name = 'Female',
-    #         data = notifQuarterCounts[Gender == 'F', Count]
-    #       ),
-    #       list(
-    #         name = 'Male',
-    #         data = notifQuarterCounts[Gender == 'M', Count]
-    #       )
-    #     )
-    #   )
-    #   PrintAlert('Notification quarter density plot data created')
-
-    #   missPlotData <- GetMissingnessPlots(plotDT)
-    #   PrintAlert('Missingness plot data created')
-
-    #   repDelPlotData <- GetReportingDelaysPlots(plotDT)
-    #   PrintAlert('Reporting delays plot data created')
-
-    #   summaryData <- list(
-    #     DiagYearPlotData = diagYearPlotData,
-    #     NotifQuarterPlotData = notifQuarterPlotData,
-    #     MissPlotData = missPlotData,
-    #     RepDelPlotData = repDelPlotData
-    #   )
-
-    #   return(summaryData)
-    # },
+    }
 
     # # 5. Adjust case-based data --------------------------------------------------------------------
     # AdjustCaseBasedData = function(adjustmentSpecs) {
@@ -223,71 +209,143 @@ CaseDataManager <- R6::R6Class(
     # Storage
     Catalogs = NULL,
 
-    Initialize = function(step) {
+    Reinitialize = function(step) {
       if (step == 'ReadData') {
         private$Catalogs$OriginalDataPath <- NULL
         private$Catalogs$OriginalData <- NULL
-        private$Catalogs$AttributeMapping <- NULL
-        private$Catalogs$AttributeMappingStatus <- NULL
+        private$Catalogs$AttrMapping <- NULL
+        private$Catalogs$AttrMappingStatus <- NULL
         private$Catalogs$OriginDistribution <- NULL
         private$Catalogs$OriginGrouping <- list()
+        private$Catalogs$PreProcessArtifacts <- NULL
+        private$Catalogs$Summary <- NULL
         private$Catalogs$Data <- NULL
         private$Catalogs$DataStatus <- NULL
+        private$Catalogs$LastStep <- 0L
       } else if (step == 'ApplyAttributeMapping') {
-        private$Catalogs$AttributeMapping <- NULL
-        private$Catalogs$AttributeMappingStatus <- NULL
+        private$Catalogs$AttrMapping <- NULL
+        private$Catalogs$AttrMappingStatus <- NULL
         private$Catalogs$OriginDistribution <- NULL
         private$Catalogs$OriginGrouping <- list()
+        private$Catalogs$PreProcessArtifacts <- NULL
+        private$Catalogs$Summary <- NULL
         private$Catalogs$Data <- NULL
         private$Catalogs$DataStatus <- NULL
+        private$Catalogs$LastStep <- 1L
       } else if (step == 'ApplyOriginGrouping') {
         private$Catalogs$OriginGrouping <- list()
         if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$Data$Table)) {
           private$Catalogs$Data$Table[, GroupedRegionOfOrigin := NULL]
         }
+        private$Catalogs$Summary <- NULL
+        private$Catalogs$LastStep <- 2L
       }
     },
 
-    DetermineAttributeMapping = function() {
-      attrMapping <- GetPreliminaryAttributesMapping(private$Catalogs$OriginalData)
-      private$Catalogs$AttributeMapping <- attrMapping
-      private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
-    },
+    ComputeSummary = function() {
+      if (private$Catalogs$LastStep < 3) {
+        PrintAlert(
+          'Origin grouping must be applied before computing summary data',
+          type = 'danger'
+        )
+        return(invisible(self))
+      }
 
-    PreProcessData = function() {
-      dt <- PreProcessInputDataBeforeSummary(private$Catalogs$Data)
-      PreProcessInputDataBeforeAdjustments(dt$Table)
-      dtStatus <- GetInputDataValidityStatus(dt$Table)
+      data <- private$Catalogs$Data
+      status <- 'SUCCESS'
+      tryCatch({
+        # Diagnosis year plot
+        diagYearCounts <- data[, .(Count = .N), keyby = .(Gender, YearOfHIVDiagnosis)]
+        diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
+        diagYearPlotData <- list(
+          filter = list(
+            scaleMinYear = min(diagYearCategories),
+            scaleMaxYear = max(diagYearCategories),
+            valueMinYear = min(diagYearCategories),
+            valueMaxYear = max(diagYearCategories)
+          ),
+          chartCategories = diagYearCategories,
+          chartData = list(
+            list(
+              name = 'Female',
+              data = diagYearCounts[Gender == 'F', Count]
+            ),
+            list(
+              name = 'Male',
+              data = diagYearCounts[Gender == 'M', Count]
+            )
+          )
+        )
 
-      private$Catalogs$DataStatus <- dtStatus
-      if (dtStatus$Valid) {
-        private$Catalogs$Data <- dt
-        private$Catalogs$OriginDistribution <- GetOriginDistribution(dt$Table)
-        PrintAlert('Data has been pre-processed')
+        # Notification quarter plot
+        notifQuarterCounts <- data[,
+          .(Count = .N),
+          keyby = .(
+            Gender,
+            QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
+          )
+        ]
+        notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
+        notifQuarterPlotData <- list(
+          filter = list(
+            scaleMinYear = min(notifQuarterCategories),
+            scaleMaxYear = max(notifQuarterCategories),
+            valueMinYear = min(notifQuarterCategories),
+            valueMaxYear = max(notifQuarterCategories)
+          ),
+          chartCategories = notifQuarterCategories,
+          chartData = list(
+            list(
+              name = 'Female',
+              data = notifQuarterCounts[Gender == 'F', Count]
+            ),
+            list(
+              name = 'Male',
+              data = notifQuarterCounts[Gender == 'M', Count]
+            )
+          )
+        )
+
+        missPlotData <- GetMissingnessPlots(data)
+
+        repDelPlotData <- GetReportingDelaysPlots(data)
+
+        summary <- list(
+          DiagYearPlotData = diagYearPlotData,
+          NotifQuarterPlotData = notifQuarterPlotData,
+          MissPlotData = missPlotData,
+          RepDelPlotData = repDelPlotData
+        )
+      },
+      error = function(e) {
+        status <- 'FAIL'
+      })
+
+      if (status == 'SUCCESS') {
+        private$Catalogs$Summary <- summary
       } else {
-        PrintAlert('Data contains invalid values. Pre-processing is reverted.', type = 'danger')
+        PrintAlert('Summary cannot be computed', type = 'danger')
       }
 
       return(invisible(self))
     }
-
   ),
 
   active = list(
-    OriginalDataPath = function() {
-      return(private$Catalogs$OriginalDataPath)
+    FileName = function() {
+      return(private$Catalogs$FileName)
     },
 
     OriginalData = function() {
       return(private$Catalogs$OriginalData)
     },
 
-    AttributeMapping = function() {
-      return(private$Catalogs$AttributeMapping)
+    AttrMapping = function() {
+      return(private$Catalogs$AttrMapping)
     },
 
-    AttributeMappingStatus = function() {
-      return(private$Catalogs$AttributeMappingStatus)
+    AttrMappingStatus = function() {
+      return(private$Catalogs$AttrMappingStatus)
     },
 
     OriginDistribution = function() {
@@ -298,12 +356,24 @@ CaseDataManager <- R6::R6Class(
       return(private$Catalogs$OriginGrouping)
     },
 
-    Data = function() {
-      return(private$Catalogs$Data)
+    PreProcessArtifacts = function() {
+      return(private$Catalogs$PreProcessArtifacts)
+    },
+
+    Summary = function() {
+      return(private$Catalogs$Summary)
     },
 
     DataStatus = function() {
       return(private$Catalogs$DataStatus)
+    },
+
+    Data = function() {
+      return(private$Catalogs$Data)
+    },
+
+    LastStep = function() {
+      return(private$Catalogs$LastStep)
     }
 
     # MICount = function() {

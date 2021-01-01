@@ -18,25 +18,23 @@ ApplyOriginGrouping <- function(
   inputData,
   originGrouping
 ) {
-  data <- copy(inputData$Table)
   if (length(originGrouping) > 0) {
     dtMap <- ConvertListToDt(originGrouping)
   } else {
-    origin <- data[, sort(unique(FullRegionOfOrigin))]
+    origin <- inputData[, sort(unique(FullRegionOfOrigin))]
     dtMap <- data.table(
       name = origin,
       origin = origin
     )
   }
 
-  data[
+  inputData[
     dtMap,
     GroupedRegionOfOrigin := name,
     on = c('FullRegionOfOrigin' = 'origin')
   ]
 
-  data[, GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin)]
-  inputData$Table <- data
+  inputData[, GroupedRegionOfOrigin := factor(GroupedRegionOfOrigin)]
 
   return(inputData)
 }
