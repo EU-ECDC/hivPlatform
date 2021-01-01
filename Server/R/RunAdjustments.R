@@ -35,17 +35,15 @@ RunAdjustments <- function(
   # Data table performs many operations by reference.
   # We make a copy of the data to make sure the input object is not changed by the adjustment
   # procedures.
-  data <- list(Table = data.table::copy(data))
+  data <- copy(data)
   if (!is.null(diagYearRange)) {
-    data$Table <- data$Table[
-      HIVDiagnosisYear %between% diagYearRange | is.na(DateOfDiagnosis)
-    ]
+    data <- data[HIVDiagnosisYear %between% diagYearRange | is.na(DateOfDiagnosis)]
   }
   if (!is.null(notifQuarterRange)) {
-    data$Table <- data$Table[NotificationTime %between% notifQuarterRange | is.na(NotificationTime)]
+    data <- data[NotificationTime %between% notifQuarterRange | is.na(NotificationTime)]
   }
 
-  PreProcessInputDataBeforeAdjustments(data$Table)
+  PreProcessInputDataBeforeAdjustments(data)
 
   # Process adjustments
   set.seed(seed)
@@ -74,10 +72,14 @@ RunAdjustments <- function(
     PrintH2('Executing')
 
     # Run adjustment function
-    output <- adjustmentSpec$AdjustmentFunction(inputData = data$Table, parameters = parameters)
+    output <- adjustmentSpec$AdjustmentFunction(inputData = data, parameters = parameters)
 
-    data <- list(
-      Table = output$Table,
+    if ('Imputation' %in% colnames(output$Data)) {
+      setorderv(output$Data, 'Imputation')
+    }
+
+    adjustResults <- list(
+      Data = output$Data,
       Artifacts = output$Artifacts,
       Parameters = parameters,
       RunIdx = i,
@@ -87,12 +89,8 @@ RunAdjustments <- function(
       TimeStamp = GetTimeStamp()
     )
 
-    if ('Imputation' %in% colnames(data$Table)) {
-      setorderv(data$Table, 'Imputation')
-    }
-
     # Store intermediate results for later reference
-    results[[adjustmentSpec$Key]] <- data
+    results[[adjustmentSpec$Key]] <- adjustResults
 
     endTime <- Sys.time()
     cat('\n')

@@ -56,7 +56,7 @@ list(
 
     # Perform imputations per data set.
     # This is the actual worker function.
-    workerFunction <- function(i, nit, nimp, nsdf, imputeRD) {
+    WorkerFunction <- function(i, nit, nimp, nsdf, imputeRD) {
 
       cat('\n')
       cat(sprintf('Processing gender: %s\n', names(dataSets)[i]))
@@ -80,13 +80,13 @@ list(
       # Determine which columns to pass to the mice package
 
       # At least 2 distinct values present
-      xFilterFunc <- function(colName) length(unique(dataSet[[colName]])) >= 2
+      XFilterFunc <- function(colName) length(unique(dataSet[[colName]])) >= 2
       # At least one non-NA
-      yFilterFunc <- function(colName) !all(is.na(dataSet[[colName]]))
+      YFilterFunc <- function(colName) !all(is.na(dataSet[[colName]]))
 
       # Keep only column names meeting requirement
-      xColNames <- Filter(xFilterFunc, xColNamesAll)
-      yColNames <- Filter(yFilterFunc, yColNamesAll)
+      xColNames <- Filter(XFilterFunc, xColNamesAll)
+      yColNames <- Filter(YFilterFunc, yColNamesAll)
 
       # Keep for reporting
       artifacts[['X_COLS']] <- list(All = xColNamesAll, Kept = xColNames)
@@ -94,7 +94,7 @@ list(
 
       # Create splines with proper names and intercept
       splineBasisMatrix <- try(as.data.table(splines::ns(dataSet$DY, df = nsdf)), silent = TRUE)
-      if (inherits(splineBasisMatrix, 'try-error')) {
+      if (IsError(splineBasisMatrix)) {
         splineBasisMatrix <- data.table()
       } else {
         setnames(splineBasisMatrix, paste0('SplineKnot.', colnames(splineBasisMatrix)))
@@ -122,15 +122,18 @@ list(
         artifacts[['Mids']] <- mids
 
         imp <- setDT(mice::complete(mids, action = 'long', include = TRUE))
-        setnames(imp, old = c('.imp', '.id'), new = c('Imputation', 'id'))
+        setnames(imp, old = c('.imp', '.id'), new = c('Imputation', 'Id'))
 
       } else {
-        imp <- data.table(Imputation = 0L, id = seq_len(nrow(Y)))
+        imp <- data.table(Imputation = 0L, Id = seq_len(nrow(Y)))
       }
 
-      indexColNames <- c('Imputation', 'id')
+      indexColNames <- c('Imputation', 'Id')
       impColNames <- union(indexColNames, yColNames)
-      dataSetColNames <- setdiff(colnames(dataSet), union(yColNames, 'LogTweakedMaxPossibleDelay'))
+      dataSetColNames <- setdiff(
+        colnames(dataSet),
+        union(yColNames, c('Imputation', 'LogTweakedMaxPossibleDelay'))
+      )
 
       mi <- cbind(imp[, ..impColNames], dataSet[, ..dataSetColNames])
 
@@ -140,7 +143,7 @@ list(
 
       mi[, FirstCD4Count := SqCD4^2]
 
-      return(list(Table = mi, Artifacts = artifacts))
+      return(list(Data = mi, Artifacts = artifacts))
     }
 
     # 1. Save original order for later
@@ -155,7 +158,7 @@ list(
     # 4. Execute the worker function per data set
     outputData <- lapply(
       seq_along(dataSets),
-      workerFunction,
+      WorkerFunction,
       nit = parameters$nit,
       nimp = parameters$nimp,
       nsdf = parameters$nsdf,
@@ -164,15 +167,15 @@ list(
 
     # 5. Combine all data sets
     names(outputData) <- names(dataSets)
-    table <- rbindlist(lapply(outputData, '[[', 'Table'))
+    data <- rbindlist(lapply(outputData, '[[', 'Data'))
     artifacts <- lapply(outputData, '[[', 'Artifacts')
 
     # 6. Restore original order per Imputation
-    setorder(table, Imputation, OrigSort)
+    setorder(data, Imputation, OrigSort)
 
     return(
       list(
-        Table = table,
+        Data = data,
         Artifacts = artifacts
       )
     )

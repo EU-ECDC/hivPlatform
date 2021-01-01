@@ -61,7 +61,7 @@ caseMgr <- CaseDataManager$new()
 caseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 caseMgr$ApplyAttributesMapping()
 caseMgr$ApplyOriginGrouping()
-caseMgr$AdjustData(
+caseMgr$RunAdjustments(
   GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 )
 caseMgr$FileName
@@ -75,3 +75,4 @@ caseMgr$Summary
 caseMgr$DataStatus
 caseMgr$Data
 caseMgr$LastStep
+results <- caseMgr$AdjustmentTask$Result
