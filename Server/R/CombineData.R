@@ -133,8 +133,10 @@ CombineData <- function(
     } else {
       finalSet <- lapply(set1, WorkFunc)
     }
-  } else {
+  } else if (!is.null(set2)) {
     finalSet <- list(set2)
+  } else {
+    finalSet <- NULL
   }
 
   return(finalSet)

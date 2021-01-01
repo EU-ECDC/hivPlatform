@@ -4,10 +4,10 @@
 \alias{GetOriginGroupingPreset}
 \title{GetOriginGroupingPreset}
 \usage{
-GetOriginGroupingPreset(type, distr)
+GetOriginGroupingPreset(type = "REPCOUNTRY + UNK + OTHER", distr)
 }
 \arguments{
-\item{type}{Grouping type}
+\item{type}{Grouping type. Default = 'REPCOUNTRY + UNK + OTHER'}
 
 \item{distr}{Distribution of RegionOfOrigin}
 }

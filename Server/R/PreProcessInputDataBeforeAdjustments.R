@@ -14,8 +14,9 @@
 #' }
 #'
 #' @export
-PreProcessInputDataBeforeAdjustments <- function(inputData)
-{
+PreProcessInputDataBeforeAdjustments <- function(
+  inputData
+) {
   stopifnot(!missing(inputData))
 
   if (is.null(inputData)) {

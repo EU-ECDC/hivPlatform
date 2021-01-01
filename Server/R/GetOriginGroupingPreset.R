@@ -2,7 +2,7 @@
 #'
 #' Get mapping from RegionOfOrigin to GroupOfOrigin
 #'
-#' @param type Grouping type
+#' @param type Grouping type. Default = 'REPCOUNTRY + UNK + OTHER'
 #' @param distr Distribution of RegionOfOrigin
 #'
 #' @return NULL
@@ -18,8 +18,10 @@
 #' )
 #'
 #' @export
-GetOriginGroupingPreset <- function(type, distr)
-{
+GetOriginGroupingPreset <- function(
+  type = 'REPCOUNTRY + UNK + OTHER',
+  distr
+) {
   # Initialize mapping
   map <- c(
     'UNK', 'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM',
@@ -59,20 +61,6 @@ GetOriginGroupingPreset <- function(type, distr)
     )
     map[origin %chin% sepRegions, name := origin]
   }
-
-  # # Add count per origin
-  # map[distr,
-  #   originCount := count,
-  #   on = .(origin)
-  # ]
-  # map[is.na(originCount), originCount := 0]
-  #
-  # # Add count per GroupedRegionOfOrigin
-  # map[, groupCount := sum(originCount), by = .(name)]
-  #
-  # map[,
-  #   name := factor(name, levels = unique(name))
-  # ]
 
   map <- ConvertOriginGroupingDtToList(map)
 

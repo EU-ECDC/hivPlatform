@@ -4,14 +4,11 @@ appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
 appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
-appMgr$ReadAggregatedData('D:/VirtualBox_Shared/HIV test files/Data/test NL - 2 populations.zip')
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$ApplyAttributesMappingToCaseBasedData()
 appMgr$PreProcessCaseBasedData()
 appMgr$ApplyOriginGrouping(groups = list())
-summaryData <- appMgr$GetSummaryData()
-summaryDataJson <- jsonlite:::asJSON(summaryData, keep_vec_names = TRUE)
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c(
@@ -19,10 +16,50 @@ adjustmentSpecs <- GetAdjustmentSpecs(c(
 ))
 appMgr$AdjustCaseBasedData(adjustmentSpecs)
 appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
-cat(appMgr$AdjustmentTask$RunLog)
-cat(appMgr$AdjustmentTask$HTMLRunLog)
 
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+
+if (!is.null(appMgr$FinalAdjustedCaseBasedData$Table)) {
+  caseBasedData <- appMgr$FinalAdjustedCaseBasedData$Table
+} else {
+  caseBasedData <- appMgr$PreProcessedCaseBasedData$Table
+}
+
+dataSets <- CombineData(
+  caseBasedData = copy(appMgr$FinalAdjustedCaseBasedData$Table),
+  aggregatedData = copy(appMgr$AggregatedData),
+  popCombination = appMgr$PopulationCombination,
+  aggrDataSelection = appMgr$AggregatedDataSelection
+)
+
+settings <- list(Verbose = FALSE)
+parameters <- list()
+results <- list()
+# i <- 1
+for (i in seq_along(dataSets)) {
+  context <- hivModelling::GetRunContext(
+    data = dataSets[[i]],
+    settings = settings,
+    parameters = parameters
+  )
+  data <- hivModelling::GetPopulationData(context)
+
+  startTime <- Sys.time()
+  fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = TRUE)
+  runTime <- Sys.time() - startTime
+
+  results[[i]] <- list(
+    Context = context,
+    Data = data,
+    Results = fitResults,
+    RunTime = runTime
+  )
+}
+
+
+
+
+
 appMgr$FitHIVModel()
 appMgr$HIVModelResults <- appMgr$HIVModelTask$Result
 cat(appMgr$HIVModelTask$RunLog)
@@ -56,17 +93,3 @@ appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
 # STEP 9 - Generate report -------------------------------------------------------------------------
 appMgr$GenerateReport()
 appMgr$Report <- appMgr$ReportTask$Result
-
-
-caseMgr <- CaseDataManager$new()
-caseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
-caseMgr$ApplyAttributesMapping()
-caseMgr$ApplyOriginGrouping()
-caseMgr$OriginalDataPath
-caseMgr$OriginalData
-caseMgr$AttributeMapping
-caseMgr$AttributeMappingStatus
-caseMgr$OriginDistribution
-caseMgr$OriginGrouping
-caseMgr$DataStatus
-caseMgr$Data$Table[]

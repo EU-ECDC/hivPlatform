@@ -54,7 +54,10 @@ ApplyAttributesMapping <- function(
 
   ConvertDataTableColumns(outputData, sapply(columnSpecs, '[[', 'type'))
 
-  setcolorder(outputData, names(attrMapping))
+  # Add Imputation column
+  outputData[, Imputation := 0L]
+
+  setcolorder(outputData, union('Imputation', names(attrMapping)))
 
   return(outputData)
 }

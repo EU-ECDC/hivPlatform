@@ -246,7 +246,7 @@ AppManager <- R6::R6Class(
       private$Catalogs$AdjustmentTask <- Task$new(
         function(data, adjustmentSpecs) {
           suppressMessages(pkgload::load_all())
-          options(width = 130)
+          options(width = 100)
           result <- hivEstimatesAccuracy2::RunAdjustments(
             data = data,
             adjustmentSpecs = adjustmentSpecs,

@@ -1,7 +1,8 @@
 list(
   RecordId = list(
     attribute = 'RecordId',
-    desciption = 'Unique identifier for each record within and across the national surveillance system',
+    desciption =
+      'Unique identifier for each record within and across the national surveillance system',
     type = 'character',
     defaultValue = NA_character_,
     candidateOrigColNames = c('recordid')
