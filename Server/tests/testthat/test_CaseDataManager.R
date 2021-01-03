@@ -97,7 +97,7 @@ test_that('adjusting is correct', {
   expect_true(caseMgr$DataStatus$Valid)
   expect_equal(length(caseMgr$DataStatus$CheckStatus), 25)
   expect_is(caseMgr$Data, 'data.table')
-  expect_equal(nrow(caseMgr$Data), 22857)
+  expect_equal(nrow(caseMgr$Data), 15238)
   expect_true(caseMgr$Data[, all(Imputation %in% c(0, 1, 2))])
   expect_is(caseMgr$OriginGrouping, 'list')
   expect_equal(length(caseMgr$OriginGrouping), 15)
@@ -138,6 +138,6 @@ test_that('reactive processing is correct', {
   capture.output(session$flushReact())
 
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'SUCCESS')
-  expect_equal(nrow(isolate(caseMgr$Data)), 22857)
+  expect_equal(nrow(isolate(caseMgr$Data)), 15238)
   expect_equal(isolate(caseMgr$LastStep), 4)
 })

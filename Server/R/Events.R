@@ -7,7 +7,7 @@ Events <- function(
   # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn
-    print(fileInfo)
+    PrintAlert(fileInfo)
 
     # Case based data uploaded
     appMgr$SendEventToReact('shinyHandler', list(

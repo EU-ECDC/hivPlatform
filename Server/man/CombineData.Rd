@@ -4,12 +4,17 @@
 \alias{CombineData}
 \title{CombineData}
 \usage{
-CombineData(caseBasedData, aggregatedData, popCombination, aggrDataSelection)
+CombineData(
+  caseData,
+  aggrData,
+  popCombination = NULL,
+  aggrDataSelection = NULL
+)
 }
 \arguments{
-\item{caseBasedData}{Case-based data (before or after adjustments). Required.}
+\item{caseData}{Case-based data (before or after adjustments). Required.}
 
-\item{aggregatedData}{Aggregated data. Required.}
+\item{aggrData}{Aggregated data. Required.}
 
 \item{popCombination}{List of populations to combine per case-based and aggregated data.
 Required.}
@@ -26,13 +31,11 @@ Combines case-based and aggregated data for HIV Model
 \examples{
 \dontrun{
 popCombination <- list(
-  CaseBasedPopulations = c('Gender_M'),
-  AggrPopulations = c()
+  Case = list(Values = c('M'), Variables = c('Gender')),
+  Aggr = c('pop_0')
 )
 aggrDataSelection <- data.table(
-  DataType = c(
-    'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
-  ),
+  Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)

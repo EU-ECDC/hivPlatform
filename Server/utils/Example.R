@@ -9,17 +9,43 @@ appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_NL_-_2_populations.zip')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
-appMgr$CaseMgr$Summary
-appMgr$CaseMgr$SummaryJSON
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c(
   'Multiple Imputation using Chained Equations - MICE'
 ))
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
-cat(appMgr$CaseMgr$AdjustmentTask$RunLog)
 
-# # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+caseData <- appMgr$CaseMgr$Data
+aggrData <- appMgr$AggrMgr$Data
+
+# Interface codes for case-based populations
+# 'M [G], MSM [T]'
+# 'M [G], IDU [T]'
+# 'MSM [T], REPCOUNTRY [Reg]'
+# 'OTHER [Res], REPCOUNTRY [Reg]'
+
+popCombination <- list(
+  Case = list(
+    list(Values = c('M', 'MSM'), Variables = c('Gender', 'Transmission'))
+  ),
+  Aggr = c('pop_0')
+)
+aggrDataSelection <- data.table(
+  Name = c(
+    'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
+  ),
+  Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+  MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
+  MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
+)
+appMgr$HIVModelMgr$CombineData(popCombination, aggrDataSelection)
+appMgr$HIVModelMgr$Data
+appMgr$HIVModelMgr$PopCombination
+appMgr$HIVModelMgr$AggrDataSelection
+
+
 # appMgr$FitHIVModel()
 # appMgr$HIVModelResults <- appMgr$HIVModelTask$Result
 # cat(appMgr$HIVModelTask$RunLog)

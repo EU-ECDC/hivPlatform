@@ -16,8 +16,10 @@ CaseDataManager <- R6::R6Class(
 
     # GENERIC METHOD ===============================================================================
     initialize = function(
-      session = NULL
+      session = NULL,
+      appMgr = NULL
     ) {
+      private$AppMgr <- appMgr
       private$Session <- session
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
@@ -243,7 +245,7 @@ CaseDataManager <- R6::R6Class(
           session = private$Session,
           successCallback = function(result) {
             private$Catalogs$AdjustmentData <- result
-            private$Catalogs$Data <- self$LastAdjustmentData$Data
+            private$Catalogs$Data <- self$LastAdjustmentData$Data[Imputation != 0]
             private$Catalogs$LastStep <- 4L
             PrintAlert('Running adjustment task finished')
           },
@@ -284,6 +286,9 @@ CaseDataManager <- R6::R6Class(
   private = list(
     # Shiny session
     Session = NULL,
+
+    # Parent application manager
+    AppMgr = NULL,
 
     # Storage
     Catalogs = NULL,

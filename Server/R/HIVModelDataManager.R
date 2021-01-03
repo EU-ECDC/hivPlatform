@@ -1,15 +1,15 @@
-#' AggrDataManager
+#' HIVModelDataManager
 #'
-#' R6 class for representing the aggregated data manaager
+#' R6 class for representing the HIV Model manaager
 #'
-#' @name AggrDataManager
+#' @name HIVModelDataManager
 #' @examples
-#' caseMgr <- AggrDataManager$new()
+#' hivModelMgr <- HIVModelDataManager$new()
 NULL
 
 #' @export
-AggrDataManager <- R6::R6Class(
-  classname = 'AggrDataManager',
+HIVModelDataManager <- R6::R6Class(
+  classname = 'HIVModelDataManager',
   class = FALSE,
   cloneable = FALSE,
   public = list(
@@ -23,8 +23,9 @@ AggrDataManager <- R6::R6Class(
       private$AppMgr <- appMgr
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
-        FileName = NULL,
         Data = NULL,
+        PopCombination = NULL,
+        AggrDataSelection = NULL,
         LastStep = 0L
       )
     },
@@ -35,14 +36,15 @@ AggrDataManager <- R6::R6Class(
 
     # USER ACTIONS =================================================================================
 
-    # 1. Read case-based data ----------------------------------------------------------------------
-    ReadData = function(
-      fileName,
+    # 1. Combine data ------------------------------------------------------------------------------
+    CombineData = function(
+      popCombination = NULL,
+      aggrDataSelection = NULL,
       callback = NULL
     ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert(
-          'AggrDataManager is not initialized properly before reading data',
+          'HIVModelDataManager is not initialized properly before combining data',
           type = 'danger'
         )
         return(invisible(self))
@@ -50,24 +52,27 @@ AggrDataManager <- R6::R6Class(
 
       status <- 'SUCCESS'
       tryCatch({
-        data <- hivModelling::ReadInputData(fileName)
+        caseData <- private$AppMgr$CaseMgr$Data
+        aggrData <- private$AppMgr$AggrMgr$Data
+        data <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
       },
       error = function(e) {
         status <- 'FAIL'
       })
 
       if (status == 'SUCCESS') {
-        private$Reinitialize('ReadData')
-        private$Catalogs$FileName <- fileName
+        private$Reinitialize('CombineData')
         private$Catalogs$Data <- data
+        private$Catalogs$PopCombination <- popCombination
+        private$Catalogs$AggrDataSelection <- aggrDataSelection
         private$Catalogs$LastStep <- 1L
-        PrintAlert('Data file {.file {fileName}} loaded')
+        PrintAlert('Data has been combined')
       } else {
-        PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
+        PrintAlert('Combining data failed', type = 'danger')
       }
 
       payload <- list(
-        type = 'AggrDataManager:ReadData',
+        type = 'HIVModelDataManager:CombineData',
         status = status,
         artifacts = list()
       )
@@ -84,32 +89,37 @@ AggrDataManager <- R6::R6Class(
     # Shiny session
     Session = NULL,
 
-    # Parent application manager
+    # Private application manager
     AppMgr = NULL,
 
     # Storage
     Catalogs = NULL,
 
     Reinitialize = function(step) {
-      if (step == 'ReadData') {
-        private$Catalogs$FileName <- NULL
+      if (step == 'CombineData') {
         private$Catalogs$Data <- NULL
+        private$Catalogs$PopCombination <- NULL
+        private$Catalogs$AggrDataSelection <- NULL
         private$Catalogs$LastStep <- 0L
       }
     }
   ),
 
   active = list(
-    FileName = function() {
-      return(private$Catalogs$FileName)
-    },
-
     Data = function() {
       return(private$Catalogs$Data)
     },
 
     LastStep = function() {
       return(private$Catalogs$LastStep)
+    },
+
+    PopCombination = function() {
+      return(private$Catalogs$PopCombination)
+    },
+
+    AggrDataSelection = function() {
+      return(private$Catalogs$AggrDataSelection)
     }
   )
 )

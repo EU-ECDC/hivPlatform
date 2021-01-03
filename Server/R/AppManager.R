@@ -22,20 +22,18 @@ AppManager <- R6::R6Class(
 
       private$Session <- session
 
-      private$CaseMgrPriv <- CaseDataManager$new(session)
-      private$AggrMgrPriv <- AggrDataManager$new(session)
+      private$CaseMgrPriv <- CaseDataManager$new(session, self)
+      private$AggrMgrPriv <- AggrDataManager$new(session, self)
+      private$HIVModelMgrPriv <- HIVModelDataManager$new(session, self)
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
         MICount = 0,
         BSCount = 0,
-        AggregatedDataSelection = NULL,
-        PopulationCombination = list(CaseBasedPopulations = c(), AggrPopulations = c()),
         HIVModelParameters = NULL,
         HIVModelResults = NULL,
         HIVBootstrapModelResults = NULL,
         Report = NULL,
-        AdjustmentTask = NULL,
         HIVModelTask = NULL,
         BootstrapTask = NULL,
         ReportTask = NULL
@@ -354,14 +352,6 @@ AppManager <- R6::R6Class(
     #   private$Catalogs$BSCount <- max(count, 0)
     # },
 
-    # SetPopulationCombination = function(populationCombination) {
-    #   private$Catalogs$PopulationCombination <- PopulationCombination
-    # },
-
-    # SetAggregatedDataSelection = function(aggregatedDataSelection) {
-    #   private$Catalogs$AggregatedDataSelection <- aggregatedDataSelection
-    # },
-
     # GenerateReport = function() {
     #   private$Catalogs$ReportTask <- Task$new(
     #     function() {
@@ -393,6 +383,9 @@ AppManager <- R6::R6Class(
     # Aggregated data manager
     AggrMgrPriv = NULL,
 
+    # HIV Model manager
+    HIVModelMgrPriv = NULL,
+
     # Storage
     Catalogs = NULL,
 
@@ -416,6 +409,10 @@ AppManager <- R6::R6Class(
 
     AggrMgr = function() {
       return(private$AggrMgrPriv)
+    },
+
+    HIVModelMgr = function() {
+      return(private$HIVModelMgrPriv)
     }
 
     # MICount = function() {
@@ -424,14 +421,6 @@ AppManager <- R6::R6Class(
 
     # BSCount = function() {
     #   return(private$Catalogs$BSCount)
-    # },
-
-    # AggregatedDataSelection = function() {
-    #   return(private$Catalogs$AggregatedDataSelection)
-    # },
-
-    # PopulationCombination = function() {
-    #   return(private$Catalogs$PopulationCombination)
     # },
 
     # BootstrapCaseBasedDataSets = function() {
