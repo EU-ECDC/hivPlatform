@@ -53,7 +53,10 @@ CaseDataManager <- R6::R6Class(
       callback = NULL
     ) {
       if (private$Catalogs$LastStep < 0) {
-        PrintAlert('Object is not initialized properly before reading data', type = 'danger')
+        PrintAlert(
+          'CaseDataManager is not initialized properly before reading data',
+          type = 'danger'
+        )
         return(invisible(self))
       }
 
@@ -287,6 +290,7 @@ CaseDataManager <- R6::R6Class(
 
     Reinitialize = function(step) {
       if (step == 'ReadData') {
+        private$Catalogs$FileName <- NULL
         private$Catalogs$OriginalDataPath <- NULL
         private$Catalogs$OriginalData <- NULL
         private$Catalogs$AttrMapping <- NULL
@@ -474,17 +478,5 @@ CaseDataManager <- R6::R6Class(
 
       return(result)
     }
-
-    # MICount = function() {
-    #   return(private$Catalogs$MICount)
-    # },
-
-    # AdjustmentRunLog = function() {
-    #   return(private$Catalogs$AdjustmentRunLog)
-    # },
-
-    # PopulationCombination = function() {
-    #   return(private$Catalogs$PopulationCombination)
-    # },
   )
 )

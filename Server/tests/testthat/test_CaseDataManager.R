@@ -8,7 +8,7 @@ test_that('creating the manager object is correct', {
 
 test_that('reading data is correct', {
   capture.output(
-    caseMgr$ReadData(system.file('TestData', 'dummy_miss1.zip', package = 'hivEstimatesAccuracy2'))
+    caseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
   )
 
   expect_equal(basename(caseMgr$FileName), 'dummy_miss1.zip')
@@ -77,11 +77,11 @@ test_that('applying origin grouping is correct', {
   expect_equal(caseMgr$LastStep, 3)
 })
 
-mockAdjustment <- setNames(list(GetListObject(
-  system.file('testData', 'MockMICEAdjustment.R', package = 'hivEstimatesAccuracy2')
-)), 'Mock MICE Adjustment')
-
 test_that('adjusting is correct', {
+  mockAdjustment <- setNames(
+    list(GetListObject(GetSystemFile('testData', 'MockMICEAdjustment.R'))),
+    'Mock MICE Adjustment'
+  )
   capture.output(caseMgr$RunAdjustments(mockAdjustment))
 
   expect_is(caseMgr$OriginalData, 'data.table')

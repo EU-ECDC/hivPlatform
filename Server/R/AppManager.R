@@ -23,11 +23,10 @@ AppManager <- R6::R6Class(
       private$Session <- session
 
       private$CaseMgrPriv <- CaseDataManager$new(session)
+      private$AggrMgrPriv <- AggrDataManager$new(session)
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
-        AggregatedDataPath = NULL,
-        AggregatedData = NULL,
         MICount = 0,
         BSCount = 0,
         AggregatedDataSelection = NULL,
@@ -54,29 +53,6 @@ AppManager <- R6::R6Class(
     }
 
     # # USER ACTIONS =================================================================================
-
-    # # 2. Read aggregated data ----------------------------------------------------------------------
-    # ReadAggregatedData = function(fileName) {
-    #   private$Catalogs$AggregatedDataPath <- fileName
-    #   private$Catalogs$AggregatedData <- hivModelling::ReadInputData(fileName)
-    #   private$Catalogs$AggregatedDataSelection <-
-    #     GetPrelimAggrDataSelection(private$Catalogs$AggregatedData)
-    #   private$Catalogs$PopulationCombination$AggrPopulations <-
-    #     names(private$Catalogs$AggregatedData[[1]])[-1]
-
-    #   PrintAlert('Aggregated data file {.file {fileName}} loaded')
-
-    #   return(invisible(self))
-    # },
-
-    # # 3. Read HIV model parameters -----------------------------------------------------------------
-    # ReadHIVModelParameters = function(fileName) {
-
-    #   PrintAlert('Not implemented')
-
-    #   return(invisible(self))
-    # },
-
 
     # # 9. Fit HIV model -----------------------------------------------------------------------------
     # FitHIVModel = function(
@@ -411,8 +387,11 @@ AppManager <- R6::R6Class(
     # Shiny session
     Session = NULL,
 
-    # Case data manager
+    # Case-based data manager
     CaseMgrPriv = NULL,
+
+    # Aggregated data manager
+    AggrMgrPriv = NULL,
 
     # Storage
     Catalogs = NULL,
@@ -433,11 +412,11 @@ AppManager <- R6::R6Class(
   active = list(
     CaseMgr = function() {
       return(private$CaseMgrPriv)
-    }
+    },
 
-    # AggregatedDataPath = function() {
-    #   return(private$Catalogs$AggregatedDataPath)
-    # },
+    AggrMgr = function() {
+      return(private$AggrMgrPriv)
+    }
 
     # MICount = function() {
     #   return(private$Catalogs$MICount)
@@ -445,26 +424,6 @@ AppManager <- R6::R6Class(
 
     # BSCount = function() {
     #   return(private$Catalogs$BSCount)
-    # },
-
-    # AdjustmentRunLog = function() {
-    #   return(private$Catalogs$AdjustmentRunLog)
-    # },
-
-    # FinalAdjustedCaseBasedData = function() {
-    #   dt <- private$Catalogs$AdjustedCaseBasedData
-    #   if (!is.null(dt)) {
-    #     finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
-    #     result <- private$Catalogs$AdjustedCaseBasedData[[finalIdx]]
-    #   } else {
-    #     result <- NULL
-    #   }
-
-    #   return(result)
-    # },
-
-    # AggregatedData = function() {
-    #   return(private$Catalogs$AggregatedData)
     # },
 
     # AggregatedDataSelection = function() {
@@ -515,10 +474,6 @@ AppManager <- R6::R6Class(
 
     # HIVBootstrapStatistics = function() {
     #   return(private$Catalogs$HIVBootstrapStatistics)
-    # },
-
-    # AdjustmentTask = function() {
-    #   return(private$Catalogs$AdjustmentTask)
     # },
 
     # HIVModelTask = function() {
