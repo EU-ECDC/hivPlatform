@@ -26,10 +26,11 @@ HIVModelDataManager <- R6::R6Class(
         Data = NULL,
         PopCombination = NULL,
         AggrDataSelection = NULL,
-        LastStep = 0L,
-
-        HIVModelTask = NULL,
-        HIVModelResult = NULL
+        MainFitTask = NULL,
+        MainFitResult = NULL,
+        BootstrapFitTask = NULL,
+        BootstrapFitResult = NULL,
+        LastStep = 0L
       )
     },
 
@@ -103,7 +104,7 @@ HIVModelDataManager <- R6::R6Class(
       status <- 'SUCCESS'
       private$Reinitialize('RunMainFit')
       tryCatch({
-        private$Catalogs$HIVModelTask <- Task$new(
+        private$Catalogs$MainFitTask <- Task$new(
           function(dataSets, settings, parameters) {
             options(width = 100)
 
@@ -136,7 +137,7 @@ HIVModelDataManager <- R6::R6Class(
           ),
           session = private$Session,
           successCallback = function(result) {
-            private$Catalogs$HIVModelResult <- result
+            private$Catalogs$MainFitResult <- result
             private$Catalogs$LastStep <- 2L
             PrintAlert('Running HIV Model main fit task finished')
           },
@@ -161,6 +162,66 @@ HIVModelDataManager <- R6::R6Class(
       }
 
       return(invisible(payload))
+    },
+
+    CancelMainFit = function() {
+      private$Catalogs$MainFitTask$Stop()
+      return(invisible(self))
+    },
+
+    RunBootstrapFit = function(
+      callback = NULL
+    ) {
+      if (private$Catalogs$LastStep < 2) {
+        PrintAlert('Main fit must be performed before running bootstrap', type = 'danger')
+        return(invisible(self))
+      }
+
+      dataSets <- private$Catalogs$Data
+
+      PrintAlert('Starting HIV Model bootstrap fit task')
+      status <- 'SUCCESS'
+      private$Reinitialize('RunBootstrapFit')
+      tryCatch({
+        private$Catalogs$BootstrapFitTask <- Task$new(
+          function() {
+            options(width = 100)
+            result <- list()
+            return(result)
+          },
+          args = list(),
+          session = private$Session,
+          successCallback = function(result) {
+            private$Catalogs$BootstrapFitResult <- result
+            private$Catalogs$LastStep <- 3L
+            PrintAlert('Running HIV Model bootstrap fit task finished')
+          },
+          failCallback = function() {
+            PrintAlert('Running HIV Model bootstrap fit task failed', type = 'danger')
+          }
+        )
+      },
+      error = function(e) {
+        status <- 'FAIL'
+        print(e)
+      })
+
+      payload <- list(
+        type = 'HIVModelDataManager:RunBootstrapFit',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
+    },
+
+    CancelBootstrapFit = function() {
+      private$Catalogs$BootstrapFitTask$Stop()
+      return(invisible(self))
     }
   ),
 
@@ -182,14 +243,20 @@ HIVModelDataManager <- R6::R6Class(
       }
 
       if (step %in% c('CombineData', 'RunMainFit')) {
-        private$Catalogs$HIVModelTask <- NULL
-        private$Catalogs$HIVModelResults <- NULL
+        private$Catalogs$MainFitTask <- NULL
+        private$Catalogs$MainFitResult <- NULL
+      }
+
+      if (step %in% c('CombineData', 'RunMainFit', 'RunBootstrapFit')) {
+        private$Catalogs$BootstrapFitTask <- NULL
+        private$Catalogs$BootstrapFitResult <- NULL
       }
 
       lastStep <- switch(
         step,
         'CombineData' = 0L,
-        'RunMainFit' = 1L
+        'RunMainFit' = 1L,
+        'RunBootstrapFit' = 2L
       )
       private$Catalogs$LastStep <- lastStep
     }
@@ -212,12 +279,20 @@ HIVModelDataManager <- R6::R6Class(
       return(private$Catalogs$AggrDataSelection)
     },
 
-    HIVModelTask = function() {
-      return(private$Catalogs$HIVModelTask)
+    MainFitTask = function() {
+      return(private$Catalogs$MainFitTask)
     },
 
-    HIVModelResult = function() {
-      return(private$Catalogs$HIVModelResult)
+    MainFitResult = function() {
+      return(private$Catalogs$MainFitResult)
+    },
+
+    BootstrapFitTask = function() {
+      return(private$Catalogs$BootstrapFitTask)
+    },
+
+    BootstrapFitResult = function() {
+      return(private$Catalogs$BootstrapFitResult)
     }
   )
 )

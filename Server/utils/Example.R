@@ -40,10 +40,10 @@ aggrDataSelection <- data.table(
 appMgr$HIVModelMgr$CombineData(popCombination, aggrDataSelection)
 appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters = list())
 
-# # STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+# STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+appMgr$HIVModelMgr$RunBootstrapFit()
+appMgr$HIVModelMgr$BootstrapFitResult
 # appMgr$RunBootstrap(bsCount = 5)
-# appMgr$HIVBootstrapModelResults <- appMgr$BootstrapTask$Result
-# cat(appMgr$BootstrapTask$RunLog)
 
 # # STEP 7 - Calculate statistics for every output column --------------------------------------------
 # appMgr$ComputeHIVBootstrapStatistics()

@@ -46,13 +46,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.23.0"],
+            ["apexcharts", "npm:3.23.1"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["copyfiles", "npm:2.4.1"],
             ["cross-env", "npm:7.0.3"],
             ["file-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:6.2.0"],
-            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.1"],
+            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.3"],
             ["jquery", "npm:3.5.1"],
             ["lodash", "npm:4.17.20"],
             ["mobx", "npm:6.0.4"],
@@ -61,7 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.11.1"],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["webpack-dev-server", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-beta.0"],
             ["webpack-merge", "npm:5.7.3"]
           ],
@@ -3052,20 +3052,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@webpack-cli/info", [
-        ["npm:1.2.0", {
-          "packageLocation": "./.yarn/cache/@webpack-cli-info-npm-1.2.0-3b2294cd51-f58002259f.zip/node_modules/@webpack-cli/info/",
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/@webpack-cli-info-npm-1.2.1-07e09b72d6-5d7533ed5a.zip/node_modules/@webpack-cli/info/",
           "packageDependencies": [
-            ["@webpack-cli/info", "npm:1.2.0"]
+            ["@webpack-cli/info", "npm:1.2.1"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0", {
-          "packageLocation": "./.yarn/$$virtual/@webpack-cli-info-virtual-74b6c30885/0/cache/@webpack-cli-info-npm-1.2.0-3b2294cd51-f58002259f.zip/node_modules/@webpack-cli/info/",
+        ["virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1", {
+          "packageLocation": "./.yarn/$$virtual/@webpack-cli-info-virtual-2f9d2e23c3/0/cache/@webpack-cli-info-npm-1.2.1-07e09b72d6-5d7533ed5a.zip/node_modules/@webpack-cli/info/",
           "packageDependencies": [
-            ["@webpack-cli/info", "virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0"],
+            ["@webpack-cli/info", "virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1"],
             ["@types/webpack-cli", null],
             ["envinfo", "npm:7.7.3"],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"]
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"]
           ],
           "packagePeers": [
             "@types/webpack-cli",
@@ -3075,19 +3075,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@webpack-cli/serve", [
-        ["npm:1.2.0", {
-          "packageLocation": "./.yarn/cache/@webpack-cli-serve-npm-1.2.0-e86870b87f-be9a5199a9.zip/node_modules/@webpack-cli/serve/",
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/@webpack-cli-serve-npm-1.2.1-cee635bccf-b82245b17a.zip/node_modules/@webpack-cli/serve/",
           "packageDependencies": [
-            ["@webpack-cli/serve", "npm:1.2.0"]
+            ["@webpack-cli/serve", "npm:1.2.1"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0", {
-          "packageLocation": "./.yarn/$$virtual/@webpack-cli-serve-virtual-96c2fd7ac6/0/cache/@webpack-cli-serve-npm-1.2.0-e86870b87f-be9a5199a9.zip/node_modules/@webpack-cli/serve/",
+        ["virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1", {
+          "packageLocation": "./.yarn/$$virtual/@webpack-cli-serve-virtual-fb3fa68445/0/cache/@webpack-cli-serve-npm-1.2.1-cee635bccf-b82245b17a.zip/node_modules/@webpack-cli/serve/",
           "packageDependencies": [
-            ["@webpack-cli/serve", "virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0"],
+            ["@webpack-cli/serve", "virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1"],
             ["@types/webpack-cli", null],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["webpack-dev-server", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-beta.0"]
           ],
           "packagePeers": [
@@ -3262,10 +3262,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["apexcharts", [
-        ["npm:3.23.0", {
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.23.0-ac3a24a1f7-b927d2abcd.zip/node_modules/apexcharts/",
+        ["npm:3.23.1", {
+          "packageLocation": "./.yarn/cache/apexcharts-npm-3.23.1-26079442ad-05a5c1f626.zip/node_modules/apexcharts/",
           "packageDependencies": [
-            ["apexcharts", "npm:3.23.0"],
+            ["apexcharts", "npm:3.23.1"],
             ["svg.draggable.js", "npm:2.2.2"],
             ["svg.easing.js", "npm:2.0.0"],
             ["svg.filter.js", "npm:2.0.2"],
@@ -4726,6 +4726,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["strip-final-newline", "npm:2.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/execa-npm-5.0.0-4ee568fb49-bf9664702c.zip/node_modules/execa/",
+          "packageDependencies": [
+            ["execa", "npm:5.0.0"],
+            ["cross-spawn", "npm:7.0.3"],
+            ["get-stream", "npm:6.0.0"],
+            ["human-signals", "npm:2.1.0"],
+            ["is-stream", "npm:2.0.0"],
+            ["merge-stream", "npm:2.0.0"],
+            ["npm-run-path", "npm:4.0.1"],
+            ["onetime", "npm:5.1.2"],
+            ["signal-exit", "npm:3.0.3"],
+            ["strip-final-newline", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["express", [
@@ -5095,6 +5111,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/get-stream-npm-6.0.0-ca30041dff-4354a4de78.zip/node_modules/get-stream/",
+          "packageDependencies": [
+            ["get-stream", "npm:6.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["getpass", [
@@ -5282,13 +5305,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.23.0"],
+            ["apexcharts", "npm:3.23.1"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["copyfiles", "npm:2.4.1"],
             ["cross-env", "npm:7.0.3"],
             ["file-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:6.2.0"],
-            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.1"],
+            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.3"],
             ["jquery", "npm:3.5.1"],
             ["lodash", "npm:4.17.20"],
             ["mobx", "npm:6.0.4"],
@@ -5297,7 +5320,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.11.1"],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["webpack-dev-server", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-beta.0"],
             ["webpack-merge", "npm:5.7.3"]
           ],
@@ -5353,17 +5376,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["html-webpack-plugin", [
-        ["npm:5.0.0-beta.1", {
-          "packageLocation": "./.yarn/cache/html-webpack-plugin-npm-5.0.0-beta.1-fd77fa0afb-d71b4e4a7b.zip/node_modules/html-webpack-plugin/",
+        ["npm:5.0.0-beta.3", {
+          "packageLocation": "./.yarn/cache/html-webpack-plugin-npm-5.0.0-beta.3-28a3f220fa-7cd75f5ec2.zip/node_modules/html-webpack-plugin/",
           "packageDependencies": [
-            ["html-webpack-plugin", "npm:5.0.0-beta.1"]
+            ["html-webpack-plugin", "npm:5.0.0-beta.3"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.1", {
-          "packageLocation": "./.yarn/$$virtual/html-webpack-plugin-virtual-08b85f13d1/0/cache/html-webpack-plugin-npm-5.0.0-beta.1-fd77fa0afb-d71b4e4a7b.zip/node_modules/html-webpack-plugin/",
+        ["virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.3", {
+          "packageLocation": "./.yarn/$$virtual/html-webpack-plugin-virtual-9d03f64ebb/0/cache/html-webpack-plugin-npm-5.0.0-beta.3-28a3f220fa-7cd75f5ec2.zip/node_modules/html-webpack-plugin/",
           "packageDependencies": [
-            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.1"],
+            ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.3"],
             ["@types/html-minifier-terser", "npm:5.1.1"],
             ["@types/webpack", null],
             ["html-minifier-terser", "npm:5.1.1"],
@@ -5493,6 +5516,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/human-signals-npm-1.1.1-616b2586c2-cac115f635.zip/node_modules/human-signals/",
           "packageDependencies": [
             ["human-signals", "npm:1.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/human-signals-npm-2.1.0-f75815481d-70bfd94d27.zip/node_modules/human-signals/",
+          "packageDependencies": [
+            ["human-signals", "npm:2.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -7318,7 +7348,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["@types/apexcharts", null],
             ["@types/react", null],
-            ["apexcharts", "npm:3.23.0"],
+            ["apexcharts", "npm:3.23.1"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.1"]
           ],
@@ -8676,7 +8706,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tapable", "npm:2.2.0"],
             ["terser-webpack-plugin", "virtual:32eb68db99d3c802ee12022d9a6dc5bf0c3e4c315a407b2099127daa6280b359434c39d30d17e9ac90dd04218616ebf2de1f4439ae83b4f4bca42f401f738c61#npm:5.0.3"],
             ["watchpack", "npm:2.1.0"],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["webpack-sources", "npm:2.2.0"]
           ],
           "packagePeers": [
@@ -8686,29 +8716,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["webpack-cli", [
-        ["npm:4.3.0", {
-          "packageLocation": "./.yarn/cache/webpack-cli-npm-4.3.0-04ed7b38f4-d2d4987ef7.zip/node_modules/webpack-cli/",
+        ["npm:4.3.1", {
+          "packageLocation": "./.yarn/cache/webpack-cli-npm-4.3.1-7f25a8ea71-5765fc1fd2.zip/node_modules/webpack-cli/",
           "packageDependencies": [
-            ["webpack-cli", "npm:4.3.0"]
+            ["webpack-cli", "npm:4.3.1"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0", {
-          "packageLocation": "./.yarn/$$virtual/webpack-cli-virtual-48733e3b9b/0/cache/webpack-cli-npm-4.3.0-04ed7b38f4-d2d4987ef7.zip/node_modules/webpack-cli/",
+        ["virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1", {
+          "packageLocation": "./.yarn/$$virtual/webpack-cli-virtual-b6459801d8/0/cache/webpack-cli-npm-4.3.1-7f25a8ea71-5765fc1fd2.zip/node_modules/webpack-cli/",
           "packageDependencies": [
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["@discoveryjs/json-ext", "npm:0.5.2"],
             ["@types/webpack", null],
-            ["@webpack-cli/generate-loader", null],
-            ["@webpack-cli/generate-plugin", null],
-            ["@webpack-cli/info", "virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0"],
+            ["@webpack-cli/generators", null],
+            ["@webpack-cli/info", "virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1"],
             ["@webpack-cli/init", null],
             ["@webpack-cli/migrate", null],
-            ["@webpack-cli/serve", "virtual:48733e3b9b78278cda0f170c9747a92920e19d563f79271b524c7bc5362b5bad1c8e51d614d68a67c11734c2a68356ea81c263690d5a0f47a1ed79681c602632#npm:1.2.0"],
+            ["@webpack-cli/serve", "virtual:b6459801d893c1db894e8f08790691d762d942d6bc1536d84bd6f39b9230f15382bc4d6d93b4ecd2b22ce499dadca9258aa59b4076336fe22fb479443ac7b851#npm:1.2.1"],
             ["colorette", "npm:1.2.1"],
             ["commander", "npm:6.2.0"],
             ["enquirer", "npm:2.3.6"],
-            ["execa", "npm:4.1.0"],
+            ["execa", "npm:5.0.0"],
             ["fastest-levenshtein", "npm:1.0.12"],
             ["import-local", "npm:3.0.2"],
             ["interpret", "npm:2.2.0"],
@@ -8721,8 +8750,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "packagePeers": [
             "@types/webpack",
-            "@webpack-cli/generate-loader",
-            "@webpack-cli/generate-plugin",
+            "@webpack-cli/generators",
             "@webpack-cli/init",
             "@webpack-cli/migrate",
             "webpack-bundle-analyzer",
@@ -8800,7 +8828,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["url", "npm:0.11.0"],
             ["util", "npm:0.12.3"],
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.11.1"],
-            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.0"],
+            ["webpack-cli", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.3.1"],
             ["webpack-dev-middleware", "virtual:c38159f271482360a92f728026448aba08222c10b02ad463df5cb6994b6ae30e3fddf3b23193dfeae5106b2c7f7a9ecbddd65c56a44e968a39a27aca1fb51cbf#npm:4.0.2"],
             ["ws", "virtual:c38159f271482360a92f728026448aba08222c10b02ad463df5cb6994b6ae30e3fddf3b23193dfeae5106b2c7f7a9ecbddd65c56a44e968a39a27aca1fb51cbf#npm:7.4.1"]
           ],

@@ -28,14 +28,9 @@ AppManager <- R6::R6Class(
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
-        MICount = 0,
-        BSCount = 0,
-        HIVModelParameters = NULL,
-        HIVModelResults = NULL,
+        BootstrapTask = NULL,
         HIVBootstrapModelResults = NULL,
         Report = NULL,
-        HIVModelTask = NULL,
-        BootstrapTask = NULL,
         ReportTask = NULL
       )
     },
@@ -52,63 +47,6 @@ AppManager <- R6::R6Class(
 
     # # USER ACTIONS =================================================================================
 
-    # # 9. Fit HIV model -----------------------------------------------------------------------------
-    # FitHIVModel = function(
-    #   settings = list(),
-    #   parameters = list(),
-    #   popCombination = NULL,
-    #   aggrDataSelection = NULL
-    # ) {
-    #   dataSets <- CombineData(
-    #     copy(self$FinalAdjustedCaseBasedData$Table),
-    #     copy(private$Catalogs$AggregatedData),
-    #     private$Catalogs$PopulationCombination,
-    #     private$Catalogs$AggregatedDataSelection
-    #   )
-
-    #   private$Catalogs$HIVModelTask <- Task$new(
-    #     function(dataSets, settings, parameters) {
-    #       options(width = 100)
-
-    #       results <- list()
-    #       for (i in seq_along(dataSets)) {
-    #         context <- hivModelling::GetRunContext(
-    #           data = dataSets[[i]],
-    #           settings = settings,
-    #           parameters = parameters
-    #         )
-    #         data <- hivModelling::GetPopulationData(context)
-
-    #         startTime <- Sys.time()
-    #         fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = TRUE)
-    #         runTime <- Sys.time() - startTime
-
-    #         results[[i]] <- list(
-    #           Context = context,
-    #           Data = data,
-    #           Results = fitResults,
-    #           RunTime = runTime
-    #         )
-    #       }
-    #       return(results)
-    #     },
-    #     args = list(
-    #       dataSets = dataSets,
-    #       settings = settings,
-    #       parameters = parameters
-    #     ),
-    #     session = private$Session
-    #   )
-    #   private$Catalogs$HIVModelTask$Run()
-
-    #   return(invisible(self))
-    # },
-
-    # CancelHIVModelFit = function() {
-    #   private$Catalogs$HIVModelTask$Stop()
-
-    #   return(invisible(self))
-    # },
 
     # # 10. Perform non-parametric bootstrap ---------------------------------------------------------
     # RunBootstrap = function(
@@ -344,14 +282,6 @@ AppManager <- R6::R6Class(
     #   return(htmlReportFileName)
     # },
 
-    # SetMICount = function(count) {
-    #   private$Catalogs$MICount <- max(count, 0)
-    # },
-
-    # SetBSCount = function(count) {
-    #   private$Catalogs$BSCount <- max(count, 0)
-    # },
-
     # GenerateReport = function() {
     #   private$Catalogs$ReportTask <- Task$new(
     #     function() {
@@ -415,14 +345,6 @@ AppManager <- R6::R6Class(
       return(private$HIVModelMgrPriv)
     }
 
-    # MICount = function() {
-    #   return(private$Catalogs$MICount)
-    # },
-
-    # BSCount = function() {
-    #   return(private$Catalogs$BSCount)
-    # },
-
     # BootstrapCaseBasedDataSets = function() {
     #   return(private$Catalogs$BootstrapCaseBasedDataSets)
     # },
@@ -463,10 +385,6 @@ AppManager <- R6::R6Class(
 
     # HIVBootstrapStatistics = function() {
     #   return(private$Catalogs$HIVBootstrapStatistics)
-    # },
-
-    # HIVModelTask = function() {
-    #   return(private$Catalogs$HIVModelTask)
     # },
 
     # BootstrapTask = function() {
