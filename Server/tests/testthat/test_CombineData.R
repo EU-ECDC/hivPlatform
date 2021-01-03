@@ -8,8 +8,6 @@ capture.output({
   appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_NL_-_2_populations.zip'))
 })
 
-caseData <- appMgr$CaseMgr$Data
-aggrData <- appMgr$AggrMgr$Data
 popCombination <- list(
   Case = list(
     list(Values = c('M', 'MSM'), Variables = c('Gender', 'Transmission'))

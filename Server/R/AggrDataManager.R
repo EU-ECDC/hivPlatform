@@ -91,11 +91,16 @@ AggrDataManager <- R6::R6Class(
     Catalogs = NULL,
 
     Reinitialize = function(step) {
-      if (step == 'ReadData') {
+      if (step %in% 'ReadData') {
         private$Catalogs$FileName <- NULL
         private$Catalogs$Data <- NULL
-        private$Catalogs$LastStep <- 0L
       }
+
+      lastStep <- switch(
+        step,
+        'ReadData' = 0L
+      )
+      private$Catalogs$LastStep <- lastStep
     }
   ),
 

@@ -29,7 +29,7 @@ HIVModelDataManager <- R6::R6Class(
         LastStep = 0L,
 
         HIVModelTask = NULL,
-        HIVModelResults = NULL
+        HIVModelResult = NULL
       )
     },
 
@@ -85,6 +85,82 @@ HIVModelDataManager <- R6::R6Class(
       }
 
       return(invisible(payload))
+    },
+
+    RunMainFit = function(
+      settings = list(),
+      parameters = list(),
+      callback = NULL
+    ) {
+      if (private$Catalogs$LastStep < 1) {
+        PrintAlert('Data must be combined before running adjustments', type = 'danger')
+        return(invisible(self))
+      }
+
+      dataSets <- private$Catalogs$Data
+
+      PrintAlert('Starting HIV Model main fit task')
+      status <- 'SUCCESS'
+      private$Reinitialize('RunMainFit')
+      tryCatch({
+        private$Catalogs$HIVModelTask <- Task$new(
+          function(dataSets, settings, parameters) {
+            options(width = 100)
+
+            result <- list()
+            for (i in seq_along(dataSets)) {
+              context <- hivModelling::GetRunContext(
+                data = dataSets[[i]],
+                settings = settings,
+                parameters = parameters
+              )
+              data <- hivModelling::GetPopulationData(context)
+
+              startTime <- Sys.time()
+              fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = TRUE)
+              runTime <- Sys.time() - startTime
+
+              result[[i]] <- list(
+                Context = context,
+                Data = data,
+                Results = fitResults,
+                RunTime = runTime
+              )
+            }
+            return(result)
+          },
+          args = list(
+            dataSets = dataSets,
+            settings = settings,
+            parameters = parameters
+          ),
+          session = private$Session,
+          successCallback = function(result) {
+            private$Catalogs$HIVModelResult <- result
+            private$Catalogs$LastStep <- 2L
+            PrintAlert('Running HIV Model main fit task finished')
+          },
+          failCallback = function() {
+            PrintAlert('Running HIV Model main fit task failed', type = 'danger')
+          }
+        )
+      },
+      error = function(e) {
+        status <- 'FAIL'
+        print(e)
+      })
+
+      payload <- list(
+        type = 'HIVModelDataManager:RunMainFit',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
     }
   ),
 
@@ -99,14 +175,23 @@ HIVModelDataManager <- R6::R6Class(
     Catalogs = NULL,
 
     Reinitialize = function(step) {
-      if (step == 'CombineData') {
+      if (step %in% 'CombineData') {
         private$Catalogs$Data <- NULL
         private$Catalogs$PopCombination <- NULL
         private$Catalogs$AggrDataSelection <- NULL
-        private$Catalogs$LastStep <- 0L
+      }
+
+      if (step %in% c('CombineData', 'RunMainFit')) {
         private$Catalogs$HIVModelTask <- NULL
         private$Catalogs$HIVModelResults <- NULL
       }
+
+      lastStep <- switch(
+        step,
+        'CombineData' = 0L,
+        'RunMainFit' = 1L
+      )
+      private$Catalogs$LastStep <- lastStep
     }
   ),
 
@@ -125,6 +210,14 @@ HIVModelDataManager <- R6::R6Class(
 
     AggrDataSelection = function() {
       return(private$Catalogs$AggrDataSelection)
+    },
+
+    HIVModelTask = function() {
+      return(private$Catalogs$HIVModelTask)
+    },
+
+    HIVModelResult = function() {
+      return(private$Catalogs$HIVModelResult)
     }
   )
 )
