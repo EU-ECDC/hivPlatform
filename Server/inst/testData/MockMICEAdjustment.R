@@ -1,6 +1,6 @@
 list(
   # Adjustment name ----
-  Name = 'Multiple Imputation using Chained Equations - MICE',
+  Name = 'Mock MICE Adjustment',
 
   # Adjustment type ----
   Type = 'MULTIPLE_IMPUTATIONS',
@@ -39,11 +39,6 @@ list(
       value = FALSE,
       input = 'checkbox'
     )
-    # Parameter 5
-    # runInParallel = list(
-    #   label = 'Run in parallel',
-    #   value = FALSE,
-    #   input = 'checkbox')
   ),
 
   # Names of packages that must be made available to the adjustment function ----
@@ -70,13 +65,6 @@ list(
       # Define outcomes
       yColNamesAll <- c('Age', 'SqCD4', 'Transmission', 'GroupedRegionOfOrigin')
 
-      if (imputeRD) {
-        dataSet[, LogTweakedMaxPossibleDelay := log(TweakedMaxPossibleDelay)]
-
-        xColNamesAll <- union(xColNamesAll, c('LogTweakedMaxPossibleDelay'))
-        yColNamesAll <- union(yColNamesAll, c('VarX'))
-      }
-
       # Determine which columns to pass to the mice package
 
       # At least 2 distinct values present
@@ -88,46 +76,6 @@ list(
       xColNames <- Filter(XFilterFunc, xColNamesAll)
       yColNames <- Filter(YFilterFunc, yColNamesAll)
 
-      # Keep for reporting
-      artifacts[['X_COLS']] <- list(All = xColNamesAll, Kept = xColNames)
-      artifacts[['Y_COLS']] <- list(All = yColNamesAll, Kept = yColNames)
-
-      # Create splines with proper names and intercept
-      splineBasisMatrix <- try(as.data.table(splines::ns(dataSet$DY, df = nsdf)), silent = TRUE)
-      if (IsError(splineBasisMatrix)) {
-        splineBasisMatrix <- data.table()
-      } else {
-        setnames(splineBasisMatrix, paste0('SplineKnot.', colnames(splineBasisMatrix)))
-      }
-
-      intercept <- 1L
-
-      # Define covariates of joint imputation model
-      X <- cbind(Intercept = intercept, splineBasisMatrix)
-      if (length(xColNames) > 0) {
-        X <- cbind(dataSet[, ..xColNames], X)
-      }
-
-      if (length(yColNames) > 0) {
-        # Define outcomes of joint imputation model
-        Y <- dataSet[, ..yColNames]
-
-        # Not used levels must be removed
-        X <- droplevels(X)
-        Y <- droplevels(Y)
-
-        # Run model
-        cat('Performing imputation.\n')
-        mids <- mice::mice(cbind(Y, X), m = nimp, maxit = nit)
-        artifacts[['Mids']] <- mids
-
-        imp <- setDT(mice::complete(mids, action = 'long', include = TRUE))
-        setnames(imp, old = c('.imp', '.id'), new = c('Imputation', 'Id'))
-
-      } else {
-        imp <- data.table(Imputation = 0L, Id = seq_len(nrow(Y)))
-      }
-
       indexColNames <- c('Imputation', 'Id')
       impColNames <- union(indexColNames, yColNames)
       dataSetColNames <- setdiff(
@@ -135,7 +83,10 @@ list(
         union(yColNames, c('Imputation', 'LogTweakedMaxPossibleDelay'))
       )
 
-      mi <- cbind(imp[, ..impColNames], dataSet[, ..dataSetColNames])
+      imp <- dataSet[rep(seq_len(.N), nimp)]
+      imp[, Imputation := rep(seq_len(nimp), each = nrow(dataSet))]
+      mi <- rbind(dataSet, imp)
+      mi[, Id := seq_len(nrow(.SD)), by = .(Imputation)]
 
       setcolorder(mi, union(indexColNames, dataSetColNames))
 

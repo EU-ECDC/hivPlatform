@@ -5,7 +5,8 @@
 #' @name Task
 #' @examples
 #' \dontrun{
-#' tast <- Task$new()
+#' task <- Task$new(function() { 1 + 1})
+#' task$Result
 #' }
 NULL
 
@@ -21,44 +22,69 @@ Task <- R6::R6Class(
       expr,
       args = list(),
       successCallback = NULL,
-      session = NULL
+      failCallback = NULL,
+      progressCallback = NULL,
+      progressRefresh = 2,
+      session = NULL,
+      autorun = TRUE
     ) {
-
-      private$Session <- session
       private$Expr <- expr
       private$Args <- args
       private$SuccessCallback <- successCallback
+      private$FailCallback <- failCallback
+      private$ProgressCallback <- progressCallback
+      private$ProgressRefresh <- progressRefresh
+      private$Session <- session
+      private$Autorun <- autorun
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
 
       private$Catalogs <- catalogStorage(
+        Status = 'IDLE',
         TaskHandle = NULL,
-        Process = NULL,
         Result = NULL,
-        RunLog = '',
         StartTime = NULL,
-        Status = 'STANDBY'
+        RunLog = '',
+        HTMLRunLog = ''
       )
+
+
+      if (autorun) {
+        self$Run()
+      }
+    },
+
+    finalize = function() {
+      self$Stop()
     },
 
     Run = function() {
+      if (self$IsRunning) {
+        PrintAlert('Task is already running', type = 'warning')
+        return(invisible(self))
+      }
       private$InitializeCatalogs()
 
       taskHandle <- callr::r_bg(
         force(private$Expr),
         args = private$Args,
         supervise = TRUE,
-        package = TRUE,
-        stderr = '2>&1'
+        package = FALSE,
+        stdout = '|',
+        stderr = '|',
+        user_profile = 'project',
+        error = 'error'
       )
 
       private$Catalogs$Status <- 'CREATED'
 
       private$Catalogs$TaskHandle <- taskHandle
-      private$Catalogs$Process <- taskHandle$as_ps_handle()
+      private$Process <- taskHandle$as_ps_handle()
       private$Catalogs$StartTime <- taskHandle$get_start_time()
 
       private$Monitor()
+
+      return(invisible(self))
     },
 
     Stop = function() {
@@ -69,12 +95,6 @@ Task <- R6::R6Class(
   ),
 
   private = list(
-    # Shiny session
-    Session = NULL,
-
-    # Storage
-    Catalogs = NULL,
-
     # Expression to run
     Expr = NULL,
 
@@ -84,17 +104,36 @@ Task <- R6::R6Class(
     # On-success callback function
     SuccessCallback = NULL,
 
-    CancellProcessed = FALSE,
+    # On-fail callback function
+    FailCallback = NULL,
+
+    ProgressCallback = NULL,
+
+    # Progress refresh timeout in seconds
+    ProgressRefresh = 2,
+
+    # Shiny session
+    Session = NULL,
+
+    Process = NULL,
+
+    # Start job immediately
+    Autorun = TRUE,
+
+    # Storage
+    Catalogs = NULL,
+
+    CancelProcessed = FALSE,
 
     InitializeCatalogs = function(skipRunLog = FALSE) {
-      private$Catalogs$Status <- 'STANDBY'
+      private$Catalogs$Status <- 'IDLE'
       private$Catalogs$TaskHandle <- NULL
-      private$Catalogs$Process <- NULL
       private$Catalogs$Result <- NULL
       private$Catalogs$StartTime <- NULL
       if (!skipRunLog) {
+        private$Catalogs$HTMLRunLog <- ''
         private$Catalogs$RunLog <- ''
-        private$CancellProcessed <- FALSE
+        private$CancelProcessed <- FALSE
       }
     },
 
@@ -105,9 +144,10 @@ Task <- R6::R6Class(
       } else if (self$IsFinished) {
         if (!self$IsCancelled) {
           log <- private$Catalogs$TaskHandle$read_all_output()
-        } else if (!private$CancellProcessed) {
+        } else if (!private$CancelProcessed) {
           log <- '\nTask cancelled'
-          private$CancellProcessed <- TRUE
+          private$Catalogs$Status <- 'CANCELLED'
+          private$CancelProcessed <- TRUE
         }
       }
       return(log)
@@ -124,18 +164,29 @@ Task <- R6::R6Class(
       return(!is.null(private$Session))
     },
 
-    Monitor = function() {
+    Monitor = function(timeout) {
       if (private$IsReactive()) {
         o <- shiny::observe({
-          self$Status
+          private$Catalogs$Status
           if (self$IsRunning) {
             private$Catalogs$Status <- 'RUNNING'
             self$RunLog
-            shiny::invalidateLater(2000)
+            shiny::invalidateLater(private$ProgressRefresh * 1000)
           } else {
-            private$Catalogs$Status <- 'STOPPED'
+            private$Catalogs$Status <- 'SUCCESS'
             self$Result
             self$RunLog
+            if (
+              private$Catalogs$Status == 'SUCCESS' &&
+                is.function(private$SuccessCallback)
+            ) {
+              private$SuccessCallback(self$Result)
+            } else if (
+              private$Catalogs$Status == 'FAIL' &&
+                is.function(private$FailCallback)
+            ) {
+              private$FailCallback()
+            }
             o$destroy()
           }
         })
@@ -145,28 +196,36 @@ Task <- R6::R6Class(
           log <- private$CollectRunLog()
           cat(log)
           private$AddToRunLog(log)
-          Sys.sleep(2)
+          Sys.sleep(private$ProgressRefresh)
         }
-        private$Catalogs$Status <- 'STOPPED'
+        private$Catalogs$Status <- 'SUCCESS'
         log <- private$CollectRunLog()
         cat(log)
         private$AddToRunLog(log)
       }
-      if (is.function(private$SuccessCallback)) {
-        private$SuccessCallback()
+      result <- self$Result
+      if (
+        self$Status == 'SUCCESS' &&
+          is.function(private$SuccessCallback)
+      ) {
+        private$SuccessCallback(self$Result)
+      } else if (
+        self$Status == 'FAIL' &&
+          is.function(private$FailCallback)
+      ) {
+        private$FailCallback()
       }
+      return(invisible(self))
     }
   ),
 
   active = list(
     Result = function() {
       if (self$IsFinished && !self$IsCancelled) {
-        result <- try(
-          private$Catalogs$TaskHandle$get_result(),
-          silent = TRUE
-        )
+        result <- try(private$Catalogs$TaskHandle$get_result(), silent = TRUE)
         if (IsError(result)) {
           result <- NULL
+          private$Catalogs$Status <- 'FAIL'
         }
         private$Catalogs$Result <- result
       }
@@ -187,22 +246,18 @@ Task <- R6::R6Class(
       return(private$Catalogs$TaskHandle)
     },
 
-    Process = function() {
-      return(private$Catalogs$Process)
-    },
-
     StartTime = function() {
       return(private$Catalogs$StartTime)
     },
 
     IsInitialized = function() {
-      return(!is.null(private$Catalogs$Process))
+      return(!is.null(private$Process))
     },
 
     IsRunning = function() {
       return(
         self$IsInitialized &&
-          ps::ps_is_running(private$Catalogs$Process)
+          ps::ps_is_running(private$Process)
       )
     },
 

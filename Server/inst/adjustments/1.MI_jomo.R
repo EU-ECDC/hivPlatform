@@ -137,13 +137,14 @@ list(
           nimp = nimp,
           beta.start = mcmc$collectbeta[, , nburn],
           l1cov.start = mcmc$collectomega[, , nburn],
-          out.iter = 100)
-        )
+          out.iter = 100
+        ))
+        setnames(imp, old = c('id'), new = c('Id'))
       } else {
-        imp <- data.table(Imputation = 0L, id = seq_len(nrow(Y)))
+        imp <- data.table(Imputation = 0L, Id = seq_len(nrow(Y)))
       }
 
-      indexColNames <- c('Imputation', 'id')
+      indexColNames <- c('Imputation', 'Id')
       impColNames <- union(indexColNames, yColNames)
       dataSetColNames <- setdiff(colnames(dataSet), union(yColNames, 'LogTweakedMaxPossibleDelay'))
 
@@ -194,6 +195,13 @@ list(
 
     # 6. Restore original order per Imputation
     setorder(table, Imputation, OrigSort)
+
+    # 7. Clean up
+    data[, ':='(
+      Id = NULL,
+      OrigSort = NULL,
+      DY = NULL
+    )]
 
     return(
       list(

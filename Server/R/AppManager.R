@@ -22,7 +22,7 @@ AppManager <- R6::R6Class(
 
       private$Session <- session
 
-      private$CaseMgrP <- CaseDataManager$new(session)
+      private$CaseMgrPriv <- CaseDataManager$new(session)
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
@@ -55,19 +55,6 @@ AppManager <- R6::R6Class(
 
     # # USER ACTIONS =================================================================================
 
-    # # 1. Read case-based data ----------------------------------------------------------------------
-    # ReadCaseBasedData = function(fileName) {
-    #   private$Catalogs$CaseBasedDataPath <- fileName
-    #   private$Catalogs$CaseBasedData <- ReadDataFile(fileName)
-
-    #   # Initialize attribute mapping
-    #   private$DetermineAttributeMapping()
-
-    #   PrintAlert('Case-based data file {.file {fileName}} loaded')
-
-    #   return(invisible(self))
-    # },
-
     # # 2. Read aggregated data ----------------------------------------------------------------------
     # ReadAggregatedData = function(fileName) {
     #   private$Catalogs$AggregatedDataPath <- fileName
@@ -90,168 +77,6 @@ AppManager <- R6::R6Class(
     #   return(invisible(self))
     # },
 
-    # # 4. Apply attribute mapping -------------------------------------------------------------------
-    # ApplyAttributesMappingToCaseBasedData = function(attrMapping) {
-    #   if (missing(attrMapping)) {
-    #     private$DetermineAttributeMapping()
-    #   } else {
-    #     private$Catalogs$AttributeMapping <- attrMapping
-    #     private$Catalogs$AttributeMappingStatus <- GetAttrMappingStatus(attrMapping)
-    #   }
-
-    #   private$Catalogs$PreProcessedCaseBasedData <- ApplyAttributesMapping(
-    #     private$Catalogs$CaseBasedData,
-    #     private$Catalogs$AttributeMapping
-    #   )
-
-    #   PrintAlert('Attribute mapping has been applied to case-based data')
-
-    #   return(invisible(self))
-    # },
-
-    # # 5. Pre-process case-based data ---------------------------------------------------------------
-    # PreProcessCaseBasedData = function() {
-    #   dt <- PreProcessInputDataBeforeSummary(private$Catalogs$PreProcessedCaseBasedData)
-    #   PreProcessInputDataBeforeAdjustments(dt$Table)
-    #   dtStatus <- GetInputDataValidityStatus(dt$Table)
-
-    #   private$Catalogs$PreProcessedCaseBasedData <- dt
-    #   private$Catalogs$PreProcessedCaseBasedDataStatus <- dtStatus
-    #   private$Catalogs$OriginDistribution <- GetOriginDistribution(dt$Table)
-
-    #   PrintAlert('Case-based data has been pre-processed')
-
-    #   return(invisible(self))
-    # },
-
-    # # 6. Apply origin grouping ---------------------------------------------------------------------
-    # ApplyOriginGrouping = function(groups, type) {
-    #   if (missing(groups)) {
-    #     groups <- GetOriginGroupingPreset(type, private$Catalogs$OriginDistribution)
-    #   }
-    #   private$Catalogs$OriginGrouping <- groups
-
-    #   private$Catalogs$PreProcessedCaseBasedData <- ApplyOriginGroupingMap(
-    #     private$Catalogs$PreProcessedCaseBasedData,
-    #     groups
-    #   )
-
-    #   self$SendEventToReact('shinyHandler', list(
-    #     Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-    #     Status = 'SUCCESS',
-    #     Payload = list()
-    #   ))
-
-    #   PrintAlert('Origin grouping has been applied')
-
-    #   return(invisible(self))
-    # },
-
-    # # 7. Create plots ------------------------------------------------------------------------------
-    # GetSummaryData = function() {
-    #   plotDT <- private$Catalogs$PreProcessedCaseBasedData$Table
-
-    #   # Diagnosis year plot
-    #   diagYearCounts <- plotDT[, .(Count = .N), keyby = .(Gender, YearOfHIVDiagnosis)]
-    #   diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
-    #   diagYearPlotData <- list(
-    #     filter = list(
-    #       scaleMinYear = min(diagYearCategories),
-    #       scaleMaxYear = max(diagYearCategories),
-    #       valueMinYear = min(diagYearCategories),
-    #       valueMaxYear = max(diagYearCategories)
-    #     ),
-    #     chartCategories = diagYearCategories,
-    #     chartData = list(
-    #       list(
-    #         name = 'Female',
-    #         data = diagYearCounts[Gender == 'F', Count]
-    #       ),
-    #       list(
-    #         name = 'Male',
-    #         data = diagYearCounts[Gender == 'M', Count]
-    #       )
-    #     )
-    #   )
-    #   PrintAlert('Diagnosis year density plot data created')
-
-    #   # Notification quarter plot
-    #   notifQuarterCounts <- plotDT[,
-    #     .(Count = .N),
-    #     keyby = .(
-    #       Gender,
-    #       QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
-    #     )
-    #   ]
-    #   notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
-    #   notifQuarterPlotData <- list(
-    #     filter = list(
-    #       scaleMinYear = min(notifQuarterCategories),
-    #       scaleMaxYear = max(notifQuarterCategories),
-    #       valueMinYear = min(notifQuarterCategories),
-    #       valueMaxYear = max(notifQuarterCategories)
-    #     ),
-    #     chartCategories = notifQuarterCategories,
-    #     chartData = list(
-    #       list(
-    #         name = 'Female',
-    #         data = notifQuarterCounts[Gender == 'F', Count]
-    #       ),
-    #       list(
-    #         name = 'Male',
-    #         data = notifQuarterCounts[Gender == 'M', Count]
-    #       )
-    #     )
-    #   )
-    #   PrintAlert('Notification quarter density plot data created')
-
-    #   missPlotData <- GetMissingnessPlots(plotDT)
-    #   PrintAlert('Missingness plot data created')
-
-    #   repDelPlotData <- GetReportingDelaysPlots(plotDT)
-    #   PrintAlert('Reporting delays plot data created')
-
-    #   summaryData <- list(
-    #     DiagYearPlotData = diagYearPlotData,
-    #     NotifQuarterPlotData = notifQuarterPlotData,
-    #     MissPlotData = missPlotData,
-    #     RepDelPlotData = repDelPlotData
-    #   )
-
-    #   return(summaryData)
-    # },
-
-    # # 8. Adjust case-based data --------------------------------------------------------------------
-    # AdjustCaseBasedData = function(adjustmentSpecs) {
-    #   private$Catalogs$AdjustmentTask <- Task$new(
-    #     function(data, adjustmentSpecs) {
-    #       suppressMessages(pkgload::load_all())
-    #       options(width = 100)
-    #       result <- hivEstimatesAccuracy2::RunAdjustments(
-    #         data = data,
-    #         adjustmentSpecs = adjustmentSpecs,
-    #         diagYearRange = NULL,
-    #         notifQuarterRange = NULL,
-    #         seed = NULL
-    #       )
-    #       return(result)
-    #     },
-    #     args = list(
-    #       data = isolate(private$Catalogs$PreProcessedCaseBasedData$Table),
-    #       adjustmentSpecs = adjustmentSpecs
-    #     ),
-    #     session = private$Session
-    #   )
-    #   private$Catalogs$AdjustmentTask$Run()
-
-    #   return(invisible(self))
-    # },
-
-    # CancelAdjustmentTask = function() {
-    #   private$Catalogs$AdjustmentTask$Stop()
-
-    #   return(invisible(self))
-    # },
 
     # # 9. Fit HIV model -----------------------------------------------------------------------------
     # FitHIVModel = function(
@@ -587,7 +412,7 @@ AppManager <- R6::R6Class(
     Session = NULL,
 
     # Case data manager
-    CaseMgrP = NULL,
+    CaseMgrPriv = NULL,
 
     # Storage
     Catalogs = NULL,
@@ -607,7 +432,7 @@ AppManager <- R6::R6Class(
 
   active = list(
     CaseMgr = function() {
-      return(private$CaseMgrP)
+      return(private$CaseMgrPriv)
     }
 
     # AggregatedDataPath = function() {

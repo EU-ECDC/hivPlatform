@@ -36,7 +36,8 @@ CaseDataManager <- R6::R6Class(
 
         LastStep = 0L,
 
-        AdjustmentTask = NULL
+        AdjustmentTask = NULL,
+        AdjustmentData = NULL
       )
     },
 
@@ -47,7 +48,10 @@ CaseDataManager <- R6::R6Class(
     # USER ACTIONS =================================================================================
 
     # 1. Read case-based data ----------------------------------------------------------------------
-    ReadData = function(fileName) {
+    ReadData = function(
+      fileName,
+      callback = NULL
+    ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert('Object is not initialized properly before reading data', type = 'danger')
         return(invisible(self))
@@ -75,11 +79,24 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
       }
 
-      return(invisible(self))
+      payload <- list(
+        type = 'CaseDataManager:ReadData',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
     },
 
     # 2. Apply attribute mapping -------------------------------------------------------------------
-    ApplyAttributesMapping = function(attrMapping) {
+    ApplyAttributesMapping = function(
+      attrMapping,
+      callback = NULL
+    ) {
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
         return(invisible(self))
@@ -121,11 +138,25 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Attribute mapping is not valid and cannot be applied', type = 'danger')
       }
 
-      return(invisible(self))
+      payload <- list(
+        type = 'CaseDataManager:ApplyAttributesMapping',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
     },
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
-    ApplyOriginGrouping = function(originGrouping, type = 'CUSTOM') {
+    ApplyOriginGrouping = function(
+      originGrouping,
+      type = 'CUSTOM',
+      callback = NULL
+    ) {
       if (private$Catalogs$LastStep < 2) {
         PrintAlert(
           'Atrributes mapping must be applied before applying origin grouping',
@@ -161,11 +192,24 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
 
-      return(invisible(self))
+      payload <- list(
+        type = 'CaseDataManager:ApplyOriginGrouping',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
     },
 
     # 4. Adjust data -------------------------------------------------------------------------------
-    RunAdjustments = function(adjustmentSpecs) {
+    RunAdjustments = function(
+      adjustmentSpecs,
+      callback = NULL
+    ) {
       if (private$Catalogs$LastStep < 3) {
         PrintAlert(
           'Origing grouping must be applied before running adjustments',
@@ -176,32 +220,59 @@ CaseDataManager <- R6::R6Class(
 
       data <- private$Catalogs$Data
 
-      private$Catalogs$AdjustmentTask <- Task$new(
-        function(data, adjustmentSpecs) {
-          suppressMessages(pkgload::load_all())
-          options(width = 100)
-          result <- hivEstimatesAccuracy2::RunAdjustments(
-            data = data,
-            adjustmentSpecs = adjustmentSpecs,
-            diagYearRange = NULL,
-            notifQuarterRange = NULL,
-            seed = NULL
-          )
-          return(result)
-        },
-        args = list(data = data, adjustmentSpecs = adjustmentSpecs),
-        successCallback = function() {
-          PrintAlert('Hey, I\'m done')
-        },
-        session = private$Session
-      )
-      private$Catalogs$AdjustmentTask$Run()
+      PrintAlert('Starting adjustment task')
+      status <- 'SUCCESS'
+      tryCatch({
+        private$Catalogs$AdjustmentTask <- Task$new(
+          function(data, adjustmentSpecs) {
+            suppressMessages(pkgload::load_all())
+            options(width = 100)
+            result <- hivEstimatesAccuracy2::RunAdjustments(
+              data = data,
+              adjustmentSpecs = adjustmentSpecs,
+              diagYearRange = NULL,
+              notifQuarterRange = NULL,
+              seed = NULL
+            )
+            return(result)
+          },
+          args = list(data = data, adjustmentSpecs = adjustmentSpecs),
+          session = private$Session,
+          successCallback = function(result) {
+            private$Catalogs$AdjustmentData <- result
+            private$Catalogs$Data <- self$LastAdjustmentData$Data
+            private$Catalogs$LastStep <- 4L
+            PrintAlert('Running adjustment task finished')
+          },
+          failCallback = function() {
+            PrintAlert('Running adjustment task failed', type = 'danger')
+          }
+        )
+      },
+      error = function(e) {
+        status <- 'FAIL'
+        print(e)
+      })
 
-      return(invisible(self))
+      payload <- list(
+        type = 'CaseDataManager:RunAdjustments',
+        status = status,
+        artifacts = list()
+      )
+
+      if (is.function(callback)) {
+        callback(payload)
+      }
+
+      return(invisible(payload))
     },
 
-    CancelAdjustments = function() {
-      private$Catalogs$AdjustmentTask$Stop()
+    CancelAdjustments = function(
+      callback = NULL
+    ) {
+      if (!is.null(private$Catalogs$AdjustmentTask)) {
+        private$Catalogs$AdjustmentTask$Stop()
+      }
 
       return(invisible(self))
     }
@@ -388,6 +459,20 @@ CaseDataManager <- R6::R6Class(
 
     AdjustmentTask = function() {
       return(private$Catalogs$AdjustmentTask)
+    },
+
+    AdjustmentData = function() {
+      return(private$Catalogs$AdjustmentData)
+    },
+
+    LastAdjustmentData = function() {
+      if (is.list(private$Catalogs$AdjustmentData)) {
+        result <- private$Catalogs$AdjustmentData[[length(private$Catalogs$AdjustmentData)]]
+      } else {
+        result <- NULL
+      }
+
+      return(result)
     }
 
     # MICount = function() {
@@ -398,24 +483,8 @@ CaseDataManager <- R6::R6Class(
     #   return(private$Catalogs$AdjustmentRunLog)
     # },
 
-    # FinalAdjustedCaseBasedData = function() {
-    #   dt <- private$Catalogs$AdjustedCaseBasedData
-    #   if (!is.null(dt)) {
-    #     finalIdx <- length(private$Catalogs$AdjustedCaseBasedData)
-    #     result <- private$Catalogs$AdjustedCaseBasedData[[finalIdx]]
-    #   } else {
-    #     result <- NULL
-    #   }
-
-    #   return(result)
-    # },
-
     # PopulationCombination = function() {
     #   return(private$Catalogs$PopulationCombination)
     # },
-
-    # AdjustmentTask = function() {
-    #   return(private$Catalogs$AdjustmentTask)
-    # }
   )
 )

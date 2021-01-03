@@ -8,6 +8,7 @@ R6 class for representing a background task
 }
 \examples{
 \dontrun{
-tast <- Task$new()
+task <- Task$new(function() { 1 + 1})
+task$Result
 }
 }

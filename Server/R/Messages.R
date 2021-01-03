@@ -15,7 +15,8 @@ PrintH1 <- function(
   collapse = ' ',
   .envir = parent.frame()
 ) {
-  cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir)
+  formattedText <- capt0(cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir))
+  cat(formattedText)
 
   invisible(NULL)
 }
@@ -37,7 +38,8 @@ PrintH2 <- function(
   collapse = ' ',
   .envir = parent.frame()
 ) {
-  cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir)
+  formattedText <- capt0(cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir))
+  cat(formattedText)
 
   invisible(NULL)
 }
@@ -75,66 +77,8 @@ PrintAlert <- function(
     cli::cli_alert
   )
 
-  alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir)
-
-  invisible(NULL)
-}
-
-#' StartProcess
-#'
-#' @param ... Text to be printed
-#' @param collapse String to be used for concatenating texts
-#' @param .envir Environment for lookup of variables referenced in the text
-#'
-#' @return NULL
-#'
-#' @examples
-#' \dontrun{
-#' processId <- StartProcess('Test')
-#' }
-#'
-#' @export
-StartProcess <- function(
-  ...,
-  collapse = ' ',
-  .envir = parent.frame()
-) {
-  try(cli::cli_status_clear(NULL), silent = TRUE)
-  startTime <- Sys.time()
-  processId <- cli::cli_process_start(CollapseTexts(..., collapse = collapse), .envir = .envir)
-
-  invisible(list(
-    ProcessId = processId,
-    StartTime = startTime
-  ))
-}
-
-#' EndProcess
-#'
-#' @param procList List of processes
-#' @param ... Text to be printed
-#' @param collapse String to be used for concatenating texts
-#' @param .envir Environment for lookup of variables referenced in the text
-#'
-#' @return NULL
-#'
-#' @examples
-#' \dontrun{
-#' EndProcess(processId, 'Test')
-#' }
-#'
-#' @export
-EndProcess <- function(
-  procList = NULL,
-  ...,
-  collapse = ' ',
-  .envir = parent.frame()
-) {
-  cli::cli_process_done(
-    id = procList$ProcessId,
-    CollapseTexts(..., collapse = collapse),
-    .envir = .envir
-  )
+  formattedText <- capt0(alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir))
+  cat(formattedText)
 
   invisible(NULL)
 }
@@ -154,9 +98,12 @@ PrintBullets <- function(
   items = c(),
   .envir = parent.frame()
 ) {
-  cli::cli_ul()
-  sapply(items, cli::cli_li)
-  cli::cli_end()
+  formattedText <- capt0({
+    cli::cli_ul()
+    sapply(items, cli::cli_li)
+    cli::cli_end()
+  })
+  cat(formattedText)
 
   invisible(NULL)
 }
@@ -177,4 +124,19 @@ CollapseTexts <- function(
   collapse = ' '
 ) {
   return(paste(list(...), collapse = collapse))
+}
+
+capture_messages <- function(expr) {
+  msgs <- character()
+  i <- 0
+  suppressMessages(withCallingHandlers(
+    expr,
+    message = function(e) msgs[[i <<- i + 1]] <<- conditionMessage(e)
+  ))
+  paste0(msgs, collapse = "")
+}
+
+capt0 <- function(expr, strip_style = FALSE) {
+  out <- capture_messages(expr)
+  if (strip_style) cli::ansi_strip(out) else out
 }

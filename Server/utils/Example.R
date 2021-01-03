@@ -57,13 +57,14 @@ appMgr$GenerateReport()
 appMgr$Report <- appMgr$ReportTask$Result
 
 # Case data manager only  --------------------------------------------------------------------------
+mockAdjustment <- setNames(list(GetListObject(
+  system.file('testData', 'MockMICEAdjustment.R', package = 'hivEstimatesAccuracy2')
+)), 'Mock MICE Adjustment')
 caseMgr <- CaseDataManager$new()
 caseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 caseMgr$ApplyAttributesMapping()
 caseMgr$ApplyOriginGrouping()
-caseMgr$RunAdjustments(
-  GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-)
+caseMgr$RunAdjustments(GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')))
 caseMgr$FileName
 caseMgr$OriginalData
 caseMgr$AttrMapping
@@ -75,4 +76,6 @@ caseMgr$Summary
 caseMgr$DataStatus
 caseMgr$Data
 caseMgr$LastStep
-results <- caseMgr$AdjustmentTask$Result
+caseMgr$AdjustmentTask$Status
+caseMgr$AdjustmentData
+caseMgr$LastAdjustmentData
