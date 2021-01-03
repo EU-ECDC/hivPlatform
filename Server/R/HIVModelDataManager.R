@@ -26,7 +26,10 @@ HIVModelDataManager <- R6::R6Class(
         Data = NULL,
         PopCombination = NULL,
         AggrDataSelection = NULL,
-        LastStep = 0L
+        LastStep = 0L,
+
+        HIVModelTask = NULL,
+        HIVModelResults = NULL
       )
     },
 
@@ -101,6 +104,8 @@ HIVModelDataManager <- R6::R6Class(
         private$Catalogs$PopCombination <- NULL
         private$Catalogs$AggrDataSelection <- NULL
         private$Catalogs$LastStep <- 0L
+        private$Catalogs$HIVModelTask <- NULL
+        private$Catalogs$HIVModelResults <- NULL
       }
     }
   ),

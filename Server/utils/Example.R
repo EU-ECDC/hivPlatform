@@ -11,14 +11,11 @@ appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- GetAdjustmentSpecs(c(
-  'Multiple Imputation using Chained Equations - MICE'
-))
-appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+appMgr$CaseMgr$RunAdjustments(
+  GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+)
 
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
-caseData <- appMgr$CaseMgr$Data
-aggrData <- appMgr$AggrMgr$Data
 
 # Interface codes for case-based populations
 # 'M [G], MSM [T]'
@@ -41,10 +38,6 @@ aggrDataSelection <- data.table(
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
 appMgr$HIVModelMgr$CombineData(popCombination, aggrDataSelection)
-appMgr$HIVModelMgr$Data
-appMgr$HIVModelMgr$PopCombination
-appMgr$HIVModelMgr$AggrDataSelection
-
 
 # appMgr$FitHIVModel()
 # appMgr$HIVModelResults <- appMgr$HIVModelTask$Result

@@ -25,21 +25,18 @@ CaseDataManager <- R6::R6Class(
       private$Catalogs <- catalogStorage(
         FileName = NULL,
         OriginalData = NULL,
-
         AttrMapping = NULL,
         AttrMappingStatus = NULL,
-        PreProcessArtifacts = NULL,
         OriginDistribution = NULL,
         OriginGrouping = list(),
+        PreProcessArtifacts = NULL,
         Summary = NULL,
-
-        Data = NULL,
-        DataStatus = NULL,
-
-        LastStep = 0L,
-
+        PreProcessedData = NULL,
+        PreProcessedDataStatus = NULL,
+        AdjustedData = NULL,
         AdjustmentTask = NULL,
-        AdjustmentData = NULL
+        AdjustmentResult = NULL,
+        LastStep = 0L
       )
     },
 
@@ -135,8 +132,8 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
         private$Catalogs$OriginDistribution <- originDistribution
         private$Catalogs$PreProcessArtifacts <- preProcessArtifacts
-        private$Catalogs$Data <- data
-        private$Catalogs$DataStatus <- dataStatus
+        private$Catalogs$PreProcessedData <- data
+        private$Catalogs$PreProcessedDataStatus <- dataStatus
         private$Catalogs$LastStep <- 2L
         PrintAlert('Attribute mapping has been applied')
       } else {
@@ -171,7 +168,7 @@ CaseDataManager <- R6::R6Class(
       }
 
       originDistribution <- private$Catalogs$OriginDistribution
-      data <- private$Catalogs$Data
+      preProcessedData <- private$Catalogs$PreProcessedData
 
       status <- 'SUCCESS'
       tryCatch({
@@ -180,7 +177,7 @@ CaseDataManager <- R6::R6Class(
         } else {
           type <- 'CUSTOM'
         }
-        ApplyOriginGrouping(data, originGrouping)
+        ApplyOriginGrouping(preProcessedData, originGrouping)
       },
       error = function(e) {
         status <- 'FAIL'
@@ -189,7 +186,7 @@ CaseDataManager <- R6::R6Class(
       if (status == 'SUCCESS') {
         private$Reinitialize('ApplyOriginGrouping')
         private$Catalogs$OriginGrouping <- originGrouping
-        private$Catalogs$Data <- data
+        private$Catalogs$PreProcessedData <- preProcessedData
         private$Catalogs$LastStep <- 3L
         PrintAlert('Origin grouping {.val {type}} has been applied')
         private$ComputeSummary()
@@ -223,10 +220,11 @@ CaseDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      data <- private$Catalogs$Data
+      preProcessedData <- private$Catalogs$PreProcessedData
 
       PrintAlert('Starting adjustment task')
       status <- 'SUCCESS'
+      private$Reinitialize('RunAdjustments')
       tryCatch({
         private$Catalogs$AdjustmentTask <- Task$new(
           function(data, adjustmentSpecs) {
@@ -241,11 +239,11 @@ CaseDataManager <- R6::R6Class(
             )
             return(result)
           },
-          args = list(data = data, adjustmentSpecs = adjustmentSpecs),
+          args = list(data = preProcessedData, adjustmentSpecs = adjustmentSpecs),
           session = private$Session,
           successCallback = function(result) {
-            private$Catalogs$AdjustmentData <- result
-            private$Catalogs$Data <- self$LastAdjustmentData$Data[Imputation != 0]
+            private$Catalogs$AdjustmentResult <- result
+            private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
             private$Catalogs$LastStep <- 4L
             PrintAlert('Running adjustment task finished')
           },
@@ -294,37 +292,52 @@ CaseDataManager <- R6::R6Class(
     Catalogs = NULL,
 
     Reinitialize = function(step) {
-      if (step == 'ReadData') {
+      if (
+        step %in% c('ReadData')
+      ) {
         private$Catalogs$FileName <- NULL
-        private$Catalogs$OriginalDataPath <- NULL
         private$Catalogs$OriginalData <- NULL
         private$Catalogs$AttrMapping <- NULL
         private$Catalogs$AttrMappingStatus <- NULL
-        private$Catalogs$OriginDistribution <- NULL
-        private$Catalogs$OriginGrouping <- list()
-        private$Catalogs$PreProcessArtifacts <- NULL
-        private$Catalogs$Summary <- NULL
-        private$Catalogs$Data <- NULL
-        private$Catalogs$DataStatus <- NULL
-        private$Catalogs$LastStep <- 0L
-      } else if (step == 'ApplyAttributeMapping') {
+      }
+
+      if (
+        step %in% c('ReadData', 'ApplyAttributeMapping')
+      ) {
         private$Catalogs$AttrMapping <- NULL
         private$Catalogs$AttrMappingStatus <- NULL
-        private$Catalogs$OriginDistribution <- NULL
-        private$Catalogs$OriginGrouping <- list()
         private$Catalogs$PreProcessArtifacts <- NULL
-        private$Catalogs$Summary <- NULL
-        private$Catalogs$Data <- NULL
-        private$Catalogs$DataStatus <- NULL
-        private$Catalogs$LastStep <- 1L
-      } else if (step == 'ApplyOriginGrouping') {
-        private$Catalogs$OriginGrouping <- list()
-        if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$Data$Table)) {
-          private$Catalogs$Data$Table[, GroupedRegionOfOrigin := NULL]
-        }
-        private$Catalogs$Summary <- NULL
-        private$Catalogs$LastStep <- 2L
+        private$Catalogs$OriginDistribution <- NULL
+        private$Catalogs$PreProcessedData <- NULL
+        private$Catalogs$PreProcessedDataStatus <- NULL
       }
+
+      if (
+        step %in% c('ReadData', 'ApplyAttributeMapping', 'ApplyOriginGrouping')
+      ) {
+        private$Catalogs$OriginGrouping <- list()
+        private$Catalogs$Summary <- NULL
+        if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$PreProcessedData$Table)) {
+          private$Catalogs$PreProcessedData$Table[, GroupedRegionOfOrigin := NULL]
+        }
+      }
+
+      if (
+        step %in% c('ReadData', 'ApplyAttributeMapping', 'ApplyOriginGrouping', 'RunAdjustments')
+      ) {
+        private$Catalogs$AdjustedData <- NULL
+        private$Catalogs$AdjustmentTask <- NULL
+        private$Catalogs$AdjustmentResult <- NULL
+      }
+
+      lastStep <- switch(
+        step,
+        'ReadData' = 0L,
+        'ApplyAttributeMapping' = 1L,
+        'ApplyOriginGrouping' = 2L,
+        'RunAdjustments' = 3L
+      )
+      private$Catalogs$LastStep <- lastStep
     },
 
     ComputeSummary = function() {
@@ -336,7 +349,7 @@ CaseDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      data <- private$Catalogs$Data
+      data <- private$Catalogs$PreProcessedData
       status <- 'SUCCESS'
       tryCatch({
         # Diagnosis year plot
@@ -454,34 +467,47 @@ CaseDataManager <- R6::R6Class(
       return(summaryJSON)
     },
 
-    DataStatus = function() {
-      return(private$Catalogs$DataStatus)
+    PreProcessedData = function() {
+      return(private$Catalogs$PreProcessedData)
     },
 
-    Data = function() {
-      return(private$Catalogs$Data)
+    PreProcessedDataStatus = function() {
+      return(private$Catalogs$PreProcessedDataStatus)
     },
 
-    LastStep = function() {
-      return(private$Catalogs$LastStep)
+    AdjustedData = function() {
+      return(private$Catalogs$AdjustedData)
     },
 
     AdjustmentTask = function() {
       return(private$Catalogs$AdjustmentTask)
     },
 
-    AdjustmentData = function() {
-      return(private$Catalogs$AdjustmentData)
+    AdjustmentResult = function() {
+      return(private$Catalogs$AdjustmentResult)
     },
 
-    LastAdjustmentData = function() {
-      if (is.list(private$Catalogs$AdjustmentData)) {
-        result <- private$Catalogs$AdjustmentData[[length(private$Catalogs$AdjustmentData)]]
+    LastAdjustmentResult = function() {
+      if (is.list(private$Catalogs$AdjustmentResult)) {
+        result <- private$Catalogs$AdjustmentResult[[length(private$Catalogs$AdjustmentResult)]]
       } else {
         result <- NULL
       }
 
       return(result)
+    },
+
+    Data = function() {
+      if (!is.null(private$Catalogs$AdjustedData)) {
+        data <- private$Catalogs$AdjustedData
+      } else {
+        data <- private$Catalogs$PreProcessedData
+      }
+      return(data)
+    },
+
+    LastStep = function() {
+      return(private$Catalogs$LastStep)
     }
   )
 )
