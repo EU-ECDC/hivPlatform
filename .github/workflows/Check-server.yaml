@@ -91,7 +91,9 @@ jobs:
           _R_CHECK_FORCE_SUGGESTS_: false
           _R_CHECK_LICENSE_: false
           _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
-        run: rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
+        run: |
+          rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
+          testthat::test_package('hivEstimatesAccuracy2')
         shell: Rscript {0}
         working-directory: Server
 
