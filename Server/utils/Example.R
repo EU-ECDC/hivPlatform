@@ -43,37 +43,24 @@ appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters = list())
 
 # STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, type = 'PARAMETRIC')
-appMgr$HIVModelMgr$BootstrapFitResult
 
-# # STEP 7 - Calculate statistics for every output column --------------------------------------------
-# appMgr$ComputeHIVBootstrapStatistics()
+# STEP 7 - Explore bootstrap results ---------------------------------------------------------------
+# All data sets
+hist(appMgr$HIVModelMgr$BootstrapFitStats$RunTime)
+table(appMgr$HIVModelMgr$BootstrapFitStats$Converged)
 
-# # STEP 8 - Explore bootstrap results ---------------------------------------------------------------
-# # All data sets
-# hist(appMgr$HIVBootstrapStatistics$RunTime)
-# table(appMgr$HIVBootstrapStatistics$Converged)
+# Successful fits only data sets
+appMgr$HIVModelMgr$BootstrapFitStats$Beta
+pairs(appMgr$HIVModelMgr$BootstrapFitStats$Beta)
+appMgr$HIVModelMgr$BootstrapFitStats$BetaStats
 
-# # Successful fits only data sets
-# appMgr$HIVBootstrapStatistics$Beta
-# pairs(appMgr$HIVBootstrapStatistics$Beta)
-# appMgr$HIVBootstrapStatistics$BetaStats
+appMgr$HIVModelMgr$BootstrapFitStats$Theta
+pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
+appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
-# appMgr$HIVBootstrapStatistics$Theta
-# pairs(appMgr$HIVBootstrapStatistics$Theta)
-# appMgr$HIVBootstrapStatistics$ThetaStats
+appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIV_Obs_M
+appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIVAIDS_M
 
-# appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIV_Obs_M
-# appMgr$HIVBootstrapStatistics$MainOutputsStats$N_HIVAIDS_M
-
-# # STEP 9 - Generate report -------------------------------------------------------------------------
+# # STEP 8 - Generate report -------------------------------------------------------------------------
 # appMgr$GenerateReport()
 # appMgr$Report <- appMgr$ReportTask$Result
-
-appMgr$CaseMgr$Data
-length(appMgr$HIVModelMgr$MainFitResult)
-as.integer(names(appMgr$HIVModelMgr$Data))
-
-names(appMgr$HIVModelMgr$MainFitResult[[1]])
-appMgr$HIVModelMgr$MainFitResult[[1]]$Context$Data
-
-appMgr$CaseMgr$Data[, unique(Imputation)]

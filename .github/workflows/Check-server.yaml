@@ -38,6 +38,7 @@ jobs:
           install.packages('remotes')
           install.packages('rcmdcheck')
           install.packages('renv')
+          install.packages('testthat')
         shell: Rscript {0}
         working-directory: Server
 

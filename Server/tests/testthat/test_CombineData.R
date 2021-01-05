@@ -6,6 +6,8 @@ capture.output({
   appMgr$CaseMgr$ApplyAttributesMapping()
   appMgr$CaseMgr$ApplyOriginGrouping()
   appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_NL_-_2_populations.zip'))
+  caseData <- appMgr$CaseMgr$Data
+  aggrData <- appMgr$AggrMgr$Data
 })
 
 popCombination <- list(
