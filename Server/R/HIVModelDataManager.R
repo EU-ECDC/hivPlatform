@@ -98,8 +98,6 @@ HIVModelDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      dataSets <- private$Catalogs$Data
-
       PrintAlert('Starting HIV Model main fit task')
       status <- 'SUCCESS'
       private$Reinitialize('RunMainFit')
@@ -109,29 +107,30 @@ HIVModelDataManager <- R6::R6Class(
             options(width = 100)
 
             result <- list()
-            for (i in seq_along(dataSets)) {
+            for (imp in names(dataSets)) {
               context <- hivModelling::GetRunContext(
-                data = dataSets[[i]],
+                data = dataSets[[imp]],
                 settings = settings,
                 parameters = parameters
               )
-              data <- hivModelling::GetPopulationData(context)
+              popData <- hivModelling::GetPopulationData(context)
 
               startTime <- Sys.time()
-              fitResults <- hivModelling::PerformMainFit(context, data, attemptSimplify = TRUE)
+              fitResults <- hivModelling::PerformMainFit(context, popData, attemptSimplify = TRUE)
               runTime <- Sys.time() - startTime
 
-              result[[i]] <- list(
+              result[[imp]] <- list(
                 Context = context,
-                Data = data,
+                PopData = popData,
                 Results = fitResults,
-                RunTime = runTime
+                RunTime = runTime,
+                Imputation = imp
               )
             }
             return(result)
           },
           args = list(
-            dataSets = dataSets,
+            dataSets = private$Catalogs$Data,
             settings = settings,
             parameters = parameters
           ),
@@ -170,6 +169,9 @@ HIVModelDataManager <- R6::R6Class(
     },
 
     RunBootstrapFit = function(
+      bsCount = 0,
+      maxRunTimeFactor = 3,
+      type = 'NON-PARAMETRIC',
       callback = NULL
     ) {
       if (private$Catalogs$LastStep < 2) {
@@ -177,19 +179,132 @@ HIVModelDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      dataSets <- private$Catalogs$Data
+      avgRunTime <- mean(sapply(private$Catalogs$MainFitResult, '[[', 'RunTime'))
+      maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
 
       PrintAlert('Starting HIV Model bootstrap fit task')
+      PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
       status <- 'SUCCESS'
       private$Reinitialize('RunBootstrapFit')
       tryCatch({
         private$Catalogs$BootstrapFitTask <- Task$new(
-          function() {
+          function(
+            bsCount,
+            type,
+            maxRunTime,
+            mainFitResult,
+            caseData,
+            aggrData,
+            popCombination,
+            aggrDataSelection
+          ) {
+            suppressMessages(pkgload::load_all())
             options(width = 100)
+            mainCount <- length(mainFitResult)
             result <- list()
+            i <- 0
+            for (imp in names(mainFitResult)) {
+              i <- i + 1
+              mainFit <- mainFitResult[[imp]]
+              context <- mainFit$Context
+              param <- mainFit$Results$Param
+              info <- mainFit$Results$Info
+
+              context$Settings <- modifyList(
+                context$Settings,
+                list(
+                  ModelFilePath = NULL,
+                  InputDataPath = NULL,
+                  Verbose = FALSE
+                ),
+                keep.null = TRUE
+              )
+
+              PrintH2('Imputation {.val {imp}}')
+
+              if (type == 'NON-PARAMETRIC' & !is.null(caseData)) {
+                caseDataImp <- caseData[Imputation == as.integer(imp)]
+              } else {
+                caseDataImp <- NULL
+              }
+
+              jSucc <- 1
+              j <- 0
+              bootResults <- list()
+              while (jSucc <= bsCount) {
+                j <- j + 1
+
+                # Bootstrap data set
+                if (type == 'NON-PARAMETRIC' & !is.null(caseData)) {
+                  bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
+                } else {
+                  bootCaseDataImp <- NULL
+                }
+                bootData <-
+                  CombineData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection)[[1]]
+
+                bootContext <- hivModelling::GetRunContext(
+                  data = bootData,
+                  parameters = context$Parameters,
+                  settings = context$Settings
+                )
+
+                bootPopData <- hivModelling::GetPopulationData(bootContext)
+
+                startTime <- Sys.time()
+                switch(
+                  type,
+                  'PARAMETRIC' = {
+                    bootResult <- hivModelling::PerformBootstrapFit(
+                      j, bootContext, bootPopData, mainFit$Results
+                    )
+                  },
+                  'NON-PARAMETRIC' = {
+                    bootResult <- hivModelling::PerformMainFit(
+                      bootContext, bootPopData,
+                      param = param, info = info, attemptSimplify = FALSE,
+                      maxRunTime = maxRunTime
+                    )
+                  }
+                )
+                runTime <- Sys.time() - startTime
+
+                msgType <- ifelse(bootResult$Converged, 'success', 'danger')
+
+                PrintAlert(
+                  'Fit to data set {.val {jSucc}} done |',
+                  'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
+                  type = msgType
+                )
+
+                bootResults[[j]] <- list(
+                  Context = bootContext,
+                  Data = bootData,
+                  Results = bootResult,
+                  RunTime = runTime
+                )
+
+                if (bootResult$Converged) {
+                    jSucc <- jSucc + 1
+                }
+
+                progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
+              }
+
+              result[[imp]] <- bootResults
+            }
             return(result)
           },
-          args = list(),
+          args = list(
+            bsCount = 2,
+            type = type,
+            maxRunTime = maxRunTime,
+            mainFitResult = private$Catalogs$MainFitResult,
+            caseData = private$AppMgr$CaseMgr$Data,
+            aggrData = private$AppMgr$AggrMgr$Data,
+            popCombination = popCombination,
+            aggrDataSelection = aggrDataSelection
+          ),
           session = private$Session,
           successCallback = function(result) {
             private$Catalogs$BootstrapFitResult <- result

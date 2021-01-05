@@ -45,9 +45,9 @@ Task <- R6::R6Class(
         Result = NULL,
         StartTime = NULL,
         RunLog = '',
-        HTMLRunLog = ''
+        HTMLRunLog = '',
+        FailMessage = ''
       )
-
 
       if (autorun) {
         self$Run()
@@ -130,6 +130,7 @@ Task <- R6::R6Class(
       private$Catalogs$TaskHandle <- NULL
       private$Catalogs$Result <- NULL
       private$Catalogs$StartTime <- NULL
+      private$Catalogs$FailMessage <- ''
       if (!skipRunLog) {
         private$Catalogs$HTMLRunLog <- ''
         private$Catalogs$RunLog <- ''
@@ -222,11 +223,18 @@ Task <- R6::R6Class(
   active = list(
     Result = function() {
       if (self$IsFinished && !self$IsCancelled) {
-        result <- try(private$Catalogs$TaskHandle$get_result(), silent = TRUE)
-        if (IsError(result)) {
-          result <- NULL
+        result <- NULL
+        tryCatch({
+          result <- private$Catalogs$TaskHandle$get_result()
+        }, error = function(e) {
           private$Catalogs$Status <- 'FAIL'
-        }
+          private$Catalogs$FailMessage <- e
+        })
+        # result <- try(private$Catalogs$TaskHandle$get_result(), silent = TRUE)
+        # if (IsError(result)) {
+        #   result <- NULL
+        #   private$Catalogs$Status <- 'FAIL'
+        # }
         private$Catalogs$Result <- result
       }
       return(private$Catalogs$Result)
@@ -240,6 +248,10 @@ Task <- R6::R6Class(
 
     HTMLRunLog = function() {
       return(fansi::sgr_to_html(private$Catalogs$RunLog, warn = FALSE))
+    },
+
+    FailMessage = function() {
+      return(private$Catalogs$FailMessage)
     },
 
     TaskHandle = function() {

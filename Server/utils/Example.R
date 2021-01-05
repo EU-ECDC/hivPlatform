@@ -37,13 +37,13 @@ aggrDataSelection <- data.table(
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
+aggrDataSelection <- NULL
 appMgr$HIVModelMgr$CombineData(popCombination, aggrDataSelection)
 appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters = list())
 
 # STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
-appMgr$HIVModelMgr$RunBootstrapFit()
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, type = 'PARAMETRIC')
 appMgr$HIVModelMgr$BootstrapFitResult
-# appMgr$RunBootstrap(bsCount = 5)
 
 # # STEP 7 - Calculate statistics for every output column --------------------------------------------
 # appMgr$ComputeHIVBootstrapStatistics()
@@ -68,3 +68,12 @@ appMgr$HIVModelMgr$BootstrapFitResult
 # # STEP 9 - Generate report -------------------------------------------------------------------------
 # appMgr$GenerateReport()
 # appMgr$Report <- appMgr$ReportTask$Result
+
+appMgr$CaseMgr$Data
+length(appMgr$HIVModelMgr$MainFitResult)
+as.integer(names(appMgr$HIVModelMgr$Data))
+
+names(appMgr$HIVModelMgr$MainFitResult[[1]])
+appMgr$HIVModelMgr$MainFitResult[[1]]$Context$Data
+
+appMgr$CaseMgr$Data[, unique(Imputation)]
