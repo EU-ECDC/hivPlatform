@@ -38,11 +38,12 @@ aggrDataSelection <- data.table(
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
 aggrDataSelection <- NULL
-appMgr$HIVModelMgr$CombineData(popCombination, aggrDataSelection)
-appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters = list())
+appMgr$HIVModelMgr$RunMainFit(
+  settings = list(), parameters = list(), popCombination, aggrDataSelection
+)
 
 # STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
-appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, type = 'PARAMETRIC')
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 50, bsType = 'PARAMETRIC')
 
 # STEP 7 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets

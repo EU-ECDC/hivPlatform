@@ -182,7 +182,7 @@ HIVModelManager <- R6::R6Class(
                 keep.null = TRUE
               )
 
-              PrintH2('Imputation {.val {imp}}')
+              PrintH2('Main data set {.val {imp}}')
 
               if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
                 caseDataImp <- caseData[Imputation == as.integer(imp)]
@@ -234,7 +234,7 @@ HIVModelManager <- R6::R6Class(
                 msgType <- ifelse(bootResult$Converged, 'success', 'danger')
 
                 PrintAlert(
-                  'Fit to data set {.val {jSucc}} done |',
+                  'Iteration {.val {jSucc}} done |',
                   'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
                   type = msgType
                 )
