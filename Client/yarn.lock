@@ -3891,7 +3891,7 @@ fsevents@~2.1.2:
     copyfiles: 2.4.1
     cross-env: 7.0.3
     file-loader: 6.2.0
-    html-webpack-plugin: ^5.0.0-beta.3
+    html-webpack-plugin: ^5.0.0-beta.4
     jquery: ^3.5.1
     lodash: ^4.17.20
     mobx: ^6.0.4
@@ -3951,19 +3951,19 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:^5.0.0-beta.3":
-  version: 5.0.0-beta.3
-  resolution: "html-webpack-plugin@npm:5.0.0-beta.3"
+"html-webpack-plugin@npm:^5.0.0-beta.4":
+  version: 5.0.0-beta.4
+  resolution: "html-webpack-plugin@npm:5.0.0-beta.4"
   dependencies:
     "@types/html-minifier-terser": ^5.0.0
     html-minifier-terser: ^5.0.1
-    loader-utils: 2.0.0
+    loader-utils: ^2.0.0
     lodash: ^4.17.20
     pretty-error: ^2.1.1
-    tapable: 2.0.0
+    tapable: ^2.0.0
   peerDependencies:
     webpack: ^5.1.2
-  checksum: 7cd75f5ec2f481028a9966a88e0f2a6a22d262e7ca71314761befe69361c7061b3a5fe91bd72ae770827e4f404e57905a7cd20d91257aacb9fce727bedb16f62
+  checksum: 6edb90f2b7042f59882c21375898b5fec25845d324f8d2c1895197d58b99b76e7789991550dd0e2f53d84b25b7c954ba02961c0d603dfbdafb2e2efc8bfdb38d
   languageName: node
   linkType: hard
 
@@ -4675,17 +4675,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:2.0.0, loader-utils@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "loader-utils@npm:2.0.0"
-  dependencies:
-    big.js: ^5.2.2
-    emojis-list: ^3.0.0
-    json5: ^2.1.2
-  checksum: a1c2e48781e1501e126a32c39bc1fb1a7e2f02bd99e5aeb8853ddaf3c121fffefcc4579367f97ca6890b58369e571af1c9ec82e4e20db238d560ab359ff25c33
-  languageName: node
-  linkType: hard
-
 "loader-utils@npm:^1.4.0":
   version: 1.4.0
   resolution: "loader-utils@npm:1.4.0"
@@ -4694,6 +4683,17 @@ fsevents@~2.1.2:
     emojis-list: ^3.0.0
     json5: ^1.0.1
   checksum: 9fd690e57ad78d32ff2942383b4a7a175eba575280ba5aca3b4d03183fec34aa0db314f49bd3301adf7e60b02471644161bf53149e8f2d18fd6a52627e95a927
+  languageName: node
+  linkType: hard
+
+"loader-utils@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "loader-utils@npm:2.0.0"
+  dependencies:
+    big.js: ^5.2.2
+    emojis-list: ^3.0.0
+    json5: ^2.1.2
+  checksum: a1c2e48781e1501e126a32c39bc1fb1a7e2f02bd99e5aeb8853ddaf3c121fffefcc4579367f97ca6890b58369e571af1c9ec82e4e20db238d560ab359ff25c33
   languageName: node
   linkType: hard
 
@@ -6509,13 +6509,6 @@ resolve@^1.9.0:
   dependencies:
     svg.js: ^2.6.5
   checksum: f5b6db853ba083d9bbf2fb3e5a93b1368fa204ce2464f6712124bb8e5f691416eab0983ba7f69b2351269d40ed56feb2f4912ffa976f547d3fb729db2f260920
-  languageName: node
-  linkType: hard
-
-"tapable@npm:2.0.0":
-  version: 2.0.0
-  resolution: "tapable@npm:2.0.0"
-  checksum: e6321280f9ace1043b2d2e893b998454227f27da05e5e1f7c92a67752d6a87e2ca529aeb516f31a21c1a92d2532a77518423b7df7aaf7acd3a8df925f02b4c66
   languageName: node
   linkType: hard
 

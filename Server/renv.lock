@@ -513,10 +513,10 @@
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.22.0",
+      "Version": "1.23.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c8cd9aa518ef4b08bc10aa17b548c27c"
+      "Hash": "2f841d7915986a8fd995ab4ec105dd1b"
     },
     "pillar": {
       "Package": "pillar",
