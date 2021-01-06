@@ -73,19 +73,24 @@ const CaseUpload = (props) => {
               <Table>
                 <TableBody>
                   <TableRow hover>
-                    <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileName}</TableCell>
+                    <TableCell className={classes.header}>File name</TableCell>
+                    <TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileName}</TableCell>
                   </TableRow>
                   <TableRow hover>
-                    <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.filePath}</TableCell>
+                    <TableCell className={classes.header}>File path</TableCell>
+                    <TableCell className={classes.content}>{appManager.caseBasedDataMgr.filePath}</TableCell>
                   </TableRow>
                   <TableRow hover>
-                    <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appManager.caseBasedDataMgr.fileSize)}</TableCell>
+                    <TableCell className={classes.header}>File size</TableCell>
+                    <TableCell className={classes.content}>{FormatBytes(appManager.caseBasedDataMgr.fileSize)}</TableCell>
                   </TableRow>
                   <TableRow hover>
-                    <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileType}</TableCell>
+                    <TableCell className={classes.header}>File type</TableCell>
+                    <TableCell className={classes.content}>{appManager.caseBasedDataMgr.fileType}</TableCell>
                   </TableRow>
                   <TableRow hover>
-                    <TableCell className={classes.header}>Number of records</TableCell><TableCell className={classes.content}>{appManager.caseBasedDataMgr.recordCount}</TableCell>
+                    <TableCell className={classes.header}>Number of records</TableCell>
+                    <TableCell className={classes.content}>{appManager.caseBasedDataMgr.recordCount}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

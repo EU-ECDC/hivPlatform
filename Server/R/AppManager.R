@@ -37,9 +37,9 @@ AppManager <- R6::R6Class(
       print(self$Session)
     },
 
-    SendEventToReact = function(eventName, value) {
+    SendMessage = function(...) {
       if (!is.null(private$Session)) {
-        private$Session$sendCustomMessage(eventName, value)
+        private$Session$sendCustomMessage('shinyHandler', list(...))
       }
     }
 

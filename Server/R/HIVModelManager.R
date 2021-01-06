@@ -247,10 +247,9 @@ HIVModelManager <- R6::R6Class(
                 )
 
                 if (bootResult$Converged) {
-                    jSucc <- jSucc + 1
+                  jSucc <- jSucc + 1
+                   progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
                 }
-
-                progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
               }
 
               result[[imp]] <- bootResults

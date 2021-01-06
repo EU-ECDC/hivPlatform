@@ -20,7 +20,7 @@ export default class UIStateManager {
   };
 
   setLastEventType = eventType => {
-    console.log('setLastEventType', this.enabledStages);
+    console.log('UIStateManager:setLastEventType', eventType);
     this.lastEventType = eventType;
   }
 
@@ -29,7 +29,9 @@ export default class UIStateManager {
   };
 
   get caseBasedUploadStageEnabled() {
-    return this.enabledStages.indexOf('CASE_BASED_UPLOAD') !== -1;
+    console.log(this.enabledStages);
+    // return this.enabledStages.indexOf('CASE_BASED_UPLOAD') !== -1;
+    return false;
   };
 
   get caseBasedAttrMappingStageEnabled() {

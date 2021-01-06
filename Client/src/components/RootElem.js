@@ -68,7 +68,7 @@ const RootElem = props => {
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' className={classes.appVersion}>
-          Mode: {appManager.mode} | {appManager.shinyReady} Shiny state: {appManager.shinyState} | Version {VERSION}
+          {appManager.shinyReady} Engine state: {appManager.shinyState} | Version {VERSION}
         </Typography>
         <IconButton onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}>
           <MenuIcon />

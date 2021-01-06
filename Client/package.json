@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=development webpack serve",
     "build": "cross-env NODE_ENV=production webpack && copyfiles -u 1 build/* build/js/* www/* www/img/* ../Server/inst/app/www/"
   },
-  "repository": "",
+  "repository": "https://github.com/nextpagesoft/hivEstimatesAccuracy2",
   "author": "NextPage Software Daniel Lewandowski",
   "license": "EUPL-1.2",
   "engines": {

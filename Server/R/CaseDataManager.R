@@ -49,7 +49,7 @@ CaseDataManager <- R6::R6Class(
     # 1. Read case-based data ----------------------------------------------------------------------
     ReadData = function(
       fileName,
-      callback = NULL
+      callback = private$AppMgr$SendMessage
     ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert(
@@ -77,21 +77,22 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
         private$Catalogs$LastStep <- 1L
         PrintAlert('Data file {.file {fileName}} loaded')
+        payload <- list(
+          ColumnNames = colnames(originalData),
+          RecordCount = nrow(originalData),
+          AttrMapping = unname(attrMapping),
+          AttrMappingStatus = attrMappingStatus
+        )
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
+        payload <- list()
       }
-
-      payload <- list(
-        type = 'CaseDataManager:ReadData',
-        status = status,
-        artifacts = list()
-      )
 
       if (is.function(callback)) {
-        callback(payload)
+        callback(type = 'CASE_BASED_DATA_READ', status = status, payload = payload)
       }
 
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     # 2. Apply attribute mapping -------------------------------------------------------------------

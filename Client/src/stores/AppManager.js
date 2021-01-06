@@ -77,123 +77,120 @@ export default class AppManager {
 
   activeStepId = 0;
 
-  mode = 'NONE';
-
   report = '';
 
   // Shiny custom event handlers
   onShinyEvent = event => {
-    console.log(event);
-    switch (event.Type) {
+    switch (event.type) {
       case 'CASE_BASED_DATA_UPLOADED':
-        this.caseBasedDataMgr.setFileName(event.Payload.FileName);
-        this.caseBasedDataMgr.setFilePath(event.Payload.FilePath);
-        this.caseBasedDataMgr.setFileSize(event.Payload.FileSize);
-        this.caseBasedDataMgr.setFileType(event.Payload.FileType);
+        this.caseBasedDataMgr.setFileName(event.payload.FileName);
+        this.caseBasedDataMgr.setFilePath(event.payload.FilePath);
+        this.caseBasedDataMgr.setFileSize(event.payload.FileSize);
+        this.caseBasedDataMgr.setFileType(event.payload.FileType);
         break;
       case 'CASE_BASED_DATA_READ':
-        this.caseBasedDataMgr.setColumnNames(event.Payload.ColumnNames);
-        this.caseBasedDataMgr.setRecordCount(event.Payload.RecordCount);
-        this.attrMappingMgr.setMapping(event.Payload.AttributeMapping);
+        this.caseBasedDataMgr.setColumnNames(event.payload.ColumnNames);
+        this.caseBasedDataMgr.setRecordCount(event.payload.RecordCount);
+        this.attrMappingMgr.setMapping(event.payload.AttrMapping);
         this.notificationsMgr.setMsg('Case-based data uploaded');
         break;
-      case 'AGGR_DATA_UPLOADED':
-        this.aggrDataMgr.setFileName(event.Payload.FileName);
-        this.aggrDataMgr.setFilePath(event.Payload.FilePath);
-        this.aggrDataMgr.setFileSize(event.Payload.FileSize);
-        this.aggrDataMgr.setFileType(event.Payload.FileType);
-        break;
-      case 'AGGR_DATA_READ':
-        this.aggrDataMgr.setDataFiles(event.Payload.DataFiles);
-        this.aggrDataMgr.setPopulationNames(event.Payload.PopulationNames);
-        this.notificationsMgr.setMsg('Aggregated data uploaded');
-        break;
-      case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
-        this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
-        break;
-      case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
-        this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
-        break;
-      case 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED':
-        this.origGroupMgr.setDistribution(event.Payload.OriginDistribution);
-        break;
-      case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
-        this.origGroupMgr.setType(event.Payload.OriginGroupingType);
-        this.origGroupMgr.setGroupings(event.Payload.OriginGrouping);
-        break;
-      case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
-        this.notificationsMgr.setMsg('Origin grouping applied');
-        break;
-      case 'SUMMARY_DATA_PREPARED':
-        this.summaryDataMgr.setDiagYearPlotData(event.Payload.DiagYearPlotData);
-        this.summaryDataMgr.setNotifQuarterPlotData(event.Payload.NotifQuarterPlotData);
-        this.summaryDataMgr.setMissPlotData(event.Payload.MissPlotData);
-        this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
-        break;
-      case 'ADJUSTMENTS_RUN_STARTED':
-        this.adjustMgr.setAdjustmentsRunProgress(1);
-        break;
-      case 'ADJUSTMENTS_RUN_FINISHED':
-        this.adjustMgr.setAdjustmentsRunProgress(null);
-        this.notificationsMgr.setMsg('Adjustment run finished');
-        break;
-      case 'ADJUSTMENTS_RUN_LOG_SET':
-        this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
-        break;
-      case 'AVAILABLE_STRATA_SET':
-        this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
-        break;
-      case 'MODELS_PARAMS_SET':
-        this.modelMgr.setMinYear(event.Payload.Params.minYear);
-        this.modelMgr.setMaxYear(event.Payload.Params.maxYear);
-        this.modelMgr.setMinFitPos(event.Payload.Params.minFitPos);
-        this.modelMgr.setMaxFitPos(event.Payload.Params.maxFitPos);
-        this.modelMgr.setMinFitCD4(event.Payload.Params.minFitCD4);
-        this.modelMgr.setMaxFitCD4(event.Payload.Params.maxFitCD4);
-        this.modelMgr.setMinFitAIDS(event.Payload.Params.minFitAIDS);
-        this.modelMgr.setMaxFitAIDS(event.Payload.Params.maxFitAIDS);
-        this.modelMgr.setMinFitHIVAIDS(event.Payload.Params.minFitHIVAIDS);
-        this.modelMgr.setMaxFitHIVAIDS(event.Payload.Params.maxFitHIVAIDS);
-        this.modelMgr.setFullData(event.Payload.Params.fullData);
-        this.modelMgr.setKnotsCount(event.Payload.Params.knotsCount);
-        this.modelMgr.setStartIncZero(event.Payload.Params.startIncZero);
-        this.modelMgr.setMaxIncCorr(event.Payload.Params.maxIncCorr);
-        this.modelMgr.setDistributionFit(event.Payload.Params.distributionFit);
-        this.modelMgr.setDelta4Fac(event.Payload.Params.delta4Fac);
-        this.modelMgr.setCountry(event.Payload.Params.country);
-        this.modelMgr.setRDisp(event.Payload.Params.rDisp);
-        this.modelMgr.setSplineType(event.Payload.Params.splineType);
-        this.modelMgr.timeIntMgr.setIntervals(
-          event.Payload.Params.minYear,
-          event.Payload.Params.maxYear,
-          event.Payload.Params.timeIntervals
-        );
-        break;
-      case 'MODELS_RUN_STARTED':
-        this.modelMgr.setModelsRunProgress(1);
-        break;
-      case 'MODELS_RUN_LOG_SET':
-        this.modelMgr.setModelsRunLog(event.Payload.RunLog);
-        break;
-      case 'MODELS_RUN_FINISHED':
-        this.modelMgr.setModelsRunProgress(null);
-        this.notificationsMgr.setMsg('Model run finished');
-        break;
-      case 'BOOTSTRAP_RUN_STARTED':
-        this.modelMgr.setBootstrapRunProgress(1);
-        break;
-      case 'BOOTSTRAP_RUN_LOG_SET':
-        this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
-        break;
-      case 'BOOTSTRAP_RUN_FINISHED':
-        this.modelMgr.setBootstrapRunProgress(null);
-        this.notificationsMgr.setMsg('Bootstrap run finished');
-        break
-      case 'REPORT_SET':
-        this.setReport(event.Payload.Report);
-        break;
+      // case 'AGGR_DATA_UPLOADED':
+      //   this.aggrDataMgr.setFileName(event.Payload.FileName);
+      //   this.aggrDataMgr.setFilePath(event.Payload.FilePath);
+      //   this.aggrDataMgr.setFileSize(event.Payload.FileSize);
+      //   this.aggrDataMgr.setFileType(event.Payload.FileType);
+      //   break;
+      // case 'AGGR_DATA_READ':
+      //   this.aggrDataMgr.setDataFiles(event.Payload.DataFiles);
+      //   this.aggrDataMgr.setPopulationNames(event.Payload.PopulationNames);
+      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
+      //   break;
+      // case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
+      //   this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+      //   break;
+      // case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
+      //   this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
+      //   break;
+      // case 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED':
+      //   this.origGroupMgr.setDistribution(event.Payload.OriginDistribution);
+      //   break;
+      // case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
+      //   this.origGroupMgr.setType(event.Payload.OriginGroupingType);
+      //   this.origGroupMgr.setGroupings(event.Payload.OriginGrouping);
+      //   break;
+      // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
+      //   this.notificationsMgr.setMsg('Origin grouping applied');
+      //   break;
+      // case 'SUMMARY_DATA_PREPARED':
+      //   this.summaryDataMgr.setDiagYearPlotData(event.Payload.DiagYearPlotData);
+      //   this.summaryDataMgr.setNotifQuarterPlotData(event.Payload.NotifQuarterPlotData);
+      //   this.summaryDataMgr.setMissPlotData(event.Payload.MissPlotData);
+      //   this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
+      //   break;
+      // case 'ADJUSTMENTS_RUN_STARTED':
+      //   this.adjustMgr.setAdjustmentsRunProgress(1);
+      //   break;
+      // case 'ADJUSTMENTS_RUN_FINISHED':
+      //   this.adjustMgr.setAdjustmentsRunProgress(null);
+      //   this.notificationsMgr.setMsg('Adjustment run finished');
+      //   break;
+      // case 'ADJUSTMENTS_RUN_LOG_SET':
+      //   this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
+      //   break;
+      // case 'AVAILABLE_STRATA_SET':
+      //   this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
+      //   break;
+      // case 'MODELS_PARAMS_SET':
+      //   this.modelMgr.setMinYear(event.Payload.Params.minYear);
+      //   this.modelMgr.setMaxYear(event.Payload.Params.maxYear);
+      //   this.modelMgr.setMinFitPos(event.Payload.Params.minFitPos);
+      //   this.modelMgr.setMaxFitPos(event.Payload.Params.maxFitPos);
+      //   this.modelMgr.setMinFitCD4(event.Payload.Params.minFitCD4);
+      //   this.modelMgr.setMaxFitCD4(event.Payload.Params.maxFitCD4);
+      //   this.modelMgr.setMinFitAIDS(event.Payload.Params.minFitAIDS);
+      //   this.modelMgr.setMaxFitAIDS(event.Payload.Params.maxFitAIDS);
+      //   this.modelMgr.setMinFitHIVAIDS(event.Payload.Params.minFitHIVAIDS);
+      //   this.modelMgr.setMaxFitHIVAIDS(event.Payload.Params.maxFitHIVAIDS);
+      //   this.modelMgr.setFullData(event.Payload.Params.fullData);
+      //   this.modelMgr.setKnotsCount(event.Payload.Params.knotsCount);
+      //   this.modelMgr.setStartIncZero(event.Payload.Params.startIncZero);
+      //   this.modelMgr.setMaxIncCorr(event.Payload.Params.maxIncCorr);
+      //   this.modelMgr.setDistributionFit(event.Payload.Params.distributionFit);
+      //   this.modelMgr.setDelta4Fac(event.Payload.Params.delta4Fac);
+      //   this.modelMgr.setCountry(event.Payload.Params.country);
+      //   this.modelMgr.setRDisp(event.Payload.Params.rDisp);
+      //   this.modelMgr.setSplineType(event.Payload.Params.splineType);
+      //   this.modelMgr.timeIntMgr.setIntervals(
+      //     event.Payload.Params.minYear,
+      //     event.Payload.Params.maxYear,
+      //     event.Payload.Params.timeIntervals
+      //   );
+      //   break;
+      // case 'MODELS_RUN_STARTED':
+      //   this.modelMgr.setModelsRunProgress(1);
+      //   break;
+      // case 'MODELS_RUN_LOG_SET':
+      //   this.modelMgr.setModelsRunLog(event.Payload.RunLog);
+      //   break;
+      // case 'MODELS_RUN_FINISHED':
+      //   this.modelMgr.setModelsRunProgress(null);
+      //   this.notificationsMgr.setMsg('Model run finished');
+      //   break;
+      // case 'BOOTSTRAP_RUN_STARTED':
+      //   this.modelMgr.setBootstrapRunProgress(1);
+      //   break;
+      // case 'BOOTSTRAP_RUN_LOG_SET':
+      //   this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
+      //   break;
+      // case 'BOOTSTRAP_RUN_FINISHED':
+      //   this.modelMgr.setBootstrapRunProgress(null);
+      //   this.notificationsMgr.setMsg('Bootstrap run finished');
+      //   break
+      // case 'REPORT_SET':
+      //   this.setReport(event.Payload.Report);
+      //   break;
     };
-    this.uiStateMgr.setLastEventType(event.Type);
+    this.uiStateMgr.setLastEventType(event.type);
   };
 
   constructor() {
@@ -214,12 +211,10 @@ export default class AppManager {
       shinyMessage: observable,
       steps: observable,
       activeStepId: observable,
-      mode: observable,
       shinyReady: computed,
       stepsTitles: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
-      setMode: action,
       unbindShinyInputs: action,
       bindShinyInputs: action,
       btnClicked: action,
@@ -253,11 +248,11 @@ export default class AppManager {
     }
   };
 
-  setMode = mode => {
-    this.mode = mode;
-    this.steps[0].completed = true;
-    this.setActiveStepId(1);
-  };
+  // setMode = mode => {
+  //   this.mode = mode;
+  //   this.steps[0].completed = true;
+  //   this.setActiveStepId(1);
+  // };
 
   setReport = report => this.report = report;
 

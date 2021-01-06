@@ -49,7 +49,7 @@ const WelcomeCard = props => {
 const TabWelcome = props => {
   const appManager = props.appManager;
 
-  const handleCardClick = mode => () => appManager.setMode(mode);
+  const handleCardClick = mode => () => appManager.setActiveStepId(1);
 
   const accuracyMore = <React.Fragment>
     <p>
