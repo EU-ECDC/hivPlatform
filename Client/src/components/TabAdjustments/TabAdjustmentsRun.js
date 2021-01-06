@@ -17,14 +17,14 @@ const AdjustmentsRunProgressBar = (props) => {
 };
 
 const TabAdjustmentsRun = props => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   const handleRunAdjustBtnClick = () => {
-    appManager.adjustMgr.runAdjustments();
+    appMgr.adjustMgr.runAdjustments();
   }
 
   const handleCancelAdjustBtnClick = () => {
-    appManager.adjustMgr.cancelAdjustments();
+    appMgr.adjustMgr.cancelAdjustments();
   }
 
   return (
@@ -38,7 +38,7 @@ const TabAdjustmentsRun = props => {
         <Grid item xs={3}>
           <Btn
             onClick={handleRunAdjustBtnClick}
-            disabled={!appManager.adjustMgr.adjustmentSelected || appManager.adjustMgr.adjustmentsRunInProgress}
+            disabled={!appMgr.adjustMgr.adjustmentSelected || appMgr.adjustMgr.adjustmentsRunInProgress}
           >
             <DirectionsRunIcon />&nbsp;Run adjustments
           </Btn>
@@ -46,17 +46,17 @@ const TabAdjustmentsRun = props => {
             onClick={handleCancelAdjustBtnClick}
             color='primary'
             style={{ marginLeft: 20 }}
-            disabled={!appManager.adjustMgr.adjustmentsRunInProgress}
+            disabled={!appMgr.adjustMgr.adjustmentsRunInProgress}
           >
             Cancel
           </Button>
-          <AdjustmentsRunProgressBar progress={appManager.adjustMgr.adjustmentsRunProgress} />
+          <AdjustmentsRunProgressBar progress={appMgr.adjustMgr.adjustmentsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
-              dangerouslySetInnerHTML={{ __html: appManager.adjustMgr.adjustmentsRunLog }}
+              dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsRunLog }}
               style={{ overflowX: 'auto' }}
             />
           </Paper>

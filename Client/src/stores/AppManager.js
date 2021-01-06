@@ -34,98 +34,51 @@ export default class AppManager {
 
   shinyMessage = {};
 
-  steps = [
-    { title: 'Welcome', completed: false, disabled: false, subSteps: []},
-    {
-      title: 'Input data upload',
-      completed: false,
-      disabled: false,
-      subSteps: [
-        { title: 'Case-based data' },
-        { title: 'Aggregated data' }
-      ],
-      activeSubStepId: 0
-    },
-    { title: 'Data summary', completed: false, disabled: false, subSteps: []},
-    {
-      title: 'Adjustments',
-      completed: false,
-      disabled: false,
-      subSteps: [
-        { title: 'Inputs' },
-        { title: 'Run' },
-      ],
-      activeSubStepId: 0
-    },
-    {
-      title: 'Modelling',
-      completed: false,
-      disabled: false,
-      subSteps: [
-        { title: 'Populations' },
-        { title: 'Inputs' },
-        { title: 'Advanced' },
-        { title: 'Run Main Fit' },
-        { title: 'Run Bootstrap' },
-        { title: 'Tables and charts' }
-      ],
-      activeSubStepId: 0
-    },
-    { title: 'Reports', completed: false, disabled: false, subSteps: []},
-    { title: 'Outputs', completed: false, disabled: false, subSteps: []},
-  ];
-
-  activeStepId = 0;
-
   report = '';
 
   // Shiny custom event handlers
-  onShinyEvent = event => {
-    switch (event.type) {
+  onShinyEvent = e => {
+    switch (e.type) {
       case 'CASE_BASED_DATA_UPLOADED':
-        this.caseBasedDataMgr.setFileName(event.payload.FileName);
-        this.caseBasedDataMgr.setFilePath(event.payload.FilePath);
-        this.caseBasedDataMgr.setFileSize(event.payload.FileSize);
-        this.caseBasedDataMgr.setFileType(event.payload.FileType);
+        this.caseBasedDataMgr.setFileName(e.payload.FileName);
+        this.caseBasedDataMgr.setFilePath(e.payload.FilePath);
+        this.caseBasedDataMgr.setFileSize(e.payload.FileSize);
+        this.caseBasedDataMgr.setFileType(e.payload.FileType);
         break;
       case 'CASE_BASED_DATA_READ':
-        this.caseBasedDataMgr.setColumnNames(event.payload.ColumnNames);
-        this.caseBasedDataMgr.setRecordCount(event.payload.RecordCount);
-        this.attrMappingMgr.setMapping(event.payload.AttrMapping);
+        this.caseBasedDataMgr.setColumnNames(e.payload.ColumnNames);
+        this.caseBasedDataMgr.setRecordCount(e.payload.RecordCount);
+        this.attrMappingMgr.setMapping(e.payload.AttrMapping);
         this.notificationsMgr.setMsg('Case-based data uploaded');
         break;
-      // case 'AGGR_DATA_UPLOADED':
-      //   this.aggrDataMgr.setFileName(event.Payload.FileName);
-      //   this.aggrDataMgr.setFilePath(event.Payload.FilePath);
-      //   this.aggrDataMgr.setFileSize(event.Payload.FileSize);
-      //   this.aggrDataMgr.setFileType(event.Payload.FileType);
-      //   break;
-      // case 'AGGR_DATA_READ':
-      //   this.aggrDataMgr.setDataFiles(event.Payload.DataFiles);
-      //   this.aggrDataMgr.setPopulationNames(event.Payload.PopulationNames);
-      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
-      //   break;
-      // case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
-      //   this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
-      //   break;
-      // case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
-      //   this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
-      //   break;
-      // case 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED':
-      //   this.origGroupMgr.setDistribution(event.Payload.OriginDistribution);
-      //   break;
-      // case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
-      //   this.origGroupMgr.setType(event.Payload.OriginGroupingType);
-      //   this.origGroupMgr.setGroupings(event.Payload.OriginGrouping);
-      //   break;
+      case 'AGGR_DATA_UPLOADED':
+        this.aggrDataMgr.setFileName(e.payload.FileName);
+        this.aggrDataMgr.setFilePath(e.payload.FilePath);
+        this.aggrDataMgr.setFileSize(e.payload.FileSize);
+        this.aggrDataMgr.setFileType(e.payload.FileType);
+        break;
+      case 'AGGR_DATA_READ':
+        this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
+        this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
+        this.notificationsMgr.setMsg('Aggregated data uploaded');
+        break;
+      case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
+        this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+        break;
+      case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
+        this.origGroupMgr.setDistribution(e.payload.OriginDistribution);
+        this.origGroupMgr.setType(e.payload.OriginGroupingType);
+        this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
+        this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
+        break;
       // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
       //   this.notificationsMgr.setMsg('Origin grouping applied');
       //   break;
       // case 'SUMMARY_DATA_PREPARED':
-      //   this.summaryDataMgr.setDiagYearPlotData(event.Payload.DiagYearPlotData);
-      //   this.summaryDataMgr.setNotifQuarterPlotData(event.Payload.NotifQuarterPlotData);
-      //   this.summaryDataMgr.setMissPlotData(event.Payload.MissPlotData);
-      //   this.summaryDataMgr.setRepDelPlotData(event.Payload.RepDelPlotData);
+      //   this.summaryDataMgr.setDiagYearPlotData(e.payload.DiagYearPlotData);
+      //   this.summaryDataMgr.setNotifQuarterPlotData(e.payload.NotifQuarterPlotData);
+      //   this.summaryDataMgr.setMissPlotData(e.payload.MissPlotData);
+      //   this.summaryDataMgr.setRepDelPlotData(e.payload.RepDelPlotData);
       //   break;
       // case 'ADJUSTMENTS_RUN_STARTED':
       //   this.adjustMgr.setAdjustmentsRunProgress(1);
@@ -190,7 +143,7 @@ export default class AppManager {
       //   this.setReport(event.Payload.Report);
       //   break;
     };
-    this.uiStateMgr.setLastEventType(event.type);
+    this.uiStateMgr.setLastEventType(e.type);
   };
 
   constructor() {
@@ -209,18 +162,13 @@ export default class AppManager {
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,
-      steps: observable,
-      activeStepId: observable,
       shinyReady: computed,
-      stepsTitles: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
       unbindShinyInputs: action,
       bindShinyInputs: action,
       btnClicked: action,
       inputValueSet: action,
-      setActiveStepId: action,
-      setActiveSubStepId: action,
       setShinyMessage: action
     });
   };
@@ -228,11 +176,6 @@ export default class AppManager {
   // Computed
   get shinyReady() {
     return this.shinyState === 'SESSION_INITIALIZED';
-  };
-
-  get stepsTitles() {
-    const stepTitles = this.steps.map(step => step.title);
-    return stepTitles;
   };
 
   get jsonShinyMessage() {
@@ -247,12 +190,6 @@ export default class AppManager {
       Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
     }
   };
-
-  // setMode = mode => {
-  //   this.mode = mode;
-  //   this.steps[0].completed = true;
-  //   this.setActiveStepId(1);
-  // };
 
   setReport = report => this.report = report;
 
@@ -287,17 +224,6 @@ export default class AppManager {
     } else {
       console.log('inputValueSet: Shiny is not available', inputId, toJS(value));
     }
-  };
-
-  setActiveStepId = stepId => {
-    this.steps[stepId].disabled = false;
-    this.activeStepId = stepId;
-  };
-
-  setActiveSubStepId = (stepId, subStepId) => {
-    this.steps[stepId].disabled = false;
-    this.activeStepId = stepId;
-    this.steps[stepId].activeSubStepId = subStepId;
   };
 
   setShinyMessage = msg => {

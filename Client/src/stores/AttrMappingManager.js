@@ -45,7 +45,7 @@ export default class AttrMappingManager {
   };
 
   applyMapping = () => {
-    this.rootMgr.inputValueSet('attrMapping:AttrMappingArray', this.mapping);
+    this.rootMgr.inputValueSet('attrMapping', this.mapping);
   }
 
   validateMapping = () => {

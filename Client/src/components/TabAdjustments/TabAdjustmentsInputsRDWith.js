@@ -8,15 +8,15 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 
 const TabAdjustmentsInputsRDWith = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleRDWithStartYearChange = (e) => appManager.adjustMgr.setRDWithStartYear(e.target.value);
-  const handleRDWithEndYearChange = (e) => appManager.adjustMgr.setRDWithEndYear(e.target.value);
-  const handleRDWithEndQrtChange = (e) => appManager.adjustMgr.setRDWithEndQrt(e.target.value);
-  const handleRDWithStratGenderChange = (e, value) => appManager.adjustMgr.setRDWithStratGender(value);
-  const handleRDWithStratTransChange = (e, value) => appManager.adjustMgr.setRDWithStratTrans(value);
-  const handleRDWithStratMigrChange = (e, value) => appManager.adjustMgr.setRDWithStratMigr(value);
-  const handleRDRestoreDefaults = (e) => appManager.adjustMgr.restoreRDDefaults('withTrend');
+  const handleRDWithStartYearChange = (e) => appMgr.adjustMgr.setRDWithStartYear(e.target.value);
+  const handleRDWithEndYearChange = (e) => appMgr.adjustMgr.setRDWithEndYear(e.target.value);
+  const handleRDWithEndQrtChange = (e) => appMgr.adjustMgr.setRDWithEndQrt(e.target.value);
+  const handleRDWithStratGenderChange = (e, value) => appMgr.adjustMgr.setRDWithStratGender(value);
+  const handleRDWithStratTransChange = (e, value) => appMgr.adjustMgr.setRDWithStratTrans(value);
+  const handleRDWithStratMigrChange = (e, value) => appMgr.adjustMgr.setRDWithStratMigr(value);
+  const handleRDRestoreDefaults = (e) => appMgr.adjustMgr.restoreRDDefaults('withTrend');
 
   return (
     <React.Fragment>
@@ -26,7 +26,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
           label='Diagnosis start year'
           helperText='Enter the start year for diagnosis'
           type='number'
-          value={appManager.adjustMgr.rdWithTrendSettings.startYear}
+          value={appMgr.adjustMgr.rdWithTrendSettings.startYear}
           onChange={handleRDWithStartYearChange}
           fullWidth
           variant='filled'
@@ -36,7 +36,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
           label='Notification end year'
           helperText='Enter the end year for notification'
           type='number'
-          value={appManager.adjustMgr.rdWithTrendSettings.endYear}
+          value={appMgr.adjustMgr.rdWithTrendSettings.endYear}
           onChange={handleRDWithEndYearChange}
           fullWidth
           variant='filled'
@@ -45,7 +45,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
         <TextField
           label='Notification end quarter (integer between 1 and 4)'
           type='number'
-          value={appManager.adjustMgr.rdWithTrendSettings.endQrt}
+          value={appMgr.adjustMgr.rdWithTrendSettings.endQrt}
           onChange={handleRDWithEndQrtChange}
           fullWidth
           variant='filled'
@@ -53,15 +53,15 @@ const TabAdjustmentsInputsRDWith = (props) => {
         />
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={appManager.adjustMgr.rdWithTrendSettings.stratGender} onChange={handleRDWithStratGenderChange} name='check' color='primary' />}
+            control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratGender} onChange={handleRDWithStratGenderChange} name='check' color='primary' />}
             label='Stratify by Gender'
           />
           <FormControlLabel
-            control={<Checkbox checked={appManager.adjustMgr.rdWithTrendSettings.stratTrans} onChange={handleRDWithStratTransChange} name='check' color='primary' />}
+            control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratTrans} onChange={handleRDWithStratTransChange} name='check' color='primary' />}
             label='Stratify by Transmission'
           />
           <FormControlLabel
-            control={<Checkbox checked={appManager.adjustMgr.rdWithTrendSettings.stratMigr} onChange={handleRDWithStratMigrChange} name='check' color='primary' />}
+            control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratMigr} onChange={handleRDWithStratMigrChange} name='check' color='primary' />}
             label='Stratify by Migration'
           />
         </FormGroup>

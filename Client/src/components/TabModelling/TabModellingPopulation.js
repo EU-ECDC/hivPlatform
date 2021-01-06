@@ -10,7 +10,6 @@ import CombinePopulations from './CombinePopulations';
 import AggregatedDataPopulations from './AggregatedDataPopulations';
 
 const TabModellingPopulation = props => {
-  const { appManager } = props;
 
   return (
     <TabPanel>
@@ -26,7 +25,7 @@ const TabModellingPopulation = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <CreatePopulations appManager={appManager} />
+          <CreatePopulations {...props} />
         </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
@@ -40,7 +39,7 @@ const TabModellingPopulation = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <AggregatedDataPopulations appManager={appManager} />
+          <AggregatedDataPopulations {...props} />
         </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
@@ -51,7 +50,7 @@ const TabModellingPopulation = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <CombinePopulations appManager={appManager} />
+          <CombinePopulations {...props} />
         </Grid>
       </Grid>
     </TabPanel>

@@ -8,9 +8,9 @@ import TabModellingRunBootstrap from './TabModellingRunBootstrap';
 import TabModellingTables from './TabModellingTables';
 
 const TabModelling = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const activeSubStepId = appManager.steps[appManager.activeStepId].activeSubStepId;
+  const activeSubStepId = appMgr.uiStateMgr.steps[appMgr.uiStateMgr.activeStepId].activeSubStepId;
 
   return (
     <React.Fragment>

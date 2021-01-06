@@ -9,7 +9,6 @@ import TabAdjustmentsMI from './TabAdjustmentsInputsMI';
 import TabAdjustmentsRD from './TabAdjustmentsInputsRD';
 
 const TabAdjustmentsInputs = (props) => {
-  const { appManager } = props;
   return (
     <TabPanel>
       <Grid container spacing={2}>
@@ -18,11 +17,11 @@ const TabAdjustmentsInputs = (props) => {
             <Button size='small' color='primary'>Next step</Button>
           </Box>
         </Grid>
-        <TabAdjustmentsMI appManager={appManager} />
+        <TabAdjustmentsMI {...props} />
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <TabAdjustmentsRD appManager={appManager} />
+        <TabAdjustmentsRD {...props} />
       </Grid>
     </TabPanel>
   );

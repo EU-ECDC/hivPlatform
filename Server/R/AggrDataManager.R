@@ -38,7 +38,7 @@ AggrDataManager <- R6::R6Class(
     # 1. Read case-based data ----------------------------------------------------------------------
     ReadData = function(
       fileName,
-      callback = NULL
+      callback = private$AppMgr$SendMessage
     ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert(
@@ -62,18 +62,30 @@ AggrDataManager <- R6::R6Class(
         private$Catalogs$Data <- data
         private$Catalogs$LastStep <- 1L
         PrintAlert('Data file {.file {fileName}} loaded')
+
+        dataNames <- names(data)
+        dataFiles <- lapply(
+          dataNames,
+          function(dataName) {
+            dt <- data[[dataName]]
+            list(
+              name = dataName,
+              use = TRUE,
+              years = c(min(dt$Year), max(dt$Year))
+            )
+          }
+        )
+        payload <- list(
+          DataFiles = dataFiles,
+          PopulationNames = names(data[[1]])[-1]
+        )
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
+        payload <- list()
       }
 
-      payload <- list(
-        type = 'AggrDataManager:ReadData',
-        status = status,
-        artifacts = list()
-      )
-
       if (is.function(callback)) {
-        callback(payload)
+        callback(type = 'AGGR_DATA_READ', status = status, payload = payload)
       }
 
       return(invisible(payload))

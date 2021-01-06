@@ -9,14 +9,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 
 const CreatePopulationRow = (props) => {
-  const { i, isSelected, onSelectClick, population: el, appManager } = props;
+  const { i, isSelected, onSelectClick, population: el, appMgr } = props;
 
   const handleStratNameChange = e => {
-    appManager.popMgr.setPopulationName(i, e.target.value);
+    appMgr.popMgr.setPopulationName(i, e.target.value);
   };
 
   const handleStrataChange = e => {
-    appManager.popMgr.setPopulationStrata(i, e.target.value);
+    appMgr.popMgr.setPopulationStrata(i, e.target.value);
   };
 
   return (
@@ -52,7 +52,7 @@ const CreatePopulationRow = (props) => {
           disableUnderline
         >
           {
-            appManager.popMgr.availableStrataNames.map((el2, j) => (
+            appMgr.popMgr.availableStrataNames.map((el2, j) => (
               <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
             ))
           }

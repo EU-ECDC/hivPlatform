@@ -11,10 +11,10 @@ import CreatePopulationRow from './CreatePopulationRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
 const CreatePopulations = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const populations = appManager.popMgr.populationsJS;
+  const populations = appMgr.popMgr.populationsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
@@ -46,11 +46,11 @@ const CreatePopulations = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.popMgr.addEmptyPopulation();
+    appMgr.popMgr.addEmptyPopulation();
   };
 
   const handleDeleteClick = () => {
-    appManager.popMgr.removePopulations(selected);
+    appMgr.popMgr.removePopulations(selected);
     setSelected([]);
   }
 
@@ -83,7 +83,7 @@ const CreatePopulations = (props) => {
                 key={i}
                 i={i}
                 population={el}
-                appManager={appManager}
+                appManager={appMgr}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
               />

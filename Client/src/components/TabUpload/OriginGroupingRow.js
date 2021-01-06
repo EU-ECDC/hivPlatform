@@ -9,17 +9,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 
 const OriginGroupingRow = (props) => {
-  const { i, isSelected, onSelectClick,  grouping:el, appManager } = props;
+  const { i, isSelected, onSelectClick,  grouping:el, appMgr } = props;
 
-  const unusedOrigins = appManager.origGroupMgr.unusedOrigins;
+  const unusedOrigins = appMgr.origGroupMgr.unusedOrigins;
   const menuItems = el.origin.concat(unusedOrigins);
 
   const handleGroupedNameChange = e => {
-    appManager.origGroupMgr.setGroupName(i, e.target.value);
+    appMgr.origGroupMgr.setGroupName(i, e.target.value);
   };
 
   const handleOriginsChange = e => {
-    appManager.origGroupMgr.setGroupOrigin(i, e.target.value);
+    appMgr.origGroupMgr.setGroupOrigin(i, e.target.value);
   };
 
   return (

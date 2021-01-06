@@ -6,14 +6,14 @@ import Switch from '@material-ui/core/Switch';
 import Slider from '@material-ui/core/Slider';
 
 const AggregatedDataPopulationsRow = (props) => {
-  const { i, rowCount, dataFile, appManager } = props;
+  const { i, rowCount, dataFile, appMgr } = props;
 
   const handleUseChange = e => {
-    appManager.aggrDataMgr.setDataFileUse(dataFile.name, e.target.checked);
+    appMgr.aggrDataMgr.setDataFileUse(dataFile.name, e.target.checked);
   };
 
   const handleYearsChange = (e, years) => {
-    appManager.aggrDataMgr.setDataFileYears(dataFile.name, years);
+    appMgr.aggrDataMgr.setDataFileYears(dataFile.name, years);
   };
 
   let lastColumn = null;

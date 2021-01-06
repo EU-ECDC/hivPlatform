@@ -11,10 +11,10 @@ import CombinePopulationsRow from './CombinePopulationsRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
 const CombinePopulations = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const combinations = appManager.popCombMgr.combinationsJS;
+  const combinations = appMgr.popCombMgr.combinationsJS;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
@@ -46,11 +46,11 @@ const CombinePopulations = (props) => {
   };
 
   const handleAddClick = () => {
-    appManager.popCombMgr.addEmptyCombination();
+    appMgr.popCombMgr.addEmptyCombination();
   };
 
   const handleDeleteClick = () => {
-    appManager.popCombMgr.removeCombinations(selected);
+    appMgr.popCombMgr.removeCombinations(selected);
     setSelected([]);
   }
 
@@ -83,7 +83,7 @@ const CombinePopulations = (props) => {
                 key={i}
                 i={i}
                 combination={el}
-                appManager={appManager}
+                appMgr={appMgr}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
               />

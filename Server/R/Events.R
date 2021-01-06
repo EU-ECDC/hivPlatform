@@ -7,8 +7,6 @@ Events <- function(
   # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn
-
-    # Case based data uploaded
     appMgr$SendMessage(
       type = 'CASE_BASED_DATA_UPLOADED',
       status = 'SUCCESS',
@@ -19,90 +17,27 @@ Events <- function(
         FilePath = fileInfo$datapath[1]
       )
     )
-
     appMgr$CaseMgr$ReadData(fileInfo$datapath)
   })
 
-  # observeEvent(input$aggrUploadBtn, {
-  #   fileInfo <- input$aggrUploadBtn
-  #   print(fileInfo)
+  observeEvent(input$aggrUploadBtn, {
+    fileInfo <- input$aggrUploadBtn
+    appMgr$SendMessage(
+      type = 'AGGR_DATA_UPLOADED',
+      status = 'SUCCESS',
+      payload = list(
+        FileName = fileInfo$name[1],
+        FileSize = fileInfo$size[1],
+        FileType = fileInfo$type[1],
+        FilePath = fileInfo$datapath[1]
+      )
+    )
+    appMgr$AggrMgr$ReadData(fileInfo$datapath)
+  })
 
-  #   # Case based data uploaded
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'AGGR_DATA_UPLOADED',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
-  #       FileName = fileInfo$name[1],
-  #       FileSize = fileInfo$size[1],
-  #       FileType = fileInfo$type[1],
-  #       FilePath = fileInfo$datapath[1]
-  #     )
-  #   ))
-
-  #   appMgr$ReadAggregatedData(fileInfo$datapath)
-  #   dataNames <- names(appMgr$AggregatedData)
-  #   dataFiles <- lapply(
-  #     dataNames,
-  #     function(dataName) {
-  #       dt <- appMgr$AggregatedData[[dataName]]
-  #       list(
-  #         name = dataName,
-  #         use = TRUE,
-  #         years = c(min(dt$Year), max(dt$Year))
-  #       )
-  #     }
-  #   )
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'AGGR_DATA_READ',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
-  #       DataFiles = dataFiles,
-  #       PopulationNames = names(appMgr$AggregatedData[[1]])[-1]
-  #     )
-  #   ))
-  # })
-
-  # observeEvent(input$attrMapping, {
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START',
-  #     Status = 'SUCCESS',
-  #     Payload = list()
-  #   ))
-
-  #   appMgr$ApplyAttributesMappingToCaseBasedData(input$attrMapping)
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
-  #     Status = 'SUCCESS',
-  #     Payload = list()
-  #   ))
-
-  #   appMgr$PreProcessCaseBasedData()
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_DATA_PREPROCESSED',
-  #     Status = 'SUCCESS',
-  #     Payload = list()
-  #   ))
-
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_DATA_ORIGIN_DISTR_COMPUTED',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
-  #       OriginDistribution = appMgr$OriginDistribution
-  #     )
-  #   ))
-
-  #   type <- 'REPCOUNTRY + UNK + OTHER'
-  #   distr <- appMgr$OriginDistribution
-  #   groups <- GetOriginGroupingPreset(type, distr)
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
-  #       OriginGroupingType = type,
-  #       OriginGrouping = groups
-  #     )
-  #   ))
-  # })
+  observeEvent(input$attrMapping, {
+    appMgr$CaseMgr$ApplyAttributesMapping()
+  })
 
   # observeEvent(input$groupingPresetSelect, {
   #   type <- input$groupingPresetSelect

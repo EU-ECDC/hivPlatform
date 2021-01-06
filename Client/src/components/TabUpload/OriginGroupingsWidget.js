@@ -17,14 +17,14 @@ import OriginGroupingRow from './OriginGroupingRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
 const OriginGroupingsWidget = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const groupings = appManager.origGroupMgr.groupingsJS;
+  const groupings = appMgr.origGroupMgr.groupingsJS;
 
   const handleGroupingPresetChange = e => {
-    appManager.inputValueSet('groupingPresetSelect', e.target.value);
-    appManager.origGroupMgr.setType(e.target.value);
+    appMgr.inputValueSet('groupingPresetSelect', e.target.value);
+    appMgr.origGroupMgr.setType(e.target.value);
   };
 
   const handleSelectAllClick = e => {
@@ -57,12 +57,12 @@ const OriginGroupingsWidget = (props) => {
   };
 
   const handleDeleteClick = () => {
-    appManager.origGroupMgr.removeGroupings(selected);
+    appMgr.origGroupMgr.removeGroupings(selected);
     setSelected([]);
   }
 
   const handleAddClick = () => {
-    appManager.origGroupMgr.addEmptyGrouping();
+    appMgr.origGroupMgr.addEmptyGrouping();
   }
 
   const rowCount = groupings.length;
@@ -76,7 +76,7 @@ const OriginGroupingsWidget = (props) => {
         <InputLabel>
           Preset
       </InputLabel>
-        <Select value={appManager.origGroupMgr.type} onChange={handleGroupingPresetChange}>
+        <Select value={appMgr.origGroupMgr.type} onChange={handleGroupingPresetChange}>
           <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
           <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
           <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
@@ -107,7 +107,7 @@ const OriginGroupingsWidget = (props) => {
                 key={i}
                 i={i}
                 grouping={el}
-                appManager={appManager}
+                appMgr={appMgr}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
               />

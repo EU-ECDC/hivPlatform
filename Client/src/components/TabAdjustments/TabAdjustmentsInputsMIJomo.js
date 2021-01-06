@@ -9,14 +9,14 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 
 const TabAdjustmentsInputsMIJomo = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleMIJomoNimpChange = (e) => appManager.adjustMgr.setMIJomoNimp(e.target.value);
-  const handleMIJomoNburnChange = (e) => appManager.adjustMgr.setMIJomoNburn(e.target.value);
-  const handleMIJomoNbetweenChange = (e) => appManager.adjustMgr.setMIJomoNbetween(e.target.value);
-  const handleMIJomoNsdfChange = (e, value) => appManager.adjustMgr.setMIJomoNsdf(value);
-  const handleMIJomoImputeRDChange = (e, value) => appManager.adjustMgr.setMIJomoImputeRD(value);
-  const handleMIRestoreDefaults = (e) => appManager.adjustMgr.restoreMIDefaults('jomo');
+  const handleMIJomoNimpChange = (e) => appMgr.adjustMgr.setMIJomoNimp(e.target.value);
+  const handleMIJomoNburnChange = (e) => appMgr.adjustMgr.setMIJomoNburn(e.target.value);
+  const handleMIJomoNbetweenChange = (e) => appMgr.adjustMgr.setMIJomoNbetween(e.target.value);
+  const handleMIJomoNsdfChange = (e, value) => appMgr.adjustMgr.setMIJomoNsdf(value);
+  const handleMIJomoImputeRDChange = (e, value) => appMgr.adjustMgr.setMIJomoImputeRD(value);
+  const handleMIRestoreDefaults = (e) => appMgr.adjustMgr.restoreMIDefaults('jomo');
 
   return (
       <React.Fragment>
@@ -26,7 +26,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
             label='Number of imputations'
             helperText='Type the number of data sets to input'
             type='number'
-            value={appManager.adjustMgr.miJomoSettings.nimp}
+            value={appMgr.adjustMgr.miJomoSettings.nimp}
             onChange={handleMIJomoNimpChange}
             fullWidth
             variant='filled'
@@ -36,7 +36,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
             label='Number of burn-in iterations'
             helperText='Type the number of inital iterations to skip before imputing'
             type='number'
-            value={appManager.adjustMgr.miJomoSettings.nburn}
+            value={appMgr.adjustMgr.miJomoSettings.nburn}
             onChange={handleMIJomoNburnChange}
             fullWidth
             variant='filled'
@@ -45,7 +45,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
           <TextField
             label='Number of iterations between two successive imputations'
             type='number'
-            value={appManager.adjustMgr.miJomoSettings.nbetween}
+            value={appMgr.adjustMgr.miJomoSettings.nbetween}
             onChange={handleMIJomoNbetweenChange}
             fullWidth
             variant='filled'
@@ -57,13 +57,13 @@ const TabAdjustmentsInputsMIJomo = (props) => {
           <Slider
             min={3}
             max={5}
-            value={appManager.adjustMgr.miJomoSettings.nsdf}
+            value={appMgr.adjustMgr.miJomoSettings.nsdf}
             onChange={handleMIJomoNsdfChange}
             marks={[{ value: 3, label: 3 }, { value: 4, label: 4 }, { value: 5, label: 5 }]}
           />
           <FormGroup row>
             <FormControlLabel
-              control={<Checkbox checked={appManager.adjustMgr.miJomoSettings.imputeRD} onChange={handleMIJomoImputeRDChange} name='check' color='primary' />}
+              control={<Checkbox checked={appMgr.adjustMgr.miJomoSettings.imputeRD} onChange={handleMIJomoImputeRDChange} name='check' color='primary' />}
               label='Impute reporting delays inputs'
             />
           </FormGroup>

@@ -29,20 +29,20 @@ const userStyles = makeStyles({
 });
 
 const TabUploadAggregated = props => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const classes = userStyles();
 
   React.useEffect(
     () => {
-      appManager.unbindShinyInputs();
-      if (appManager.shinyReady) {
+      appMgr.unbindShinyInputs();
+      if (appMgr.shinyReady) {
         Shiny
           .inputBindings.bindingNames['shiny.reactAggrFileInputBinding']
           .binding.subscribe('#aggrUploadBtn');
       }
-      appManager.bindShinyInputs();
+      appMgr.bindShinyInputs();
 
-      return () => appManager.unbindShinyInputs();
+      return () => appMgr.unbindShinyInputs();
     }
   );
 
@@ -65,7 +65,7 @@ const TabUploadAggregated = props => {
             Maximum file size: 70MB<br />
             Supported files types: csv (zip archives)
           </Typography>
-          <UploadProgressBar progress={appManager.aggrDataMgr.fileUploadProgress} />
+          <UploadProgressBar progress={appMgr.aggrDataMgr.fileUploadProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
@@ -75,16 +75,16 @@ const TabUploadAggregated = props => {
                 <Table>
                   <TableBody>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appManager.aggrDataMgr.fileName}</TableCell>
+                      <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.fileName}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appManager.aggrDataMgr.filePath}</TableCell>
+                      <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.filePath}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appManager.aggrDataMgr.fileSize)}</TableCell>
+                      <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appMgr.aggrDataMgr.fileSize)}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appManager.aggrDataMgr.fileType}</TableCell>
+                      <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.fileType}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -95,13 +95,13 @@ const TabUploadAggregated = props => {
                     <TableRow hover><TableCell className={classes.header}>Data names</TableCell></TableRow>
                     <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
                       <div style={{ overflow: 'auto', maxHeight: 164 }}>
-                        {appManager.aggrDataMgr.dataNamesString}
+                        {appMgr.aggrDataMgr.dataNamesString}
                       </div>
                     </TableCell></TableRow>
                     <TableRow hover><TableCell className={classes.header}>Population names</TableCell></TableRow>
                     <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
                       <div style={{ overflow: 'auto', maxHeight: 164 }}>
-                        {appManager.aggrDataMgr.populationNamesString}
+                        {appMgr.aggrDataMgr.populationNamesString}
                       </div>
                     </TableCell></TableRow>
 

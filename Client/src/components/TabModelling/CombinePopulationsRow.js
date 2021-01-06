@@ -9,18 +9,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 
 const CombinePopulationsRow = (props) => {
-  const { i, isSelected, onSelectClick, combination: el, appManager } = props;
+  const { i, isSelected, onSelectClick, combination: el, appMgr } = props;
 
   const handleCombinationNameChange = e => {
-    appManager.popCombMgr.setCombinationName(i, e.target.value);
+    appMgr.popCombMgr.setCombinationName(i, e.target.value);
   };
 
   const handlePopulationsChange = e => {
-    appManager.popCombMgr.setCombinationPopulations(i, e.target.value);
+    appMgr.popCombMgr.setCombinationPopulations(i, e.target.value);
   };
 
   const handleAggrPopulationsChange = e => {
-    appManager.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
+    appMgr.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
   };
 
   let name = null;
@@ -32,7 +32,7 @@ const CombinePopulationsRow = (props) => {
     aggrPopulations =
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {
-          appManager.aggrDataMgr.populationNames.map((value, i) => (
+          appMgr.aggrDataMgr.populationNames.map((value, i) => (
             <Chip key={value} label={value} style={{ margin: 2 }} />
           ))
         }
@@ -58,7 +58,7 @@ const CombinePopulationsRow = (props) => {
       disableUnderline
     >
       {
-        appManager.popMgr.definedPopulations.map((el2, j) => (
+        appMgr.popMgr.definedPopulations.map((el2, j) => (
           <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
         ))
       }
@@ -78,7 +78,7 @@ const CombinePopulationsRow = (props) => {
       disableUnderline
     >
       {
-        appManager.aggrDataMgr.populationNames.map((el2, j) => (
+        appMgr.aggrDataMgr.populationNames.map((el2, j) => (
           <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
         ))
       }

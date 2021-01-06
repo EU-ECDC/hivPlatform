@@ -12,11 +12,11 @@ import Btn from '../Btn';
 import OriginGroupingsWidget from './OriginGroupingsWidget';
 
 const OriginGroupings = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const distribution = appManager.origGroupMgr.distributionArray;
+  const distribution = appMgr.origGroupMgr.distributionArray;
 
-  const onApplyClick = () => appManager.origGroupMgr.applyGroupings();
+  const onApplyClick = () => appMgr.origGroupMgr.applyGroupings();
 
   return (
     <Grid container spacing={2}>
@@ -46,7 +46,7 @@ const OriginGroupings = (props) => {
         </Table>
       </Grid>
       <Grid item xs={9}>
-        <OriginGroupingsWidget appManager={appManager} />
+        <OriginGroupingsWidget {...props} />
       </Grid>
     </Grid>
   )

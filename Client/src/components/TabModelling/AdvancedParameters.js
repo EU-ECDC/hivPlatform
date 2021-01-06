@@ -34,46 +34,46 @@ const YearsSlider = (props) => {
 }
 
 const AdvancedParameters = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   const handleYearsChange = (e, years) => {
-    appManager.modelMgr.setMinYear(years[0]);
-    appManager.modelMgr.setMaxYear(years[1]);
+    appMgr.modelMgr.setMinYear(years[0]);
+    appMgr.modelMgr.setMaxYear(years[1]);
   };
 
   const handleFitPosChange = (e, years) => {
-    appManager.modelMgr.setMinFitPos(years[0]);
-    appManager.modelMgr.setMaxFitPos(years[1]);
+    appMgr.modelMgr.setMinFitPos(years[0]);
+    appMgr.modelMgr.setMaxFitPos(years[1]);
   };
 
   const handleFitCD4Change = (e, years) => {
-    appManager.modelMgr.setMinFitCD4(years[0]);
-    appManager.modelMgr.setMaxFitCD4(years[1]);
+    appMgr.modelMgr.setMinFitCD4(years[0]);
+    appMgr.modelMgr.setMaxFitCD4(years[1]);
   };
 
   const handleFitAIDSChange = (e, years) => {
-    appManager.modelMgr.setMinFitAIDS(years[0]);
-    appManager.modelMgr.setMaxFitAIDS(years[1]);
+    appMgr.modelMgr.setMinFitAIDS(years[0]);
+    appMgr.modelMgr.setMaxFitAIDS(years[1]);
   };
 
   const handleFitHIVAIDSChange = (e, years) => {
-    appManager.modelMgr.setMinFitHIVAIDS(years[0]);
-    appManager.modelMgr.setMaxFitHIVAIDS(years[1]);
+    appMgr.modelMgr.setMinFitHIVAIDS(years[0]);
+    appMgr.modelMgr.setMaxFitHIVAIDS(years[1]);
   };
 
-  const handleFullDataChange = e => appManager.modelMgr.setFullData(e.target.checked);
+  const handleFullDataChange = e => appMgr.modelMgr.setFullData(e.target.checked);
 
-  const handleKnotsCountChange = e => appManager.modelMgr.setKnotsCount(e.target.value);
+  const handleKnotsCountChange = e => appMgr.modelMgr.setKnotsCount(e.target.value);
 
-  const handleStartIncZeroChange = e => appManager.modelMgr.setStartIncZero(e.target.checked);
+  const handleStartIncZeroChange = e => appMgr.modelMgr.setStartIncZero(e.target.checked);
 
-  const handleMaxIncCorrChange = e => appManager.modelMgr.setMaxIncCorr(e.target.checked);
+  const handleMaxIncCorrChange = e => appMgr.modelMgr.setMaxIncCorr(e.target.checked);
 
-  const handleDistributionFitChange = e => appManager.modelMgr.setDistributionFit(e.target.value);
+  const handleDistributionFitChange = e => appMgr.modelMgr.setDistributionFit(e.target.value);
 
-  const handleDelta4FacChange = e => appManager.modelMgr.setDelta4Fac(e.target.value);
+  const handleDelta4FacChange = e => appMgr.modelMgr.setDelta4Fac(e.target.value);
 
-  const handleCountryChange = e => appManager.modelMgr.setCountry(e.target.value);
+  const handleCountryChange = e => appMgr.modelMgr.setCountry(e.target.value);
 
   return (
     <Paper>
@@ -83,8 +83,8 @@ const AdvancedParameters = (props) => {
             <Typography variant='overline'>1. Range of calculations</Typography>
             <div style={{ padding: '40px 10px 0 10px' }}>
               <YearsSlider
-                minYear={appManager.modelMgr.minYear}
-                maxYear={appManager.modelMgr.maxYear}
+                minYear={appMgr.modelMgr.minYear}
+                maxYear={appMgr.modelMgr.maxYear}
                 onChange={handleYearsChange}
               />
             </div>
@@ -95,8 +95,8 @@ const AdvancedParameters = (props) => {
             <Typography variant='overline'>2. HIV diagnoses, total</Typography>
             <div style={{ padding: '40px 10px 0 10px' }}>
               <YearsSlider
-                minYear={appManager.modelMgr.minFitPos}
-                maxYear={appManager.modelMgr.maxFitPos}
+                minYear={appMgr.modelMgr.minFitPos}
+                maxYear={appMgr.modelMgr.maxFitPos}
                 onChange={handleFitPosChange}
               />
             </div>
@@ -107,8 +107,8 @@ const AdvancedParameters = (props) => {
             <Typography variant='overline'>3. HIV diagnoses, by CD4 count</Typography>
             <div style={{ padding: '40px 10px 0 10px' }}>
               <YearsSlider
-                minYear={appManager.modelMgr.minFitCD4}
-                maxYear={appManager.modelMgr.maxFitCD4}
+                minYear={appMgr.modelMgr.minFitCD4}
+                maxYear={appMgr.modelMgr.maxFitCD4}
                 onChange={handleFitCD4Change}
               />
             </div>
@@ -119,8 +119,8 @@ const AdvancedParameters = (props) => {
             <Typography variant='overline'>4. AIDS diagnoses, total</Typography>
             <div style={{ padding: '40px 10px 0 10px' }}>
               <YearsSlider
-                minYear={appManager.modelMgr.minFitAIDS}
-                maxYear={appManager.modelMgr.maxFitAIDS}
+                minYear={appMgr.modelMgr.minFitAIDS}
+                maxYear={appMgr.modelMgr.maxFitAIDS}
                 onChange={handleFitAIDSChange}
               />
             </div>
@@ -131,8 +131,8 @@ const AdvancedParameters = (props) => {
             <Typography variant='overline'>5. HIV/AIDS diagnoses, total</Typography>
             <div style={{ padding: '40px 10px 0 10px' }}>
               <YearsSlider
-                minYear={appManager.modelMgr.minFitHIVAIDS}
-                maxYear={appManager.modelMgr.maxFitHIVAIDS}
+                minYear={appMgr.modelMgr.minFitHIVAIDS}
+                maxYear={appMgr.modelMgr.maxFitHIVAIDS}
                 onChange={handleFitHIVAIDSChange}
               />
             </div>
@@ -146,7 +146,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>
                 <Switch
                   color='primary'
-                  checked={appManager.modelMgr.fullData}
+                  checked={appMgr.modelMgr.fullData}
                   onChange={handleFullDataChange}
                   size='small'
                 />
@@ -162,7 +162,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>
                 <Input
                   style={{ width: '100%', fontSize: '0.75rem' }}
-                  value={appManager.modelMgr.knotsCount}
+                  value={appMgr.modelMgr.knotsCount}
                   onChange={handleKnotsCountChange}
                   type='number'
                 />
@@ -171,7 +171,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>
                 <Switch
                   color='primary'
-                  checked={appManager.modelMgr.startIncZero}
+                  checked={appMgr.modelMgr.startIncZero}
                   onChange={handleStartIncZeroChange}
                   size='small'
                 />
@@ -180,7 +180,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>
                 <Switch
                   color='primary'
-                  checked={appManager.modelMgr.maxIncCorr}
+                  checked={appMgr.modelMgr.maxIncCorr}
                   onChange={handleMaxIncCorrChange}
                   size='small'
                 />
@@ -194,7 +194,7 @@ const AdvancedParameters = (props) => {
             <Grid container>
               <Grid item xs={6}>Distrbution</Grid>
               <Grid item xs={6}>
-                <RadioGroup row value={appManager.modelMgr.distributionFit} onChange={handleDistributionFitChange}>
+                <RadioGroup row value={appMgr.modelMgr.distributionFit} onChange={handleDistributionFitChange}>
                   <FormControlLabel value='POISSON' control={<Radio color="primary" />} label='Poisson' />
                   <FormControlLabel value='NEGATIVE_BINOMIAL' control={<Radio color="primary" />} label='Negative Binomial' />
                 </RadioGroup>
@@ -210,7 +210,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>
                 <Input
                   style={{ width: '100%', fontSize: '0.75rem' }}
-                  value={appManager.modelMgr.delta4Fac}
+                  value={appMgr.modelMgr.delta4Fac}
                   onChange={handleDelta4FacChange}
                   type='number'
                 />
@@ -225,7 +225,7 @@ const AdvancedParameters = (props) => {
               <Grid item xs={6}>Country</Grid>
               <Grid item xs={6}>
                 <Select
-                  value={appManager.modelMgr.country}
+                  value={appMgr.modelMgr.country}
                   onChange={handleCountryChange}
                   style={{ width: '100%', fontSize: '0.75rem' }}
                 >

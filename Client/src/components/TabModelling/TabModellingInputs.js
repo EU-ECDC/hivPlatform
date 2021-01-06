@@ -17,9 +17,9 @@ import DiagnosisRates from './DiagnosisRates';
 import DiagnosisRatesSelect from './DiagnosisRatesSelect';
 
 const TabModellingInputs = props => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleModelUploadChange = e => appManager.modelMgr.setModelsParamFile(e.nativeEvent.target.files[0]);
+  const handleModelUploadChange = e => appMgr.modelMgr.setModelsParamFile(e.nativeEvent.target.files[0]);
 
   return (
     <TabPanel>
@@ -53,7 +53,7 @@ const TabModellingInputs = props => {
                   <TableBody>
                     <TableRow hover>
                       <TableCell width={100}>File name</TableCell>
-                      <TableCell>{appManager.modelMgr.modelsParamFileName}</TableCell>
+                      <TableCell>{appMgr.modelMgr.modelsParamFileName}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -68,10 +68,10 @@ const TabModellingInputs = props => {
           <Typography color='textSecondary'>
             Time intervals and diagnosis rates modelling
           </Typography>
-          <DiagnosisRatesSelect timeIntCollMgr={appManager.modelMgr.timeIntCollMgr} />
+          <DiagnosisRatesSelect timeIntCollMgr={appMgr.modelMgr.timeIntCollMgr} />
         </Grid>
         <Grid item xs={9}>
-          <DiagnosisRates timeIntCollMgr={appManager.modelMgr.timeIntCollMgr} />
+          <DiagnosisRates timeIntCollMgr={appMgr.modelMgr.timeIntCollMgr} />
         </Grid>
       </Grid>
     </TabPanel>

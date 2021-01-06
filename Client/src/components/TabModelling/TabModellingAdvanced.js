@@ -7,7 +7,6 @@ import TabPanel from '../TabPanel';
 import AdvancedParameters from './AdvancedParameters';
 
 const TabModellingAdvanced = props => {
-  const { appManager } = props;
 
   return (
     <TabPanel>
@@ -23,7 +22,7 @@ const TabModellingAdvanced = props => {
           </Typography>
         </Grid>
         <Grid item xs={9}>
-          <AdvancedParameters appManager={appManager} />
+          <AdvancedParameters {...props}/>
         </Grid>
       </Grid>
     </TabPanel>

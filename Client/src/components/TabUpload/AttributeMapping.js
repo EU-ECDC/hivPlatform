@@ -17,26 +17,26 @@ import ErrorIcon from '@material-ui/icons/Error';
 import Btn from '../Btn';
 
 const AttributeMapping = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   let attrMappingSelectOptions = [];
-  if (appManager.caseBasedDataMgr.columnNames !== null) {
-    attrMappingSelectOptions = appManager.caseBasedDataMgr.columnNames.slice().sort().map(colName => (
+  if (appMgr.caseBasedDataMgr.columnNames !== null) {
+    attrMappingSelectOptions = appMgr.caseBasedDataMgr.columnNames.slice().sort().map(colName => (
       <MenuItem key={colName} value={colName} dense>{colName}</MenuItem>
     ));
   }
 
-  const onApplyBtnClick = () => appManager.attrMappingMgr.applyMapping();
+  const onApplyBtnClick = () => appMgr.attrMappingMgr.applyMapping();
 
   const onOrigColSelect = attribute => e => {
-    appManager.attrMappingMgr.setOrigCol(attribute, e.target.value);
+    appMgr.attrMappingMgr.setOrigCol(attribute, e.target.value);
   }
 
   const onDefValChange = attribute => e => {
-    appManager.attrMappingMgr.setDefVal(attribute, e.target.value);
+    appMgr.attrMappingMgr.setDefVal(attribute, e.target.value);
   }
 
-  const attrMappingTableRows = appManager.attrMappingMgr.mapping.map((entry, idx) => (
+  const attrMappingTableRows = appMgr.attrMappingMgr.mapping.map((entry, idx) => (
     <TableRow hover key={idx}>
       <TableCell>{entry.attribute}</TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
@@ -60,7 +60,7 @@ const AttributeMapping = (props) => {
     </TableRow>
   ));
 
-  const validIcon = appManager.attrMappingMgr.valid ?
+  const validIcon = appMgr.attrMappingMgr.valid ?
     <CheckIcon style={{ width: '0.75rem', height: '0.75rem' }} /> :
     <ErrorIcon style={{ width: '0.75rem', height: '0.75rem' }} />
 
@@ -70,7 +70,7 @@ const AttributeMapping = (props) => {
         <Btn
           style={{ marginBottom: 6 }}
           onClick={onApplyBtnClick}
-          disabled={!appManager.attrMappingMgr.valid}
+          disabled={!appMgr.attrMappingMgr.valid}
         >
           <AssignmentIcon />&nbsp;Apply mapping
         </Btn>
@@ -80,7 +80,7 @@ const AttributeMapping = (props) => {
         </Typography>
         <Typography variant='body2' style={{marginTop: 10}}>
           {validIcon}&nbsp;
-          {appManager.attrMappingMgr.msg}
+          {appMgr.attrMappingMgr.msg}
         </Typography>
       </Grid>
       <Grid item xs={9}>

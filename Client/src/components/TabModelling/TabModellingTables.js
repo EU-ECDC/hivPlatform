@@ -11,12 +11,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import Chart from 'react-apexcharts';
 import TabPanel from '../TabPanel';
-import merge from 'lodash/merge';
 import { defaultHIVOutput1ChartOptions } from '../ChartsData';
 
 const TabModellingTables = props => {
-  const { appManager } = props;
-
   const hivOutput1ChartOptions = defaultHIVOutput1ChartOptions;
 
   return (

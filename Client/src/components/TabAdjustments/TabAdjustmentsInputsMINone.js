@@ -1,5 +1,4 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 
 const TabAdjustmentsInputsMINone = () => (
@@ -12,4 +11,4 @@ const TabAdjustmentsInputsMINone = () => (
   )
 ;
 
-export default observer(TabAdjustmentsInputsMINone);
+export default TabAdjustmentsInputsMINone;

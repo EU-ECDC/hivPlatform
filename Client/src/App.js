@@ -17,26 +17,46 @@ const theme = createMuiTheme({
   },
   overrides: {
     MuiStepLabel: {
-      active: {
-        fontStyle: 'italic !important'
-      },
-      completed: {
-        fontWeight: 'bold !important'
+      label: {
+        color: 'black',
+        '&$active': {
+          fontWeight: 'bold'
+        },
+        '&$completed': {
+          fontWeight: 'bold'
+        },
       },
       root: {
         '&$disabled': {
-          color: 'red !important'
+          '& .MuiStepLabel-label': {
+            color: 'rgba(0, 0, 0, 0.5)',
+          }
         },
       },
     },
-    MuiTreeItem: {
-      label: {
-        fontSize: 12
+    MuiStepIcon: {
+      root: {
+        '& text': {
+          fill: 'white'
+        }
       }
     },
-    MuiStepIcon: {
-      text: {
-        fill: 'white !important'
+    MuiStepConnector: {
+      vertical: {
+        marginLeft: 10
+      }
+    },
+    MuiStepContent: {
+      root: {
+        marginLeft: 10,
+        '& .MuiTreeItem-label': {
+          padding: 6,
+        },
+      }
+    },
+    MuiTreeItem: {
+      label: {
+        fontSize: '0.75rem'
       }
     },
     MuiTableRow: {

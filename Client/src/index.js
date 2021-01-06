@@ -10,24 +10,24 @@ import runInit from './init';
 window.jQuery = $;
 window.$ = $;
 
-const appManager = new AppManager();
+const appMgr = new AppManager();
 
 ReactDOM.render(
-  <Provider appManager={appManager}>
+  <Provider appMgr={appMgr}>
     <App />
   </Provider>,
   document.getElementById('app'),
   () => {
     console.log('ReactDOM.render complete');
     $(() => {
-      $(document).on('shiny:connected', () => appManager.setShinyState('CONNECTED'));
-      $(document).on('shiny:sessioninitialized', () => appManager.setShinyState('SESSION_INITIALIZED'));
-      $(document).on('shiny:disconnected', () => appManager.setShinyState('DISCONNECTED'));
-      $(document).on('shiny:message', event => appManager.setShinyMessage(event));
+      $(document).on('shiny:connected', () => appMgr.setShinyState('CONNECTED'));
+      $(document).on('shiny:sessioninitialized', () => appMgr.setShinyState('SESSION_INITIALIZED'));
+      $(document).on('shiny:disconnected', () => appMgr.setShinyState('DISCONNECTED'));
+      $(document).on('shiny:message', event => appMgr.setShinyMessage(event));
       $(document).on('shiny:inputchanged', event => console.log('shiny:inputchanged:', event));
       $(document).on('shiny:filedownload', event => console.log('shiny:filedownload:', event));
     });
-    runInit(appManager);
+    runInit(appMgr);
   },
 );
 

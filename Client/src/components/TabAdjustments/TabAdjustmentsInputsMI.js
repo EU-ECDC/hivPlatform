@@ -12,9 +12,9 @@ import TabAdjustmentsInputsMIJomo from './TabAdjustmentsInputsMIJomo';
 import TabAdjustmentsINputsMIMice from './TabAdjustmentsInputsMIMice';
 
 const TabAdjustmentsInputsMI = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleDataSelection = (e) => appManager.adjustMgr.setMIAdjustType(e.target.value);
+  const handleDataSelection = (e) => appMgr.adjustMgr.setMIAdjustType(e.target.value);
 
   return (
     <React.Fragment>
@@ -25,7 +25,7 @@ const TabAdjustmentsInputsMI = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='miAdjustType'
-            value={appManager.adjustMgr.miAdjustType}
+            value={appMgr.adjustMgr.miAdjustType}
             onChange={handleDataSelection}
           >
             <FormControlLabel
@@ -48,9 +48,9 @@ const TabAdjustmentsInputsMI = (props) => {
       </Grid>
       <Grid item xs={9}>
         <Paper style={{ padding: 10, minHeight: 476 }}>
-          {appManager.adjustMgr.miAdjustType === 'none' && <TabAdjustmentsInputsMINone />}
-          {appManager.adjustMgr.miAdjustType === 'jomo' && <TabAdjustmentsInputsMIJomo appManager={appManager} />}
-          {appManager.adjustMgr.miAdjustType === 'mice' && <TabAdjustmentsINputsMIMice appManager={appManager} />}
+          {appMgr.adjustMgr.miAdjustType === 'none' && <TabAdjustmentsInputsMINone />}
+          {appMgr.adjustMgr.miAdjustType === 'jomo' && <TabAdjustmentsInputsMIJomo {...props} />}
+          {appMgr.adjustMgr.miAdjustType === 'mice' && <TabAdjustmentsINputsMIMice {...props} />}
         </Paper>
       </Grid>
     </React.Fragment>

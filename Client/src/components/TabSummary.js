@@ -11,7 +11,6 @@ import TabSummaryMissingness from './TabSummaryMissingness';
 import TabSummaryReportingDelays from './TabSummaryReportingDelays';
 
 const TabSummary = (props) => {
-  const { appManager } = props;
 
   return (
     <TabPanel>
@@ -21,19 +20,19 @@ const TabSummary = (props) => {
             <Button size='small' color='primary'>Next step</Button>
           </Box>
         </Grid>
-        <TabSummaryDiagYear appManager={appManager} />
+        <TabSummaryDiagYear {...props} />
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <TabSummaryNotifQuarter appManager={appManager} />
+        <TabSummaryNotifQuarter {...props} />
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <TabSummaryMissingness appManager={appManager} />
+        <TabSummaryMissingness {...props} />
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <TabSummaryReportingDelays appManager={appManager} />
+        <TabSummaryReportingDelays {...props} />
       </Grid>
     </TabPanel>
   )

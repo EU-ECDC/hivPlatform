@@ -15,27 +15,27 @@ import {
 } from './ChartsData';
 
 const TabSummaryMissingness = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   const missChart1Options = merge(
     {},
     defaultMissChart1Options,
-    { xaxis: { categories: appManager.summaryDataMgr.missPlotData.plot1.chartCategories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.missPlotData.plot1.chartCategories } }
   );
 
   const missChart3Options = merge(
     {},
     defaultMissChart3Options,
-    { xaxis: { categories: appManager.summaryDataMgr.missPlot3Categories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.missPlot3Categories } }
   );
 
   const missChart4Options = merge(
     {},
     defaultMissChart4Options,
-    { xaxis: { categories: appManager.summaryDataMgr.missPlot4Categories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.missPlot4Categories } }
   );
 
-  const handleDataSelection = (e) => appManager.summaryDataMgr.setMissPlotSelection(e.target.value);
+  const handleDataSelection = (e) => appMgr.summaryDataMgr.setMissPlotSelection(e.target.value);
 
   return (
     <React.Fragment>
@@ -50,7 +50,7 @@ const TabSummaryMissingness = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='missDataSelection'
-            value={appManager.summaryDataMgr.missPlotSelection}
+            value={appMgr.summaryDataMgr.missPlotSelection}
             onChange={handleDataSelection}
           >
             <FormControlLabel
@@ -77,7 +77,7 @@ const TabSummaryMissingness = (props) => {
             <Grid item xs={3}>
               <Chart
                 options={missChart1Options}
-                series={appManager.summaryDataMgr.missPlot1Series}
+                series={appMgr.summaryDataMgr.missPlot1Series}
                 type='bar'
                 height={400}
               />
@@ -85,7 +85,7 @@ const TabSummaryMissingness = (props) => {
             <Grid item xs={4}>
               <Chart
                 options={defaultMissChart2Options}
-                series={appManager.summaryDataMgr.missPlot2Series}
+                series={appMgr.summaryDataMgr.missPlot2Series}
                 type='heatmap'
                 height={400}
               />
@@ -93,7 +93,7 @@ const TabSummaryMissingness = (props) => {
             <Grid item xs={5}>
               <Chart
                 options={missChart3Options}
-                series={appManager.summaryDataMgr.missPlot3Series}
+                series={appMgr.summaryDataMgr.missPlot3Series}
                 type='bar'
                 height={400}
               />
@@ -101,7 +101,7 @@ const TabSummaryMissingness = (props) => {
             <Grid item xs={12}>
               <Chart
                 options={missChart4Options}
-                series={appManager.summaryDataMgr.missPlot4Series}
+                series={appMgr.summaryDataMgr.missPlot4Series}
                 type='area'
                 height={400}
               />

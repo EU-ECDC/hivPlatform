@@ -1,5 +1,4 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 import Typography from '@material-ui/core/Typography';
 
 const TabAdjustmentsInputsRDNone = () => (
@@ -11,4 +10,4 @@ const TabAdjustmentsInputsRDNone = () => (
   </React.Fragment>
 );
 
-export default observer(TabAdjustmentsInputsRDNone);
+export default TabAdjustmentsInputsRDNone;

@@ -23,27 +23,27 @@ const userStyles = makeStyles({
 });
 
 const TabSummaryDiagYear = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const classes = userStyles();
 
   const diagChartOptions = merge(
     {},
     defaultDiagChartOptions,
-    { xaxis: { categories: appManager.summaryDataMgr.diagYearPlotData.chartCategories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.diagYearPlotData.chartCategories } }
   );
 
   const handleDiagYearFilterSwitchChange = e =>
-    appManager.summaryDataMgr.setDiagYearFilterApply(e.target.checked);
+    appMgr.summaryDataMgr.setDiagYearFilterApply(e.target.checked);
 
   const handleDiagYearFilterYearChange = (e, value) => {
-    appManager.summaryDataMgr.setDiagYearFilterMinYear(value[0]);
-    appManager.summaryDataMgr.setDiagYearFilterMaxYear(value[1]);
+    appMgr.summaryDataMgr.setDiagYearFilterMinYear(value[0]);
+    appMgr.summaryDataMgr.setDiagYearFilterMaxYear(value[1]);
   };
 
   const diagChart = (
     <Chart
       options={diagChartOptions}
-      series={appManager.summaryDataMgr.diagYearPlotData.chartData}
+      series={appMgr.summaryDataMgr.diagYearPlotData.chartData}
       type='bar'
       height={200}
     />
@@ -58,7 +58,7 @@ const TabSummaryDiagYear = (props) => {
         <FormControlLabel
           control={
             <Switch
-              checked={appManager.summaryDataMgr.diagYearPlotData.filter.applyInAdjustments}
+              checked={appMgr.summaryDataMgr.diagYearPlotData.filter.applyInAdjustments}
               onChange={handleDiagYearFilterSwitchChange}
               color='primary'
               size='small'
@@ -72,12 +72,12 @@ const TabSummaryDiagYear = (props) => {
           <Typography variant='overline'>Diagnosis year</Typography>
           <div style={{ padding: '40px 105px 0 65px' }}>
             <Slider
-              min={appManager.summaryDataMgr.diagYearPlotData.filter.scaleMinYear}
-              max={appManager.summaryDataMgr.diagYearPlotData.filter.scaleMaxYear}
+              min={appMgr.summaryDataMgr.diagYearPlotData.filter.scaleMinYear}
+              max={appMgr.summaryDataMgr.diagYearPlotData.filter.scaleMaxYear}
               marks={true}
               value={[
-                appManager.summaryDataMgr.diagYearPlotData.filter.valueMinYear,
-                appManager.summaryDataMgr.diagYearPlotData.filter.valueMaxYear
+                appMgr.summaryDataMgr.diagYearPlotData.filter.valueMinYear,
+                appMgr.summaryDataMgr.diagYearPlotData.filter.valueMaxYear
               ]}
               onChange={handleDiagYearFilterYearChange}
               valueLabelDisplay='on'

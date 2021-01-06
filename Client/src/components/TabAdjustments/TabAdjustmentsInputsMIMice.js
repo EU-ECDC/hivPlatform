@@ -9,13 +9,13 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 
 const TabAdjustmentsInputsMIMice = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleMIMiceNimpChange = (e) => appManager.adjustMgr.setMIMiceNimp(e.target.value);
-  const handleMIMiceNitChange = (e) => appManager.adjustMgr.setMIMiceNit(e.target.value);
-  const handleMIMiceNsdfChange = (e, value) => appManager.adjustMgr.setMIMiceNsdf(value);
-  const handleMIMiceImputeRDChange = (e, value) => appManager.adjustMgr.setMIMiceImputeRD(value);
-  const handleMIRestoreDefaults = (e) => appManager.adjustMgr.restoreMIDefaults('mice');
+  const handleMIMiceNimpChange = (e) => appMgr.adjustMgr.setMIMiceNimp(e.target.value);
+  const handleMIMiceNitChange = (e) => appMgr.adjustMgr.setMIMiceNit(e.target.value);
+  const handleMIMiceNsdfChange = (e, value) => appMgr.adjustMgr.setMIMiceNsdf(value);
+  const handleMIMiceImputeRDChange = (e, value) => appMgr.adjustMgr.setMIMiceImputeRD(value);
+  const handleMIRestoreDefaults = (e) => appMgr.adjustMgr.restoreMIDefaults('mice');
 
   return (
     <React.Fragment>
@@ -25,7 +25,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
           label='Number of imputations'
           helperText='Type the number of data sets to input'
           type='number'
-          value={appManager.adjustMgr.miMiceSettings.nimp}
+          value={appMgr.adjustMgr.miMiceSettings.nimp}
           onChange={handleMIMiceNimpChange}
           fullWidth
           variant='filled'
@@ -35,7 +35,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
           label='Number of mice iterations'
           helperText='Type the number of mice iterations'
           type='number'
-          value={appManager.adjustMgr.miMiceSettings.nit}
+          value={appMgr.adjustMgr.miMiceSettings.nit}
           onChange={handleMIMiceNitChange}
           fullWidth
           variant='filled'
@@ -47,13 +47,13 @@ const TabAdjustmentsInputsMIMice = (props) => {
         <Slider
           min={3}
           max={5}
-          value={appManager.adjustMgr.miMiceSettings.nsdf}
+          value={appMgr.adjustMgr.miMiceSettings.nsdf}
           onChange={handleMIMiceNsdfChange}
           marks={[{ value: 3, label: 3 }, { value: 4, label: 4 }, { value: 5, label: 5 }]}
         />
         <FormGroup row>
           <FormControlLabel
-            control={<Checkbox checked={appManager.adjustMgr.miMiceSettings.imputeRD} onChange={handleMIMiceImputeRDChange} name='check' color='primary' />}
+            control={<Checkbox checked={appMgr.adjustMgr.miMiceSettings.imputeRD} onChange={handleMIMiceImputeRDChange} name='check' color='primary' />}
             label='Impute reporting delays inputs'
           />
         </FormGroup>

@@ -30,6 +30,17 @@ const LeftNav = (props) => {
                   ))
                 }
               </TreeView>
+              {/* <Stepper nonLinear activeStep={0} orientation='vertical'>
+                {
+                  step.subSteps.map((subStep, index) => (
+                    <Step key={index}>
+                      <StepButton>
+                        <StepLabel>{subStep.title}</StepLabel>
+                      </StepButton>
+                    </Step>
+                  ))
+                }
+              </Stepper> */}
             </StepContent>}
           </Step>
         ))}

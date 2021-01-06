@@ -20,22 +20,22 @@ const ModelRunProgressBar = (props) => {
 };
 
 const TabModellingRunMain = props => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   const handleRunModelsBtnClick = () => {
-    appManager.modelMgr.runModels();
+    appMgr.modelMgr.runModels();
   };
 
   const handleCancelModelsBtnClick = () => {
-    appManager.modelMgr.cancelModels();
+    appMgr.modelMgr.cancelModels();
   };
 
   const handleSelectedPopCombName = e => {
-    appManager.popCombMgr.setSelectedCombinationName(e.target.value);
+    appMgr.popCombMgr.setSelectedCombinationName(e.target.value);
   };
 
   const handleSelectedCollectionId = e => {
-    appManager.modelMgr.timeIntCollMgr.setSelectedRunCollectionId(e.target.value);
+    appMgr.modelMgr.timeIntCollMgr.setSelectedRunCollectionId(e.target.value);
   };
 
   return (
@@ -52,11 +52,11 @@ const TabModellingRunMain = props => {
           </Typography>
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Select
-              value={appManager.popCombMgr.selectedCombinationName}
+              value={appMgr.popCombMgr.selectedCombinationName}
               onChange={handleSelectedPopCombName}
               style={{ width: '100%', fontSize: '0.75rem' }}
             >
-              {appManager.popCombMgr.combinationsNames.map((combName, i) =>
+              {appMgr.popCombMgr.combinationsNames.map((combName, i) =>
                 <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
               )}
             </Select>
@@ -64,11 +64,11 @@ const TabModellingRunMain = props => {
           </FormControl>
           <FormControl style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
             <Select
-              value={appManager.modelMgr.timeIntCollMgr.selectedRunCollectionId}
+              value={appMgr.modelMgr.timeIntCollMgr.selectedRunCollectionId}
               onChange={handleSelectedCollectionId}
               style={{ width: '100%', fontSize: '0.75rem' }}
             >
-              {appManager.modelMgr.timeIntCollMgr.collectionsArray.map((el, i) =>
+              {appMgr.modelMgr.timeIntCollMgr.collectionsArray.map((el, i) =>
                 <MenuItem key={i} value={el.id} dense>{el.name}</MenuItem>
               )}
             </Select>
@@ -76,7 +76,7 @@ const TabModellingRunMain = props => {
           </FormControl>
           <Btn
             onClick={handleRunModelsBtnClick}
-            disabled={appManager.modelMgr.modelsRunInProgress}
+            disabled={appMgr.modelMgr.modelsRunInProgress}
           >
             &nbsp;Run main model
           </Btn>
@@ -84,17 +84,17 @@ const TabModellingRunMain = props => {
             onClick={handleCancelModelsBtnClick}
             color='primary'
             style={{ marginLeft: 20 }}
-            disabled={!appManager.modelMgr.modelsRunInProgress}
+            disabled={!appMgr.modelMgr.modelsRunInProgress}
           >
             Cancel
           </Button>
-          <ModelRunProgressBar progress={appManager.modelMgr.modelsRunProgress} />
+          <ModelRunProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
-              dangerouslySetInnerHTML={{ __html: appManager.modelMgr.modelsRunLog }}
+              dangerouslySetInnerHTML={{ __html: appMgr.modelMgr.modelsRunLog }}
               style={{ overflowX: 'auto' }}
             />
           </Paper>

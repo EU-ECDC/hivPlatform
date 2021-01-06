@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import AggregatedDataPopulationsRow from './AggregatedDataPopulationsRow';
 
 const AggregatedDataPopulations = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   return (
     <Paper>
@@ -23,24 +23,24 @@ const AggregatedDataPopulations = (props) => {
         </TableHead>
         <TableBody>
           {
-            appManager.aggrDataMgr.dataFilesNonGrouped.map((dataFile, i) => (
+            appMgr.aggrDataMgr.dataFilesNonGrouped.map((dataFile, i) => (
               <AggregatedDataPopulationsRow
                 key={i}
                 i={i}
                 rowCount={1}
                 dataFile={dataFile}
-                appManager={appManager}
+                appManager={appMgr}
               />
             ))
           }
           {
-            appManager.aggrDataMgr.dataFilesGrouped.map((dataFile, i) => (
+            appMgr.aggrDataMgr.dataFilesGrouped.map((dataFile, i) => (
               <AggregatedDataPopulationsRow
                 key={i}
                 i={i}
-                rowCount={appManager.aggrDataMgr.dataFilesGrouped.length}
+                rowCount={appMgr.aggrDataMgr.dataFilesGrouped.length}
                 dataFile={dataFile}
-                appManager={appManager}
+                appManager={appMgr}
               />
             ))
           }

@@ -23,27 +23,27 @@ const userStyles = makeStyles({
 });
 
 const TabSummaryNotifQuarter = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const classes = userStyles();
 
   const notifChartOptions = merge(
     {},
     defaultNotifChartOptions,
-    { xaxis: { categories: appManager.summaryDataMgr.notifQuarterPlotData.chartCategories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.notifQuarterPlotData.chartCategories } }
   );
 
   const handleNotifQuarterFilterSwitchChange = e =>
-    appManager.summaryDataMgr.setNotifQuarterFilterApply(e.target.checked);
+    appMgr.summaryDataMgr.setNotifQuarterFilterApply(e.target.checked);
 
   const handleNotifQuarterFilterYearChange = (e, value) => {
-    appManager.summaryDataMgr.setNotifQuarterFilterMinYear(value[0]);
-    appManager.summaryDataMgr.setNotifQuarterFilterMaxYear(value[1]);
+    appMgr.summaryDataMgr.setNotifQuarterFilterMinYear(value[0]);
+    appMgr.summaryDataMgr.setNotifQuarterFilterMaxYear(value[1]);
   };
 
   const notifChart = (
     <Chart
       options={notifChartOptions}
-      series={appManager.summaryDataMgr.notifQuarterPlotData.chartData}
+      series={appMgr.summaryDataMgr.notifQuarterPlotData.chartData}
       type='bar'
       height={200}
     />
@@ -58,7 +58,7 @@ const TabSummaryNotifQuarter = (props) => {
         <FormControlLabel
           control={
             <Switch
-              value={appManager.summaryDataMgr.notifQuarterPlotData.filter.applyInAdjustments}
+              value={appMgr.summaryDataMgr.notifQuarterPlotData.filter.applyInAdjustments}
               onChange={handleNotifQuarterFilterSwitchChange}
               color='primary'
               size='small'
@@ -72,12 +72,12 @@ const TabSummaryNotifQuarter = (props) => {
           <Typography variant='overline'>Notification quarter</Typography>
           <div style={{ padding: '40px 105px 0 65px' }}>
             <Slider
-              min={appManager.summaryDataMgr.notifQuarterPlotData.filter.scaleMinYear}
-              max={appManager.summaryDataMgr.notifQuarterPlotData.filter.scaleMaxYear}
+              min={appMgr.summaryDataMgr.notifQuarterPlotData.filter.scaleMinYear}
+              max={appMgr.summaryDataMgr.notifQuarterPlotData.filter.scaleMaxYear}
               marks={true}
               value={[
-                appManager.summaryDataMgr.notifQuarterPlotData.filter.valueMinYear,
-                appManager.summaryDataMgr.notifQuarterPlotData.filter.valueMaxYear
+                appMgr.summaryDataMgr.notifQuarterPlotData.filter.valueMinYear,
+                appMgr.summaryDataMgr.notifQuarterPlotData.filter.valueMaxYear
               ]}
               onChange={handleNotifQuarterFilterYearChange}
               valueLabelDisplay='on'

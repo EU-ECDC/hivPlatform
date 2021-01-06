@@ -56,7 +56,7 @@ const StepPanel = props => {
 };
 
 const RootElem = props => {
-  const appManager = props.appManager;
+  const appMgr = props.appMgr;
   const classes = userStyles();
   const [rightNavState, setRightNavState] = React.useState(false);
 
@@ -68,7 +68,7 @@ const RootElem = props => {
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' className={classes.appVersion}>
-          {appManager.shinyReady} Engine state: {appManager.shinyState} | Version {VERSION}
+          {appMgr.shinyReady} Engine state: {appMgr.shinyState} | Version {VERSION}
         </Typography>
         <IconButton onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}>
           <MenuIcon />
@@ -78,11 +78,11 @@ const RootElem = props => {
   );
 
   const handleStepChange = stepId => {
-    appManager.setActiveStepId(stepId);
+    appMgr.uiStateMgr.setActiveStepId(stepId);
   }
 
   const handleSubStepChange = (stepId, subStepId) => {
-    appManager.setActiveSubStepId(stepId, subStepId);
+    appMgr.uiStateMgr.setActiveSubStepId(stepId, subStepId);
   }
 
   return (
@@ -91,36 +91,36 @@ const RootElem = props => {
       {appBar}
       <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}}>
         <LeftNav
-          steps={appManager.steps}
-          activeStepId={appManager.activeStepId}
+          steps={appMgr.uiStateMgr.steps}
+          activeStepId={appMgr.uiStateMgr.activeStepId}
           onStepChange={handleStepChange}
           onSubStepChange={handleSubStepChange}
         />
-        <StepPanel panelId={0} activePanelId={appManager.activeStepId} >
-          <TabWelcome appManager={appManager}/>
+        <StepPanel panelId={0} activePanelId={appMgr.uiStateMgr.activeStepId} >
+          <TabWelcome appMgr={appMgr}/>
         </StepPanel>
-        <StepPanel panelId={1} activePanelId={appManager.activeStepId}>
-          <TabUpload appManager={appManager} />
+        <StepPanel panelId={1} activePanelId={appMgr.uiStateMgr.activeStepId}>
+          <TabUpload appMgr={appMgr} />
         </StepPanel>
-        <StepPanel panelId={2} activePanelId={appManager.activeStepId}>
-          <TabSummary appManager={appManager} />
+        <StepPanel panelId={2} activePanelId={appMgr.uiStateMgr.activeStepId}>
+          <TabSummary appMgr={appMgr} />
         </StepPanel>
-        <StepPanel panelId={3} activePanelId={appManager.activeStepId}>
-          <TabAdjustments appManager={appManager} />
+        <StepPanel panelId={3} activePanelId={appMgr.uiStateMgr.activeStepId}>
+          <TabAdjustments appMgr={appMgr} />
         </StepPanel>
-        <StepPanel panelId={4} activePanelId={appManager.activeStepId}>
-          <TabModelling appManager={appManager} />
+        <StepPanel panelId={4} activePanelId={appMgr.uiStateMgr.activeStepId}>
+          <TabModelling appMgr={appMgr} />
         </StepPanel>
-        <StepPanel panelId={5} activePanelId={appManager.activeStepId}>
-          <TabReports appManager={appManager}/>
+        <StepPanel panelId={5} activePanelId={appMgr.uiStateMgr.activeStepId}>
+          <TabReports appMgr={appMgr}/>
         </StepPanel>
-        <StepPanel panelId={6} activePanelId={appManager.activeStepId}>
+        <StepPanel panelId={6} activePanelId={appMgr.uiStateMgr.activeStepId}>
           <TabOutputs />
         </StepPanel>
       </Box>
-      <MessageBar notificationsMgr={appManager.notificationsMgr} />
+      <MessageBar notificationsMgr={appMgr.notificationsMgr} />
     </Box>
   );
 };
 
-export default inject('appManager')(observer(RootElem));
+export default inject('appMgr')(observer(RootElem));

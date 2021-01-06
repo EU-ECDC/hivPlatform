@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 
 const WelcomeCard = props => {
-  const { mode, title, description, moreText, image, onClick } = props;
+  const { title, description, moreText, image, onClick } = props;
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => setExpanded(!expanded);
@@ -19,7 +19,7 @@ const WelcomeCard = props => {
 
   return (
     <Card>
-      <CardActionArea onClick={onClick(mode)}>
+      <CardActionArea onClick={onClick}>
         <CardMedia style={{height: 300}}
           image={image}
         />
@@ -47,9 +47,9 @@ const WelcomeCard = props => {
 };
 
 const TabWelcome = props => {
-  const appManager = props.appManager;
+  const appMgr = props.appMgr;
 
-  const handleCardClick = mode => () => appManager.setActiveStepId(1);
+  const handleCardClick = () => appMgr.uiStateMgr.setActiveStepId(1);
 
   const accuracyMore = <React.Fragment>
     <p>
@@ -140,7 +140,6 @@ const TabWelcome = props => {
       </Grid>
       <Grid item xs={3}>
         <WelcomeCard
-          mode='ACCURACY'
           title='Accuracy'
           description='Adjust case-based data for missing values and reporting delay'
           moreText={accuracyMore}
@@ -150,7 +149,6 @@ const TabWelcome = props => {
       </Grid>
       <Grid item xs={3}>
         <WelcomeCard
-          mode='MODELLING'
           title='Modelling'
           description='Estimate number of PLHIV and incidence'
           moreText={modellingMore}
@@ -160,7 +158,6 @@ const TabWelcome = props => {
       </Grid>
       <Grid item xs={3}>
         <WelcomeCard
-          mode='ALL-IN-ONE'
           title='All-in-one'
           description='Accuracy adjustements and modelling integrated in one tool'
           moreText={allinoneMore}

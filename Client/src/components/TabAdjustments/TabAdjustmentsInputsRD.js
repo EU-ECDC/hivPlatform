@@ -12,9 +12,9 @@ import TabAdjustmentsInputsRDWithout from './TabAdjustmentsInputsRDWithout';
 import TabAdjustmentsInputsRDWith from './TabAdjustmentsInputsRDWith';
 
 const TabAdjustmentsInputsRD = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleDataSelection = (e) => appManager.adjustMgr.setRDAdjustType(e.target.value);
+  const handleDataSelection = (e) => appMgr.adjustMgr.setRDAdjustType(e.target.value);
 
   return (
     <React.Fragment>
@@ -25,7 +25,7 @@ const TabAdjustmentsInputsRD = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='rdAdjustType'
-            value={appManager.adjustMgr.rdAdjustType}
+            value={appMgr.adjustMgr.rdAdjustType}
             onChange={handleDataSelection}
           >
             <FormControlLabel
@@ -48,9 +48,9 @@ const TabAdjustmentsInputsRD = (props) => {
       </Grid>
       <Grid item xs={9}>
         <Paper style={{ padding: 10, minHeight: 455 }}>
-          {appManager.adjustMgr.rdAdjustType === 'none' && <TabAdjustmentsInputsRDNone />}
-          {appManager.adjustMgr.rdAdjustType === 'withoutTrend' && <TabAdjustmentsInputsRDWithout appManager={appManager} />}
-          {appManager.adjustMgr.rdAdjustType === 'withTrend' && <TabAdjustmentsInputsRDWith appManager={appManager} />}
+          {appMgr.adjustMgr.rdAdjustType === 'none' && <TabAdjustmentsInputsRDNone />}
+          {appMgr.adjustMgr.rdAdjustType === 'withoutTrend' && <TabAdjustmentsInputsRDWithout {...props} />}
+          {appMgr.adjustMgr.rdAdjustType === 'withTrend' && <TabAdjustmentsInputsRDWith {...props} />}
         </Paper>
       </Grid>
     </React.Fragment>

@@ -97,8 +97,7 @@ CaseDataManager <- R6::R6Class(
 
     # 2. Apply attribute mapping -------------------------------------------------------------------
     ApplyAttributesMapping = function(
-      attrMapping,
-      callback = NULL
+      attrMapping
     ) {
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
@@ -120,7 +119,13 @@ CaseDataManager <- R6::R6Class(
           dataStatus <- GetInputDataValidityStatus(data)
           if (dataStatus$Valid) {
             originDistribution <- GetOriginDistribution(data)
+            originGroupingType <- 'REPCOUNTRY + UNK + OTHER'
+            origingGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
+          } else {
+            status <- 'FAIL'
           }
+        } else {
+          status <- 'FAIL'
         }
       },
       error = function(e) {
@@ -137,21 +142,22 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$PreProcessedDataStatus <- dataStatus
         private$Catalogs$LastStep <- 2L
         PrintAlert('Attribute mapping has been applied')
+        payload <- list(
+          OriginDistribution = originDistribution,
+          OriginGroupingType = originGroupingType,
+          OriginGrouping = origingGrouping
+        )
       } else {
         PrintAlert('Attribute mapping is not valid and cannot be applied', type = 'danger')
+        payload <- list()
       }
 
-      payload <- list(
-        type = 'CaseDataManager:ApplyAttributesMapping',
+      private$AppMgr$SendMessage(
+        type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
         status = status,
-        artifacts = list()
+        payload = payload
       )
-
-      if (is.function(callback)) {
-        callback(payload)
-      }
-
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     # 3. Apply origin grouping ---------------------------------------------------------------------
@@ -205,7 +211,7 @@ CaseDataManager <- R6::R6Class(
         callback(payload)
       }
 
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     # 4. Adjust data -------------------------------------------------------------------------------

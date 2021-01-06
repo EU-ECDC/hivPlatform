@@ -37,13 +37,13 @@ const ModelRunProgressBar = (props) => {
 };
 
 const TabModellingRunBootstrap = props => {
-  const { appManager } = props;
+  const { appMgr } = props;
   const classes = userStyles();
 
-  const handleRunBootstrapBtnClick = () => appManager.modelMgr.runBootstrap();
-  const handleCancelBootstrapBtnClick = () => appManager.modelMgr.cancelBootstrap();
-  const handleBootstrapCountChange = e => appManager.modelMgr.setBootstrapCount(e.target.value);
-  const handleBootstrapTypeChange = e => appManager.modelMgr.setBootstrapType(e.target.value);
+  const handleRunBootstrapBtnClick = () => appMgr.modelMgr.runBootstrap();
+  const handleCancelBootstrapBtnClick = () => appMgr.modelMgr.cancelBootstrap();
+  const handleBootstrapCountChange = e => appMgr.modelMgr.setBootstrapCount(e.target.value);
+  const handleBootstrapTypeChange = e => appMgr.modelMgr.setBootstrapType(e.target.value);
 
   return (
     <TabPanel>
@@ -65,7 +65,7 @@ const TabModellingRunBootstrap = props => {
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Input
               style={{ width: '100%', fontSize: '0.75rem' }}
-              value={appManager.modelMgr.bootstrapCount}
+              value={appMgr.modelMgr.bootstrapCount}
               onChange={handleBootstrapCountChange}
               type='number'
             />
@@ -74,7 +74,7 @@ const TabModellingRunBootstrap = props => {
           <FormControl className={classes.btRoot}>
             <RadioGroup
               row
-              value={appManager.modelMgr.bootstrapType}
+              value={appMgr.modelMgr.bootstrapType}
               onChange={handleBootstrapTypeChange}
             >
               <FormControlLabel
@@ -100,13 +100,13 @@ const TabModellingRunBootstrap = props => {
           >
             Cancel
           </Button>
-          <ModelRunProgressBar progress={appManager.modelMgr.bootstrapRunProgress} />
+          <ModelRunProgressBar progress={appMgr.modelMgr.bootstrapRunProgress} />
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
-              dangerouslySetInnerHTML={{ __html: appManager.modelMgr.bootstrapRunLog }}
+              dangerouslySetInnerHTML={{ __html: appMgr.modelMgr.bootstrapRunLog }}
               style={{ overflowX: 'auto' }}
             />
           </Paper>

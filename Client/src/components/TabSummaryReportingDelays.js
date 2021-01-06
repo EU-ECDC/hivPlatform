@@ -12,7 +12,7 @@ import merge from 'lodash/merge';
 import { defaultRepDelChartOptions } from './ChartsData';
 
 const TabSummaryReportingDelays = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
   const repDelChartOptions = merge(
     {},
@@ -20,16 +20,16 @@ const TabSummaryReportingDelays = (props) => {
     {
       annotations: {
         xaxis: [{
-          x: appManager.summaryDataMgr.repDelPlot.q95,
+          x: appMgr.summaryDataMgr.repDelPlot.q95,
           label: {
-            text: `95% of cases reported by ${appManager.summaryDataMgr.repDelPlot.q95} quarters`,
+            text: `95% of cases reported by ${appMgr.summaryDataMgr.repDelPlot.q95} quarters`,
           }
         }]
       }
     }
   );
 
-  const handleDataSelection = (e) => appManager.summaryDataMgr.setRepDelPlotSelection(e.target.value);
+  const handleDataSelection = (e) => appMgr.summaryDataMgr.setRepDelPlotSelection(e.target.value);
 
   return (
     <React.Fragment>
@@ -45,7 +45,7 @@ const TabSummaryReportingDelays = (props) => {
         <FormControl component='fieldset'>
           <RadioGroup
             name='repDelDataSelection'
-            value={appManager.summaryDataMgr.repDelPlotSelection}
+            value={appMgr.summaryDataMgr.repDelPlotSelection}
             onChange={handleDataSelection}
           >
             <FormControlLabel
@@ -70,7 +70,7 @@ const TabSummaryReportingDelays = (props) => {
         <Paper style={{ padding: 10 }}>
           <Chart
             options={repDelChartOptions}
-            series={appManager.summaryDataMgr.repDelPlot.series}
+            series={appMgr.summaryDataMgr.repDelPlot.series}
             type='area'
             height={400}
           />

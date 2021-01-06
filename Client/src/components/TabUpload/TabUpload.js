@@ -4,9 +4,9 @@ import TabUploadCase from './TabUploadCase';
 import TabUploadAggregated from './TabUploadAggregated';
 
 const TabUpload = (props) => {
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const activeSubStepId = appManager.steps[appManager.activeStepId].activeSubStepId;
+  const activeSubStepId = appMgr.uiStateMgr.steps[appMgr.uiStateMgr.activeStepId].activeSubStepId;
 
   return (
     <React.Fragment>
