@@ -48,8 +48,7 @@ CaseDataManager <- R6::R6Class(
 
     # 1. Read case-based data ----------------------------------------------------------------------
     ReadData = function(
-      fileName,
-      callback = private$AppMgr$SendMessage
+      fileName
     ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert(
@@ -88,9 +87,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      if (is.function(callback)) {
-        callback(type = 'CASE_BASED_DATA_READ', status = status, payload = payload)
-      }
+      private$SendMessage(type = 'CASE_BASED_DATA_READ', status = status, payload = payload)
 
       return(invisible(self))
     },
@@ -99,6 +96,12 @@ CaseDataManager <- R6::R6Class(
     ApplyAttributesMapping = function(
       attrMapping
     ) {
+      private$SendMessage(
+        type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START',
+        status = 'SUCCESS',
+        payload = list()
+      )
+
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
         return(invisible(self))
@@ -152,7 +155,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$AppMgr$SendMessage(
+      private$SendMessage(
         type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
         status = status,
         payload = payload
@@ -297,6 +300,12 @@ CaseDataManager <- R6::R6Class(
 
     # Storage
     Catalogs = NULL,
+
+    SendMessage = function(...) {
+      if (is.function(private$AppMgr$SendMessage)) {
+        private$AppMgr$SendMessage(...)
+      }
+    },
 
     Reinitialize = function(step) {
       if (
