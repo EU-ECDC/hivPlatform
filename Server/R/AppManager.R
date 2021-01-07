@@ -43,7 +43,7 @@ AppManager <- R6::R6Class(
       }
     }
 
-    # # USER ACTIONS =================================================================================
+    # # USER ACTIONS ===============================================================================
 
     # CreateReport = function(reportName) {
     #   reportFilePath <- GetReportFileNames()[reportName]

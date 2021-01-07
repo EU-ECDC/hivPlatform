@@ -222,11 +222,13 @@ HIVModelManager <- R6::R6Class(
                     )
                   },
                   'NON-PARAMETRIC' = {
-                    bootResult <- hivModelling::PerformMainFit(
-                      bootContext, bootPopData,
-                      param = param, info = info, attemptSimplify = FALSE,
-                      maxRunTime = maxRunTime
-                    )
+                    capture.output({
+                      bootResult <- hivModelling::PerformMainFit(
+                        bootContext, bootPopData,
+                        param = param, info = info, attemptSimplify = FALSE,
+                        maxRunTime = maxRunTime, verbose = FALSE
+                      )
+                    })
                   }
                 )
                 runTime <- Sys.time() - startTime
@@ -313,6 +315,12 @@ HIVModelManager <- R6::R6Class(
     # Storage
     Catalogs = NULL,
 
+    SendMessage = function(...) {
+      if (is.function(private$AppMgr$SendMessage)) {
+        private$AppMgr$SendMessage(...)
+      }
+    },
+
     Reinitialize = function(step) {
       if (step %in% c('RunMainFit')) {
         private$Catalogs$BootstrapFitTask <- NULL
@@ -354,9 +362,9 @@ HIVModelManager <- R6::R6Class(
         mainOutputStats <- setNames(lapply(colNames, function(colName) {
           resultSample <- sapply(mainOutputList, '[[', colName)
           result <- cbind(
-            t(apply(resultSample, 1, quantile, c(0.025, 0.5, 0.975))),
-            Mean = apply(resultSample, 1, mean),
-            Std = apply(resultSample, 1, sd)
+            t(apply(resultSample, 1, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),
+            Mean = apply(resultSample, 1, mean, na.rm = TRUE),
+            Std = apply(resultSample, 1, sd, na.rm = TRUE)
           )
           rownames(result) <- years
           return(result)
@@ -367,17 +375,22 @@ HIVModelManager <- R6::R6Class(
         setnames(betas, sprintf('Beta%d', seq_len(ncol(betas))))
         bootBetasStats <- lapply(betas, function(col) {
           c(
-            quantile(col, probs = c(0.025, 0.5, 0.975)),
+            quantile(col, probs = c(0.025, 0.5, 0.975), na.rm = TRUE),
             Mean = mean(col),
             Std = sd(col)
           )
         })
 
-        thetas <- as.data.table(t(sapply(succParamList, '[[', 'Theta')))
+        thetasList <- lapply(succParamList, '[[', 'Theta')
+        maxThetasLength <- max(sapply(thetasList, length))
+        thetasList <- lapply(thetasList, function(thetas) {
+          t(c(rep(0, maxThetasLength - length(thetas)), thetas))
+        })
+        thetas <- rbindlist(lapply(thetasList, as.data.table))
         setnames(thetas, sprintf('Theta%d', seq_len(ncol(thetas))))
         bootThetasStats <- lapply(thetas, function(col) {
           c(
-            quantile(col, probs = c(0.025, 0.5, 0.975)),
+            quantile(col, probs = c(0.025, 0.5, 0.975), na.rm = TRUE),
             Mean = mean(col),
             Std = sd(col)
           )
@@ -392,18 +405,14 @@ HIVModelManager <- R6::R6Class(
           BetaStats = bootBetasStats,
           ThetaStats = bootThetasStats
         )
+        private$Catalogs$BootstrapFitStats <- stats
       },
       error = function(e) {
         status <- 'FAIL'
+        PrintAlert('Computing bootstrap statistics failed', type = 'danger')
       })
 
-      if (status == 'SUCCESS') {
-        private$Catalogs$BootstrapFitStats <- stats
-      } else {
-        PrintAlert('Computing bootstrap statistics failed', type = 'danger')
-      }
-
-      return(invisible(self))
+      return(status)
     }
   ),
 

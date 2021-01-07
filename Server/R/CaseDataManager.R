@@ -204,15 +204,11 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
 
-      payload <- list(
+      private$SendMessage(
         type = 'CaseDataManager:ApplyOriginGrouping',
         status = status,
         artifacts = list()
       )
-
-      if (is.function(callback)) {
-        callback(payload)
-      }
 
       return(invisible(self))
     },
