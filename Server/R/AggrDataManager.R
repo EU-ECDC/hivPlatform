@@ -30,7 +30,7 @@ AggrDataManager <- R6::R6Class(
     },
 
     print = function() {
-      print(self$Session)
+      print('AggrDataManager')
     },
 
     # USER ACTIONS =================================================================================
@@ -101,6 +101,12 @@ AggrDataManager <- R6::R6Class(
 
     # Storage
     Catalogs = NULL,
+
+    SendMessage = function(...) {
+      if (is.function(private$AppMgr$SendMessage)) {
+        private$AppMgr$SendMessage(...)
+      }
+    },
 
     Reinitialize = function(step) {
       if (step %in% 'ReadData') {

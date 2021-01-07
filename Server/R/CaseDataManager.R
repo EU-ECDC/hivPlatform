@@ -41,7 +41,7 @@ CaseDataManager <- R6::R6Class(
     },
 
     print = function() {
-      print(self$Session)
+      print('CaseDataManager')
     },
 
     # USER ACTIONS =================================================================================
@@ -124,18 +124,14 @@ CaseDataManager <- R6::R6Class(
             originDistribution <- GetOriginDistribution(data)
             originGroupingType <- 'REPCOUNTRY + UNK + OTHER'
             origingGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
-          } else {
-            status <- 'FAIL'
           }
-        } else {
-          status <- 'FAIL'
         }
       },
       error = function(e) {
         status <- 'FAIL'
       })
 
-      if (status == 'SUCCESS' && attrMappingStatus$Valid && dataStatus$Valid) {
+      if (status == 'SUCCESS') {
         private$Reinitialize('ApplyAttributesMapping')
         private$Catalogs$AttrMapping <- attrMapping
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
@@ -166,8 +162,7 @@ CaseDataManager <- R6::R6Class(
     # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(
       originGrouping,
-      type = 'CUSTOM',
-      callback = NULL
+      type = 'CUSTOM'
     ) {
       if (private$Catalogs$LastStep < 2) {
         PrintAlert(
@@ -205,9 +200,9 @@ CaseDataManager <- R6::R6Class(
       }
 
       private$SendMessage(
-        type = 'CaseDataManager:ApplyOriginGrouping',
+        type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
         status = status,
-        artifacts = list()
+        payload = list()
       )
 
       return(invisible(self))
