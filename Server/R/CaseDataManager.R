@@ -69,12 +69,12 @@ CaseDataManager <- R6::R6Class(
       })
 
       if (status == 'SUCCESS') {
-        private$Reinitialize('ReadData')
         private$Catalogs$FileName <- fileName
         private$Catalogs$OriginalData <- originalData
         private$Catalogs$AttrMapping <- attrMapping
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
         private$Catalogs$LastStep <- 1L
+        private$Reinitialize('ReadData')
         PrintAlert('Data file {.file {fileName}} loaded')
         payload <- list(
           ColumnNames = colnames(originalData),
@@ -92,7 +92,7 @@ CaseDataManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    # 2. Apply attribute mapping -------------------------------------------------------------------
+    # 2. Apply attributes mapping ------------------------------------------------------------------
     ApplyAttributesMapping = function(
       attrMapping
     ) {
@@ -124,7 +124,11 @@ CaseDataManager <- R6::R6Class(
             originDistribution <- GetOriginDistribution(data)
             originGroupingType <- 'REPCOUNTRY + UNK + OTHER'
             origingGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
+          } else {
+            status <- 'FAIL'
           }
+        } else {
+          status <- 'FAIL'
         }
       },
       error = function(e) {
@@ -132,7 +136,6 @@ CaseDataManager <- R6::R6Class(
       })
 
       if (status == 'SUCCESS') {
-        private$Reinitialize('ApplyAttributesMapping')
         private$Catalogs$AttrMapping <- attrMapping
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
         private$Catalogs$OriginDistribution <- originDistribution
@@ -140,6 +143,7 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$PreProcessedData <- data
         private$Catalogs$PreProcessedDataStatus <- dataStatus
         private$Catalogs$LastStep <- 2L
+        private$Reinitialize('ApplyAttributesMapping')
         PrintAlert('Attribute mapping has been applied')
         payload <- list(
           OriginDistribution = originDistribution,
@@ -173,7 +177,7 @@ CaseDataManager <- R6::R6Class(
       }
 
       originDistribution <- private$Catalogs$OriginDistribution
-      preProcessedData <- private$Catalogs$PreProcessedData
+      preProcessedData <- copy(private$Catalogs$PreProcessedData)
 
       status <- 'SUCCESS'
       tryCatch({
@@ -183,18 +187,19 @@ CaseDataManager <- R6::R6Class(
           type <- 'CUSTOM'
         }
         ApplyOriginGrouping(preProcessedData, originGrouping)
+        summary <- GetCaseDataSummary(preProcessedData)
       },
       error = function(e) {
         status <- 'FAIL'
       })
 
       if (status == 'SUCCESS') {
-        private$Reinitialize('ApplyOriginGrouping')
         private$Catalogs$OriginGrouping <- originGrouping
         private$Catalogs$PreProcessedData <- preProcessedData
+        private$Catalogs$Summary <- summary
         private$Catalogs$LastStep <- 3L
+        private$Reinitialize('ApplyOriginGrouping')
         PrintAlert('Origin grouping {.val {type}} has been applied')
-        private$ComputeSummary()
       } else {
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
@@ -210,9 +215,10 @@ CaseDataManager <- R6::R6Class(
 
     # 4. Adjust data -------------------------------------------------------------------------------
     RunAdjustments = function(
-      adjustmentSpecs,
-      callback = NULL
+      adjustmentSpecs
     ) {
+      private$SendMessage(type = 'ADJUSTMENTS_RUN_STARTED', status = 'SUCCESS', payload = list())
+
       if (private$Catalogs$LastStep < 3) {
         PrintAlert(
           'Origing grouping must be applied before running adjustments',
@@ -225,7 +231,6 @@ CaseDataManager <- R6::R6Class(
 
       PrintAlert('Starting adjustment task')
       status <- 'SUCCESS'
-      private$Reinitialize('RunAdjustments')
       tryCatch({
         private$Catalogs$AdjustmentTask <- Task$new(
           function(data, adjustmentSpecs) {
@@ -246,7 +251,13 @@ CaseDataManager <- R6::R6Class(
             private$Catalogs$AdjustmentResult <- result
             private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
             private$Catalogs$LastStep <- 4L
+            private$Reinitialize('RunAdjustments')
             PrintAlert('Running adjustment task finished')
+            private$SendMessage(
+              type = 'ADJUSTMENTS_RUN_FINISHED',
+              status = 'SUCCESS',
+              payload = list()
+            )
           },
           failCallback = function() {
             PrintAlert('Running adjustment task failed', type = 'danger')
@@ -302,136 +313,40 @@ CaseDataManager <- R6::R6Class(
       if (
         step %in% c('ReadData')
       ) {
-        private$Catalogs$FileName <- NULL
-        private$Catalogs$OriginalData <- NULL
-        private$Catalogs$AttrMapping <- NULL
-        private$Catalogs$AttrMappingStatus <- NULL
-      }
-
-      if (
-        step %in% c('ReadData', 'ApplyAttributeMapping')
-      ) {
-        private$Catalogs$AttrMapping <- NULL
-        private$Catalogs$AttrMappingStatus <- NULL
-        private$Catalogs$PreProcessArtifacts <- NULL
         private$Catalogs$OriginDistribution <- NULL
+        private$Catalogs$OriginGrouping <- list()
+        private$Catalogs$PreProcessArtifacts <- NULL
+        private$Catalogs$Summary <- NULL
         private$Catalogs$PreProcessedData <- NULL
         private$Catalogs$PreProcessedDataStatus <- NULL
-      }
-
-      if (
-        step %in% c('ReadData', 'ApplyAttributeMapping', 'ApplyOriginGrouping')
-      ) {
-        private$Catalogs$OriginGrouping <- list()
-        private$Catalogs$Summary <- NULL
+        private$Catalogs$AdjustedData <- NULL
+        private$Catalogs$AdjustmentTask <- NULL
+        private$Catalogs$AdjustmentResult <- NULL
         if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$PreProcessedData$Table)) {
           private$Catalogs$PreProcessedData$Table[, GroupedRegionOfOrigin := NULL]
         }
       }
 
       if (
-        step %in% c('ReadData', 'ApplyAttributeMapping', 'ApplyOriginGrouping', 'RunAdjustments')
+        step %in% c('ApplyAttributeMapping')
+      ) {
+        private$Catalogs$OriginGrouping <- list()
+        private$Catalogs$Summary <- NULL
+        private$Catalogs$AdjustedData <- NULL
+        private$Catalogs$AdjustmentTask <- NULL
+        private$Catalogs$AdjustmentResult <- NULL
+        if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$PreProcessedData$Table)) {
+          private$Catalogs$PreProcessedData$Table[, GroupedRegionOfOrigin := NULL]
+        }
+      }
+
+      if (
+        step %in% c('ApplyOriginGrouping')
       ) {
         private$Catalogs$AdjustedData <- NULL
         private$Catalogs$AdjustmentTask <- NULL
         private$Catalogs$AdjustmentResult <- NULL
       }
-
-      lastStep <- switch(
-        step,
-        'ReadData' = 0L,
-        'ApplyAttributeMapping' = 1L,
-        'ApplyOriginGrouping' = 2L,
-        'RunAdjustments' = 3L
-      )
-      private$Catalogs$LastStep <- lastStep
-    },
-
-    ComputeSummary = function() {
-      if (private$Catalogs$LastStep < 3) {
-        PrintAlert(
-          'Origin grouping must be applied before computing summary data',
-          type = 'danger'
-        )
-        return(invisible(self))
-      }
-
-      data <- private$Catalogs$PreProcessedData
-      status <- 'SUCCESS'
-      tryCatch({
-        # Diagnosis year plot
-        diagYearCounts <- data[, .(Count = .N), keyby = .(Gender, YearOfHIVDiagnosis)]
-        diagYearCategories <- sort(unique(diagYearCounts$YearOfHIVDiagnosis))
-        diagYearPlotData <- list(
-          filter = list(
-            scaleMinYear = min(diagYearCategories),
-            scaleMaxYear = max(diagYearCategories),
-            valueMinYear = min(diagYearCategories),
-            valueMaxYear = max(diagYearCategories)
-          ),
-          chartCategories = diagYearCategories,
-          chartData = list(
-            list(
-              name = 'Female',
-              data = diagYearCounts[Gender == 'F', Count]
-            ),
-            list(
-              name = 'Male',
-              data = diagYearCounts[Gender == 'M', Count]
-            )
-          )
-        )
-
-        # Notification quarter plot
-        notifQuarterCounts <- data[,
-          .(Count = .N),
-          keyby = .(
-            Gender,
-            QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
-          )
-        ]
-        notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
-        notifQuarterPlotData <- list(
-          filter = list(
-            scaleMinYear = min(notifQuarterCategories),
-            scaleMaxYear = max(notifQuarterCategories),
-            valueMinYear = min(notifQuarterCategories),
-            valueMaxYear = max(notifQuarterCategories)
-          ),
-          chartCategories = notifQuarterCategories,
-          chartData = list(
-            list(
-              name = 'Female',
-              data = notifQuarterCounts[Gender == 'F', Count]
-            ),
-            list(
-              name = 'Male',
-              data = notifQuarterCounts[Gender == 'M', Count]
-            )
-          )
-        )
-
-        missPlotData <- GetMissingnessPlots(data)
-
-        repDelPlotData <- GetReportingDelaysPlots(data)
-
-        summary <- list(
-          DiagYearPlotData = diagYearPlotData,
-          NotifQuarterPlotData = notifQuarterPlotData,
-          MissPlotData = missPlotData,
-          RepDelPlotData = repDelPlotData
-        )
-      },
-      error = function(e) {
-        status <- 'FAIL'
-      })
-
-      if (status == 'SUCCESS') {
-        private$Catalogs$Summary <- summary
-      } else {
-        PrintAlert('Summary cannot be computed', type = 'danger')
-      }
-
       return(invisible(self))
     }
   ),

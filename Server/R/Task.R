@@ -230,11 +230,6 @@ Task <- R6::R6Class(
           private$Catalogs$Status <- 'FAIL'
           private$Catalogs$FailMessage <- e
         })
-        # result <- try(private$Catalogs$TaskHandle$get_result(), silent = TRUE)
-        # if (IsError(result)) {
-        #   result <- NULL
-        #   private$Catalogs$Status <- 'FAIL'
-        # }
         private$Catalogs$Result <- result
       }
       return(private$Catalogs$Result)

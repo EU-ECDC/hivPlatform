@@ -6,11 +6,9 @@ appMgr <- AppManager$new()
 appMgr$CaseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
 appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_-_2_populations.zip'))
 
-
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
-
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 appMgr$CaseMgr$RunAdjustments(
