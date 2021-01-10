@@ -7,23 +7,29 @@ export default class AttrMappingManager {
     this.rootMgr = mgr;
     makeObservable(this, {
       mapping: observable,
-      valid: observable,
+      status: observable,
       msg: observable,
       setMapping: action,
       setOrigCol: action,
       setDefVal: action,
-      applyMapping: action
+      applyMapping: action,
+      setStatus: action,
+      setMsg: action
     });
   }
 
   mapping = [];
-  valid = true;
-  msg = 'Mapping is valid';
+  status = true;
+  msg = null;
 
   setMapping = mapping => {
     this.mapping = mapping;
     this.validateMapping();
   };
+
+  setMsg = msg => this.msg = msg;
+
+  setStatus = status => this.status = status;
 
   setOrigCol = (attribute, origCol) => {
     const idx = this.mapping.findIndex(el => el.attribute === attribute);
@@ -55,12 +61,17 @@ export default class AttrMappingManager {
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
     const multipleMappedColumns = [...counts].filter(el => el[1] > 1).map(el => el[0]);
 
+    let msg = null;
+    let status = null;
     if (multipleMappedColumns.length > 0) {
-      this.valid = false;
-      this.msg = `Column${multipleMappedColumns.length > 1 ? 's' : ''} "${multipleMappedColumns.join(', ')}" ${multipleMappedColumns.length > 1 ? 'are' : 'is'} mapped multiple times`;
+      status = 'FAIL';
+      msg = `Column${multipleMappedColumns.length > 1 ? 's' : ''} "${multipleMappedColumns.join(', ')}" ${multipleMappedColumns.length > 1 ? 'are' : 'is'} mapped multiple times`;
+      this.setMsg()
     } else {
-      this.valid = true;
-      this.msg = 'Mapping is valid'
+      status = 'SUCCESS';
+      msg = 'Attribute mapping is valid';
     }
+    this.setStatus(status);
+    this.setMsg(msg);
   };
 }

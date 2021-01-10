@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Btn from '../Btn';
 import UploadProgressBar from '../UploadProgressBar';
+import MessageAlert from '../MessageAlert';
 import FormatBytes from '../../utilities/FormatBytes';
 
 const userStyles = makeStyles({
@@ -64,6 +65,10 @@ const CaseUpload = (props) => {
           Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)
         </Typography>
         <UploadProgressBar progress={appMgr.caseBasedDataMgr.fileUploadProgress} />
+        <MessageAlert
+          status={appMgr.caseBasedDataMgr.fileUploadStatus}
+          msg={appMgr.caseBasedDataMgr.fileUploadMsg}
+        />
       </Grid>
       <Grid item xs={9}>
         <Paper style={{ padding: 10 }}>

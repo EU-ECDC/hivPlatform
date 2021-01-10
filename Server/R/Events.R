@@ -8,9 +8,10 @@ Events <- function(
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn
     appMgr$SendMessage(
-      type = 'CASE_BASED_DATA_UPLOADED',
-      status = 'SUCCESS',
-      payload = list(
+      'CASE_BASED_DATA_UPLOADED',
+      'SUCCESS',
+      'Data has been uploaded successfully',
+      list(
         FileName = fileInfo$name[1],
         FileSize = fileInfo$size[1],
         FileType = fileInfo$type[1],
@@ -23,9 +24,9 @@ Events <- function(
   observeEvent(input$aggrUploadBtn, {
     fileInfo <- input$aggrUploadBtn
     appMgr$SendMessage(
-      type = 'AGGR_DATA_UPLOADED',
-      status = 'SUCCESS',
-      payload = list(
+      'AGGR_DATA_UPLOADED',
+      'SUCCESS',
+      list(
         FileName = fileInfo$name[1],
         FileSize = fileInfo$size[1],
         FileType = fileInfo$type[1],
@@ -54,9 +55,9 @@ Events <- function(
   #   ))
   # })
 
-  observeEvent(input$originGrouping, {
-    appMgr$ApplyOriginGrouping(input$originGrouping)
-  })
+  # observeEvent(input$originGrouping, {
+  #   appMgr$ApplyOriginGrouping(input$originGrouping)
+  # })
 
   # observeEvent(input$runAdjustBtn, {
   #   params <- input$runAdjustBtn

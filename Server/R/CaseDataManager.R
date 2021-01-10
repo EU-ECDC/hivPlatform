@@ -59,6 +59,7 @@ CaseDataManager <- R6::R6Class(
       }
 
       status <- 'SUCCESS'
+      msg <- 'Data read correctly'
       tryCatch({
         originalData <- ReadDataFile(fileName)
         attrMapping <- GetPreliminaryAttributesMapping(originalData)
@@ -66,6 +67,7 @@ CaseDataManager <- R6::R6Class(
       },
       error = function(e) {
         status <- 'FAIL'
+        msg <- 'There was a difficulty encountered when reading the data. It has not been loaded.'
       })
 
       if (status == 'SUCCESS') {
@@ -87,7 +89,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$SendMessage('CASE_BASED_DATA_READ', status, payload)
+      private$SendMessage('CASE_BASED_DATA_READ', status, msg, payload)
 
       return(invisible(self))
     },
@@ -105,6 +107,7 @@ CaseDataManager <- R6::R6Class(
 
       originalData <- private$Catalogs$OriginalData
       status <- 'SUCCESS'
+      msg <- 'Attributes applied correctly'
       tryCatch({
         if (missing(attrMapping)) {
           attrMapping <- GetPreliminaryAttributesMapping(originalData)
@@ -121,13 +124,16 @@ CaseDataManager <- R6::R6Class(
             originGroupingType <- 'REPCOUNTRY + UNK + OTHER'
             origingGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
           } else {
+            msg <- 'Data pre-processing did not succeed'
             status <- 'FAIL'
           }
         } else {
+          msg <- 'Attributes mapping has invalid status'
           status <- 'FAIL'
         }
       },
       error = function(e) {
+        msg <- 'Attributes mapping failed'
         status <- 'FAIL'
       })
 
@@ -151,7 +157,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END', status, payload)
+      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END', status, msg, payload)
       return(invisible(self))
     },
 

@@ -40,28 +40,36 @@ export default class AppManager {
   onShinyEvent = e => {
     switch (e.type) {
       case 'CASE_BASED_DATA_UPLOADED':
-        this.caseBasedDataMgr.setFileName(e.payload.FileName);
-        this.caseBasedDataMgr.setFilePath(e.payload.FilePath);
-        this.caseBasedDataMgr.setFileSize(e.payload.FileSize);
-        this.caseBasedDataMgr.setFileType(e.payload.FileType);
+        if (e.status === 'SUCCESS') {
+          this.caseBasedDataMgr.setFileName(e.payload.FileName);
+          this.caseBasedDataMgr.setFilePath(e.payload.FilePath);
+          this.caseBasedDataMgr.setFileSize(e.payload.FileSize);
+          this.caseBasedDataMgr.setFileType(e.payload.FileType);
+        }
+        this.caseBasedDataMgr.setFileUploadStatus(e.status);
+        this.caseBasedDataMgr.setFileUploadMsg(e.msg);
         break;
       case 'CASE_BASED_DATA_READ':
-        this.caseBasedDataMgr.setColumnNames(e.payload.ColumnNames);
-        this.caseBasedDataMgr.setRecordCount(e.payload.RecordCount);
+        if (e.status === 'SUCCESS') {
+          this.caseBasedDataMgr.setColumnNames(e.payload.ColumnNames);
+          this.caseBasedDataMgr.setRecordCount(e.payload.RecordCount);
+          this.notificationsMgr.setMsg('Case-based data uploaded');
+        }
+        this.caseBasedDataMgr.setFileUploadStatus(e.status);
+        this.caseBasedDataMgr.setFileUploadMsg(e.msg);
         this.attrMappingMgr.setMapping(e.payload.AttrMapping);
-        this.notificationsMgr.setMsg('Case-based data uploaded');
         break;
-      case 'AGGR_DATA_UPLOADED':
-        this.aggrDataMgr.setFileName(e.payload.FileName);
-        this.aggrDataMgr.setFilePath(e.payload.FilePath);
-        this.aggrDataMgr.setFileSize(e.payload.FileSize);
-        this.aggrDataMgr.setFileType(e.payload.FileType);
-        break;
-      case 'AGGR_DATA_READ':
-        this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
-        this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
-        this.notificationsMgr.setMsg('Aggregated data uploaded');
-        break;
+      // case 'AGGR_DATA_UPLOADED':
+      //   this.aggrDataMgr.setFileName(e.payload.FileName);
+      //   this.aggrDataMgr.setFilePath(e.payload.FilePath);
+      //   this.aggrDataMgr.setFileSize(e.payload.FileSize);
+      //   this.aggrDataMgr.setFileType(e.payload.FileType);
+      //   break;
+      // case 'AGGR_DATA_READ':
+      //   this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
+      //   this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
+      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
+      //   break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
         this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
         break;

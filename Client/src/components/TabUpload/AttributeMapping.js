@@ -15,6 +15,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import Btn from '../Btn';
+import MessageAlert from '../MessageAlert';
 
 const AttributeMapping = (props) => {
   const { appMgr } = props;
@@ -70,7 +71,7 @@ const AttributeMapping = (props) => {
         <Btn
           style={{ marginBottom: 6 }}
           onClick={onApplyBtnClick}
-          disabled={!appMgr.attrMappingMgr.valid}
+          disabled={appMgr.attrMappingMgr.status !== 'SUCCESS'}
         >
           <AssignmentIcon />&nbsp;Apply mapping
         </Btn>
@@ -78,10 +79,10 @@ const AttributeMapping = (props) => {
           Input data set to be mapped to internal attributes.<br />
           Adjust mapping and press 'Apply mapping' button.
         </Typography>
-        <Typography variant='body2' style={{marginTop: 10}}>
-          {validIcon}&nbsp;
-          {appMgr.attrMappingMgr.msg}
-        </Typography>
+        <MessageAlert
+          status={appMgr.attrMappingMgr.status}
+          msg={appMgr.attrMappingMgr.msg}
+        />
       </Grid>
       <Grid item xs={9}>
         <Paper style={{ padding: 10 }}>

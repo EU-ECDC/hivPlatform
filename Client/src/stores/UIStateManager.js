@@ -14,8 +14,8 @@ export default class UIStateManager {
       completed: false,
       disabled: false,
       subSteps: [
-        { title: 'Case-based data' },
-        { title: 'Aggregated data' }
+        { title: 'Case-based data', disabled: false },
+        { title: 'Aggregated data', disabled: true }
       ],
       activeSubStepId: 0
     },

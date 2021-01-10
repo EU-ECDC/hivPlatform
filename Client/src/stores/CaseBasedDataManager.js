@@ -11,6 +11,8 @@ export default class CaseBasedDataManager {
   columnNames = [];
   recordCount = null;
   fileUploadProgress = null;
+  fileUploadStatus = null;
+  fileUploadMsg = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -22,6 +24,8 @@ export default class CaseBasedDataManager {
       columnNames: observable,
       recordCount: observable,
       fileUploadProgress: observable,
+      fileUploadStatus: observable,
+      fileUploadMsg: observable,
       setFileName: action,
       setFileSize: action,
       setFileType: action,
@@ -41,6 +45,8 @@ export default class CaseBasedDataManager {
   setRecordCount = recordCount => this.recordCount = recordCount;
   setColumnNames = columnNames => this.columnNames = EnsureArray(columnNames);
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
+  setFileUploadStatus = status => this.fileUploadStatus = status;
+  setFileUploadMsg = msg => this.fileUploadMsg = msg;
 
   get columnNamesString() {
     if (this.columnNames === null) {

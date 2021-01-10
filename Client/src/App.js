@@ -13,7 +13,7 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#bedfe1',
-    }
+    },
   },
   overrides: {
     MuiStepLabel: {
