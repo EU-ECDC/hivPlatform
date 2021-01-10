@@ -87,7 +87,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$SendMessage(type = 'CASE_BASED_DATA_READ', status = status, payload = payload)
+      private$SendMessage('CASE_BASED_DATA_READ', status, payload)
 
       return(invisible(self))
     },
@@ -96,11 +96,7 @@ CaseDataManager <- R6::R6Class(
     ApplyAttributesMapping = function(
       attrMapping
     ) {
-      private$SendMessage(
-        type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START',
-        status = 'SUCCESS',
-        payload = list()
-      )
+      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START', 'SUCCESS')
 
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
@@ -155,11 +151,7 @@ CaseDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$SendMessage(
-        type = 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
-        status = status,
-        payload = payload
-      )
+      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END', status, payload)
       return(invisible(self))
     },
 
@@ -204,11 +196,7 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
 
-      private$SendMessage(
-        type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
-        status = status,
-        payload = list()
-      )
+      private$SendMessage('CASE_BASED_DATA_ORIGIN_GROUPING_SET', status)
 
       return(invisible(self))
     },
@@ -217,8 +205,6 @@ CaseDataManager <- R6::R6Class(
     RunAdjustments = function(
       adjustmentSpecs
     ) {
-      private$SendMessage(type = 'ADJUSTMENTS_RUN_STARTED', status = 'SUCCESS', payload = list())
-
       if (private$Catalogs$LastStep < 3) {
         PrintAlert(
           'Origing grouping must be applied before running adjustments',
@@ -227,11 +213,11 @@ CaseDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      preProcessedData <- private$Catalogs$PreProcessedData
-
-      PrintAlert('Starting adjustment task')
-      status <- 'SUCCESS'
       tryCatch({
+        PrintAlert('Starting adjustment task')
+
+        preProcessedData <- private$Catalogs$PreProcessedData
+
         private$Catalogs$AdjustmentTask <- Task$new(
           function(data, adjustmentSpecs) {
             suppressMessages(pkgload::load_all())
@@ -253,33 +239,21 @@ CaseDataManager <- R6::R6Class(
             private$Catalogs$LastStep <- 4L
             private$Reinitialize('RunAdjustments')
             PrintAlert('Running adjustment task finished')
-            private$SendMessage(
-              type = 'ADJUSTMENTS_RUN_FINISHED',
-              status = 'SUCCESS',
-              payload = list()
-            )
+            private$SendMessage('ADJUSTMENTS_RUN_FINISHED', 'SUCCESS')
           },
           failCallback = function() {
             PrintAlert('Running adjustment task failed', type = 'danger')
+            private$SendMessage('ADJUSTMENTS_RUN_FINISHED', 'FAIL')
           }
         )
+        private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'SUCCESS')
       },
       error = function(e) {
-        status <- 'FAIL'
+        private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'FAIL')
         print(e)
       })
 
-      payload <- list(
-        type = 'CaseDataManager:RunAdjustments',
-        status = status,
-        artifacts = list()
-      )
-
-      if (is.function(callback)) {
-        callback(payload)
-      }
-
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     CancelAdjustments = function(

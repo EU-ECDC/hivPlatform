@@ -6,9 +6,11 @@ appMgr <- AppManager$new()
 appMgr$CaseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
 appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_-_2_populations.zip'))
 
+
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
+
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 appMgr$CaseMgr$RunAdjustments(
@@ -37,9 +39,9 @@ appMgr$HIVModelMgr$RunMainFit(
 
 
 # STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
-appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 10, bsType = 'PARAMETRIC')
-appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 10, bsType = 'NON-PARAMETRIC')
-
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
+appMgr$HIVModelMgr$BootstrapFitStats
 
 # STEP 6 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets

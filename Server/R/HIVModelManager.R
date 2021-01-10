@@ -44,8 +44,7 @@ HIVModelManager <- R6::R6Class(
       settings = list(),
       parameters = list(),
       popCombination = NULL,
-      aggrDataSelection = NULL,
-      callback = NULL
+      aggrDataSelection = NULL
     ) {
       if (private$Catalogs$LastStep < 0) {
         PrintAlert(
@@ -55,9 +54,9 @@ HIVModelManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      PrintAlert('Starting HIV Model main fit task')
-      status <- 'SUCCESS'
       tryCatch({
+        PrintAlert('Starting HIV Model main fit task')
+
         caseData <- private$AppMgr$CaseMgr$Data
         aggrData <- private$AppMgr$AggrMgr$Data
         dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
@@ -96,34 +95,27 @@ HIVModelManager <- R6::R6Class(
           ),
           session = private$Session,
           successCallback = function(result) {
-            private$Reinitialize('RunMainFit')
             private$Catalogs$PopCombination <- popCombination
             private$Catalogs$AggrDataSelection <- aggrDataSelection
             private$Catalogs$MainFitResult <- result
             private$Catalogs$LastStep <- 1L
+            private$Reinitialize('RunMainFit')
             PrintAlert('Running HIV Model main fit task finished')
+            private$SendMessage('MODELS_RUN_FINISHED', 'SUCCESS')
           },
           failCallback = function() {
             PrintAlert('Running HIV Model main fit task failed', type = 'danger')
+            private$SendMessage('MODELS_RUN_FINISHED', 'FAIL')
           }
         )
+        private$SendMessage('MODELS_RUN_STARTED', 'SUCCESS')
       },
       error = function(e) {
-        status <- 'FAIL'
+        private$SendMessage('MODELS_RUN_STARTED', 'FAIL')
         print(e)
       })
 
-      payload <- list(
-        type = 'HIVModelManager:RunMainFit',
-        status = status,
-        artifacts = list()
-      )
-
-      if (is.function(callback)) {
-        callback(payload)
-      }
-
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     CancelMainFit = function() {
@@ -134,21 +126,20 @@ HIVModelManager <- R6::R6Class(
     RunBootstrapFit = function(
       bsCount = 0,
       bsType = 'PARAMETRIC',
-      maxRunTimeFactor = 3,
-      callback = NULL
+      maxRunTimeFactor = 3
     ) {
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Main fit must be performed before running bootstrap', type = 'danger')
         return(invisible(self))
       }
 
-      avgRunTime <- mean(sapply(private$Catalogs$MainFitResult, '[[', 'RunTime'))
-      maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
-
-      PrintAlert('Starting HIV Model bootstrap fit task')
-      PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
-      status <- 'SUCCESS'
       tryCatch({
+        avgRunTime <- mean(sapply(private$Catalogs$MainFitResult, '[[', 'RunTime'))
+        maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
+
+        PrintAlert('Starting HIV Model bootstrap fit task')
+        PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
+
         private$Catalogs$BootstrapFitTask <- Task$new(
           function(
             bsCount,
@@ -163,7 +154,7 @@ HIVModelManager <- R6::R6Class(
             suppressMessages(pkgload::load_all())
             options(width = 100)
             mainCount <- length(mainFitResult)
-            result <- list()
+            fits <- list()
             i <- 0
             for (imp in names(mainFitResult)) {
               i <- i + 1
@@ -241,21 +232,29 @@ HIVModelManager <- R6::R6Class(
                   type = msgType
                 )
 
+                if (bootResult$Converged) {
+                  jSucc <- jSucc + 1
+                  progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
+                }
+
                 bootResults[[j]] <- list(
                   Context = bootContext,
                   Data = bootData,
                   Results = bootResult,
                   RunTime = runTime
                 )
-
-                if (bootResult$Converged) {
-                  jSucc <- jSucc + 1
-                   progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
-                }
               }
 
-              result[[imp]] <- bootResults
+              fits[[imp]] <- bootResults
             }
+
+            stats <- GetBootstrapFitStats(fits)
+
+            result <- list(
+              Fits = fits,
+              Stats = stats
+            )
+
             return(result)
           },
           args = list(
@@ -270,33 +269,26 @@ HIVModelManager <- R6::R6Class(
           ),
           session = private$Session,
           successCallback = function(result) {
-            private$Reinitialize('RunBootstrapFit')
-            private$Catalogs$BootstrapFitResult <- result
+            private$Catalogs$BootstrapFitResult <- result$Fits
+            private$Catalogs$BootstrapFitStats <- result$Stats
             private$Catalogs$LastStep <- 2L
+            private$Reinitialize('RunBootstrapFit')
             PrintAlert('Running HIV Model bootstrap fit task finished')
-            private$ComputeBootstrapFitStats()
+            private$SendMessage('BOOTSTRAP_RUN_FINISHED', 'SUCCESS')
           },
           failCallback = function() {
             PrintAlert('Running HIV Model bootstrap fit task failed', type = 'danger')
+            private$SendMessage('BOOTSTRAP_RUN_FINISHED', 'FAIL')
           }
         )
+        private$SendMessage('BOOTSTRAP_RUN_STARTED', 'SUCCESS')
       },
       error = function(e) {
-        status <- 'FAIL'
+        private$SendMessage('BOOTSTRAP_RUN_STARTED', 'FAIL')
         print(e)
       })
 
-      payload <- list(
-        type = 'HIVModelDataManager:RunBootstrapFit',
-        status = status,
-        artifacts = list()
-      )
-
-      if (is.function(callback)) {
-        callback(payload)
-      }
-
-      return(invisible(payload))
+      return(invisible(self))
     },
 
     CancelBootstrapFit = function() {
@@ -328,91 +320,7 @@ HIVModelManager <- R6::R6Class(
         private$Catalogs$BootstrapFitStats <- NULL
       }
 
-      lastStep <- switch(
-        step,
-        'RunMainFit' = 0L,
-        'RunBootstrapFit' = 1L
-      )
-      private$Catalogs$LastStep <- lastStep
-    },
-
-    ComputeBootstrapFitStats = function() {
-      if (private$Catalogs$LastStep < 2) {
-        PrintAlert(
-          'Bootstrap fit must be performed before computing bootstrap statistics',
-          type = 'danger'
-        )
-        return(invisible(self))
-      }
-
-      status <- 'SUCCESS'
-      tryCatch({
-        flatList <- self$BootstrapFitResultFlat
-        resultsList <- lapply(flatList, '[[', 'Results')
-        runTime <- sapply(resultsList, '[[', 'RunTime')
-        converged <- sapply(resultsList, '[[', 'Converged')
-        succFlatList <- Filter(function(item) item$Results$Converged, flatList)
-        succResultsList <- lapply(succFlatList, '[[', 'Results')
-
-        info <- lapply(succResultsList, '[[', 'Info')[[1]]
-        years <- info$ModelMinYear:(info$ModelMaxYear - 1)
-
-        mainOutputList <- lapply(succResultsList, '[[', 'MainOutputs')
-        colNames <- colnames(mainOutputList[[1]])
-        mainOutputStats <- setNames(lapply(colNames, function(colName) {
-          resultSample <- sapply(mainOutputList, '[[', colName)
-          result <- cbind(
-            t(apply(resultSample, 1, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),
-            Mean = apply(resultSample, 1, mean, na.rm = TRUE),
-            Std = apply(resultSample, 1, sd, na.rm = TRUE)
-          )
-          rownames(result) <- years
-          return(result)
-        }), colNames)
-
-        succParamList <- lapply(succResultsList, '[[', 'Param')
-        betas <- as.data.table(t(sapply(succParamList, '[[', 'Beta')))
-        setnames(betas, sprintf('Beta%d', seq_len(ncol(betas))))
-        bootBetasStats <- lapply(betas, function(col) {
-          c(
-            quantile(col, probs = c(0.025, 0.5, 0.975), na.rm = TRUE),
-            Mean = mean(col),
-            Std = sd(col)
-          )
-        })
-
-        thetasList <- lapply(succParamList, '[[', 'Theta')
-        maxThetasLength <- max(sapply(thetasList, length))
-        thetasList <- lapply(thetasList, function(thetas) {
-          t(c(rep(0, maxThetasLength - length(thetas)), thetas))
-        })
-        thetas <- rbindlist(lapply(thetasList, as.data.table))
-        setnames(thetas, sprintf('Theta%d', seq_len(ncol(thetas))))
-        bootThetasStats <- lapply(thetas, function(col) {
-          c(
-            quantile(col, probs = c(0.025, 0.5, 0.975), na.rm = TRUE),
-            Mean = mean(col),
-            Std = sd(col)
-          )
-        })
-
-        stats <- list(
-          RunTime = runTime,
-          Converged = converged,
-          Beta = betas,
-          Theta = thetas,
-          MainOutputsStats = mainOutputStats,
-          BetaStats = bootBetasStats,
-          ThetaStats = bootThetasStats
-        )
-        private$Catalogs$BootstrapFitStats <- stats
-      },
-      error = function(e) {
-        status <- 'FAIL'
-        PrintAlert('Computing bootstrap statistics failed', type = 'danger')
-      })
-
-      return(status)
+      return(invisible(self))
     }
   ),
 
@@ -447,10 +355,6 @@ HIVModelManager <- R6::R6Class(
 
     BootstrapFitResult = function() {
       return(private$Catalogs$BootstrapFitResult)
-    },
-
-    BootstrapFitResultFlat = function() {
-      return(Reduce(c, self$BootstrapFitResult))
     },
 
     BootstrapFitStats = function() {

@@ -83,7 +83,7 @@ AggrDataManager <- R6::R6Class(
         payload <- list()
       }
 
-      private$SendMessage(type = 'AGGR_DATA_READ', status = status, payload = payload)
+      private$SendMessage('AGGR_DATA_READ', status, payload)
 
       return(invisible(self))
     }
