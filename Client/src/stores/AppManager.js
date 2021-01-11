@@ -40,24 +40,26 @@ export default class AppManager {
   onShinyEvent = e => {
     switch (e.type) {
       case 'CASE_BASED_DATA_UPLOADED':
-        if (e.status === 'SUCCESS') {
+        this.caseBasedDataMgr.setActionStatus(e.payload.ActionStatus);
+        this.caseBasedDataMgr.setActionMessage(e.payload.ActionMessage);
+        if (e.payload.ActionStatus === 'SUCCESS') {
           this.caseBasedDataMgr.setFileName(e.payload.FileName);
           this.caseBasedDataMgr.setFilePath(e.payload.FilePath);
           this.caseBasedDataMgr.setFileSize(e.payload.FileSize);
           this.caseBasedDataMgr.setFileType(e.payload.FileType);
+          this.uiStateMgr.setLastEventType(e.type);
         }
-        this.caseBasedDataMgr.setFileUploadStatus(e.status);
-        this.caseBasedDataMgr.setFileUploadMsg(e.msg);
         break;
       case 'CASE_BASED_DATA_READ':
-        if (e.status === 'SUCCESS') {
+        this.caseBasedDataMgr.setActionStatus(e.payload.ActionStatus);
+        this.caseBasedDataMgr.setActionMessage(e.payload.ActionMessage);
+        if (e.payload.ActionStatus === 'SUCCESS') {
           this.caseBasedDataMgr.setColumnNames(e.payload.ColumnNames);
           this.caseBasedDataMgr.setRecordCount(e.payload.RecordCount);
+          this.attrMappingMgr.setMapping(e.payload.AttrMapping);
           this.notificationsMgr.setMsg('Case-based data uploaded');
+          this.uiStateMgr.setLastEventType(e.type);
         }
-        this.caseBasedDataMgr.setFileUploadStatus(e.status);
-        this.caseBasedDataMgr.setFileUploadMsg(e.msg);
-        this.attrMappingMgr.setMapping(e.payload.AttrMapping);
         break;
       // case 'AGGR_DATA_UPLOADED':
       //   this.aggrDataMgr.setFileName(e.payload.FileName);
@@ -71,13 +73,18 @@ export default class AppManager {
       //   this.notificationsMgr.setMsg('Aggregated data uploaded');
       //   break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
-        this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+        }
         break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
-        this.origGroupMgr.setDistribution(e.payload.OriginDistribution);
-        this.origGroupMgr.setType(e.payload.OriginGroupingType);
-        this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
-        this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.origGroupMgr.setDistribution(e.payload.OriginDistribution);
+          this.origGroupMgr.setType(e.payload.OriginGroupingType);
+          this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
+          this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
+          this.uiStateMgr.setLastEventType(e.type);
+        }
         break;
       // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
       //   this.notificationsMgr.setMsg('Origin grouping applied');
@@ -151,7 +158,6 @@ export default class AppManager {
       //   this.setReport(event.Payload.Report);
       //   break;
     };
-    this.uiStateMgr.setLastEventType(e.type);
   };
 
   constructor() {

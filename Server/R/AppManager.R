@@ -37,20 +37,15 @@ AppManager <- R6::R6Class(
       print(self$Session)
     },
 
-    SendMessage = function(type, status, msg = NULL, payload = list()) {
-      if (missing(type) || missing(status)) {
-        PrintAlert(
-          'Arguments {.arg type} and {.arg status} must be provided',
-          type = 'danger'
-        )
+    SendMessage = function(type, payload = list()) {
+      if (missing(type)) {
+        PrintAlert('Arguments {.arg type} must be provided', type = 'danger')
         return(invisible(NULL))
       }
 
       if (!is.null(private$Session)) {
         private$Session$sendCustomMessage('shinyHandler', list(
           type = type,
-          status = status,
-          msg = msg,
           payload = payload
         ))
       }

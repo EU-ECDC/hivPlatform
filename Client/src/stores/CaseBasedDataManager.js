@@ -1,5 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 import EnsureArray from '../utilities/EnsureArray';
+import IsNull from '../utilities/IsNull';
 
 export default class CaseBasedDataManager {
   rootMgr = null;
@@ -10,9 +11,9 @@ export default class CaseBasedDataManager {
   filePath = null;
   columnNames = [];
   recordCount = null;
-  fileUploadProgress = null;
-  fileUploadStatus = null;
-  fileUploadMsg = null;
+  uploadProgress = null;
+  actionStatus = null;
+  actionMessage = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -23,9 +24,9 @@ export default class CaseBasedDataManager {
       filePath: observable,
       columnNames: observable,
       recordCount: observable,
-      fileUploadProgress: observable,
-      fileUploadStatus: observable,
-      fileUploadMsg: observable,
+      uploadProgress: observable,
+      actionStatus: observable,
+      actionMessage: observable,
       setFileName: action,
       setFileSize: action,
       setFileType: action,
@@ -33,8 +34,11 @@ export default class CaseBasedDataManager {
       setRecordCount: action,
       setColumnNames: action,
       setColumnNames: action,
-      setFileUploadProgress: action,
-      columnNamesString: computed
+      setUploadProgress: action,
+      setActionStatus: action,
+      setActionMessage: action,
+      columnNamesString: computed,
+      actionValid: computed
     });
   };
 
@@ -44,14 +48,22 @@ export default class CaseBasedDataManager {
   setFilePath = filePath => this.filePath = filePath;
   setRecordCount = recordCount => this.recordCount = recordCount;
   setColumnNames = columnNames => this.columnNames = EnsureArray(columnNames);
-  setFileUploadProgress = progress => this.fileUploadProgress = progress;
-  setFileUploadStatus = status => this.fileUploadStatus = status;
-  setFileUploadMsg = msg => this.fileUploadMsg = msg;
+  setUploadProgress = progress => this.uploadProgress = progress;
+  setActionStatus = status => this.actionStatus = status;
+  setActionMessage = message => this.actionMessage = message;
 
   get columnNamesString() {
     if (this.columnNames === null) {
       return '';
     }
     return this.columnNames.join(', ');
+  };
+
+  get actionValid() {
+    if (IsNull(this.actionStatus)) {
+      return (null);
+    } else {
+      return this.actionStatus === 'SUCCESS';
+    }
   };
 }

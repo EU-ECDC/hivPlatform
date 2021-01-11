@@ -217,7 +217,7 @@ const DefineReactFileInputBinding = (appManager) => {
         id,
         files,
         evt.target,
-        appManager.caseBasedDataMgr.setFileUploadProgress,
+        appManager.caseBasedDataMgr.setUploadProgress,
         reactCaseBasedFileInputBinding
       )
     );
@@ -268,7 +268,7 @@ const DefineReactFileInputBinding = (appManager) => {
         id,
         files,
         evt.target,
-        appManager.aggrDataMgr.setFileUploadProgress,
+        appManager.aggrDataMgr.setUploadProgress,
         reactAggrFileInputBinding
       )
     );

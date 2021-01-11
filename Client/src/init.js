@@ -8,9 +8,9 @@ export default appMgr => {
   // 1. Upload case-based data
   appMgr.onShinyEvent({
     type: 'CASE_BASED_DATA_UPLOADED',
-    status: 'SUCCESS',
-    msg: 'Data has been uploaded successfully',
     payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Data has been uploaded successfully',
       FileName: 'asd',
       FilePath: 'asds',
       FileSize: 4000,
@@ -21,9 +21,9 @@ export default appMgr => {
   // 2. Upload case-based data
   appMgr.onShinyEvent({
     type: 'CASE_BASED_DATA_READ',
-    status: 'SUCCESS',
-    msg: 'Data read correctly',
     payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Data read correctly',
       ColumnNames: ['recordid', 'reportingcountry', 'age', 'gender'],
       RecordCount: 400,
       AttrMapping: [
@@ -32,8 +32,7 @@ export default appMgr => {
         { attribute: 'Age', origColName: 'age', defaultValue: null },
         { attribute: 'Gender', origColName: 'gender', defaultValue: null },
         { attribute: 'DateOfArt', origColName: null, defaultValue: null }
-      ],
-      AttrMappingStatus
+      ]
     }
   });
 
@@ -47,8 +46,6 @@ export default appMgr => {
   //     FileType: 'asdas asd'
   //   }
   // });
-
-
 
   // // 2b. Upload aggregated data
   // appMgr.onShinyEvent({

@@ -64,56 +64,60 @@ const CaseUpload = (props) => {
           Maximum file size: 70MB<br />
           Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)
         </Typography>
-        <UploadProgressBar progress={appMgr.caseBasedDataMgr.fileUploadProgress} />
+        <UploadProgressBar progress={appMgr.caseBasedDataMgr.uploadProgress} />
         <MessageAlert
-          status={appMgr.caseBasedDataMgr.fileUploadStatus}
-          msg={appMgr.caseBasedDataMgr.fileUploadMsg}
+          valid={appMgr.caseBasedDataMgr.actionValid}
+          msg={appMgr.caseBasedDataMgr.actionMessage}
         />
       </Grid>
       <Grid item xs={9}>
-        <Paper style={{ padding: 10 }}>
-          <Typography variant='overline'>Uploaded file details</Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Table>
-                <TableBody>
-                  <TableRow hover>
-                    <TableCell className={classes.header}>File name</TableCell>
-                    <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.fileName}</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell className={classes.header}>File path</TableCell>
-                    <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.filePath}</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell className={classes.header}>File size</TableCell>
-                    <TableCell className={classes.content}>{FormatBytes(appMgr.caseBasedDataMgr.fileSize)}</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell className={classes.header}>File type</TableCell>
-                    <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.fileType}</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell className={classes.header}>Number of records</TableCell>
-                    <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.recordCount}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+        {appMgr.caseBasedDataMgr.actionValid &&
+          <Paper style={{ padding: 10 }}>
+            <Typography variant='overline'>Uploaded file details</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Table>
+                  <TableBody>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>File name</TableCell>
+                      <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.fileName}</TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>File path</TableCell>
+                      <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.filePath}</TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>File size</TableCell>
+                      <TableCell className={classes.content}>{FormatBytes(appMgr.caseBasedDataMgr.fileSize)}</TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>File type</TableCell>
+                      <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.fileType}</TableCell>
+                    </TableRow>
+                    <TableRow hover>
+                      <TableCell className={classes.header}>Number of records</TableCell>
+                      <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.recordCount}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={6}>
+                <Table>
+                  <TableBody>
+                    <TableRow hover><TableCell className={classes.header}>Column names</TableCell></TableRow>
+                    <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
+                      <div style={{ overflow: 'auto', maxHeight: 164 }}>
+                        {appMgr.caseBasedDataMgr.columnNamesString}
+                      </div>
+                    </TableCell></TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Table>
-                <TableBody>
-                  <TableRow hover><TableCell className={classes.header}>Column names</TableCell></TableRow>
-                  <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
-                    <div style={{ overflow: 'auto', maxHeight: 164 }}>
-                      {appMgr.caseBasedDataMgr.columnNamesString}
-                    </div>
-                  </TableCell></TableRow>
-                </TableBody>
-              </Table>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+
+        }
+
       </Grid>
     </Grid>
   );

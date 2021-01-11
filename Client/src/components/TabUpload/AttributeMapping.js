@@ -61,27 +61,23 @@ const AttributeMapping = (props) => {
     </TableRow>
   ));
 
-  const validIcon = appMgr.attrMappingMgr.valid ?
-    <CheckIcon style={{ width: '0.75rem', height: '0.75rem' }} /> :
-    <ErrorIcon style={{ width: '0.75rem', height: '0.75rem' }} />
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
         <Btn
           style={{ marginBottom: 6 }}
           onClick={onApplyBtnClick}
-          disabled={appMgr.attrMappingMgr.status !== 'SUCCESS'}
+          disabled={!appMgr.attrMappingMgr.actionValid}
         >
           <AssignmentIcon />&nbsp;Apply mapping
         </Btn>
         <Typography variant='body2' color='textSecondary'>
-          Input data set to be mapped to internal attributes.<br />
+          Input data to be mapped to internal attributes.<br />
           Adjust mapping and press 'Apply mapping' button.
         </Typography>
         <MessageAlert
-          status={appMgr.attrMappingMgr.status}
-          msg={appMgr.attrMappingMgr.msg}
+          valid={appMgr.attrMappingMgr.actionValid}
+          msg={appMgr.attrMappingMgr.actionMessage}
         />
       </Grid>
       <Grid item xs={9}>

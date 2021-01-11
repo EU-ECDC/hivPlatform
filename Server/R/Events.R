@@ -9,9 +9,9 @@ Events <- function(
     fileInfo <- input$caseUploadBtn
     appMgr$SendMessage(
       'CASE_BASED_DATA_UPLOADED',
-      'SUCCESS',
-      'Data has been uploaded successfully',
       list(
+        ActionStatus = 'SUCCESS',
+        ActionMessage = 'Data has been uploaded successfully',
         FileName = fileInfo$name[1],
         FileSize = fileInfo$size[1],
         FileType = fileInfo$type[1],
@@ -21,20 +21,20 @@ Events <- function(
     appMgr$CaseMgr$ReadData(fileInfo$datapath)
   })
 
-  observeEvent(input$aggrUploadBtn, {
-    fileInfo <- input$aggrUploadBtn
-    appMgr$SendMessage(
-      'AGGR_DATA_UPLOADED',
-      'SUCCESS',
-      list(
-        FileName = fileInfo$name[1],
-        FileSize = fileInfo$size[1],
-        FileType = fileInfo$type[1],
-        FilePath = fileInfo$datapath[1]
-      )
-    )
-    appMgr$AggrMgr$ReadData(fileInfo$datapath)
-  })
+  # observeEvent(input$aggrUploadBtn, {
+  #   fileInfo <- input$aggrUploadBtn
+  #   appMgr$SendMessage(
+  #     'AGGR_DATA_UPLOADED',
+  #     'SUCCESS',
+  #     list(
+  #       FileName = fileInfo$name[1],
+  #       FileSize = fileInfo$size[1],
+  #       FileType = fileInfo$type[1],
+  #       FilePath = fileInfo$datapath[1]
+  #     )
+  #   )
+  #   appMgr$AggrMgr$ReadData(fileInfo$datapath)
+  # })
 
   observeEvent(input$attrMapping, {
     appMgr$CaseMgr$ApplyAttributesMapping()

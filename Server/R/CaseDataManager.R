@@ -67,7 +67,8 @@ CaseDataManager <- R6::R6Class(
       },
       error = function(e) {
         status <- 'FAIL'
-        msg <- 'There was a difficulty encountered when reading the data. It has not been loaded.'
+        msg <-
+          'There was a difficulty encountered when reading the data file. It has not been loaded.'
       })
 
       if (status == 'SUCCESS') {
@@ -79,6 +80,8 @@ CaseDataManager <- R6::R6Class(
         private$Reinitialize('ReadData')
         PrintAlert('Data file {.file {fileName}} loaded')
         payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg,
           ColumnNames = colnames(originalData),
           RecordCount = nrow(originalData),
           AttrMapping = unname(attrMapping),
@@ -86,10 +89,13 @@ CaseDataManager <- R6::R6Class(
         )
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
-        payload <- list()
+        payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg
+        )
       }
 
-      private$SendMessage('CASE_BASED_DATA_READ', status, msg, payload)
+      private$SendMessage('CASE_BASED_DATA_READ', payload)
 
       return(invisible(self))
     },
@@ -98,7 +104,10 @@ CaseDataManager <- R6::R6Class(
     ApplyAttributesMapping = function(
       attrMapping
     ) {
-      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START', 'SUCCESS')
+      private$SendMessage(
+        'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START',
+        list(ActionStatus = 'SUCCESS')
+      )
 
       if (private$Catalogs$LastStep < 1) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
@@ -148,16 +157,21 @@ CaseDataManager <- R6::R6Class(
         private$Reinitialize('ApplyAttributesMapping')
         PrintAlert('Attribute mapping has been applied')
         payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg,
           OriginDistribution = originDistribution,
           OriginGroupingType = originGroupingType,
           OriginGrouping = origingGrouping
         )
       } else {
         PrintAlert('Attribute mapping is not valid and cannot be applied', type = 'danger')
-        payload <- list()
+        payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg
+        )
       }
 
-      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END', status, msg, payload)
+      private$SendMessage('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END', payload)
       return(invisible(self))
     },
 
