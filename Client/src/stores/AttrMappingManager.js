@@ -56,7 +56,7 @@ export default class AttrMappingManager {
 
   // Apply mapping in server
   applyMapping = () => {
-    this.rootMgr.inputValueSet('attrMapping', this.mapping);
+    this.rootMgr.inputValueSet('attrMapping:AttrMappingArray', this.mapping);
   }
 
   // Check mapping in client

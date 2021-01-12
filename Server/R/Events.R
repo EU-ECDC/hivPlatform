@@ -37,22 +37,22 @@ Events <- function(
   # })
 
   observeEvent(input$attrMapping, {
-    appMgr$CaseMgr$ApplyAttributesMapping()
+    appMgr$CaseMgr$ApplyAttributesMapping(input$attrMapping)
   })
 
   # observeEvent(input$groupingPresetSelect, {
   #   type <- input$groupingPresetSelect
-  #   distr <- appMgr$OriginDistribution
+  #   distr <- appMgr$CaseDataMgr$OriginDistribution
   #   groups <- GetOriginGroupingPreset(type, distr)
 
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
+  #   appMgr$SendMessage(
+  #     type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
+  #     payload = list(
+  #       ActionStatus = 'SUCCESS',
   #       OriginGroupingType = type,
   #       OriginGrouping = groups
   #     )
-  #   ))
+  #   )
   # })
 
   # observeEvent(input$originGrouping, {

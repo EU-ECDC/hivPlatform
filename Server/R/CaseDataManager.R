@@ -66,8 +66,8 @@ CaseDataManager <- R6::R6Class(
         attrMappingStatus <- GetAttrMappingStatus(attrMapping)
       },
       error = function(e) {
-        status <- 'FAIL'
-        msg <-
+        status <<- 'FAIL'
+        msg <<-
           'There was a difficulty encountered when reading the data file. It has not been loaded.'
       })
 
@@ -114,7 +114,6 @@ CaseDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      originalData <- private$Catalogs$OriginalData
       status <- 'SUCCESS'
       msg <- 'Attributes applied correctly'
       tryCatch({
@@ -124,6 +123,7 @@ CaseDataManager <- R6::R6Class(
         attrMappingStatus <- GetAttrMappingStatus(attrMapping)
 
         if (attrMappingStatus$Valid) {
+          originalData <- private$Catalogs$OriginalData
           data <- ApplyAttributesMapping(originalData, attrMapping)
           preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
           PreProcessInputDataBeforeAdjustments(data)
@@ -142,8 +142,8 @@ CaseDataManager <- R6::R6Class(
         }
       },
       error = function(e) {
-        msg <- 'Attributes mapping failed'
-        status <- 'FAIL'
+        msg <<- 'Attributes mapping failed'
+        status <<- 'FAIL'
       })
 
       if (status == 'SUCCESS') {
@@ -188,16 +188,15 @@ CaseDataManager <- R6::R6Class(
         return(invisible(self))
       }
 
-      originDistribution <- private$Catalogs$OriginDistribution
-      preProcessedData <- copy(private$Catalogs$PreProcessedData)
-
       status <- 'SUCCESS'
       tryCatch({
         if (missing(originGrouping)) {
+          originDistribution <- private$Catalogs$OriginDistribution
           originGrouping <- GetOriginGroupingPreset(type, originDistribution)
         } else {
           type <- 'CUSTOM'
         }
+        preProcessedData <- copy(private$Catalogs$PreProcessedData)
         ApplyOriginGrouping(preProcessedData, originGrouping)
         summary <- GetCaseDataSummary(preProcessedData)
       },
@@ -216,7 +215,10 @@ CaseDataManager <- R6::R6Class(
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
 
-      private$SendMessage('CASE_BASED_DATA_ORIGIN_GROUPING_SET', status)
+      private$SendMessage(
+        'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
+        payload = list(ActionStatus = status)
+      )
 
       return(invisible(self))
     },

@@ -74,16 +74,26 @@ export default class AppManager {
       //   break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.notificationsMgr.setMsg('Applying attribute mapping to case-based data');
+          this.notificationsMgr.setMsg('Applying attribute mapping');
         }
         break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END':
+        this.attrMappingMgr.setActionStatus(e.payload.ActionStatus);
+        this.attrMappingMgr.setActionMessage(e.payload.ActionMessage);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.origGroupMgr.setDistribution(e.payload.OriginDistribution);
           this.origGroupMgr.setType(e.payload.OriginGroupingType);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
-          this.notificationsMgr.setMsg('Attribute mapping has been applied to case-based data');
+          this.notificationsMgr.setMsg('Attribute mapping has been applied');
           this.uiStateMgr.setLastEventType(e.type);
+        } else {
+          this.notificationsMgr.setMsg('Attribute mapping could not be applied');
+        }
+        break;
+      case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.origGroupMgr.setType(e.payload.OriginGroupingType);
+          this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
         }
         break;
       // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
