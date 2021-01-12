@@ -55,9 +55,9 @@ Events <- function(
     )
   })
 
-  # observeEvent(input$originGrouping, {
-  #   appMgr$ApplyOriginGrouping(input$originGrouping)
-  # })
+  observeEvent(input$originGrouping, {
+    appMgr$CaseMgr$ApplyOriginGrouping(input$originGrouping)
+  })
 
   # observeEvent(input$runAdjustBtn, {
   #   params <- input$runAdjustBtn

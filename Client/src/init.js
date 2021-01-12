@@ -82,14 +82,15 @@ export default appMgr => {
   // 4. Set origin grouping
   appMgr.onShinyEvent({
     type: 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-    status: 'SUCCESS',
     payload: {
-      OriginGrouping: [
-        { name: 'UNK', origin: ['UNK'], groupCount: [1944] },
-        { name: 'OTHER', origin: ['ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM', 'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'], groupCount: [4113] },
-        { name: 'REPCOUNTRY', origin: ['REPCOUNTRY'], groupCount: [1562] }
-      ],
-      OriginGroupingType: 'REPCOUNTRY + UNK + OTHER'
+      ActionStatus: 'SUCCESS',
+      ActionMessage: '',
+      // OriginGrouping: [
+      //   { name: 'UNK', origin: ['UNK'], groupCount: [1944] },
+      //   { name: 'OTHER', origin: ['ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM', 'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'], groupCount: [4113] },
+      //   { name: 'REPCOUNTRY', origin: ['REPCOUNTRY'], groupCount: [1562] }
+      // ],
+      // OriginGroupingType: 'REPCOUNTRY + UNK + OTHER'
     }
   });
 

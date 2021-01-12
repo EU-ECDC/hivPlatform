@@ -142,7 +142,7 @@ CaseDataManager <- R6::R6Class(
         }
       },
       error = function(e) {
-        msg <<- 'Attributes mapping failed'
+        msg <<- 'Applying attributes mapping failed'
         status <<- 'FAIL'
       })
 
@@ -178,7 +178,7 @@ CaseDataManager <- R6::R6Class(
     # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(
       originGrouping,
-      type = 'CUSTOM'
+      originGroupingType = 'CUSTOM'
     ) {
       if (private$Catalogs$LastStep < 2) {
         PrintAlert(
@@ -189,19 +189,19 @@ CaseDataManager <- R6::R6Class(
       }
 
       status <- 'SUCCESS'
+      msg <- 'Grouping applied correctly'
       tryCatch({
         if (missing(originGrouping)) {
           originDistribution <- private$Catalogs$OriginDistribution
-          originGrouping <- GetOriginGroupingPreset(type, originDistribution)
-        } else {
-          type <- 'CUSTOM'
+          originGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
         }
         preProcessedData <- copy(private$Catalogs$PreProcessedData)
         ApplyOriginGrouping(preProcessedData, originGrouping)
         summary <- GetCaseDataSummary(preProcessedData)
       },
       error = function(e) {
-        status <- 'FAIL'
+        status <<- 'FAIL'
+        msg <<- 'Applying grouping failed'
       })
 
       if (status == 'SUCCESS') {
@@ -210,14 +210,17 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$Summary <- summary
         private$Catalogs$LastStep <- 3L
         private$Reinitialize('ApplyOriginGrouping')
-        PrintAlert('Origin grouping {.val {type}} has been applied')
+        PrintAlert('Origin grouping {.val {originGroupingType}} has been applied')
       } else {
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
       }
 
       private$SendMessage(
         'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-        payload = list(ActionStatus = status)
+        payload = list(
+          ActionStatus = status,
+          ActionMessage = msg
+        )
       )
 
       return(invisible(self))

@@ -88,6 +88,7 @@ export default class AppManager {
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.notificationsMgr.setMsg('Attribute mapping could not be applied');
+          this.uiStateMgr.setLastEventType('CASE_BASED_DATA_READ');
         }
         break;
       case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
@@ -98,9 +99,14 @@ export default class AppManager {
           this.notificationsMgr.setMsg('There was a problem with setting this origin grouping');
         }
         break;
-      // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
-      //   this.notificationsMgr.setMsg('Origin grouping applied');
-      //   break;
+      case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setLastEventType(e.type);
+        } else {
+          this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        break;
       // case 'SUMMARY_DATA_PREPARED':
       //   this.summaryDataMgr.setDiagYearPlotData(e.payload.DiagYearPlotData);
       //   this.summaryDataMgr.setNotifQuarterPlotData(e.payload.NotifQuarterPlotData);
