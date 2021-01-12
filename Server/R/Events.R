@@ -40,20 +40,20 @@ Events <- function(
     appMgr$CaseMgr$ApplyAttributesMapping(input$attrMapping)
   })
 
-  # observeEvent(input$groupingPresetSelect, {
-  #   type <- input$groupingPresetSelect
-  #   distr <- appMgr$CaseDataMgr$OriginDistribution
-  #   groups <- GetOriginGroupingPreset(type, distr)
+  observeEvent(input$groupingPresetSelect, {
+    type <- input$groupingPresetSelect
+    distr <- appMgr$CaseMgr$OriginDistribution
+    groups <- GetOriginGroupingPreset(type, distr)
 
-  #   appMgr$SendMessage(
-  #     type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
-  #     payload = list(
-  #       ActionStatus = 'SUCCESS',
-  #       OriginGroupingType = type,
-  #       OriginGrouping = groups
-  #     )
-  #   )
-  # })
+    appMgr$SendMessage(
+      type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
+      payload = list(
+        ActionStatus = 'SUCCESS',
+        OriginGroupingType = type,
+        OriginGrouping = groups
+      )
+    )
+  })
 
   # observeEvent(input$originGrouping, {
   #   appMgr$ApplyOriginGrouping(input$originGrouping)

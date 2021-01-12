@@ -117,13 +117,13 @@ CaseDataManager <- R6::R6Class(
       status <- 'SUCCESS'
       msg <- 'Attributes applied correctly'
       tryCatch({
+        originalData <- private$Catalogs$OriginalData
         if (missing(attrMapping)) {
           attrMapping <- GetPreliminaryAttributesMapping(originalData)
         }
         attrMappingStatus <- GetAttrMappingStatus(attrMapping)
 
         if (attrMappingStatus$Valid) {
-          originalData <- private$Catalogs$OriginalData
           data <- ApplyAttributesMapping(originalData, attrMapping)
           preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
           PreProcessInputDataBeforeAdjustments(data)
@@ -164,7 +164,7 @@ CaseDataManager <- R6::R6Class(
           OriginGrouping = origingGrouping
         )
       } else {
-        PrintAlert('Attribute mapping is not valid and cannot be applied', type = 'danger')
+        PrintAlert(msg, type = 'danger')
         payload <- list(
           ActionStatus = status,
           ActionMessage = msg

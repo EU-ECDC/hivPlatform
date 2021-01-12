@@ -94,6 +94,8 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.origGroupMgr.setType(e.payload.OriginGroupingType);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
+        } else {
+          this.notificationsMgr.setMsg('There was a problem with setting this origin grouping');
         }
         break;
       // case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':

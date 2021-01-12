@@ -10,7 +10,6 @@ appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_-_2_populations.zip'))
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
-
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 appMgr$CaseMgr$RunAdjustments(
   GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))

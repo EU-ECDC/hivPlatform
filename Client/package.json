@@ -1,6 +1,6 @@
 {
   "name": "hiv-estimates-accuracy",
-  "version": "1.9.28",
+  "version": "1.9.29",
   "description": "HIV Estimates Accuracy platform",
   "main": "index.js",
   "scripts": {
