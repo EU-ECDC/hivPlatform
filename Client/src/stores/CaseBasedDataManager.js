@@ -1,4 +1,5 @@
 import { observable, action, computed, makeObservable } from 'mobx';
+import ReactFileUploader from '../utilities/Uploader';
 import EnsureArray from '../utilities/EnsureArray';
 import IsNull from '../utilities/IsNull';
 
@@ -34,6 +35,7 @@ export default class CaseBasedDataManager {
       setRecordCount: action,
       setColumnNames: action,
       setColumnNames: action,
+      uploadData: action,
       setUploadProgress: action,
       setActionStatus: action,
       setActionMessage: action,
@@ -51,6 +53,19 @@ export default class CaseBasedDataManager {
   setUploadProgress = progress => this.uploadProgress = progress;
   setActionStatus = status => this.actionStatus = status;
   setActionMessage = message => this.actionMessage = message;
+
+  uploadData = el => {
+    var $el = $(el);
+
+    $el.data(
+      'currentUploader',
+      new ReactFileUploader(
+        Shiny.shinyapp,
+        el,
+        this.setUploadProgress
+      )
+    );
+  };
 
   get columnNamesString() {
     if (this.columnNames === null) {

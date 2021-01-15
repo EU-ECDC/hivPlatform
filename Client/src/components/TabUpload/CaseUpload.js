@@ -32,19 +32,7 @@ const CaseUpload = (props) => {
   const { appMgr } = props;
   const classes = userStyles();
 
-  React.useEffect(
-    () => {
-      appMgr.unbindShinyInputs();
-      if (appMgr.shinyReady) {
-        Shiny
-          .inputBindings.bindingNames['shiny.reactCaseBasedFileInputBinding']
-          .binding.subscribe('#caseUploadBtn');
-      }
-      appMgr.bindShinyInputs();
-
-      return () => appMgr.unbindShinyInputs();
-    }
-  );
+  const handleBtnClick = evt => appMgr.caseBasedDataMgr.uploadData(evt.target);
 
   return (
     <Grid container spacing={2}>
@@ -54,10 +42,16 @@ const CaseUpload = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={2}>
-        <input style={{ display: 'none' }} id='caseUploadBtn' className='uploadBtn' type='file' />
+        <input
+          style={{ display: 'none' }}
+          id='caseUploadBtn'
+          className='uploadBtn'
+          type='file'
+          onChange={handleBtnClick}
+        />
         <Tooltip title='Select case-based data file'>
           <label htmlFor='caseUploadBtn'>
-            <Btn style={{ marginBottom: 6 }}><CloudUploadIcon />&nbsp;Upload data</Btn>
+            <Btn style={{ marginBottom: 6 }} ><CloudUploadIcon />&nbsp;Upload data</Btn>
           </label>
         </Tooltip>
         <Typography variant='body2' color='textSecondary'>

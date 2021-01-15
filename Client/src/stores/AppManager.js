@@ -1,5 +1,4 @@
 import { observable, action, configure, computed, toJS, makeObservable } from 'mobx';
-import DefineReactFileInputBinding from '../external/reactFileInputBinding';
 import UIStateManager from './UIStateManager'
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
@@ -202,8 +201,6 @@ export default class AppManager {
       shinyReady: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
-      unbindShinyInputs: action,
-      bindShinyInputs: action,
       btnClicked: action,
       inputValueSet: action,
       setShinyMessage: action
@@ -223,29 +220,11 @@ export default class AppManager {
   setShinyState = state => {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
-      DefineReactFileInputBinding(this);
       Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
     }
   };
 
   setReport = report => this.report = report;
-
-  unbindShinyInputs = () => {
-    if (this.shinyReady) {
-      Shiny.unbindAll();
-    } else {
-      console.log('unbindShinyInputs: Shiny is not available');
-    }
-  };
-
-  bindShinyInputs = () => {
-    if (this.shinyReady) {
-      Shiny.initializeInputs();
-      Shiny.bindAll();
-    } else {
-      console.log('bindShinyInputs: Shiny is not available');
-    }
-  };
 
   btnClicked = (btnId, value = '') => {
     if (this.shinyReady) {
