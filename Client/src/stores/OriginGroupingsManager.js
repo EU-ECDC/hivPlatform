@@ -1,5 +1,6 @@
 import { observable, computed, action, toJS, makeObservable} from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import IsNull from '../utilities/IsNull';
 
 export default class OriginGroupingsManager {
   rootMgr = null;
@@ -10,6 +11,8 @@ export default class OriginGroupingsManager {
       distribution: observable,
       groupings: observable,
       type: observable,
+      actionStatus: observable,
+      actionMessage: observable,
       distributionArray: computed,
       origins: computed,
       usedOrigins: computed,
@@ -23,6 +26,9 @@ export default class OriginGroupingsManager {
       removeGroupings: action,
       addEmptyGrouping: action,
       applyGroupings: action,
+      setActionStatus: action,
+      setActionMessage: action,
+      actionValid: computed
     });
   }
 
@@ -34,6 +40,9 @@ export default class OriginGroupingsManager {
   groupings = [];
 
   type = 'REPCOUNTRY + UNK + OTHER';
+
+  actionStatus = null;
+  actionMessage = null;
 
   get distributionArray() {
     const origins = this.distribution.origin;
@@ -81,6 +90,10 @@ export default class OriginGroupingsManager {
 
   setType = type => this.type = type;
 
+  setActionStatus = status => this.actionStatus = status;
+
+  setActionMessage = message => this.actionMessage = message;
+
   setGroupName = (i, name) => {
     this.groupings[i].name = name;
     this.type = 'Custom';
@@ -123,5 +136,13 @@ export default class OriginGroupingsManager {
         group.groupCount = groupCount;
       }
     );
+  };
+
+  get actionValid() {
+    if (IsNull(this.actionStatus)) {
+      return (null);
+    } else {
+      return this.actionStatus === 'SUCCESS';
+    }
   };
 }

@@ -50,7 +50,7 @@ const StepPanel = props => {
       style={{ flexGrow: 1, overflowY: 'scroll' }}
       {...other}
     >
-      {activePanelId === panelId && <Box p={3}>{children}</Box>}
+      {activePanelId === panelId && <Box p={2}>{children}</Box>}
     </Typography>
   );
 };
@@ -86,10 +86,10 @@ const RootElem = props => {
   }
 
   return (
-    <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}}>
+    <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}} p={0}>
       <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
-      <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}}>
+      <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}} p={0}>
         <LeftNav
           steps={appMgr.uiStateMgr.steps}
           activeStepId={appMgr.uiStateMgr.activeStepId}

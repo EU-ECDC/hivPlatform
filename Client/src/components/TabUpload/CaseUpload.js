@@ -53,7 +53,7 @@ const CaseUpload = (props) => {
           Upload case-based data
         </Typography>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <input style={{ display: 'none' }} id='caseUploadBtn' className='uploadBtn' type='file' />
         <Tooltip title='Select case-based data file'>
           <label htmlFor='caseUploadBtn'>
@@ -70,7 +70,7 @@ const CaseUpload = (props) => {
           msg={appMgr.caseBasedDataMgr.actionMessage}
         />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         {appMgr.caseBasedDataMgr.actionValid &&
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Uploaded file details</Typography>
@@ -115,9 +115,7 @@ const CaseUpload = (props) => {
               </Grid>
             </Grid>
           </Paper>
-
         }
-
       </Grid>
     </Grid>
   );

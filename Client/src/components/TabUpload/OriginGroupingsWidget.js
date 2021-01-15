@@ -6,6 +6,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -20,6 +22,7 @@ const OriginGroupingsWidget = (props) => {
   const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
+  const distribution = appMgr.origGroupMgr.distributionArray;
   const groupings = appMgr.origGroupMgr.groupingsJS;
 
   const handleGroupingPresetChange = e => {
@@ -71,55 +74,79 @@ const OriginGroupingsWidget = (props) => {
 
   return (
     <Paper style={{ padding: 10 }}>
-      <Typography variant='overline'>Migrant variable regrouping</Typography>
-      <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
-        <InputLabel>
-          Preset
-      </InputLabel>
-        <Select value={appMgr.origGroupMgr.type} onChange={handleGroupingPresetChange}>
-          <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
-          <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
-          <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
-          <MenuItem value='Custom' dense>Custom</MenuItem>
-        </Select>
-        <FormHelperText>Select regrouping preset</FormHelperText>
-      </FormControl>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell padding='checkbox'>
-              <Checkbox
-                inputProps={{ 'aria-label': 'select all' }}
-                color='primary'
-                onClick={handleSelectAllClick}
-                checked={rowCount > 0 && selectedCount === rowCount}
-              />
-            </TableCell>
-            <TableCell padding='none'>GroupedRegionOfOrigin</TableCell>
-            <TableCell width='60%'>FullRegionOfOrigin</TableCell>
-            <TableCell align='right' width='10%'>Count</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            groupings.map((el, i) => (
-              <OriginGroupingRow
-                key={i}
-                i={i}
-                grouping={el}
-                appMgr={appMgr}
-                isSelected={isSelected(i)}
-                onSelectClick={handleSelectClick(i)}
-              />
-            ))
-          }
-        </TableBody>
-      </Table>
-      <EnhancedTableToolbar
-        selectedCount={selectedCount}
-        onAddClick={handleAddClick}
-        onDeleteClick={handleDeleteClick}
-      />
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Typography variant='overline'>Distribution of region of origin</Typography>
+          <Table size='small'>
+            <TableHead>
+              <TableRow>
+                <TableCell>FullRegionOfOrigin</TableCell><TableCell align='right'>Count</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                distribution.map((el, i) => (
+                  <TableRow hover key={i}>
+                    <TableCell>{el.origin}</TableCell>
+                    <TableCell align='right'>{el.count}</TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
+        </Grid>
+        <Grid item xs={9}>
+          <Typography variant='overline'>Migrant variable regrouping</Typography>
+          <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
+            <InputLabel>
+              Preset
+             </InputLabel>
+            <Select value={appMgr.origGroupMgr.type} onChange={handleGroupingPresetChange}>
+              <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
+              <MenuItem value='Custom' dense>Custom</MenuItem>
+            </Select>
+            <FormHelperText>Select regrouping preset</FormHelperText>
+          </FormControl>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding='checkbox'>
+                  <Checkbox
+                    inputProps={{ 'aria-label': 'select all' }}
+                    color='primary'
+                    onClick={handleSelectAllClick}
+                    checked={rowCount > 0 && selectedCount === rowCount}
+                  />
+                </TableCell>
+                <TableCell padding='none'>GroupedRegionOfOrigin</TableCell>
+                <TableCell width='60%'>FullRegionOfOrigin</TableCell>
+                <TableCell align='right' width='10%'>Count</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                groupings.map((el, i) => (
+                  <OriginGroupingRow
+                    key={i}
+                    i={i}
+                    grouping={el}
+                    appMgr={appMgr}
+                    isSelected={isSelected(i)}
+                    onSelectClick={handleSelectClick(i)}
+                  />
+                ))
+              }
+            </TableBody>
+          </Table>
+          <EnhancedTableToolbar
+            selectedCount={selectedCount}
+            onAddClick={handleAddClick}
+            onDeleteClick={handleDeleteClick}
+          />
+        </Grid>
+      </Grid>
     </Paper>
   )
 };

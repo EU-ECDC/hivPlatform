@@ -79,27 +79,46 @@ export default appMgr => {
   //   }
   // });
 
+  appMgr.onShinyEvent({
+    type: 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Attributes applied correctly',
+      OriginDistribution: {
+        origin: [
+          'REPCOUNTRY', 'SUBAFR', 'WESTEUR', 'SOUTHASIA', 'CENTEUR', 'CAR', 'LATAM', 'EASTEUR',
+          'NORTHAM', 'NORTHAFRMIDEAST', 'EASTASIAPAC', 'AUSTNZ', 'UNK'
+        ],
+        count: [1562, 2237, 1119, 164, 144, 123, 107, 58, 49, 43, 36, 33, 1944]
+      },
+      OriginGroupingType: 'REPCOUNTRY + UNK + OTHER',
+      OriginGrouping: [
+        {
+          name: 'UNK',
+          origin: 'UNK'
+        },
+        {
+          name: 'OTHER',
+          origin: [
+            'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM', 'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
+          ]
+        },
+        {
+          name: 'REPCOUNTRY',
+          origin: 'REPCOUNTRY'
+        }
+      ]
+    }
+  });
+
   // 4. Set origin grouping
   appMgr.onShinyEvent({
     type: 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
     payload: {
       ActionStatus: 'SUCCESS',
-      ActionMessage: '',
-      // OriginGrouping: [
-      //   { name: 'UNK', origin: ['UNK'], groupCount: [1944] },
-      //   { name: 'OTHER', origin: ['ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM', 'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'], groupCount: [4113] },
-      //   { name: 'REPCOUNTRY', origin: ['REPCOUNTRY'], groupCount: [1562] }
-      // ],
-      // OriginGroupingType: 'REPCOUNTRY + UNK + OTHER'
+      ActionMessage: 'Migrant variable regrouping applied correctly',
     }
   });
-
-  // // 5. Apply origin grouping
-  // appMgr.onShinyEvent({
-  //   type: 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-  //   status: 'SUCCESS',
-  //   payload: null
-  // });
 
   // // 6. Prepare summary data
   // appMgr.onShinyEvent({

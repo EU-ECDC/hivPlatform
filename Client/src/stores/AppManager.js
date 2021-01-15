@@ -38,6 +38,7 @@ export default class AppManager {
 
   // Shiny custom event handlers
   onShinyEvent = e => {
+    console.log('onShinyEvent', e);
     switch (e.type) {
       case 'CASE_BASED_DATA_UPLOADED':
         this.caseBasedDataMgr.setActionStatus(e.payload.ActionStatus);
@@ -100,6 +101,8 @@ export default class AppManager {
         }
         break;
       case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
+        this.origGroupMgr.setActionStatus(e.payload.ActionStatus);
+        this.origGroupMgr.setActionMessage(e.payload.ActionMessage);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
         } else {

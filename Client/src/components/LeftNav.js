@@ -12,7 +12,7 @@ const LeftNav = (props) => {
   const { steps, activeStepId, onStepChange, onSubStepChange } = props;
 
   return (
-    <div style={{ minWidth: 300, backgroundColor: 'white' }}>
+    <div style={{ minWidth: 250, backgroundColor: 'white' }}>
       <Stepper nonLinear activeStep={activeStepId} orientation='vertical'>
         {steps.map((step, i) => (
           <Step key={i} completed={step.completed} disabled={step.disabled}>

@@ -63,7 +63,7 @@ const AttributeMapping = (props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <Btn
           style={{ marginBottom: 6 }}
           onClick={onApplyBtnClick}
@@ -80,7 +80,7 @@ const AttributeMapping = (props) => {
           msg={appMgr.attrMappingMgr.actionMessage}
         />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
           <Typography variant='overline'>Attribute mapping</Typography>
           <Grid container spacing={2}>
