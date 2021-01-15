@@ -12,8 +12,6 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import CheckIcon from '@material-ui/icons/Check';
-import ErrorIcon from '@material-ui/icons/Error';
 import Btn from '../Btn';
 import MessageAlert from '../MessageAlert';
 

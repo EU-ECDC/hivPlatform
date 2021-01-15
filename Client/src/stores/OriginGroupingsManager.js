@@ -122,7 +122,7 @@ export default class OriginGroupingsManager {
   };
 
   applyGroupings = () => {
-    this.rootMgr.inputValueSet('originGrouping:OriginGroupingArray', this.groupings);
+    this.rootMgr.btnClicked('originGrouping:OriginGroupingArray', this.groupings);
   };
 
   computeGroupCounts = () => {

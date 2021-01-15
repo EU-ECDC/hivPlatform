@@ -86,20 +86,33 @@ export default class UIStateManager {
   };
 
   setLastEventType = eventType => {
-    console.log('UIStateManager:setLastEventType', eventType);
+    console.log(eventType);
     this.lastEventType = eventType;
 
-    switch (eventType) {
-      case 'AGGR_DATA_UPLOADED':
-        this.steps[4].disabled = false;
-        break;
-      case 'SUMMARY_DATA_PREPARED':
-        this.steps[2].disabled = false;
-        break;
-      case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
-        this.steps[3].disabled = false;
-        break;
-    }
+    // Welcome
+    // this.steps[0].disabled = false;
+
+    // Data upload
+    // this.steps[1].disabled =
+
+    // Case-based summary
+    this.steps[2].disabled = !this.caseBasedSummaryStageEnabled;
+
+    // Adjustments
+    this.steps[3].disabled = !this.caseBasedAdjustmentsStageEnabled;
+
+    // switch (eventType) {
+    //   // case 'AGGR_DATA_UPLOADED':
+    //   //   this.steps[4].disabled = false;
+    //   //   break;
+    //   // case 'SUMMARY_DATA_PREPARED':
+    //   //   this.steps[2].disabled = false;
+    //   //   break;
+    //   case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
+    //     this.steps[2].disabled = !this.caseBasedSummaryStageEnabled;
+    //     this.steps[3].disabled = !this.caseBasedSummaryStageEnabled;
+    //     break;
+    // }
   };
 
   get enabledStages() {
@@ -116,5 +129,13 @@ export default class UIStateManager {
 
   get caseBasedOrigGrpngStageEnabled() {
     return this.enabledStages.indexOf('CASE_BASED_ORIGIN_GROUPING') !== -1;
+  };
+
+  get caseBasedSummaryStageEnabled() {
+    return this.enabledStages.indexOf('CASE_BASED_SUMMARY') !== -1;
+  };
+
+  get caseBasedAdjustmentsStageEnabled() {
+    return this.enabledStages.indexOf('CASE_BASED_ADJUSTMENTS') !== -1;
   };
 }

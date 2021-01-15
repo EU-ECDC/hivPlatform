@@ -194,6 +194,8 @@ export default class AppManager {
     this.popCombMgr = new PopCombinationsManager(this);
     this.modelMgr = new ModelsManager(this);
 
+    this.uiStateMgr.setLastEventType('START');
+
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,

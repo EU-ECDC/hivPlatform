@@ -219,7 +219,8 @@ CaseDataManager <- R6::R6Class(
         'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
         payload = list(
           ActionStatus = status,
-          ActionMessage = msg
+          ActionMessage = msg,
+          Summary = summary
         )
       )
 
