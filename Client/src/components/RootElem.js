@@ -22,7 +22,6 @@ import { NAME, VERSION } from '../settings';
 const userStyles = makeStyles({
   appBar: {
     padding: 3,
-    backgroundColor: 'inherent'
   },
   appName: {
     color: 'white',
@@ -56,21 +55,29 @@ const StepPanel = props => {
 };
 
 const RootElem = props => {
-  const appMgr = props.appMgr;
+  const { appMgr } = props;
   const classes = userStyles();
   const [rightNavState, setRightNavState] = React.useState(false);
 
+  const bgColor = appMgr.shinyReady ? '#69b023' : '#f44336';
+
   const appBar = (
-    <AppBar position='static' className={classes.appBar}>
+    <AppBar position='static' className={classes.appBar} style={{ backgroundColor: `${bgColor}`}}>
       <Toolbar variant='dense' disableGutters>
         <Typography variant='h6' className={classes.appName}>
           {NAME}
         </Typography>
+        <Typography variant='subtitle1' className={classes.appVersion}>
+          &nbsp;| version {VERSION}
+        </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' className={classes.appVersion}>
-          {appMgr.shinyReady} Engine state: {appMgr.shinyState} | Version {VERSION}
+          Engine state: {appMgr.shinyStateHuman}
         </Typography>
-        <IconButton onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}>
+        <IconButton
+          disabled
+          onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}
+        >
           <MenuIcon />
         </IconButton>
       </Toolbar>

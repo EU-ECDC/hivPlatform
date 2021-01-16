@@ -77,7 +77,7 @@ const OriginGroupingsWidget = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
-          <Table size='small'>
+          <Table size='small' style={{ backgroundColor: 'rgba(0, 0, 0, 0.02)'}}>
             <TableHead>
               <TableRow>
                 <TableCell>FullRegionOfOrigin</TableCell><TableCell align='right'>Count</TableCell>
@@ -86,7 +86,7 @@ const OriginGroupingsWidget = (props) => {
             <TableBody>
               {
                 distribution.map((el, i) => (
-                  <TableRow hover key={i}>
+                  <TableRow key={i}>
                     <TableCell>{el.origin}</TableCell>
                     <TableCell align='right'>{el.count}</TableCell>
                   </TableRow>

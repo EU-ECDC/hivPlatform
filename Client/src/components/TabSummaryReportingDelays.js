@@ -33,10 +33,12 @@ const TabSummaryReportingDelays = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
+      <Grid item xs={12}>
         <Typography variant='h6'>
           Reporting delays summary
         </Typography>
+      </Grid>
+      <Grid item xs={2}>
         <Typography variant='body2' color='textSecondary'>
           Average reporting delay for cases notified within a quarter and the upper bound for
           typical average delay values. Quarters when the average delay exceeds the upper bound
@@ -66,7 +68,7 @@ const TabSummaryReportingDelays = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
           <Chart
             options={repDelChartOptions}

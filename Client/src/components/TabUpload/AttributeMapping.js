@@ -37,6 +37,7 @@ const AttributeMapping = (props) => {
 
   const attrMappingTableRows = appMgr.attrMappingMgr.mapping.map((entry, idx) => (
     <TableRow hover key={idx}>
+      <TableCell>{`${idx+1}.`}</TableCell>
       <TableCell>{entry.attribute}</TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px' }}>
         <Select
@@ -61,6 +62,11 @@ const AttributeMapping = (props) => {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant='h6'>
+          Attribute mapping
+        </Typography>
+      </Grid>
       <Grid item xs={2}>
         <Btn
           style={{ marginBottom: 6 }}
@@ -70,7 +76,7 @@ const AttributeMapping = (props) => {
           <AssignmentIcon />&nbsp;Apply mapping
         </Btn>
         <Typography variant='body2' color='textSecondary'>
-          Input data to be mapped to internal attributes.<br />
+          Input data must mapped to internal attributes.<br />
           Adjust mapping and press 'Apply mapping' button.
         </Typography>
         <MessageAlert
@@ -85,7 +91,8 @@ const AttributeMapping = (props) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell width='30%'>Attribute</TableCell>
+                  <TableCell width='5%'>Idx</TableCell>
+                  <TableCell width='25%'>Attribute</TableCell>
                   <TableCell width='40%'>Uploaded data column</TableCell>
                   <TableCell width='30%'>Override value</TableCell>
                 </TableRow>

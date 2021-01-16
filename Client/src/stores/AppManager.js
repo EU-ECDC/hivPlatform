@@ -103,6 +103,10 @@ export default class AppManager {
         this.origGroupMgr.setActionStatus(e.payload.ActionStatus);
         this.origGroupMgr.setActionMessage(e.payload.ActionMessage);
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.summaryDataMgr.setDiagYearPlotData(e.payload.Summary.DiagYearPlotData);
+          this.summaryDataMgr.setNotifQuarterPlotData(e.payload.Summary.NotifQuarterPlotData);
+          this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
+          this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');
@@ -214,6 +218,22 @@ export default class AppManager {
 
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
+  };
+
+  get shinyStateHuman() {
+    let result = '';
+    switch (this.shinyState) {
+      case 'DISCONNECTED':
+        result = 'DISCONNECTED';
+        break;
+      case 'CONNECTED':
+        result = 'INITIALIZING';
+        break;
+      case 'SESSION_INITIALIZED':
+        result = 'READY';
+        break;
+    }
+    return (result);
   };
 
   // Actions

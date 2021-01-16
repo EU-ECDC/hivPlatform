@@ -20,9 +20,9 @@ ReactDOM.render(
   () => {
     console.log('ReactDOM.render complete');
     $(() => {
+      $(document).on('shiny:disconnected', () => appMgr.setShinyState('DISCONNECTED'));
       $(document).on('shiny:connected', () => appMgr.setShinyState('CONNECTED'));
       $(document).on('shiny:sessioninitialized', () => appMgr.setShinyState('SESSION_INITIALIZED'));
-      $(document).on('shiny:disconnected', () => appMgr.setShinyState('DISCONNECTED'));
       $(document).on('shiny:message', event => appMgr.setShinyMessage(event));
       $(document).on('shiny:inputchanged', event => console.log('shiny:inputchanged:', event));
       $(document).on('shiny:filedownload', event => console.log('shiny:filedownload:', event));

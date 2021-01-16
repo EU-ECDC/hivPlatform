@@ -3,6 +3,8 @@ import { observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -32,12 +34,25 @@ const CaseUpload = (props) => {
   const { appMgr } = props;
   const classes = userStyles();
 
-  const handleBtnClick = evt => appMgr.caseBasedDataMgr.uploadData(evt.target);
+  const handleUploadBtnClick = e => appMgr.caseBasedDataMgr.uploadData(e.target);
+  const handleNextStepBtnClick = e => appMgr.uiStateMgr.setActiveStepId(2);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Typography color='textSecondary'>
+        <Box display='flex' justifyContent='flex-end'>
+          <Button
+            size='small'
+            color='primary'
+            disabled={!appMgr.uiStateMgr.caseBasedSummaryStageEnabled}
+            onClick={handleNextStepBtnClick}
+          >
+            Next step
+          </Button>
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant='h6'>
           Upload case-based data
         </Typography>
       </Grid>
@@ -47,7 +62,7 @@ const CaseUpload = (props) => {
           id='caseUploadBtn'
           className='uploadBtn'
           type='file'
-          onChange={handleBtnClick}
+          onChange={handleUploadBtnClick}
         />
         <Tooltip title='Select case-based data file'>
           <label htmlFor='caseUploadBtn'>

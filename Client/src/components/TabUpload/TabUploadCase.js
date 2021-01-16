@@ -17,13 +17,13 @@ const TabUploadCase = (props) => {
       { appMgr.uiStateMgr.caseBasedAttrMappingStageEnabled &&
         <React.Fragment>
           {divider}
-        <AttributeMapping {...props} />
+          <AttributeMapping {...props} />
         </React.Fragment>
       }
       { appMgr.uiStateMgr.caseBasedOrigGrpngStageEnabled &&
         <React.Fragment>
           {divider}
-        <OriginGroupings {...props} />
+          <OriginGroupings {...props} />
         </React.Fragment>
       }
     </TabPanel>

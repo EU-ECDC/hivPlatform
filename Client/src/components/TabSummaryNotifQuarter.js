@@ -51,10 +51,7 @@ const TabSummaryNotifQuarter = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
-        <Typography color='textSecondary'>
-          Filter data on quarter of notification
-          </Typography>
+      <Grid item xs={2}>
         <FormControlLabel
           control={
             <Switch
@@ -67,7 +64,7 @@ const TabSummaryNotifQuarter = (props) => {
           label='Apply filter in adjustments'
         />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
           <Typography variant='overline'>Notification quarter</Typography>
           <div style={{ padding: '40px 105px 0 65px' }}>

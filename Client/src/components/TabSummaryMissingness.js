@@ -39,10 +39,12 @@ const TabSummaryMissingness = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
+      <Grid item xs={12}>
         <Typography variant='h6'>
           Missing data summary: key variables
         </Typography>
+      </Grid>
+      <Grid item xs={2}>
         <Typography variant='body2' color='textSecondary'>
           Percentages of cases for which the information was not available (missing) for one or
           more of the key variables: CD4 count, transmission category, migrant status or age.
@@ -71,7 +73,7 @@ const TabSummaryMissingness = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
           <Grid container>
             <Grid item xs={3}>
