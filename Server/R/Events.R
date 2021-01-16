@@ -59,6 +59,10 @@ Events <- function(
     appMgr$CaseMgr$ApplyOriginGrouping(input$originGrouping)
   })
 
+  observeEvent(input$summaryFilters, {
+    print(input$summaryFilters)
+  })
+
   # observeEvent(input$runAdjustBtn, {
   #   params <- input$runAdjustBtn
   #   adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)

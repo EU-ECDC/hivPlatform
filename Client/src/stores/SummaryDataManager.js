@@ -1,4 +1,4 @@
-import { observable, action, computed, toJS, makeObservable } from 'mobx';
+import { observable, action, computed, toJS, makeObservable, autorun } from 'mobx';
 
 export default class SummaryDataManager {
   rootMgr = null;
@@ -82,6 +82,7 @@ export default class SummaryDataManager {
       missPlotData: observable,
       missPlotSelection: observable,
       repDelPlotData: observable,
+      repDelPlotSelection: observable,
       setDiagYearPlotData: action,
       setDiagYearFilterApply: action,
       setDiagYearFilterMinYear: action,
@@ -102,6 +103,19 @@ export default class SummaryDataManager {
       missPlot3Categories: computed,
       missPlot4Categories: computed,
     });
+
+    autorun(() => {
+      this.rootMgr.inputValueSet('summaryFilters', {
+        DiagYear: {
+          MinYear: this.diagYearPlotData.filter.valueMinYear,
+          MaxYear: this.diagYearPlotData.filter.valueMaxYear
+        },
+        NotifQuarter: {
+          MinYear: this.notifQuarterPlotData.filter.valueMinYear,
+          MaxYear: this.notifQuarterPlotData.filter.valueMaxYear
+        }
+      })
+    }, { delay: 1000 });
   };
 
   setDiagYearPlotData = data => this.diagYearPlotData = data;

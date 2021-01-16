@@ -10,6 +10,7 @@ import AdjustmentsManager from './AdjustmentsManager';
 import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
 import ModelsManager from './ModelsManager';
+import IsNull from '../utilities/IsNull';
 
 configure({
   enforceActions: 'observed',
@@ -213,7 +214,7 @@ export default class AppManager {
 
   // Computed
   get shinyReady() {
-    return this.shinyState === 'SESSION_INITIALIZED';
+    return this.shinyState === 'SESSION_INITIALIZED' || this.shinyState === 'DEBUGGING';
   };
 
   get jsonShinyMessage() {
@@ -229,6 +230,7 @@ export default class AppManager {
       case 'CONNECTED':
         result = 'INITIALIZING';
         break;
+      case 'DEBUGGING':
       case 'SESSION_INITIALIZED':
         result = 'READY';
         break;
@@ -247,7 +249,7 @@ export default class AppManager {
   setReport = report => this.report = report;
 
   btnClicked = (btnId, value = '') => {
-    if (this.shinyReady) {
+    if (!IsNull(window.Shiny) && this.shinyReady) {
       Shiny.setInputValue(btnId, value, { priority: 'event' });
     } else {
       console.log('btnClicked: Shiny is not available', btnId, toJS(value));
@@ -255,7 +257,7 @@ export default class AppManager {
   };
 
   inputValueSet = (inputId, value) => {
-    if (this.shinyReady) {
+    if (!IsNull(window.Shiny) && this.shinyReady) {
       Shiny.setInputValue(inputId, value);
     } else {
       console.log('inputValueSet: Shiny is not available', inputId, toJS(value));

@@ -86,7 +86,7 @@ export default class UIStateManager {
   };
 
   setLastEventType = eventType => {
-    console.log(eventType);
+    console.log('setLastEventType:', eventType);
     this.lastEventType = eventType;
 
     // Welcome

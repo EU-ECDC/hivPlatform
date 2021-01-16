@@ -3,6 +3,7 @@ import { DEBUG } from './settings';
 export default appMgr => {
   if (!DEBUG) return;
 
+  appMgr.setShinyState('DEBUGGING');
   appMgr.uiStateMgr.setActiveSubStepId(2, 0);
 
   // 1. Upload case-based data
@@ -115,7 +116,7 @@ export default appMgr => {
   appMgr.onShinyEvent({
     type: 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
     payload: {
-      ActionStatus: 'FAIL',
+      ActionStatus: 'SUCCESS',
       ActionMessage: 'Migrant variable regrouping applied correctly',
       Summary: {
         DiagYearPlotData: {
