@@ -135,6 +135,18 @@ export default appMgr => {
             { 'name': 'Male', 'data': [16, 46, 29, 36, 45, 44, 45, 37, 62, 64, 70, 49, 81, 67, 72, 88, 58, 82, 73, 93, 108, 120, 101, 64, 91, 93, 82, 110, 84, 90, 72, 67, 114, 84, 117, 81, 135, 52, 143, 52, 128, 57, 159, 42, 129, 58, 152, 33, 158, 30, 184, 12, 208, 29, 201, 46, 43, 146, 59, 22] }
           ]
         },
+      }
+    }
+  });
+
+  // 4. Set origin grouping
+  appMgr.onShinyEvent({
+    type: 'CASE_BASED_SUMMARY_DATA_PREPARED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Summary prepared',
+      Summary: {
+        RecordCount: 4540,
         MissPlotData: {
           selected: 'all',
           plot1: {
@@ -194,6 +206,8 @@ export default appMgr => {
       }
     }
   });
+
+
 
   // appMgr.onShinyEvent({
   //   type: 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',

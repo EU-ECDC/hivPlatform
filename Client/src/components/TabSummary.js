@@ -35,10 +35,15 @@ const TabSummary = (props) => {
         <Grid item xs={12}>
           <Typography variant='h6'>
             Filter case-based data for summary
-        </Typography>
+          </Typography>
         </Grid>
         <TabSummaryDiagYear {...props} />
         <TabSummaryNotifQuarter {...props} />
+        <Grid item xs={12}>
+          <Typography variant='body1'>
+            Number of records in the selection: { appMgr.summaryDataMgr.recordCount }
+          </Typography>
+        </Grid>
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>

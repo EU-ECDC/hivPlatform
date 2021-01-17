@@ -53,15 +53,9 @@ GetCaseDataSummary <- function(
     )
   )
 
-  missPlotData <- GetMissingnessPlots(data)
-
-  repDelPlotData <- GetReportingDelaysPlots(data)
-
   summary <- list(
     DiagYearPlotData = diagYearPlotData,
-    NotifQuarterPlotData = notifQuarterPlotData,
-    MissPlotData = missPlotData,
-    RepDelPlotData = repDelPlotData
+    NotifQuarterPlotData = notifQuarterPlotData
   )
 
   return(summary)

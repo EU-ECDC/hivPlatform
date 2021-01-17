@@ -60,7 +60,55 @@ Events <- function(
   })
 
   observeEvent(input$summaryFilters, {
-    print(input$summaryFilters)
+    diagYearRange <- c(
+      input$summaryFilters$DiagYear$MinYear,
+      input$summaryFilters$DiagYear$MaxYear
+    )
+
+    notifQuarterRange <- c(
+      input$summaryFilters$NotifQuarter$MinYear,
+      input$summaryFilters$NotifQuarter$MaxYear
+    )
+
+    if (
+      any(is.null(diagYearRange)) ||
+      any(is.null(notifQuarterRange)) ||
+      is.null(appMgr$CaseMgr$PreProcessedData)
+    ) {
+      appMgr$SendMessage(
+        type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
+        payload = list(
+          ActionStatus = 'FAIL'
+        )
+      )
+      return(NULL)
+    }
+
+    data <- appMgr$CaseMgr$PreProcessedData[
+      is.na(DiagnosisTime) |
+      is.na(NotificationTime) |
+      (
+        DiagnosisTime %between% diagYearRange &
+        NotificationTime %between% notifQuarterRange
+      )
+    ]
+
+    missPlotData <- GetMissingnessPlots(data)
+    repDelPlotData <- GetReportingDelaysPlots(data)
+
+    summary <- list(
+      RecordCount = nrow(data),
+      MissPlotData = missPlotData,
+      RepDelPlotData = repDelPlotData
+    )
+
+    appMgr$SendMessage(
+      type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
+      payload = list(
+        ActionStatus = 'SUCCESS',
+        Summary = summary
+      )
+    )
   })
 
   # observeEvent(input$runAdjustBtn, {

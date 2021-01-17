@@ -62,17 +62,6 @@ export default class AppManager {
           this.uiStateMgr.setLastEventType(e.type);
         }
         break;
-      // case 'AGGR_DATA_UPLOADED':
-      //   this.aggrDataMgr.setFileName(e.payload.FileName);
-      //   this.aggrDataMgr.setFilePath(e.payload.FilePath);
-      //   this.aggrDataMgr.setFileSize(e.payload.FileSize);
-      //   this.aggrDataMgr.setFileType(e.payload.FileType);
-      //   break;
-      // case 'AGGR_DATA_READ':
-      //   this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
-      //   this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
-      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
-      //   break;
       case 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_START':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.notificationsMgr.setMsg('Applying attribute mapping');
@@ -106,20 +95,20 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.summaryDataMgr.setDiagYearPlotData(e.payload.Summary.DiagYearPlotData);
           this.summaryDataMgr.setNotifQuarterPlotData(e.payload.Summary.NotifQuarterPlotData);
-          this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
-          this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
-      // case 'SUMMARY_DATA_PREPARED':
-      //   this.summaryDataMgr.setDiagYearPlotData(e.payload.DiagYearPlotData);
-      //   this.summaryDataMgr.setNotifQuarterPlotData(e.payload.NotifQuarterPlotData);
-      //   this.summaryDataMgr.setMissPlotData(e.payload.MissPlotData);
-      //   this.summaryDataMgr.setRepDelPlotData(e.payload.RepDelPlotData);
-      //   break;
+      case 'CASE_BASED_SUMMARY_DATA_PREPARED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          console.log(e.payload.Summary);
+          this.summaryDataMgr.setRecordCount(e.payload.Summary.RecordCount);
+          this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
+          this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
+        }
+        break;
       // case 'ADJUSTMENTS_RUN_STARTED':
       //   this.adjustMgr.setAdjustmentsRunProgress(1);
       //   break;
@@ -129,6 +118,17 @@ export default class AppManager {
       //   break;
       // case 'ADJUSTMENTS_RUN_LOG_SET':
       //   this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
+      //   break;
+      // case 'AGGR_DATA_UPLOADED':
+      //   this.aggrDataMgr.setFileName(e.payload.FileName);
+      //   this.aggrDataMgr.setFilePath(e.payload.FilePath);
+      //   this.aggrDataMgr.setFileSize(e.payload.FileSize);
+      //   this.aggrDataMgr.setFileType(e.payload.FileType);
+      //   break;
+      // case 'AGGR_DATA_READ':
+      //   this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
+      //   this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
+      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
       //   break;
       // case 'AVAILABLE_STRATA_SET':
       //   this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
