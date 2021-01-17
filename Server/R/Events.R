@@ -97,7 +97,8 @@ Events <- function(
     repDelPlotData <- GetReportingDelaysPlots(data)
 
     summary <- list(
-      RecordCount = nrow(data),
+      SelectedCount = nrow(data),
+      TotalCount = nrow(appMgr$CaseMgr$PreProcessedData),
       MissPlotData = missPlotData,
       RepDelPlotData = repDelPlotData
     )

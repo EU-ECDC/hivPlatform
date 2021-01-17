@@ -2,7 +2,8 @@ import { observable, action, computed, toJS, makeObservable, autorun } from 'mob
 export default class SummaryDataManager {
   rootMgr = null;
 
-  recordCount = null;
+  selectedCount = null;
+  totalCount = null;
 
   diagYearPlotData = {
     filter: {
@@ -78,14 +79,16 @@ export default class SummaryDataManager {
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
-      recordCount: observable,
+      selectedCount: observable,
+      totalCount: observable,
       diagYearPlotData: observable,
       notifQuarterPlotData: observable,
       missPlotData: observable,
       missPlotSelection: observable,
       repDelPlotData: observable,
       repDelPlotSelection: observable,
-      setRecordCount: action,
+      setSelectedCount: action,
+      setTotalCount: action,
       setDiagYearPlotData: action,
       setDiagYearFilterApply: action,
       setDiagYearFilterMinYear: action,
@@ -121,7 +124,8 @@ export default class SummaryDataManager {
     }, { delay: 1000 });
   };
 
-  setRecordCount = recordCount => this.recordCount = recordCount;
+  setSelectedCount = count => this.selectedCount = count;
+  setTotalCount = count => this.totalCount = count;
   setDiagYearPlotData = data => this.diagYearPlotData = data;
   setDiagYearFilterApply = apply => this.diagYearPlotData.filter.applyInAdjustments = apply;
   setDiagYearFilterMinYear = minYear => this.diagYearPlotData.filter.valueMinYear = minYear;

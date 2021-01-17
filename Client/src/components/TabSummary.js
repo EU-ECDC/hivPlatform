@@ -10,6 +10,7 @@ import TabSummaryDiagYear from './TabSummaryDiagYear';
 import TabSummaryNotifQuarter from './TabSummaryNotifQuarter';
 import TabSummaryMissingness from './TabSummaryMissingness';
 import TabSummaryReportingDelays from './TabSummaryReportingDelays';
+import FormatPercentage from '../utilities/FormatPercentage';
 
 const TabSummary = (props) => {
 
@@ -34,14 +35,14 @@ const TabSummary = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h6'>
-            Filter case-based data for summary
+            Select case-based data for summary
           </Typography>
         </Grid>
         <TabSummaryDiagYear {...props} />
         <TabSummaryNotifQuarter {...props} />
         <Grid item xs={12}>
           <Typography variant='body1'>
-            Number of records in the selection: { appMgr.summaryDataMgr.recordCount }
+            Number of records in the selection: {appMgr.summaryDataMgr.selectedCount} (out of {appMgr.summaryDataMgr.totalCount}, {FormatPercentage(appMgr.summaryDataMgr.selectedCount / appMgr.summaryDataMgr.totalCount)})
           </Typography>
         </Grid>
         <Grid item xs={12}>

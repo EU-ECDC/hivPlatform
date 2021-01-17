@@ -146,7 +146,8 @@ export default appMgr => {
       ActionStatus: 'SUCCESS',
       ActionMessage: 'Summary prepared',
       Summary: {
-        RecordCount: 4540,
+        SelectedCount: 4345,
+        TotalCount: 7168,
         MissPlotData: {
           selected: 'all',
           plot1: {

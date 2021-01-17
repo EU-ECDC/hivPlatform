@@ -104,7 +104,8 @@ export default class AppManager {
       case 'CASE_BASED_SUMMARY_DATA_PREPARED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           console.log(e.payload.Summary);
-          this.summaryDataMgr.setRecordCount(e.payload.Summary.RecordCount);
+          this.summaryDataMgr.setSelectedCount(e.payload.Summary.SelectedCount);
+          this.summaryDataMgr.setTotalCount(e.payload.Summary.TotalCount);
           this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
           this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
         }
