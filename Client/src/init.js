@@ -4,7 +4,7 @@ export default appMgr => {
   if (!DEBUG) return;
 
   appMgr.setShinyState('DEBUGGING');
-  appMgr.uiStateMgr.setActiveSubStepId(2, 0);
+  appMgr.uiStateMgr.setActiveSubStepId(3, 0);
 
   // 1. Upload case-based data
   appMgr.onShinyEvent({

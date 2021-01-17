@@ -61,7 +61,7 @@ const TabSummaryNotifQuarter = (props) => {
               size='small'
             />
           }
-          label='Apply filter in adjustments'
+          label='Apply this data selection in adjustments'
         />
       </Grid>
       <Grid item xs={10}>

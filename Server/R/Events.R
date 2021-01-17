@@ -46,9 +46,10 @@ Events <- function(
     groups <- GetOriginGroupingPreset(type, distr)
 
     appMgr$SendMessage(
-      type = 'CASE_BASED_DATA_ORIGIN_GROUPING_SET',
+      type = 'CASE_BASED_DATA_ORIGIN_GROUPING_PREPARED',
       payload = list(
         ActionStatus = 'SUCCESS',
+        ActionMessage = 'Origin grouping has been prepared',
         OriginGroupingType = type,
         OriginGrouping = groups
       )
@@ -78,17 +79,18 @@ Events <- function(
       appMgr$SendMessage(
         type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
         payload = list(
-          ActionStatus = 'FAIL'
+          ActionStatus = 'FAIL',
+          ActionMessage = 'Summary could not be prepared'
         )
       )
       return(NULL)
     }
 
     data <- appMgr$CaseMgr$PreProcessedData[
-      is.na(DiagnosisTime) |
+      is.na(YearOfHIVDiagnosis) |
       is.na(NotificationTime) |
       (
-        DiagnosisTime %between% diagYearRange &
+        YearOfHIVDiagnosis %between% diagYearRange &
         NotificationTime %between% notifQuarterRange
       )
     ]
@@ -107,6 +109,7 @@ Events <- function(
       type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
       payload = list(
         ActionStatus = 'SUCCESS',
+        ActionMessage = 'Summary has been prepared',
         Summary = summary
       )
     )

@@ -25,14 +25,8 @@ GetCaseDataSummary <- function(
   )
 
   # Notification quarter plot
-  notifQuarterCounts <- data[,
-    .(Count = .N),
-    keyby = .(
-      Gender,
-      QuarterOfNotification = year(DateOfNotification) + quarter(DateOfNotification) / 4
-    )
-  ]
-  notifQuarterCategories <- sort(unique(notifQuarterCounts$QuarterOfNotification))
+  notifQuarterCounts <- data[, .(Count = .N), keyby = .(Gender, NotificationTime)]
+  notifQuarterCategories <- sort(unique(notifQuarterCounts$NotificationTime))
   notifQuarterPlotData <- list(
     filter = list(
       scaleMinYear = min(notifQuarterCategories),

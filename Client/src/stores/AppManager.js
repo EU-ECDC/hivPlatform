@@ -81,7 +81,7 @@ export default class AppManager {
           this.uiStateMgr.setLastEventType('CASE_BASED_DATA_READ');
         }
         break;
-      case 'CASE_BASED_DATA_ORIGIN_GROUPING_SET':
+      case 'CASE_BASED_DATA_ORIGIN_GROUPING_PREPARED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.origGroupMgr.setType(e.payload.OriginGroupingType);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
