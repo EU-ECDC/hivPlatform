@@ -1,4 +1,4 @@
-import { observable, action, makeObservable, computed } from 'mobx';
+import { observable, action, makeObservable, computed, autorun } from 'mobx';
 
 export default class AdjustmentsManager {
   rootMgr = null;
@@ -90,6 +90,10 @@ export default class AdjustmentsManager {
       setAdjustmentsRunProgress: action,
       setAdjustmentsRunLog: action
     });
+
+    // autorun(() => {
+    //   this.rootMgr.uiStateMgr.setSubStepDisabledStatus(3, 1, !this.adjustmentSelected);
+    // })
   };
 
   get miParams() {

@@ -32,13 +32,27 @@ const TabAdjustmentsRun = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="flex-end">
-            <Button size='small' color='primary' disabled>Next step</Button>
+            <Button
+              size='small'
+              color='primary'
+              disabled
+            >
+              Next step
+            </Button>
           </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant='h6'>
+            Case-based data adjustments run
+          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Btn
             onClick={handleRunAdjustBtnClick}
-            disabled={!appMgr.adjustMgr.adjustmentSelected || appMgr.adjustMgr.adjustmentsRunInProgress}
+            disabled={
+              !appMgr.adjustMgr.adjustmentSelected ||
+              appMgr.adjustMgr.adjustmentsRunInProgress
+            }
           >
             <DirectionsRunIcon />&nbsp;Run adjustments
           </Btn>

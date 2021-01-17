@@ -5,7 +5,6 @@ import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TabAdjustmentsInputsMINone from './TabAdjustmentsInputsMINone';
 import TabAdjustmentsInputsMIJomo from './TabAdjustmentsInputsMIJomo';
@@ -18,10 +17,8 @@ const TabAdjustmentsInputsMI = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
-        <Typography color='textSecondary'>
-          Multiple Imputations adjustment
-        </Typography>
+      <Grid item xs={2}>
+        Multiple Imputations type:
         <FormControl component='fieldset'>
           <RadioGroup
             name='miAdjustType'
@@ -46,8 +43,8 @@ const TabAdjustmentsInputsMI = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={9}>
-        <Paper style={{ padding: 10, minHeight: 476 }}>
+      <Grid item xs={10}>
+        <Paper style={{ padding: 10, minHeight: 283 }}>
           {appMgr.adjustMgr.miAdjustType === 'none' && <TabAdjustmentsInputsMINone />}
           {appMgr.adjustMgr.miAdjustType === 'jomo' && <TabAdjustmentsInputsMIJomo {...props} />}
           {appMgr.adjustMgr.miAdjustType === 'mice' && <TabAdjustmentsINputsMIMice {...props} />}

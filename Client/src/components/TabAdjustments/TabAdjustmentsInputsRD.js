@@ -5,7 +5,6 @@ import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TabAdjustmentsInputsRDNone from './TabAdjustmentsInputsRDNone';
 import TabAdjustmentsInputsRDWithout from './TabAdjustmentsInputsRDWithout';
@@ -18,10 +17,8 @@ const TabAdjustmentsInputsRD = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={3}>
-        <Typography color='textSecondary'>
-          Reporting Delays adjustment
-        </Typography>
+      <Grid item xs={2}>
+        Reporting Delays type:
         <FormControl component='fieldset'>
           <RadioGroup
             name='rdAdjustType'
@@ -46,8 +43,8 @@ const TabAdjustmentsInputsRD = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={9}>
-        <Paper style={{ padding: 10, minHeight: 455 }}>
+      <Grid item xs={10}>
+        <Paper style={{ padding: 10, minHeight: 263 }}>
           {appMgr.adjustMgr.rdAdjustType === 'none' && <TabAdjustmentsInputsRDNone />}
           {appMgr.adjustMgr.rdAdjustType === 'withoutTrend' && <TabAdjustmentsInputsRDWithout {...props} />}
           {appMgr.adjustMgr.rdAdjustType === 'withTrend' && <TabAdjustmentsInputsRDWith {...props} />}

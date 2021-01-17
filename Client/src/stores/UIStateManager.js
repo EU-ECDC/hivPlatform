@@ -25,8 +25,8 @@ export default class UIStateManager {
       completed: false,
       disabled: true,
       subSteps: [
-        { title: 'Inputs' },
-        { title: 'Run' },
+        { title: 'Inputs', disabled: true },
+        { title: 'Run', disabled: true },
       ],
       activeSubStepId: 0
     },
@@ -60,6 +60,7 @@ export default class UIStateManager {
       setActiveSubStepId: action,
       lastEventType: observable,
       setLastEventType: action,
+      setSubStepDisabledStatus: action,
       enabledStages: computed,
       caseBasedUploadStageEnabled: computed,
       caseBasedAttrMappingStageEnabled: computed,
@@ -93,13 +94,14 @@ export default class UIStateManager {
     // this.steps[0].disabled = false;
 
     // Data upload
-    // this.steps[1].disabled =
+    // this.steps[1].disabled = false;
 
     // Case-based summary
     this.steps[2].disabled = !this.caseBasedSummaryStageEnabled;
 
     // Adjustments
     this.steps[3].disabled = !this.caseBasedAdjustmentsStageEnabled;
+    this.setSubStepDisabledStatus(3, 0, !this.caseBasedAdjustmentsStageEnabled);
 
     // switch (eventType) {
     //   // case 'AGGR_DATA_UPLOADED':
@@ -113,6 +115,10 @@ export default class UIStateManager {
     //     this.steps[3].disabled = !this.caseBasedSummaryStageEnabled;
     //     break;
     // }
+  };
+
+  setSubStepDisabledStatus = (stepId, subStepId, status) => {
+    this.steps[stepId].subSteps[subStepId].disabled = status;
   };
 
   get enabledStages() {
