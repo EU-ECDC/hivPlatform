@@ -229,7 +229,8 @@ CaseDataManager <- R6::R6Class(
 
     # 4. Adjust data -------------------------------------------------------------------------------
     RunAdjustments = function(
-      adjustmentSpecs
+      adjustmentSpecs,
+      filters = NULL
     ) {
       if (private$Catalogs$LastStep < 3) {
         PrintAlert(
@@ -244,38 +245,98 @@ CaseDataManager <- R6::R6Class(
 
         preProcessedData <- private$Catalogs$PreProcessedData
 
-        private$Catalogs$AdjustmentTask <- Task$new(
-          function(data, adjustmentSpecs) {
-            suppressMessages(pkgload::load_all())
-            options(width = 100)
-            result <- hivEstimatesAccuracy2::RunAdjustments(
-              data = data,
-              adjustmentSpecs = adjustmentSpecs,
-              diagYearRange = NULL,
-              notifQuarterRange = NULL,
-              seed = NULL
+        if (isTRUE(filters$DiagYear$ApplyInAdjustments)) {
+          diagYearRange <- c(
+            filters$DiagYear$MinYear,
+            filters$DiagYear$MaxYear
+          )
+
+          preProcessedData <- preProcessedData[
+            is.na(YearOfHIVDiagnosis) |
+            YearOfHIVDiagnosis %between% diagYearRange
+          ]
+        }
+
+        if (isTRUE(filters$NotifQuarter$ApplyInAdjustments)) {
+          notifQuarterRange <- c(
+            filters$NotifQuarter$MinYear,
+            filters$NotifQuarter$MaxYear
+          )
+
+          preProcessedData <- preProcessedData[
+            is.na(NotificationTime) |
+              NotificationTime %between% notifQuarterRange
+          ]
+        }
+
+        if (nrow(preProcessedData)) {
+          private$Catalogs$AdjustmentTask <- Task$new(
+            function(data, adjustmentSpecs) {
+              suppressMessages(pkgload::load_all())
+              options(width = 100)
+              result <- hivEstimatesAccuracy2::RunAdjustments(
+                data = data,
+                adjustmentSpecs = adjustmentSpecs,
+                diagYearRange = NULL,
+                notifQuarterRange = NULL,
+                seed = NULL
+              )
+              return(result)
+            },
+            args = list(data = preProcessedData, adjustmentSpecs = adjustmentSpecs),
+            session = private$Session,
+            progressCallback = function(runLog) {
+              private$SendMessage(
+                'ADJUSTMENTS_RUN_LOG_SET',
+                payload = list(
+                  ActionStatus = 'SUCCESS',
+                  RunLog = runLog
+                )
+              )
+            },
+            successCallback = function(result) {
+              private$Catalogs$AdjustmentResult <- result
+              private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
+              private$Catalogs$LastStep <- 4L
+              private$Reinitialize('RunAdjustments')
+              PrintAlert('Running adjustment task finished')
+              private$SendMessage(
+                'ADJUSTMENTS_RUN_FINISHED',
+                payload = list(
+                  ActionStatus = 'SUCCESS',
+                  ActionMessage = 'Running adjustment task finished'
+                )
+              )
+            },
+            failCallback = function() {
+              PrintAlert('Running adjustment task failed', type = 'danger')
+              private$SendMessage(
+                'ADJUSTMENTS_RUN_FINISHED',
+                payload = list(
+                  ActionStatus = 'FAIL',
+                  ActionMessage = 'Running adjustment task failed'
+                )
+              )
+            }
+          )
+          private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'SUCCESS')
+          private$SendMessage(
+            'ADJUSTMENTS_RUN_STARTED',
+            payload = list(
+              ActionStatus = 'SUCCESS',
+              ActionMessage = 'Running adjustment task started'
             )
-            return(result)
-          },
-          args = list(data = preProcessedData, adjustmentSpecs = adjustmentSpecs),
-          session = private$Session,
-          successCallback = function(result) {
-            private$Catalogs$AdjustmentResult <- result
-            private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
-            private$Catalogs$LastStep <- 4L
-            private$Reinitialize('RunAdjustments')
-            PrintAlert('Running adjustment task finished')
-            private$SendMessage('ADJUSTMENTS_RUN_FINISHED', 'SUCCESS')
-          },
-          failCallback = function() {
-            PrintAlert('Running adjustment task failed', type = 'danger')
-            private$SendMessage('ADJUSTMENTS_RUN_FINISHED', 'FAIL')
-          }
-        )
-        private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'SUCCESS')
+          )
+        }
       },
       error = function(e) {
-        private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'FAIL')
+        private$SendMessage(
+          'ADJUSTMENTS_RUN_STARTED',
+          payload = list(
+            ActionStatus = 'FAIL',
+            ActionMessage = 'Running adjustment task failed'
+          )
+        )
         print(e)
       })
 

@@ -108,19 +108,11 @@ export default class SummaryDataManager {
       repDelPlot: computed,
       missPlot3Categories: computed,
       missPlot4Categories: computed,
+      filters: computed,
     });
 
     autorun(() => {
-      this.rootMgr.inputValueSet('summaryFilters', {
-        DiagYear: {
-          MinYear: this.diagYearPlotData.filter.valueMinYear,
-          MaxYear: this.diagYearPlotData.filter.valueMaxYear
-        },
-        NotifQuarter: {
-          MinYear: this.notifQuarterPlotData.filter.valueMinYear,
-          MaxYear: this.notifQuarterPlotData.filter.valueMaxYear
-        }
-      })
+      this.rootMgr.inputValueSet('summaryFilters', this.filters);
     }, { delay: 1000 });
   };
 
@@ -185,13 +177,29 @@ export default class SummaryDataManager {
   };
 
   get missPlot3Categories() {
-    const cats = this.missPlotData.plot3.
-      chartData[this.missPlotSelection].
-      map(el => `${(el.y * 100).toFixed(2)} %`);
+    const cats =
+      this.missPlotData.plot3.
+        chartData[this.missPlotSelection].
+        map(el => `${(el.y * 100).toFixed(2)} %`);
     return cats;
   };
 
   get missPlot4Categories() {
     return this.missPlotData.plot4.chartCategories;
+  };
+
+  get filters() {
+    return {
+      DiagYear: {
+        ApplyInAdjustments: this.diagYearPlotData.filter.applyInAdjustments,
+        MinYear: this.diagYearPlotData.filter.valueMinYear,
+        MaxYear: this.diagYearPlotData.filter.valueMaxYear,
+      },
+      NotifQuarter: {
+        ApplyInAdjustments: this.notifQuarterPlotData.filter.applyInAdjustments,
+        MinYear: this.notifQuarterPlotData.filter.valueMinYear,
+        MaxYear: this.notifQuarterPlotData.filter.valueMaxYear
+      }
+    }
   };
 }

@@ -9,7 +9,8 @@ GetCaseDataSummary <- function(
       scaleMinYear = min(diagYearCategories),
       scaleMaxYear = max(diagYearCategories),
       valueMinYear = min(diagYearCategories),
-      valueMaxYear = max(diagYearCategories)
+      valueMaxYear = max(diagYearCategories),
+      applyInAdjustments = FALSE
     ),
     chartCategories = diagYearCategories,
     chartData = list(
@@ -32,7 +33,8 @@ GetCaseDataSummary <- function(
       scaleMinYear = min(notifQuarterCategories),
       scaleMaxYear = max(notifQuarterCategories),
       valueMinYear = min(notifQuarterCategories),
-      valueMaxYear = max(notifQuarterCategories)
+      valueMaxYear = max(notifQuarterCategories),
+      applyInAdjustments = FALSE
     ),
     chartCategories = notifQuarterCategories,
     chartData = list(

@@ -33,7 +33,7 @@ export default class UIStateManager {
     {
       title: 'Modelling',
       completed: false,
-      disabled: true,
+      disabled: false,
       subSteps: [
         { title: 'Populations' },
         { title: 'Inputs' },
@@ -45,7 +45,7 @@ export default class UIStateManager {
       activeSubStepId: 0
     },
     { title: 'Reports', completed: false, disabled: true, subSteps: [] },
-    { title: 'Outputs', completed: false, disabled: true, subSteps: [] },
+    { title: 'Outputs', completed: false, disabled: false, subSteps: [] },
   ];
 
   activeStepId = 0;
@@ -75,7 +75,7 @@ export default class UIStateManager {
 
   setActiveStepId = stepId => {
     this.steps[stepId].disabled = false;
-    if (stepId > 0) {
+    if (stepId > 0 && stepId < 6) {
       this.steps[stepId - 1].completed = true;
     }
     this.activeStepId = stepId;

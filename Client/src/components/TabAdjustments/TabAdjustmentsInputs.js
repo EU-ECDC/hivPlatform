@@ -21,8 +21,7 @@ const TabAdjustmentsInputs = (props) => {
             <Button
               size='small'
               color='primary'
-              //disabled={!appMgr.adjustMgr.adjustmentSelected}
-              disabled={true}
+              disabled={!appMgr.adjustMgr.adjustmentSelected}
               onClick={handleNextStepBtnClick}
             >
               Next step

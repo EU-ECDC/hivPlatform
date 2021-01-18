@@ -103,23 +103,28 @@ export default class AppManager {
         break;
       case 'CASE_BASED_SUMMARY_DATA_PREPARED':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          console.log(e.payload.Summary);
           this.summaryDataMgr.setSelectedCount(e.payload.Summary.SelectedCount);
           this.summaryDataMgr.setTotalCount(e.payload.Summary.TotalCount);
           this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
           this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
         }
         break;
-      // case 'ADJUSTMENTS_RUN_STARTED':
-      //   this.adjustMgr.setAdjustmentsRunProgress(1);
-      //   break;
-      // case 'ADJUSTMENTS_RUN_FINISHED':
-      //   this.adjustMgr.setAdjustmentsRunProgress(null);
-      //   this.notificationsMgr.setMsg('Adjustment run finished');
-      //   break;
-      // case 'ADJUSTMENTS_RUN_LOG_SET':
-      //   this.adjustMgr.setAdjustmentsRunLog(event.Payload.RunLog);
-      //   break;
+      case 'ADJUSTMENTS_RUN_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunProgress(1);
+        }
+        break;
+      case 'ADJUSTMENTS_RUN_FINISHED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunProgress(null);
+          this.notificationsMgr.setMsg('Adjustment run finished');
+        }
+        break;
+      case 'ADJUSTMENTS_RUN_LOG_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunLog(e.payload.RunLog);
+        }
+        break;
       // case 'AGGR_DATA_UPLOADED':
       //   this.aggrDataMgr.setFileName(e.payload.FileName);
       //   this.aggrDataMgr.setFilePath(e.payload.FilePath);

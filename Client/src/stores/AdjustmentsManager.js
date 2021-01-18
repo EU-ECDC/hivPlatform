@@ -91,9 +91,9 @@ export default class AdjustmentsManager {
       setAdjustmentsRunLog: action
     });
 
-    // autorun(() => {
-    //   this.rootMgr.uiStateMgr.setSubStepDisabledStatus(3, 1, !this.adjustmentSelected);
-    // })
+    autorun(() => {
+      this.rootMgr.uiStateMgr.setSubStepDisabledStatus(3, 1, !this.adjustmentSelected);
+    })
   };
 
   get miParams() {
@@ -191,6 +191,7 @@ export default class AdjustmentsManager {
 
   runAdjustments = () => {
     this.rootMgr.btnClicked('runAdjustBtn', {
+      Filters: this.rootMgr.summaryDataMgr.filters,
       MIAdjustType: this.miAdjustType,
       MIParams: this.miParams,
       RDAdjustType: this.rdAdjustType,

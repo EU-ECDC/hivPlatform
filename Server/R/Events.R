@@ -21,21 +21,6 @@ Events <- function(
     appMgr$CaseMgr$ReadData(fileInfo$datapath)
   })
 
-  # observeEvent(input$aggrUploadBtn, {
-  #   fileInfo <- input$aggrUploadBtn
-  #   appMgr$SendMessage(
-  #     'AGGR_DATA_UPLOADED',
-  #     'SUCCESS',
-  #     list(
-  #       FileName = fileInfo$name[1],
-  #       FileSize = fileInfo$size[1],
-  #       FileType = fileInfo$type[1],
-  #       FilePath = fileInfo$datapath[1]
-  #     )
-  #   )
-  #   appMgr$AggrMgr$ReadData(fileInfo$datapath)
-  # })
-
   observeEvent(input$attrMapping, {
     appMgr$CaseMgr$ApplyAttributesMapping(input$attrMapping)
   })
@@ -115,38 +100,42 @@ Events <- function(
     )
   })
 
-  # observeEvent(input$runAdjustBtn, {
-  #   params <- input$runAdjustBtn
-  #   adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)
-  #   appMgr$AdjustCaseBasedData(adjustmentSpecs)
-  # })
+  observeEvent(input$runAdjustBtn, {
+    params <- input$runAdjustBtn
+    adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)
+    appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, params$Filter)
+  })
 
-  # observeEvent(appMgr$AdjustmentTask$HTMLRunLog, {
-  #   appMgr$SendEventToReact('shinyHandler', list(
-  #     Type = 'ADJUSTMENTS_RUN_LOG_SET',
-  #     Status = 'SUCCESS',
-  #     Payload = list(
-  #       RunLog = appMgr$AdjustmentTask$HTMLRunLog
+  observeEvent(input$downloadBtn, {
+    print(input$downloadBtn)
+    test <- downloadHandler(
+      filename = function() {
+        paste('data-', Sys.Date(), '.csv', sep = '')
+      },
+      content = function(con) {
+        write.csv(mtcars, con)
+      }
+    )
+    print(session)
+    # session$renderFile(test)
+  })
+
+
+  # observeEvent(input$aggrUploadBtn, {
+  #   fileInfo <- input$aggrUploadBtn
+  #   appMgr$SendMessage(
+  #     'AGGR_DATA_UPLOADED',
+  #     'SUCCESS',
+  #     list(
+  #       FileName = fileInfo$name[1],
+  #       FileSize = fileInfo$size[1],
+  #       FileType = fileInfo$type[1],
+  #       FilePath = fileInfo$datapath[1]
   #     )
-  #   ))
+  #   )
+  #   appMgr$AggrMgr$ReadData(fileInfo$datapath)
   # })
 
-  # observeEvent(appMgr$AdjustmentTask$Status, {
-  #   if (appMgr$AdjustmentTask$Status == 'RUNNING') {
-  #     appMgr$SendEventToReact('shinyHandler', list(
-  #       Type = 'ADJUSTMENTS_RUN_STARTED',
-  #       Status = 'SUCCESS',
-  #       Payload = list()
-  #     ))
-  #   } else if (appMgr$AdjustmentTask$Status == 'STOPPED') {
-  #     appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
-  #     appMgr$SendEventToReact('shinyHandler', list(
-  #       Type = 'ADJUSTMENTS_RUN_FINISHED',
-  #       Status = 'SUCCESS',
-  #       Payload = list()
-  #     ))
-  #   }
-  # })
 
   # observeEvent(appMgr$FinalAdjustedCaseBasedData$Table, {
   #   dt <- appMgr$FinalAdjustedCaseBasedData$Table

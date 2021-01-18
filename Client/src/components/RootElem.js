@@ -122,7 +122,7 @@ const RootElem = props => {
           <TabReports appMgr={appMgr}/>
         </StepPanel>
         <StepPanel panelId={6} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabOutputs />
+          <TabOutputs {...props}/>
         </StepPanel>
       </Box>
       <MessageBar notificationsMgr={appMgr.notificationsMgr} />

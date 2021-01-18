@@ -46,7 +46,7 @@ const TabAdjustmentsRun = props => {
             Case-based data adjustments run
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Btn
             onClick={handleRunAdjustBtnClick}
             disabled={
@@ -66,7 +66,7 @@ const TabAdjustmentsRun = props => {
           </Button>
           <AdjustmentsRunProgressBar progress={appMgr.adjustMgr.adjustmentsRunProgress} />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
