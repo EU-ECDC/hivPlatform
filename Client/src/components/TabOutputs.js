@@ -17,7 +17,14 @@ import TabPanel from './TabPanel';
 const TabOutputs = (props) => {
   const { appMgr } = props;
 
-  const handleClick = () => appMgr.btnClicked('downloadBtn')
+  React.useEffect(
+    () => {
+      appMgr.unbindShiny();
+      appMgr.bindShiny();
+
+      return () => appMgr.unbindShiny();
+    }
+  );
 
   return (
     <TabPanel>
@@ -44,7 +51,7 @@ const TabOutputs = (props) => {
                   <TableCell>1.</TableCell>
                   <TableCell>Adjusted data</TableCell>
                   <TableCell>Case-based data after adjustments</TableCell>
-                  <TableCell><Link href="#" onClick={handleClick}>rds file</Link></TableCell>
+                  <TableCell><Link href='#' id='downloadTest' className='shiny-download-link'>rds file</Link></TableCell>
                   <TableCell>2MB</TableCell>
                 </TableRow>
                 <TableRow hover>

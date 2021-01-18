@@ -106,20 +106,28 @@ Events <- function(
     appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, params$Filter)
   })
 
-  observeEvent(input$downloadBtn, {
-    print(input$downloadBtn)
-    test <- downloadHandler(
-      filename = function() {
-        paste('data-', Sys.Date(), '.csv', sep = '')
-      },
-      content = function(con) {
-        write.csv(mtcars, con)
-      }
-    )
-    print(session)
-    # session$renderFile(test)
-  })
+  # observeEvent(input$downloadBtn, {
+  #   print(input$downloadBtn)
+  #   test <- downloadHandler(
+  #     filename = function() {
+  #       paste('data-', Sys.Date(), '.csv', sep = '')
+  #     },
+  #     content = function(con) {
+  #       write.csv(mtcars, con)
+  #     }
+  #   )
+  #   print(session)
+  #   # session$renderFile(test)
+  # })
 
+  output$downloadTest <- downloadHandler(
+    filename = function() {
+      paste("data-", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(mtcars, file)
+    }
+  )
 
   # observeEvent(input$aggrUploadBtn, {
   #   fileInfo <- input$aggrUploadBtn

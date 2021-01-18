@@ -273,4 +273,22 @@ export default class AppManager {
   setShinyMessage = msg => {
     this.shinyMessage = msg;
   };
+
+  unbindShiny = () => {
+    if (this.shinyReady) {
+      Shiny.unbindAll();
+      console.log('unbindShinyInputs');
+    } else {
+      console.log('unbindShinyInputs: Shiny is not available');
+    }
+  };
+
+  bindShiny = () => {
+    if (this.shinyReady) {
+      Shiny.bindAll();
+      console.log('bindShinyInputs');
+    } else {
+      console.log('bindShinyInputs: Shiny is not available');
+    }
+  };
 }
