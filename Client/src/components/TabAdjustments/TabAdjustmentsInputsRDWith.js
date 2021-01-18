@@ -32,7 +32,11 @@ const TabAdjustmentsInputsRDWith = (props) => {
               value={appMgr.adjustMgr.rdWithTrendSettings.startYear}
               onChange={handleRDWithStartYearChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1975, max: 2030
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
@@ -44,7 +48,11 @@ const TabAdjustmentsInputsRDWith = (props) => {
               value={appMgr.adjustMgr.rdWithTrendSettings.endYear}
               onChange={handleRDWithEndYearChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1975, max: 2030
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
@@ -55,7 +63,11 @@ const TabAdjustmentsInputsRDWith = (props) => {
               value={appMgr.adjustMgr.rdWithTrendSettings.endQrt}
               onChange={handleRDWithEndQrtChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 4
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>

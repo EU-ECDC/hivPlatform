@@ -18,7 +18,7 @@ const TabAdjustmentsInputsRD = (props) => {
   return (
     <React.Fragment>
       <Grid item xs={2}>
-        Reporting Delays type:
+        Reporting Delays type:<br />
         <FormControl component='fieldset'>
           <RadioGroup
             name='rdAdjustType'

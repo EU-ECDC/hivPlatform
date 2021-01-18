@@ -125,14 +125,14 @@ export default class AdjustmentsManager {
   };
 
   setMIAdjustType = type => this.miAdjustType = type;
-  setMIJomoNimp = nimp => this.miJomoSettings.nimp = nimp;
-  setMIJomoNburn = nburn => this.miJomoSettings.nburn = nburn;
-  setMIJomoNbetween = nbetween => this.miJomoSettings.nbetween = nbetween;
+  setMIJomoNimp = nimp => this.miJomoSettings.nimp = Math.min(Math.max(nimp, 1), 1000);
+  setMIJomoNburn = nburn => this.miJomoSettings.nburn = Math.min(Math.max(nburn, 1), 1000);
+  setMIJomoNbetween = nbetween => this.miJomoSettings.nbetween = Math.min(Math.max(nbetween, 1), 1000);
   setMIJomoNsdf = nsdf => this.miJomoSettings.nsdf = nsdf;
   setMIJomoImputeRD = imputeRD => this.miJomoSettings.imputeRD = imputeRD;
-  setMIMiceNimp = nimp => this.miMiceSettings.nimp = nimp;
-  setMIMiceNit = nit => this.miMiceSettings.nit = nit;
-  setMIMiceNsdf = nsdf => this.miMiceSettings.nsdf = nsdf;
+  setMIMiceNimp = nimp => this.miMiceSettings.nimp = Math.min(Math.max(nimp, 1), 1000);
+  setMIMiceNit = nit => this.miMiceSettings.nit = Math.min(Math.max(nit, 1), 1000);
+  setMIMiceNsdf = nsdf => this.miMiceSettings.nsdf = Math.min(Math.max(nsdf, 1), 4);
   setMIMiceImputeRD = imputeRD => this.miMiceSettings.imputeRD = imputeRD;
   restoreMIDefaults = type => {
     if (type === 'jomo') {
@@ -154,15 +154,15 @@ export default class AdjustmentsManager {
   };
 
   setRDAdjustType = type => this.rdAdjustType = type;
-  setRDWithoutStartYear = year => this.rdWithoutTrendSettings.startYear = year;
-  setRDWithoutEndYear = year => this.rdWithoutTrendSettings.endYear = year;
-  setRDWithoutEndQrt = qrt => this.rdWithoutTrendSettings.endQrt = qrt;
+  setRDWithoutStartYear = year => this.rdWithoutTrendSettings.startYear = Math.min(Math.max(year, 1975), 2030);
+  setRDWithoutEndYear = year => this.rdWithoutTrendSettings.endYear = Math.min(Math.max(year, 1975), 2030);
+  setRDWithoutEndQrt = qrt => this.rdWithoutTrendSettings.endQrt = Math.min(Math.max(qrt, 1), 4);
   setRDWithoutStratGender = stratGender => this.rdWithoutTrendSettings.stratGender = stratGender;
   setRDWithoutStratTrans = stratTrans => this.rdWithoutTrendSettings.stratTrans = stratTrans;
   setRDWithoutStratMigr = stratMigr => this.rdWithoutTrendSettings.stratMigr = stratMigr;
-  setRDWithStartYear = year => this.rdWithTrendSettings.startYear = year;
-  setRDWithEndYear = year => this.rdWithTrendSettings.endYear = year;
-  setRDWithEndQrt = qrt => this.rdWithTrendSettings.endQrt = qrt;
+  setRDWithStartYear = year => this.rdWithTrendSettings.startYear = Math.min(Math.max(year, 1975), 2030);
+  setRDWithEndYear = year => this.rdWithTrendSettings.endYear = Math.min(Math.max(year, 1975), 2030);
+  setRDWithEndQrt = qrt => this.rdWithTrendSettings.endQrt = Math.min(Math.max(qrt, 1), 4);
   setRDWithStratGender = stratGender => this.rdWithTrendSettings.stratGender = stratGender;
   setRDWithStratTrans = stratTrans => this.rdWithTrendSettings.stratTrans = stratTrans;
   setRDWithStratMigr = stratMigr => this.rdWithTrendSettings.stratMigr = stratMigr;

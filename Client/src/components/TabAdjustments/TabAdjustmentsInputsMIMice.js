@@ -31,7 +31,11 @@ const TabAdjustmentsInputsMIMice = (props) => {
               value={appMgr.adjustMgr.miMiceSettings.nimp}
               onChange={handleMIMiceNimpChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 1000
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
@@ -43,7 +47,11 @@ const TabAdjustmentsInputsMIMice = (props) => {
               value={appMgr.adjustMgr.miMiceSettings.nit}
               onChange={handleMIMiceNitChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 1000
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>

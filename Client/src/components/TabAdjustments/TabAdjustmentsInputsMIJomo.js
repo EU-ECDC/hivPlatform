@@ -32,7 +32,11 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               value={appMgr.adjustMgr.miJomoSettings.nimp}
               onChange={handleMIJomoNimpChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 1000
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
@@ -44,7 +48,11 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               value={appMgr.adjustMgr.miJomoSettings.nburn}
               onChange={handleMIJomoNburnChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 1000
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
@@ -55,7 +63,11 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               value={appMgr.adjustMgr.miJomoSettings.nbetween}
               onChange={handleMIJomoNbetweenChange}
               fullWidth
-              variant='filled'
+              InputProps={{
+                inputProps: {
+                  min: 1, max: 1000
+                }
+              }}
               style={{ marginBottom: 20 }}
             />
           </Grid>
