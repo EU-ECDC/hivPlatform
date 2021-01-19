@@ -343,9 +343,7 @@ CaseDataManager <- R6::R6Class(
       return(invisible(self))
     },
 
-    CancelAdjustments = function(
-      callback = NULL
-    ) {
+    CancelAdjustments = function() {
       if (!is.null(private$Catalogs$AdjustmentTask)) {
         private$Catalogs$AdjustmentTask$Stop()
       }

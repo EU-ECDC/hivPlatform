@@ -1,3 +1,26 @@
+CreateDownload <- function(type, format, output) {
+  if (type == 'ADJUSTED_DATA') {
+    timeStamp <- appMgr$CaseMgr$LastAdjustmentResult$TimeStamp
+    if (format %in% c('rds')) {
+      downloadData <- appMgr$CaseMgr$LastAdjustmentResult
+    } else {
+      downloadData <- appMgr$CaseMgr$LastAdjustmentResult$Data
+    }
+
+    fileNamePrefix <- 'AdjustedData'
+    outputControlName <- sprintf('downAdjData%s', toupper(format))
+  }
+
+  output[[outputControlName]] <- downloadHandler(
+    filename = function() {
+      sprintf('AdjustedData_%s.%s', timeStamp, format)
+    },
+    content = function(file) {
+      WriteDataFile(downloadData, file)
+    }
+  )
+}
+
 Events <- function(
   input,
   output,
@@ -106,28 +129,14 @@ Events <- function(
     appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, params$Filter)
   })
 
-  # observeEvent(input$downloadBtn, {
-  #   print(input$downloadBtn)
-  #   test <- downloadHandler(
-  #     filename = function() {
-  #       paste('data-', Sys.Date(), '.csv', sep = '')
-  #     },
-  #     content = function(con) {
-  #       write.csv(mtcars, con)
-  #     }
-  #   )
-  #   print(session)
-  #   # session$renderFile(test)
-  # })
+  observeEvent(input$cancelAdjustBtn, {
+    appMgr$CaseMgr$CancelAdjustments()
+  })
 
-  output$downloadTest <- downloadHandler(
-    filename = function() {
-      paste("data-", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(mtcars, file)
-    }
-  )
+
+  CreateDownload('ADJUSTED_DATA', 'csv', output)
+  CreateDownload('ADJUSTED_DATA', 'rds', output)
+  CreateDownload('ADJUSTED_DATA', 'dta', output)
 
   # observeEvent(input$aggrUploadBtn, {
   #   fileInfo <- input$aggrUploadBtn
@@ -161,10 +170,6 @@ Events <- function(
   #     )
   #   ))
   # }, ignoreNULL = FALSE)
-
-  # observeEvent(input$cancelAdjustBtn, {
-  #   appMgr$CancelAdjustmentTask()
-  # })
 
   # observeEvent(input$xmlModel, {
   #   appMgr$HIVModelParameters <- input$xmlModel

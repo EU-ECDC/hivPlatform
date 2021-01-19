@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import IsNull from '../utilities/IsNull';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     marginTop: 10,
     marginBottom: 10,

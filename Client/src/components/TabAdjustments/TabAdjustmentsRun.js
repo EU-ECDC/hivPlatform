@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -9,11 +10,23 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
+import IsNull from '../../utilities/IsNull';
+
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: 10,
+    marginBottom: 10,
+    height: 10,
+  }
+}));
 
 const AdjustmentsRunProgressBar = (props) => {
   const { progress } = props;
-  if (progress === null) return null;
-  return <LinearProgress color='secondary' />
+  if (IsNull(progress)) return null;
+
+  const classes = useStyles();
+
+  return <LinearProgress color='secondary' className={classes.root}/>
 };
 
 const TabAdjustmentsRun = props => {

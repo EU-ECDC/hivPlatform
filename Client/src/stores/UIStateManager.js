@@ -33,7 +33,7 @@ export default class UIStateManager {
     {
       title: 'Modelling',
       completed: false,
-      disabled: false,
+      disabled: true,
       subSteps: [
         { title: 'Populations' },
         { title: 'Inputs' },
@@ -65,6 +65,7 @@ export default class UIStateManager {
       caseBasedUploadStageEnabled: computed,
       caseBasedAttrMappingStageEnabled: computed,
       caseBasedOrigGrpngStageEnabled: computed,
+      outputsStageEnabled: computed
     });
   };
 
@@ -75,9 +76,9 @@ export default class UIStateManager {
 
   setActiveStepId = stepId => {
     this.steps[stepId].disabled = false;
-    if (stepId > 0 && stepId < 6) {
-      this.steps[stepId - 1].completed = true;
-    }
+    // if (stepId > 0 && stepId < 6) {
+    //   this.steps[stepId - 1].completed = true;
+    // }
     this.activeStepId = stepId;
   };
 
@@ -103,18 +104,8 @@ export default class UIStateManager {
     this.steps[3].disabled = !this.caseBasedAdjustmentsStageEnabled;
     this.setSubStepDisabledStatus(3, 0, !this.caseBasedAdjustmentsStageEnabled);
 
-    // switch (eventType) {
-    //   // case 'AGGR_DATA_UPLOADED':
-    //   //   this.steps[4].disabled = false;
-    //   //   break;
-    //   // case 'SUMMARY_DATA_PREPARED':
-    //   //   this.steps[2].disabled = false;
-    //   //   break;
-    //   case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
-    //     this.steps[2].disabled = !this.caseBasedSummaryStageEnabled;
-    //     this.steps[3].disabled = !this.caseBasedSummaryStageEnabled;
-    //     break;
-    // }
+    // Outputs
+    this.steps[6].disabled = !this.outputsStageEnabled;
   };
 
   setSubStepDisabledStatus = (stepId, subStepId, status) => {
@@ -143,5 +134,9 @@ export default class UIStateManager {
 
   get caseBasedAdjustmentsStageEnabled() {
     return this.enabledStages.indexOf('CASE_BASED_ADJUSTMENTS') !== -1;
+  };
+
+  get outputsStageEnabled() {
+    return this.enabledStages.indexOf('OUTPUTS') !== -1;
   };
 }
