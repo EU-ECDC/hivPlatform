@@ -11,6 +11,7 @@ import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
 import ModelsManager from './ModelsManager';
 import IsNull from '../utilities/IsNull';
+import EnsureArray from '../utilities/EnsureArray';
 
 configure({
   enforceActions: 'observed',
@@ -214,7 +215,9 @@ export default class AppManager {
       setShinyState: action,
       btnClicked: action,
       inputValueSet: action,
-      setShinyMessage: action
+      setShinyMessage: action,
+      unbindShiny: action,
+      bindShiny: action
     });
   };
 
@@ -274,19 +277,18 @@ export default class AppManager {
     this.shinyMessage = msg;
   };
 
-  unbindShiny = () => {
-    if (this.shinyReady) {
-      Shiny.unbindAll();
-      console.log('unbindShinyInputs');
+  unbindShiny = (els) => {
+    if (!IsNull(window.Shiny) && this.shinyReady) {
+      window.Shiny.unbindAll();
+      EnsureArray(els).forEach(el => delete window.Shiny.shinyapp.$bindings[el]);
     } else {
       console.log('unbindShinyInputs: Shiny is not available');
     }
   };
 
   bindShiny = () => {
-    if (this.shinyReady) {
-      Shiny.bindAll();
-      console.log('bindShinyInputs');
+    if (!IsNull(window.Shiny) && this.shinyReady) {
+      window.Shiny.bindAll();
     } else {
       console.log('bindShinyInputs: Shiny is not available');
     }

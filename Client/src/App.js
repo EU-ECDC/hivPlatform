@@ -81,6 +81,11 @@ const theme = createMuiTheme({
         paddingLeft: 16,
         paddingBottom: 5
       }
+    },
+    MuiChip: {
+      label: {
+        color: 'white'
+      }
     }
   }
 });
