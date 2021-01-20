@@ -41,6 +41,11 @@ export default class AppManager {
   onShinyEvent = e => {
     console.log('onShinyEvent', e);
     switch (e.type) {
+      case 'COMPLETED_STEPS_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setCompletedSteps(e.payload.CompletedSteps);
+        }
+        break;
       case 'CASE_BASED_DATA_UPLOADED':
         this.caseBasedDataMgr.setActionStatus(e.payload.ActionStatus);
         this.caseBasedDataMgr.setActionMessage(e.payload.ActionMessage);
@@ -110,23 +115,26 @@ export default class AppManager {
           this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
         }
         break;
-      case 'ADJUSTMENTS_RUN_STARTED':
-        if (e.payload.ActionStatus === 'SUCCESS') {
-          this.adjustMgr.setAdjustmentsRunProgress(1);
-        }
-        break;
-      case 'ADJUSTMENTS_RUN_FINISHED':
-        if (e.payload.ActionStatus === 'SUCCESS') {
-          this.adjustMgr.setAdjustmentsRunProgress(null);
-          this.uiStateMgr.setLastEventType(e.type);
-          this.notificationsMgr.setMsg('Adjustment run finished');
-        }
-        break;
-      case 'ADJUSTMENTS_RUN_LOG_SET':
-        if (e.payload.ActionStatus === 'SUCCESS') {
-          this.adjustMgr.setAdjustmentsRunLog(e.payload.RunLog);
-        }
-        break;
+      // case 'ADJUSTMENTS_RUN_STARTED':
+      //   if (e.payload.ActionStatus === 'SUCCESS') {
+      //     this.adjustMgr.setAdjustmentsRunProgress(1);
+      //   }
+      //   break;
+      // case 'ADJUSTMENTS_RUN_FINISHED':
+      //   if (e.payload.ActionStatus === 'SUCCESS') {
+      //     this.adjustMgr.setAdjustmentsRunProgress(null);
+      //     this.uiStateMgr.setLastEventType(e.type);
+      //     this.notificationsMgr.setMsg('Adjustment run finished');
+      //   }
+      //   break;
+      // case 'ADJUSTMENTS_RUN_LOG_SET':
+      //   if (e.payload.ActionStatus === 'SUCCESS') {
+      //     this.adjustMgr.setAdjustmentsRunLog(e.payload.RunLog);
+      //   }
+      //   break;
+
+
+
       // case 'AGGR_DATA_UPLOADED':
       //   this.aggrDataMgr.setFileName(e.payload.FileName);
       //   this.aggrDataMgr.setFilePath(e.payload.FilePath);
@@ -206,7 +214,7 @@ export default class AppManager {
     this.popCombMgr = new PopCombinationsManager(this);
     this.modelMgr = new ModelsManager(this);
 
-    this.uiStateMgr.setLastEventType('START');
+    // this.uiStateMgr.setLastEventType('START');
 
     makeObservable(this, {
       shinyState: observable,

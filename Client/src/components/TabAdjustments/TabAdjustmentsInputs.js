@@ -11,7 +11,7 @@ import TabAdjustmentsRD from './TabAdjustmentsInputsRD';
 const TabAdjustmentsInputs = (props) => {
   const { appMgr } = props;
 
-  const handleNextStepBtnClick = e => appMgr.uiStateMgr.setActiveSubStepId(3, 1);
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(3, 1);
 
   return (
     <TabPanel>
@@ -22,7 +22,7 @@ const TabAdjustmentsInputs = (props) => {
               size='small'
               color='primary'
               disabled={!appMgr.adjustMgr.adjustmentSelected}
-              onClick={handleNextStepBtnClick}
+              onClick={handleNextpageBtnClick}
             >
               Next step
             </Button>

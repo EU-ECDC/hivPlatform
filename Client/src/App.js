@@ -82,11 +82,11 @@ const theme = createMuiTheme({
         paddingBottom: 5
       }
     },
-    MuiChip: {
-      label: {
-        color: 'white'
-      }
-    }
+    // MuiChip: {
+    //   label: {
+    //     color: 'white'
+    //   }
+    // }
   }
 });
 

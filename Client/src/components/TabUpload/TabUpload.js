@@ -6,12 +6,12 @@ import TabUploadAggregated from './TabUploadAggregated';
 const TabUpload = (props) => {
   const { appMgr } = props;
 
-  const activeSubStepId = appMgr.uiStateMgr.steps[appMgr.uiStateMgr.activeStepId].activeSubStepId;
+  const activeSubPageId = appMgr.uiStateMgr.activeSubPageId;
 
   return (
     <React.Fragment>
-      {activeSubStepId === 0 && <TabUploadCase {...props} />}
-      {activeSubStepId === 1 && <TabUploadAggregated {...props} />}
+      {activeSubPageId === 0 && <TabUploadCase {...props} />}
+      {activeSubPageId === 1 && <TabUploadAggregated {...props} />}
     </React.Fragment>
   );
 };

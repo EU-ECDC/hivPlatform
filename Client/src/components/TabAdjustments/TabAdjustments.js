@@ -6,12 +6,12 @@ import TabAdjustmentsRun from './TabAdjustmentsRun';
 const TabAdjustments = (props) => {
   const { appMgr } = props;
 
-  const activeSubStepId = appMgr.uiStateMgr.steps[appMgr.uiStateMgr.activeStepId].activeSubStepId;
+  const activeSubPageId = appMgr.uiStateMgr.activeSubPageId;
 
   return (
     <React.Fragment>
-      {activeSubStepId === 0 && <TabAdjustmentsInputs {...props} />}
-      {activeSubStepId === 1 && <TabAdjustmentsRun {...props} />}
+      {activeSubPageId === 0 && <TabAdjustmentsInputs {...props} />}
+      {activeSubPageId === 1 && <TabAdjustmentsRun {...props} />}
     </React.Fragment>
   );
 };

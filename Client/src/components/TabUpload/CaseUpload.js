@@ -35,7 +35,7 @@ const CaseUpload = (props) => {
   const classes = userStyles();
 
   const handleUploadBtnClick = e => appMgr.caseBasedDataMgr.uploadData(e.target);
-  const handleNextStepBtnClick = e => appMgr.uiStateMgr.setActiveStepId(2);
+  const handleNextPageBtnClick = e => appMgr.uiStateMgr.setActivePageId(2);
 
   return (
     <Grid container spacing={2}>
@@ -44,8 +44,8 @@ const CaseUpload = (props) => {
           <Button
             size='small'
             color='primary'
-            disabled={!appMgr.uiStateMgr.caseBasedSummaryStageEnabled}
-            onClick={handleNextStepBtnClick}
+            disabled={!appMgr.uiStateMgr.summaryPageEnabled}
+            onClick={handleNextPageBtnClick}
           >
             Next step
           </Button>

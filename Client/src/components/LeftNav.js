@@ -9,28 +9,28 @@ import ListItem from '@material-ui/core/ListItem';
 import { StepContent } from '@material-ui/core';
 
 const LeftNav = (props) => {
-  const { steps, activeStepId, onStepChange, onSubStepChange } = props;
+  const { pages, activePageId, onPageChange } = props;
 
   return (
     <div style={{ minWidth: 250, backgroundColor: 'white' }}>
-      <Stepper nonLinear activeStep={activeStepId} orientation='vertical'>
-        {steps.map((step, i) => (
-          <Step key={i} completed={step.completed} disabled={step.disabled}>
-            <StepButton onClick={() => onStepChange(i)} >
-              <StepLabel>{step.title}</StepLabel>
+      <Stepper nonLinear activeStep={activePageId} orientation='vertical'>
+        {pages.map((page, i) => (
+          <Step key={i} completed={page.completed} disabled={page.disabled}>
+            <StepButton onClick={() => onPageChange(i)} >
+              <StepLabel>{page.title}</StepLabel>
             </StepButton>
-            {step.subSteps && <StepContent>
+            {page.subPages && <StepContent>
               <List>
                 {
-                  step.subSteps.map((subStep, j) => (
+                  page.subPages.map((subPage, j) => (
                     <ListItem
                       button
                       key={j}
-                      selected={j === step.activeSubStepId}
-                      disabled={subStep.disabled}
-                      onClick={() => onSubStepChange(i, j)}
+                      selected={j === page.activeSubPageId}
+                      disabled={subPage.disabled}
+                      onClick={() => onPageChange(i, j)}
                     >
-                      {subStep.title}
+                      {subPage.title}
                     </ListItem>
                   ))
                 }

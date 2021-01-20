@@ -92,7 +92,7 @@ export default class AdjustmentsManager {
     });
 
     autorun(() => {
-      this.rootMgr.uiStateMgr.setSubStepDisabledStatus(3, 1, !this.adjustmentSelected);
+      this.rootMgr.uiStateMgr.setSubPageDisabledStatus(3, 1, !this.adjustmentSelected);
     })
   };
 

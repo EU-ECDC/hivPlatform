@@ -1,26 +1,3 @@
-CreateDownload <- function(type, format, output) {
-  if (type == 'ADJUSTED_DATA') {
-    timeStamp <- appMgr$CaseMgr$LastAdjustmentResult$TimeStamp
-    if (format %in% c('rds')) {
-      downloadData <- appMgr$CaseMgr$LastAdjustmentResult
-    } else {
-      downloadData <- appMgr$CaseMgr$LastAdjustmentResult$Data
-    }
-
-    fileNamePrefix <- 'AdjustedData'
-    outputControlName <- sprintf('downAdjData%s', toupper(format))
-  }
-
-  output[[outputControlName]] <- downloadHandler(
-    filename = function() {
-      sprintf('AdjustedData_%s.%s', timeStamp, format)
-    },
-    content = function(file) {
-      WriteDataFile(downloadData, file)
-    }
-  )
-}
-
 Events <- function(
   input,
   output,
@@ -121,6 +98,8 @@ Events <- function(
         Summary = summary
       )
     )
+
+    appMgr$SetCompletedStep('CASE_BASED_SUMMARY')
   })
 
   observeEvent(input$runAdjustBtn, {
@@ -133,10 +112,32 @@ Events <- function(
     appMgr$CaseMgr$CancelAdjustments()
   })
 
+  # CreateDownload <- function(type, format, output, appMgr) {
+  #   if (type == 'ADJUSTED_DATA') {
+  #     timeStamp <- appMgr$CaseMgr$LastAdjustmentResult$TimeStamp
+  #     if (format %in% c('rds')) {
+  #       downloadData <- appMgr$CaseMgr$LastAdjustmentResult
+  #     } else {
+  #       downloadData <- appMgr$CaseMgr$LastAdjustmentResult$Data
+  #     }
 
-  CreateDownload('ADJUSTED_DATA', 'csv', output)
-  CreateDownload('ADJUSTED_DATA', 'rds', output)
-  CreateDownload('ADJUSTED_DATA', 'dta', output)
+  #     fileNamePrefix <- 'AdjustedData'
+  #     outputControlName <- sprintf('downAdjData%s', toupper(format))
+  #   }
+
+  #   output[[outputControlName]] <- downloadHandler(
+  #     filename = function() {
+  #       sprintf('AdjustedData_%s.%s', timeStamp, format)
+  #     },
+  #     content = function(file) {
+  #       WriteDataFile(downloadData, file)
+  #     }
+  #   )
+  # }
+
+  # CreateDownload('ADJUSTED_DATA', 'csv', output, appMgr)
+  # CreateDownload('ADJUSTED_DATA', 'rds', output, appMgr)
+  # CreateDownload('ADJUSTED_DATA', 'dta', output, appMgr)
 
   # observeEvent(input$aggrUploadBtn, {
   #   fileInfo <- input$aggrUploadBtn

@@ -36,20 +36,20 @@ const userStyles = makeStyles({
   }
 });
 
-const StepPanel = props => {
-  const { activePanelId, panelId, children, ...other } = props;
+const Page = props => {
+  const { pageId, activePageId, children, ...other } = props;
 
   return (
     <Typography
       component='div'
       role='tabpanel'
-      hidden={activePanelId !== panelId}
-      id={`wrapped-tabpanel-${panelId}`}
-      aria-labelledby={`wrapped-tab-${panelId}`}
+      hidden={activePageId !== pageId}
+      id={`wrapped-tabpanel-${pageId}`}
+      aria-labelledby={`wrapped-tab-${pageId}`}
       style={{ flexGrow: 1, overflowY: 'scroll' }}
       {...other}
     >
-      {activePanelId === panelId && <Box p={2}>{children}</Box>}
+      {activePageId === pageId && <Box p={2}>{children}</Box>}
     </Typography>
   );
 };
@@ -84,13 +84,9 @@ const RootElem = props => {
     </AppBar>
   );
 
-  const handleStepChange = stepId => {
-    appMgr.uiStateMgr.setActiveStepId(stepId);
-  }
-
-  const handleSubStepChange = (stepId, subStepId) => {
-    appMgr.uiStateMgr.setActiveSubStepId(stepId, subStepId);
-  }
+  const handlePageChange = (pageId, subPageId) => {
+    appMgr.uiStateMgr.setActivePageId(pageId, subPageId);
+  };
 
   return (
     <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}} p={0}>
@@ -98,32 +94,31 @@ const RootElem = props => {
       {appBar}
       <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}} p={0}>
         <LeftNav
-          steps={appMgr.uiStateMgr.steps}
-          activeStepId={appMgr.uiStateMgr.activeStepId}
-          onStepChange={handleStepChange}
-          onSubStepChange={handleSubStepChange}
+          pages={appMgr.uiStateMgr.pages}
+          activePageId={appMgr.uiStateMgr.activePageId}
+          onPageChange={handlePageChange}
         />
-        <StepPanel panelId={0} activePanelId={appMgr.uiStateMgr.activeStepId} >
-          <TabWelcome appMgr={appMgr}/>
-        </StepPanel>
-        <StepPanel panelId={1} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabUpload appMgr={appMgr} />
-        </StepPanel>
-        <StepPanel panelId={2} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabSummary appMgr={appMgr} />
-        </StepPanel>
-        <StepPanel panelId={3} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabAdjustments appMgr={appMgr} />
-        </StepPanel>
-        <StepPanel panelId={4} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabModelling appMgr={appMgr} />
-        </StepPanel>
-        <StepPanel panelId={5} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabReports appMgr={appMgr}/>
-        </StepPanel>
-        <StepPanel panelId={6} activePanelId={appMgr.uiStateMgr.activeStepId}>
-          <TabOutputs {...props}/>
-        </StepPanel>
+        <Page pageId={0} activePageId={appMgr.uiStateMgr.activePageId} >
+          <TabWelcome {...props} />
+        </Page>
+        <Page pageId={1} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabUpload {...props} />
+        </Page>
+        <Page pageId={2} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabSummary {...props} />
+        </Page>
+        <Page pageId={3} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabAdjustments {...props} />
+        </Page>
+        <Page pageId={4} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabModelling {...props} />
+        </Page>
+        <Page pageId={5} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabReports {...props} />
+        </Page>
+        <Page pageId={6} activePageId={appMgr.uiStateMgr.activePageId}>
+          <TabOutputs {...props} />
+        </Page>
       </Box>
       <MessageBar notificationsMgr={appMgr.notificationsMgr} />
     </Box>

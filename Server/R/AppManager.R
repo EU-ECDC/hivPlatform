@@ -28,9 +28,12 @@ AppManager <- R6::R6Class(
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
+        CompletedSteps = NULL,
         Report = NULL,
         ReportTask = NULL
       )
+
+      self$SetCompletedStep('SESSION_INITIALIZED')
     },
 
     print = function() {
@@ -48,6 +51,37 @@ AppManager <- R6::R6Class(
           type = type,
           payload = payload
         ))
+      }
+    },
+
+    Steps = c(
+      'SESSION_INITIALIZED' = 1L,
+      'CASE_BASED_READ' = 2L,
+      'CASE_BASED_ATTR_MAPPING' = 3L,
+      'CASE_BASED_ORIGIN_GROUPING' = 4L,
+      'CASE_BASED_SUMMARY' = 5L,
+      'CASE_BASED_ADJUSTMENTS' = 6L,
+      'MODELLING' = 7L,
+      'BOOTSTRAP' = 8L,
+      'REPORTS' = 9L,
+      'OUTPUTS' = 10L
+    ),
+
+    SetCompletedStep = function(step) {
+      completedSteps <- isolate(private$Catalogs$CompletedSteps)
+      step <- self$Steps[step]
+      keptSteps <- completedSteps[completedSteps < step]
+      newCompletedSteps <- sort(union(keptSteps, step))
+      private$Catalogs$CompletedSteps <- self$Steps[newCompletedSteps]
+
+      if (!identical(completedSteps, newCompletedSteps)) {
+        self$SendMessage(
+          'COMPLETED_STEPS_SET',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            CompletedSteps = isolate(names(private$Catalogs$CompletedSteps))
+          )
+        )
       }
     }
 
@@ -137,6 +171,10 @@ AppManager <- R6::R6Class(
 
     HIVModelMgr = function() {
       return(private$HIVModelMgrPriv)
+    },
+
+    CompletedSteps = function() {
+      return(private$Catalogs$CompletedSteps)
     }
 
     # HIVModelParameters = function(xmlModel) {

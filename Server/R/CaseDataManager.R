@@ -35,8 +35,7 @@ CaseDataManager <- R6::R6Class(
         PreProcessedDataStatus = NULL,
         AdjustedData = NULL,
         AdjustmentTask = NULL,
-        AdjustmentResult = NULL,
-        LastStep = 0L
+        AdjustmentResult = NULL
       )
     },
 
@@ -50,9 +49,9 @@ CaseDataManager <- R6::R6Class(
     ReadData = function(
       fileName
     ) {
-      if (private$Catalogs$LastStep < 0) {
+      if (!is.element(private$AppMgr$Steps['SESSION_INITIALIZED'], private$AppMgr$CompletedSteps)) {
         PrintAlert(
-          'CaseDataManager is not initialized properly before reading data',
+          'AppManager is not initialized properly before reading data',
           type = 'danger'
         )
         return(invisible(self))
@@ -77,7 +76,7 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$AttrMapping <- attrMapping
         private$Catalogs$AttrMappingStatus <- attrMappingStatus
         private$Catalogs$LastStep <- 1L
-        private$Reinitialize('ReadData')
+        private$InvalidateAfterStep('CASE_BASED_READ')
         PrintAlert('Data file {.file {fileName}} loaded')
         payload <- list(
           ActionStatus = status,
@@ -109,7 +108,7 @@ CaseDataManager <- R6::R6Class(
         list(ActionStatus = 'SUCCESS')
       )
 
-      if (private$Catalogs$LastStep < 1) {
+      if (!is.element(private$AppMgr$Steps['CASE_BASED_READ'], private$AppMgr$CompletedSteps)) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
         return(invisible(self))
       }
@@ -154,7 +153,7 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$PreProcessedData <- data
         private$Catalogs$PreProcessedDataStatus <- dataStatus
         private$Catalogs$LastStep <- 2L
-        private$Reinitialize('ApplyAttributesMapping')
+        private$InvalidateAfterStep('CASE_BASED_ATTR_MAPPING')
         PrintAlert('Attribute mapping has been applied')
         payload <- list(
           ActionStatus = status,
@@ -180,7 +179,10 @@ CaseDataManager <- R6::R6Class(
       originGrouping,
       originGroupingType = 'CUSTOM'
     ) {
-      if (private$Catalogs$LastStep < 2) {
+      if (!is.element(
+        private$AppMgr$Steps['CASE_BASED_ATTR_MAPPING'],
+        private$AppMgr$CompletedSteps
+      )) {
         PrintAlert(
           'Atrributes mapping must be applied before applying origin grouping',
           type = 'danger'
@@ -209,7 +211,7 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$PreProcessedData <- preProcessedData
         private$Catalogs$Summary <- summary
         private$Catalogs$LastStep <- 3L
-        private$Reinitialize('ApplyOriginGrouping')
+        private$InvalidateAfterStep('CASE_BASED_ORIGIN_GROUPING')
         PrintAlert('Origin grouping {.val {originGroupingType}} has been applied')
       } else {
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
@@ -232,7 +234,10 @@ CaseDataManager <- R6::R6Class(
       adjustmentSpecs,
       filters = NULL
     ) {
-      if (private$Catalogs$LastStep < 3) {
+      if (!is.element(
+        private$AppMgr$Steps['CASE_BASED_ORIGIN_GROUPING'],
+        private$AppMgr$CompletedSteps
+      )) {
         PrintAlert(
           'Origing grouping must be applied before running adjustments',
           type = 'danger'
@@ -298,7 +303,7 @@ CaseDataManager <- R6::R6Class(
               private$Catalogs$AdjustmentResult <- result
               private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
               private$Catalogs$LastStep <- 4L
-              private$Reinitialize('RunAdjustments')
+              private$InvalidateAfterStep('CASE_BASED_ADJUSTMENTS')
               PrintAlert('Running adjustment task finished')
               private$SendMessage(
                 'ADJUSTMENTS_RUN_FINISHED',
@@ -368,9 +373,9 @@ CaseDataManager <- R6::R6Class(
       }
     },
 
-    Reinitialize = function(step) {
+    InvalidateAfterStep = function(step) {
       if (
-        step %in% c('ReadData')
+        step %in% c('CASE_BASED_READ')
       ) {
         private$Catalogs$OriginDistribution <- NULL
         private$Catalogs$OriginGrouping <- list()
@@ -387,7 +392,7 @@ CaseDataManager <- R6::R6Class(
       }
 
       if (
-        step %in% c('ApplyAttributeMapping')
+        step %in% c('CASE_BASED_ATTR_MAPPING')
       ) {
         private$Catalogs$OriginGrouping <- list()
         private$Catalogs$Summary <- NULL
@@ -400,12 +405,15 @@ CaseDataManager <- R6::R6Class(
       }
 
       if (
-        step %in% c('ApplyOriginGrouping')
+        step %in% c('CASE_BASED_ORIGIN_GROUPING')
       ) {
         private$Catalogs$AdjustedData <- NULL
         private$Catalogs$AdjustmentTask <- NULL
         private$Catalogs$AdjustmentResult <- NULL
       }
+
+      private$AppMgr$SetCompletedStep(step)
+
       return(invisible(self))
     }
   ),
