@@ -67,13 +67,12 @@ export default class SummaryDataManager {
 
   repDelPlotData = {
     chartData: {
-      all: {q95: 0, series: []},
-      female: { q95: 0, series: []},
-      male: { q95: 0, series: []}
+      all: { q95: 0, series: [] },
+      female: { q95: 0, series: [] },
+      male: { q95: 0, series: [] }
     }
   };
 
-  @observable
   repDelPlotSelection = 'all';
 
   constructor(mgr) {
@@ -87,6 +86,7 @@ export default class SummaryDataManager {
       missPlotSelection: observable,
       repDelPlotData: observable,
       repDelPlotSelection: observable,
+      reset: action,
       setSelectedCount: action,
       setTotalCount: action,
       setDiagYearPlotData: action,
@@ -201,5 +201,80 @@ export default class SummaryDataManager {
         MaxYear: this.notifQuarterPlotData.filter.valueMaxYear
       }
     }
+  };
+
+  reset = () => {
+    this.selectedCount = null;
+    this.totalCount = null;
+
+    this.diagYearPlotData = {
+      filter: {
+        scaleMinYear: null,
+        scaleMaxYear: null,
+        valueMinYear: null,
+        valueMaxYear: null,
+        applyInAdjustments: false
+      },
+      chartCategories: [],
+      chartData: [],
+    };
+
+    this.notifQuarterPlotData = {
+      filter: {
+        scaleMinYear: null,
+        scaleMaxYear: null,
+        valueMinYear: null,
+        valueMaxYear: null,
+        applyInAdjustments: false
+      },
+      chartCategories: [],
+      chartData: []
+    };
+
+    this.missPlotData = {
+      plot1: {
+        chartCategories: [],
+        chartData: {
+          all: [],
+          female: [],
+          male: []
+        }
+      },
+      plot2: {
+        chartCategories: [],
+        chartData: {
+          all: [],
+          female: [],
+          male: []
+        }
+      },
+      plot3: {
+        chartData: {
+          all: [],
+          female: [],
+          male: []
+        },
+      },
+      plot4: {
+        chartCategories: [],
+        chartData: {
+          all: [],
+          female: [],
+          male: [],
+        }
+      }
+    };
+
+    this.missPlotSelection = 'all';
+
+    this.repDelPlotData = {
+      chartData: {
+        all: { q95: 0, series: [] },
+        female: { q95: 0, series: [] },
+        male: { q95: 0, series: [] }
+      }
+    };
+
+    this.repDelPlotSelection = 'all';
   };
 }

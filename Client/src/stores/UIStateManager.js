@@ -74,6 +74,7 @@ export default class UIStateManager {
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,
+      outputsPageEnabled: computed,
       caseBasedAttrMappingEnabled: computed,
       caseBasedOrigGroupingEnabled: computed
     });
@@ -114,10 +115,12 @@ export default class UIStateManager {
     this.pages[0].completed = this.activePageId > 0;
     this.pages[1].completed = this.activePageId > 1;
     this.pages[2].completed = this.activePageId > 2;
+    this.pages[3].completed = this.activePageId > 3;
 
     this.pages[1].disabled = !this.uploadPageEnabled;
     this.pages[2].disabled = !this.summaryPageEnabled;
     this.pages[3].disabled = !this.adjustmentsPageEnabled;
+    this.pages[6].disabled = !this.outputsPageEnabled;
   };
 
   get uploadPageEnabled() {
@@ -132,6 +135,10 @@ export default class UIStateManager {
     return InArray('CASE_BASED_SUMMARY', this.completedSteps);
   };
 
+  get outputsPageEnabled() {
+    return InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps);
+  };
+
   get caseBasedAttrMappingEnabled() {
     return InArray('CASE_BASED_READ', this.completedSteps);
   };
@@ -139,7 +146,6 @@ export default class UIStateManager {
   get caseBasedOrigGroupingEnabled() {
     return InArray('CASE_BASED_ATTR_MAPPING', this.completedSteps);
   };
-
 
   // get enabledStages() {
   //   return EVENT_TO_ENABLED_STAGES_MAP[this.lastEventType];

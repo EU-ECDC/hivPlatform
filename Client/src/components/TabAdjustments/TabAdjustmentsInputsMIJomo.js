@@ -34,7 +34,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               fullWidth
               InputProps={{
                 inputProps: {
-                  min: 1, max: 1000
+                  min: 2, max: 50
                 }
               }}
               style={{ marginBottom: 20 }}
@@ -50,7 +50,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               fullWidth
               InputProps={{
                 inputProps: {
-                  min: 1, max: 1000
+                  min: 100, max: 10000
                 }
               }}
               style={{ marginBottom: 20 }}
@@ -65,7 +65,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               fullWidth
               InputProps={{
                 inputProps: {
-                  min: 1, max: 1000
+                  min: 100, max: 10000
                 }
               }}
               style={{ marginBottom: 20 }}

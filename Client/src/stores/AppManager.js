@@ -64,6 +64,7 @@ export default class AppManager {
           this.caseBasedDataMgr.setColumnNames(e.payload.ColumnNames);
           this.caseBasedDataMgr.setRecordCount(e.payload.RecordCount);
           this.attrMappingMgr.setMapping(e.payload.AttrMapping);
+          this.summaryDataMgr.reset();
           this.notificationsMgr.setMsg('Case-based data uploaded');
           this.uiStateMgr.setLastEventType(e.type);
         }
@@ -81,6 +82,7 @@ export default class AppManager {
           this.origGroupMgr.setType(e.payload.OriginGroupingType);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
           this.notificationsMgr.setMsg('Attribute mapping has been applied');
+          this.summaryDataMgr.reset();
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.notificationsMgr.setMsg('Attribute mapping could not be applied');
@@ -99,6 +101,7 @@ export default class AppManager {
         this.origGroupMgr.setActionStatus(e.payload.ActionStatus);
         this.origGroupMgr.setActionMessage(e.payload.ActionMessage);
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.summaryDataMgr.reset();
           this.summaryDataMgr.setDiagYearPlotData(e.payload.Summary.DiagYearPlotData);
           this.summaryDataMgr.setNotifQuarterPlotData(e.payload.Summary.NotifQuarterPlotData);
           this.uiStateMgr.setLastEventType(e.type);
@@ -113,27 +116,27 @@ export default class AppManager {
           this.summaryDataMgr.setTotalCount(e.payload.Summary.TotalCount);
           this.summaryDataMgr.setMissPlotData(e.payload.Summary.MissPlotData);
           this.summaryDataMgr.setRepDelPlotData(e.payload.Summary.RepDelPlotData);
+        } else {
+          this.notificationsMgr.setMsg(e.payload.ActionMessage);
         }
         break;
-      // case 'ADJUSTMENTS_RUN_STARTED':
-      //   if (e.payload.ActionStatus === 'SUCCESS') {
-      //     this.adjustMgr.setAdjustmentsRunProgress(1);
-      //   }
-      //   break;
-      // case 'ADJUSTMENTS_RUN_FINISHED':
-      //   if (e.payload.ActionStatus === 'SUCCESS') {
-      //     this.adjustMgr.setAdjustmentsRunProgress(null);
-      //     this.uiStateMgr.setLastEventType(e.type);
-      //     this.notificationsMgr.setMsg('Adjustment run finished');
-      //   }
-      //   break;
-      // case 'ADJUSTMENTS_RUN_LOG_SET':
-      //   if (e.payload.ActionStatus === 'SUCCESS') {
-      //     this.adjustMgr.setAdjustmentsRunLog(e.payload.RunLog);
-      //   }
-      //   break;
-
-
+      case 'ADJUSTMENTS_RUN_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunProgress(1);
+        }
+        break;
+      case 'ADJUSTMENTS_RUN_FINISHED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunProgress(null);
+          this.uiStateMgr.setLastEventType(e.type);
+          this.notificationsMgr.setMsg('Adjustment run finished');
+        }
+        break;
+      case 'ADJUSTMENTS_RUN_LOG_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.adjustMgr.setAdjustmentsRunLog(e.payload.RunLog);
+        }
+        break;
 
       // case 'AGGR_DATA_UPLOADED':
       //   this.aggrDataMgr.setFileName(e.payload.FileName);

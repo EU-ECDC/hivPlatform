@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 
 const ValidationTextField = (props) => {
-  state = {
-    error: false,
-    errorText: '',
-  };
+  // state = {
+  //   error: false,
+  //   errorText: '',
+  // };
 
   // static getDerivedStateFromProps(props) {
   //   if (props.value) {
@@ -39,7 +39,7 @@ const ValidationTextField = (props) => {
   // };
 
   const { onChange, validationFunc, helperText: propsHelperText, ...restProps } = this.props;
-  const { error, errorText } = this.state;
+  // const { error, errorText } = this.state;
 
   const helperText = errorText || propsHelperText;
 

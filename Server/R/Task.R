@@ -172,9 +172,9 @@ Task <- R6::R6Class(
           if (self$IsRunning) {
             private$Catalogs$Status <- 'RUNNING'
             self$RunLog
-            if (is.function(private$ProgressCallback)) {
-              private$ProgressCallback(self$HTMLRunLog)
-            }
+            # if (is.function(private$ProgressCallback)) {
+            #   private$ProgressCallback(self$HTMLRunLog)
+            # }
             shiny::invalidateLater(private$ProgressRefresh * 1000)
           } else {
             private$Catalogs$Status <- 'SUCCESS'

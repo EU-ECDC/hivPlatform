@@ -351,6 +351,14 @@ CaseDataManager <- R6::R6Class(
     CancelAdjustments = function() {
       if (!is.null(private$Catalogs$AdjustmentTask)) {
         private$Catalogs$AdjustmentTask$Stop()
+
+        private$SendMessage(
+          'ADJUSTMENTS_RUN_FINISHED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ActionMessage = 'Running adjustment task finished'
+          )
+        )
       }
 
       return(invisible(self))

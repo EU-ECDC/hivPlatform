@@ -1,3 +1,26 @@
+CreateDownload <- function(type, format, output, appMgr) {
+  if (type == 'ADJUSTED_DATA') {
+    timeStamp <- appMgr$CaseMgr$LastAdjustmentResult$TimeStamp
+    if (format %in% c('rds')) {
+      downloadData <- appMgr$CaseMgr$LastAdjustmentResult
+    } else {
+      downloadData <- appMgr$CaseMgr$LastAdjustmentResult$Data
+    }
+
+    fileNamePrefix <- 'AdjustedData'
+    outputControlName <- sprintf('downAdjData%s', toupper(format))
+  }
+
+  output[[outputControlName]] <- downloadHandler(
+    filename = function() {
+      sprintf('AdjustedData_%s.%s', timeStamp, format)
+    },
+    content = function(file) {
+      WriteDataFile(downloadData, file)
+    }
+  )
+}
+
 Events <- function(
   input,
   output,
@@ -61,13 +84,6 @@ Events <- function(
       any(is.null(notifQuarterRange)) ||
       is.null(appMgr$CaseMgr$PreProcessedData)
     ) {
-      appMgr$SendMessage(
-        type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
-        payload = list(
-          ActionStatus = 'FAIL',
-          ActionMessage = 'Summary could not be prepared'
-        )
-      )
       return(NULL)
     }
 
@@ -100,7 +116,7 @@ Events <- function(
     )
 
     appMgr$SetCompletedStep('CASE_BASED_SUMMARY')
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(input$runAdjustBtn, {
     params <- input$runAdjustBtn
@@ -112,32 +128,21 @@ Events <- function(
     appMgr$CaseMgr$CancelAdjustments()
   })
 
-  # CreateDownload <- function(type, format, output, appMgr) {
-  #   if (type == 'ADJUSTED_DATA') {
-  #     timeStamp <- appMgr$CaseMgr$LastAdjustmentResult$TimeStamp
-  #     if (format %in% c('rds')) {
-  #       downloadData <- appMgr$CaseMgr$LastAdjustmentResult
-  #     } else {
-  #       downloadData <- appMgr$CaseMgr$LastAdjustmentResult$Data
-  #     }
+  observeEvent(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog, {
+    appMgr$SendMessage(
+      'ADJUSTMENTS_RUN_LOG_SET',
+      payload = list(
+        ActionStatus = 'SUCCESS',
+        RunLog = appMgr$CaseMgr$AdjustmentTask$HTMLRunLog
+      )
+    )
+  })
 
-  #     fileNamePrefix <- 'AdjustedData'
-  #     outputControlName <- sprintf('downAdjData%s', toupper(format))
-  #   }
-
-  #   output[[outputControlName]] <- downloadHandler(
-  #     filename = function() {
-  #       sprintf('AdjustedData_%s.%s', timeStamp, format)
-  #     },
-  #     content = function(file) {
-  #       WriteDataFile(downloadData, file)
-  #     }
-  #   )
-  # }
-
-  # CreateDownload('ADJUSTED_DATA', 'csv', output, appMgr)
-  # CreateDownload('ADJUSTED_DATA', 'rds', output, appMgr)
-  # CreateDownload('ADJUSTED_DATA', 'dta', output, appMgr)
+  observeEvent(appMgr$CaseMgr$LastAdjustmentResult, {
+    CreateDownload('ADJUSTED_DATA', 'csv', output, appMgr)
+    CreateDownload('ADJUSTED_DATA', 'rds', output, appMgr)
+    CreateDownload('ADJUSTED_DATA', 'dta', output, appMgr)
+  })
 
   # observeEvent(input$aggrUploadBtn, {
   #   fileInfo <- input$aggrUploadBtn
