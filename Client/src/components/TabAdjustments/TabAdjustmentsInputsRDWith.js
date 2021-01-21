@@ -12,8 +12,17 @@ const TabAdjustmentsInputsRDWith = (props) => {
   const { appMgr } = props;
 
   const handleRDWithStartYearChange = (e) => appMgr.adjustMgr.setRDWithStartYear(e.target.value);
+  const handleRDWithStartYearBlur = (e) =>
+    appMgr.adjustMgr.setRDWithStartYear(Math.min(Math.max(e.target.value, 1975), 2030));
+
   const handleRDWithEndYearChange = (e) => appMgr.adjustMgr.setRDWithEndYear(e.target.value);
+  const handleRDWithEndYearBlur = (e) =>
+    appMgr.adjustMgr.setRDWithEndYear(Math.min(Math.max(e.target.value, 1975), 2030));
+
   const handleRDWithEndQrtChange = (e) => appMgr.adjustMgr.setRDWithEndQrt(e.target.value);
+  const handleRDWithEndQrtBlur = (e) =>
+    appMgr.adjustMgr.setRDWithEndQrt(Math.min(Math.max(e.target.value, 1), 4));
+
   const handleRDWithStratGenderChange = (e, value) => appMgr.adjustMgr.setRDWithStratGender(value);
   const handleRDWithStratTransChange = (e, value) => appMgr.adjustMgr.setRDWithStratTrans(value);
   const handleRDWithStratMigrChange = (e, value) => appMgr.adjustMgr.setRDWithStratMigr(value);
@@ -31,6 +40,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithTrendSettings.startYear}
               onChange={handleRDWithStartYearChange}
+              onBlur={handleRDWithStartYearBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -47,6 +57,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithTrendSettings.endYear}
               onChange={handleRDWithEndYearChange}
+              onBlur={handleRDWithEndYearBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -62,6 +73,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithTrendSettings.endQrt}
               onChange={handleRDWithEndQrtChange}
+              onBlur={handleRDWithEndQrtBlur}
               fullWidth
               InputProps={{
                 inputProps: {

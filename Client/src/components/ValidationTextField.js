@@ -3,43 +3,24 @@ import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 
 const ValidationTextField = (props) => {
-  // state = {
-  //   error: false,
-  //   errorText: '',
-  // };
+  const { onChange, validationFunc, helperText: propsHelperText, ...restProps } = props;
+  const [error, setError] = React.useState(false);
+  const [errorText, setErrorText] = React.useState('');
 
-  // static getDerivedStateFromProps(props) {
-  //   if (props.value) {
-  //     const errorText = props.validationFunc(props.value);
-  //     return {
-  //       error: errorText !== props.helperText,
-  //       errorText,
-  //     };
-  //   }
-  //   return null;
-  // }
+  const handleValueChange = e => {
+    const { value } = e.target;
 
-  // handleValueChange = event => {
-  //   const { value } = event.target;
-  //   const {
-  //     onChange,
-  //     validationFunc,
-  //     helperText: propsHelperText,
-  //   } = this.props;
+    const errorText = validationFunc(value);
+    const error = errorText !== propsHelperText;
+    const valid = !error;
 
-  //   const errorText = validationFunc(value);
-  //   const error = errorText !== propsHelperText;
-  //   const valid = !error;
+    setError(error);
+    setErrorText(errorText);
 
-  //   this.setState({ error, errorText });
-
-  //   if (onChange) {
-  //     onChange(value, valid);
-  //   }
-  // };
-
-  const { onChange, validationFunc, helperText: propsHelperText, ...restProps } = this.props;
-  // const { error, errorText } = this.state;
+    if (onChange) {
+      onChange(value, valid);
+    }
+  };
 
   const helperText = errorText || propsHelperText;
 
@@ -48,7 +29,7 @@ const ValidationTextField = (props) => {
       {...restProps}
       error={error}
       helperText={helperText}
-      onChange={this.handleValueChange}
+      onChange={handleValueChange}
     />
   );
 }

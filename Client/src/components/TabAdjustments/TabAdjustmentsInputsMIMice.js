@@ -13,7 +13,13 @@ const TabAdjustmentsInputsMIMice = (props) => {
   const { appMgr } = props;
 
   const handleMIMiceNimpChange = (e) => appMgr.adjustMgr.setMIMiceNimp(e.target.value);
+  const handleMIMiceNimpBlur = (e) =>
+    appMgr.adjustMgr.setMIMiceNimp(Math.min(Math.max(e.target.value, 2), 50));
+
   const handleMIMiceNitChange = (e) => appMgr.adjustMgr.setMIMiceNit(e.target.value);
+  const handleMIMiceNitBlur = (e) =>
+    appMgr.adjustMgr.setMIMiceNit(Math.min(Math.max(e.target.value, 2), 50));
+
   const handleMIMiceNsdfChange = (e, value) => appMgr.adjustMgr.setMIMiceNsdf(value);
   const handleMIMiceImputeRDChange = (e, value) => appMgr.adjustMgr.setMIMiceImputeRD(value);
   const handleMIRestoreDefaults = (e) => appMgr.adjustMgr.restoreMIDefaults('mice');
@@ -30,6 +36,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
               type='number'
               value={appMgr.adjustMgr.miMiceSettings.nimp}
               onChange={handleMIMiceNimpChange}
+              onBlur={handleMIMiceNimpBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -46,6 +53,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
               type='number'
               value={appMgr.adjustMgr.miMiceSettings.nit}
               onChange={handleMIMiceNitChange}
+              onBlur={handleMIMiceNitBlur}
               fullWidth
               InputProps={{
                 inputProps: {

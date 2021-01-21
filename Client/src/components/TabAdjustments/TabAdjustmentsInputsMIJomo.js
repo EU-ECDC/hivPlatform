@@ -13,8 +13,17 @@ const TabAdjustmentsInputsMIJomo = (props) => {
   const { appMgr } = props;
 
   const handleMIJomoNimpChange = (e) => appMgr.adjustMgr.setMIJomoNimp(e.target.value);
+  const handleMIJomoNimpBlur = (e) =>
+    appMgr.adjustMgr.setMIJomoNimp(Math.min(Math.max(e.target.value, 2), 50));
+
   const handleMIJomoNburnChange = (e) => appMgr.adjustMgr.setMIJomoNburn(e.target.value);
+  const handleMIJomoNburnBlur = (e) =>
+    appMgr.adjustMgr.setMIJomoNburn(Math.min(Math.max(e.target.value, 100), 10000));
+
   const handleMIJomoNbetweenChange = (e) => appMgr.adjustMgr.setMIJomoNbetween(e.target.value);
+  const handleMIJomoNbetweenBlur = (e) =>
+    appMgr.adjustMgr.setMIJomoNbetween(Math.min(Math.max(e.target.value, 100), 10000));
+
   const handleMIJomoNsdfChange = (e, value) => appMgr.adjustMgr.setMIJomoNsdf(value);
   const handleMIJomoImputeRDChange = (e, value) => appMgr.adjustMgr.setMIJomoImputeRD(value);
   const handleMIRestoreDefaults = (e) => appMgr.adjustMgr.restoreMIDefaults('jomo');
@@ -31,6 +40,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               type='number'
               value={appMgr.adjustMgr.miJomoSettings.nimp}
               onChange={handleMIJomoNimpChange}
+              onBlur={handleMIJomoNimpBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -47,6 +57,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               type='number'
               value={appMgr.adjustMgr.miJomoSettings.nburn}
               onChange={handleMIJomoNburnChange}
+              onBlur={handleMIJomoNburnBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -62,6 +73,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               type='number'
               value={appMgr.adjustMgr.miJomoSettings.nbetween}
               onChange={handleMIJomoNbetweenChange}
+              onBlur={handleMIJomoNbetweenBlur}
               fullWidth
               InputProps={{
                 inputProps: {

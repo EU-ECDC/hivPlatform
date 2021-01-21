@@ -12,8 +12,17 @@ const TabAdjustmentsInputsRDWithout = (props) => {
   const { appMgr } = props;
 
   const handleRDWithoutStartYearChange = (e) => appMgr.adjustMgr.setRDWithoutStartYear(e.target.value);
+  const handleRDWithoutStartYearBlur = (e) =>
+    appMgr.adjustMgr.setRDWithoutStartYear(Math.min(Math.max(e.target.value, 1975), 2030));
+
   const handleRDWithoutEndYearChange = (e) => appMgr.adjustMgr.setRDWithoutEndYear(e.target.value);
+  const handleRDWithoutEndYearBlur = (e) =>
+    appMgr.adjustMgr.setRDWithoutEndYear(Math.min(Math.max(e.target.value, 1975), 2030));
+
   const handleRDWithoutEndQrtChange = (e) => appMgr.adjustMgr.setRDWithoutEndQrt(e.target.value);
+  const handleRDWithoutEndQrtBlur = (e) =>
+    appMgr.adjustMgr.setRDWithoutEndQrt(Math.min(Math.max(e.target.value, 1), 4));
+
   const handleRDWithoutStratGenderChange = (e, value) => appMgr.adjustMgr.setRDWithoutStratGender(value);
   const handleRDWithoutStratTransChange = (e, value) => appMgr.adjustMgr.setRDWithoutStratTrans(value);
   const handleRDWithoutStratMigrChange = (e, value) => appMgr.adjustMgr.setRDWithoutStratMigr(value);
@@ -31,6 +40,7 @@ const TabAdjustmentsInputsRDWithout = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithoutTrendSettings.startYear}
               onChange={handleRDWithoutStartYearChange}
+              onBlur={handleRDWithoutStartYearBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -47,6 +57,7 @@ const TabAdjustmentsInputsRDWithout = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithoutTrendSettings.endYear}
               onChange={handleRDWithoutEndYearChange}
+              onBlur={handleRDWithoutEndYearBlur}
               fullWidth
               InputProps={{
                 inputProps: {
@@ -62,6 +73,7 @@ const TabAdjustmentsInputsRDWithout = (props) => {
               type='number'
               value={appMgr.adjustMgr.rdWithoutTrendSettings.endQrt}
               onChange={handleRDWithoutEndQrtChange}
+              onBlur={handleRDWithoutEndQrtBlur}
               fullWidth
               InputProps={{
                 inputProps: {

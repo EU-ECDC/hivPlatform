@@ -13,7 +13,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(1);
+  appMgr.uiStateMgr.setActivePageId(3);
 
   // 1. Upload case-based data
   appMgr.onShinyEvent({
