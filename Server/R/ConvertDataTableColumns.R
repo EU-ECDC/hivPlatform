@@ -64,10 +64,13 @@ ConvertDataTableColumns <- function(
     #   a) specified,
     #   b) the transformed column exists
     if (!is.null(transFunc) && columnName %in% objectColNames) {
-      # Apply the transformation to the data.table by reference (directly on the object, no copies made)
+      # Apply the transformation to the data.table by reference
+      # (directly on the object, no copies made)
       if (is.character(columnDef)) {
         if (columnDef == 'factor' && !is.null(levelsFunc)) {
-          object[, eval(columnName) := transFunc(get(columnName), levels = levelsFunc(columnName, ...))]
+          object[,
+            eval(columnName) := transFunc(get(columnName), levels = levelsFunc(columnName, ...))
+          ]
           next
         }
       }

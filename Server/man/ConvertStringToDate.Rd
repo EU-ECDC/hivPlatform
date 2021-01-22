@@ -16,6 +16,8 @@ Date
 ConvertStringToDate
 }
 \examples{
-ConvertStringToDate(c(NA, 'UNK', '', '2020', '2020-Q1', '2020-W01', '2020-05-20'))
+ConvertStringToDate(str = c(
+  NA, 'UNK', '', '2020', '2020-Q1', '2020-Q02', '2020-W01', '2020-W45', '2020-05-20', '2020-5-20'
+))
 
 }
