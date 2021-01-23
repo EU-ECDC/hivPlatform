@@ -126,10 +126,18 @@ export default class AppManager {
         }
         break;
       case 'ADJUSTMENTS_RUN_FINISHED':
+        this.adjustMgr.setAdjustmentsRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.adjustMgr.setAdjustmentsRunProgress(null);
           this.uiStateMgr.setLastEventType(e.type);
           this.notificationsMgr.setMsg('Adjustment run finished');
+        } else {
+          this.notificationsMgr.setMsg('Adjustment run failed');
+        }
+        break;
+      case 'ADJUSTMENTS_RUN_CANCELLED':
+        this.adjustMgr.setAdjustmentsRunProgress(null);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.notificationsMgr.setMsg('Adjustment run cancelled');
         }
         break;
       case 'ADJUSTMENTS_RUN_LOG_SET':

@@ -14,8 +14,11 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 appMgr$CaseMgr$RunAdjustments(
-  GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+  GetAdjustmentSpecs(c('Reporting Delays'))
 )
+
+appMgr$CaseMgr$AdjustmentResult
+appMgr$CaseMgr$LastAdjustmentResult$Data
 
 
 # STEP 4 - Fit the HIV model -----------------------------------------------------------------------

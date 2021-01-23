@@ -40,6 +40,3 @@ tools::write_PACKAGES(
   dir = file.path(deployPath, 'repo', 'bin', 'windows', 'contrib', rVersion),
   type = 'win.binary'
 )
-
-# Update currect version string
-writeLines(version, file.path(repoPath, 'version.txt'))

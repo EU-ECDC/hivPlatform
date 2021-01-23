@@ -125,7 +125,7 @@ CaseDataManager <- R6::R6Class(
         if (attrMappingStatus$Valid) {
           data <- ApplyAttributesMapping(originalData, attrMapping)
           preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
-          PreProcessInputDataBeforeAdjustments(data)
+          # PreProcessInputDataBeforeAdjustments(data)
           dataStatus <- GetInputDataValidityStatus(data)
           if (dataStatus$Valid) {
             originDistribution <- GetOriginDistribution(data)
@@ -301,7 +301,7 @@ CaseDataManager <- R6::R6Class(
             },
             successCallback = function(result) {
               private$Catalogs$AdjustmentResult <- result
-              private$Catalogs$AdjustedData <- self$LastAdjustmentResult$Data[Imputation != 0]
+              private$Catalogs$AdjustedData <- copy(self$LastAdjustmentResult$Data)
               private$Catalogs$LastStep <- 4L
               private$InvalidateAfterStep('CASE_BASED_ADJUSTMENTS')
               PrintAlert('Running adjustment task finished')
@@ -324,7 +324,6 @@ CaseDataManager <- R6::R6Class(
               )
             }
           )
-          private$SendMessage('ADJUSTMENTS_RUN_STARTED', 'SUCCESS')
           private$SendMessage(
             'ADJUSTMENTS_RUN_STARTED',
             payload = list(
@@ -353,10 +352,10 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$AdjustmentTask$Stop()
 
         private$SendMessage(
-          'ADJUSTMENTS_RUN_FINISHED',
+          'ADJUSTMENTS_RUN_CANCELLED',
           payload = list(
             ActionStatus = 'SUCCESS',
-            ActionMessage = 'Running adjustment task finished'
+            ActionMessage = 'Running adjustment task cancelled'
           )
         )
       }
@@ -485,7 +484,10 @@ CaseDataManager <- R6::R6Class(
     },
 
     LastAdjustmentResult = function() {
-      if (is.list(private$Catalogs$AdjustmentResult)) {
+      if (
+        is.list(private$Catalogs$AdjustmentResult) &&
+        length(private$Catalogs$AdjustmentResult) > 0
+      ) {
         result <- private$Catalogs$AdjustmentResult[[length(private$Catalogs$AdjustmentResult)]]
       } else {
         result <- NULL

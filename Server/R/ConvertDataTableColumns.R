@@ -74,7 +74,7 @@ ConvertDataTableColumns <- function(
           next
         }
       }
-      object[, eval(columnName) := transFunc(get(columnName))]
+      object[, (columnName) := eval(parse(text = sprintf('transFunc(%s)', columnName)))]
     }
   }
 

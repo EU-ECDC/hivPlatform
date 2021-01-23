@@ -75,7 +75,7 @@ list(
     # B) PROCESS DATA ------------------------------------------------------------------------------
 
     # Add dummy "Imputation" column if not found
-    isOriginalData <- !("Imputation" %in% colnames(compData))
+    isOriginalData <- compData[, all(Imputation == 0)]
     if (isOriginalData) {
       compData[, Imputation := 0L]
     }
