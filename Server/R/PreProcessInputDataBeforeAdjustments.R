@@ -43,7 +43,7 @@ PreProcessInputDataBeforeAdjustments <- function(
     # Compute MaxPossibleDelay
     maxPossibleDelay <- ifelse(
       is.na(DiagnosisTime),
-      4 * (MaxNotificationTime - YearOfHIVDiagnosis - 0.25),
+      4 * (MaxNotificationTime - YearOfHIVDiagnosis - 0.125),
       4 * (MaxNotificationTime - DiagnosisTime)
     )
     maxPossibleDelay <- ifelse(

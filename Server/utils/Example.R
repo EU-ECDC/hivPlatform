@@ -12,13 +12,11 @@ appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
+
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 appMgr$CaseMgr$RunAdjustments(
   GetAdjustmentSpecs(c('Reporting Delays'))
 )
-
-appMgr$CaseMgr$AdjustmentResult
-appMgr$CaseMgr$LastAdjustmentResult$Data
 
 
 # STEP 4 - Fit the HIV model -----------------------------------------------------------------------

@@ -167,7 +167,6 @@ export const defaultNotifChartOptions = {
     },
     tickPlacement: 'between',
     labels: {
-      formatter: value => (value).toFixed(2),
       style: {
         fontSize: '9px'
       }

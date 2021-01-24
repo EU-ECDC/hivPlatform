@@ -125,7 +125,7 @@ CaseDataManager <- R6::R6Class(
         if (attrMappingStatus$Valid) {
           data <- ApplyAttributesMapping(originalData, attrMapping)
           preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
-          # PreProcessInputDataBeforeAdjustments(data)
+          PreProcessInputDataBeforeAdjustments(data)
           dataStatus <- GetInputDataValidityStatus(data)
           if (dataStatus$Valid) {
             originDistribution <- GetOriginDistribution(data)

@@ -1,4 +1,5 @@
 import { observable, action, computed, toJS, makeObservable, autorun } from 'mobx';
+import QuarterToString from '../utilities/QuarterToString';
 export default class SummaryDataManager {
   rootMgr = null;
 
@@ -101,6 +102,8 @@ export default class SummaryDataManager {
       setMissPlotSelection: action,
       setRepDelPlotData: action,
       setRepDelPlotSelection: action,
+      notifQuarterSliderMarks: computed,
+      notifQuarterChartCategories: computed,
       missPlot1Series: computed,
       missPlot2Series: computed,
       missPlot3Series: computed,
@@ -120,16 +123,43 @@ export default class SummaryDataManager {
   setTotalCount = count => this.totalCount = count;
   setDiagYearPlotData = data => this.diagYearPlotData = data;
   setDiagYearFilterApply = apply => this.diagYearPlotData.filter.applyInAdjustments = apply;
-  setDiagYearFilterMinYear = minYear => this.diagYearPlotData.filter.valueMinYear = minYear;
-  setDiagYearFilterMaxYear = maxYear => this.diagYearPlotData.filter.valueMaxYear = maxYear;
+  setDiagYearFilterMinYear = minYear => {
+    if (this.diagYearPlotData.filter.valueMinYear !== minYear) {
+      this.diagYearPlotData.filter.valueMinYear = minYear;
+    }
+  };
+  setDiagYearFilterMaxYear = maxYear => {
+    if (this.diagYearPlotData.filter.valueMaxYear !== maxYear) {
+      this.diagYearPlotData.filter.valueMaxYear = maxYear;
+    }
+  };
   setNotifQuarterPlotData = data => this.notifQuarterPlotData = data;
   setNotifQuarterFilterApply = apply => this.notifQuarterPlotData.filter.applyInAdjustments = apply;
-  setNotifQuarterFilterMinYear = minYear => this.notifQuarterPlotData.filter.valueMinYear = minYear;
-  setNotifQuarterFilterMaxYear = maxYear => this.notifQuarterPlotData.filter.valueMaxYear = maxYear;
+  setNotifQuarterFilterMinYear = minYear => {
+    if (this.notifQuarterPlotData.filter.valueMinYear !== minYear) {
+      this.notifQuarterPlotData.filter.valueMinYear = minYear;
+    }
+  };
+  setNotifQuarterFilterMaxYear = maxYear => {
+    if (this.notifQuarterPlotData.filter.valueMaxYear !== maxYear) {
+      this.notifQuarterPlotData.filter.valueMaxYear = maxYear;
+    }
+  };
   setMissPlotData = data => this.missPlotData = data;
   setMissPlotSelection = selection => this.missPlotSelection = selection;
   setRepDelPlotData = data => this.repDelPlotData = data;
   setRepDelPlotSelection = selection => this.repDelPlotSelection = selection;
+
+  get notifQuarterSliderMarks() {
+    return this.notifQuarterPlotData.chartCategories.map(value => ({
+      value: value,
+      label: ''
+    }));
+  };
+
+  get notifQuarterChartCategories() {
+    return this.notifQuarterPlotData.chartCategories.map(value => QuarterToString(value));
+  };
 
   get missPlot1Series() {
     return [{

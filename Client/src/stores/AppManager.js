@@ -12,6 +12,7 @@ import PopCombinationsManager from './PopCombinationsManager';
 import ModelsManager from './ModelsManager';
 import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
+import FloatToQuarter from '../utilities/FloatToQuarter';
 
 configure({
   enforceActions: 'observed',
@@ -104,6 +105,12 @@ export default class AppManager {
           this.summaryDataMgr.reset();
           this.summaryDataMgr.setDiagYearPlotData(e.payload.Summary.DiagYearPlotData);
           this.summaryDataMgr.setNotifQuarterPlotData(e.payload.Summary.NotifQuarterPlotData);
+          this.adjustMgr.setRDWithoutStartYear(e.payload.Summary.DiagYearPlotData.filter.scaleMinYear);
+          this.adjustMgr.setRDWithoutEndYear(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear);
+          this.adjustMgr.setRDWithoutEndQrt(FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
+          this.adjustMgr.setRDWithStartYear(e.payload.Summary.DiagYearPlotData.filter.scaleMinYear);
+          this.adjustMgr.setRDWithEndYear(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear);
+          this.adjustMgr.setRDWithEndQrt(FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');

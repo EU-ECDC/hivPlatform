@@ -79,7 +79,7 @@ list(
 
     # B) PROCESS DATA ------------------------------------------------------------------------------
 
-    # Add dummy 'Imputation' column if not found
+    # Is this only original data?
     isOriginalData <- compData[, all(Imputation == 0)]
 
     # Make sure the strata columns exist in the data
@@ -100,7 +100,6 @@ list(
 
     # Create dimensions to match the weights later
     outputData <- copy(compData)
-
     outputData[, VarT := 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1]
 
     # Filter
@@ -117,7 +116,7 @@ list(
     compData[, ':='(
       VarT = 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1,
       Tf = 4 * (pmin.int(MaxNotificationTime, endQrt) -
-                  pmax.int(min(DiagnosisTime), startYear + 0.25)) + 1,
+            pmax.int(min(DiagnosisTime), startYear + 0.25)) + 1,
       ReportingDelay = 1L
     )]
     compData[, ':='(
@@ -134,7 +133,6 @@ list(
     rdDistribution <- NULL
     univAnalysis <- NULL
     if (nrow(compData) > 0) {
-
       # --------------------------------------------------------------------------------------------
       # Prepare diagnostic table based on original data
 
@@ -189,9 +187,8 @@ list(
           )
           res[, lapply(.SD, signif, 2), .SDcols = colnames(res)]
           setnames(res, c(
-            'HR', '1/HR', 'HR.lower.95',
-            'HR.upper.95', 'Beta', 'SE.Beta',
-            'Z', 'P.value', 'Prop.assumpt.p'
+            'HR', '1/HR', 'HR.lower.95', 'HR.upper.95', 'Beta', 'SE.Beta', 'Z', 'P.value',
+            'Prop.assumpt.p'
           ))
 
           if (!is.null(x$xlevels)) {
@@ -203,10 +200,7 @@ list(
             predictor <- rownames(y$conf.int)
           }
 
-          res <- cbind(
-            Predictor = predictor,
-            res
-          )
+          res <- cbind(Predictor = predictor, res)
           return(res)
         }
       ))
@@ -336,9 +330,10 @@ list(
       # D) STRATIFIED PLOT (OPTIONAL) --------------------------------------------------------------
       if (length(stratVarNames) > 0) {
         # Stratification
-        colNames <- union(c(
-          'MissingData', 'Source', 'YearOfHIVDiagnosis', 'Count', 'EstCount', 'EstCountVar'
-          ), stratVarNamesImp)
+        colNames <- union(
+          c('MissingData', 'Source', 'YearOfHIVDiagnosis', 'Count', 'EstCount', 'EstCountVar'),
+          stratVarNamesImp
+        )
         # Keep only required columns, convert data to 'long' format...
         agregatLong <- melt(
           agregat[, ..colNames],

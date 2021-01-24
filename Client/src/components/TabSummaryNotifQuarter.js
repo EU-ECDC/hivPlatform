@@ -10,6 +10,7 @@ import Switch from '@material-ui/core/Switch';
 import Chart from 'react-apexcharts';
 import merge from 'lodash/merge';
 import { defaultNotifChartOptions } from './ChartsData';
+import QuarterToString from '../utilities/QuarterToString';
 
 const userStyles = makeStyles({
   valueLabel: {
@@ -29,7 +30,7 @@ const TabSummaryNotifQuarter = (props) => {
   const notifChartOptions = merge(
     {},
     defaultNotifChartOptions,
-    { xaxis: { categories: appMgr.summaryDataMgr.notifQuarterPlotData.chartCategories } }
+    { xaxis: { categories: appMgr.summaryDataMgr.notifQuarterChartCategories } }
   );
 
   const handleNotifQuarterFilterSwitchChange = e =>
@@ -71,20 +72,20 @@ const TabSummaryNotifQuarter = (props) => {
             <Slider
               min={appMgr.summaryDataMgr.notifQuarterPlotData.filter.scaleMinYear}
               max={appMgr.summaryDataMgr.notifQuarterPlotData.filter.scaleMaxYear}
-              marks={true}
+              // step={0.25}s
+              step={null}
+              marks={appMgr.summaryDataMgr.notifQuarterSliderMarks}
               value={[
                 appMgr.summaryDataMgr.notifQuarterPlotData.filter.valueMinYear,
                 appMgr.summaryDataMgr.notifQuarterPlotData.filter.valueMaxYear
               ]}
               onChange={handleNotifQuarterFilterYearChange}
               valueLabelDisplay='on'
-              valueLabelFormat={value => value.toFixed(2)}
+              valueLabelFormat={value => QuarterToString(value)}
               classes={{
                 valueLabel: classes.valueLabel
               }}
               aria-labelledby='range-slider'
-              getAriaLabel={index => index.toFixed(2)}
-              getAriaValueText={value => value.toFixed(2)}
               color='secondary'
             />
           </div>
