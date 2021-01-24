@@ -14,8 +14,14 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-appMgr$CaseMgr$RunAdjustments(
-  GetAdjustmentSpecs(c('Reporting Delays'))
+appMgr$CaseMgr$RunAdjustments(GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')))
+
+adjustmentSpec <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))[[1]]
+adjustResults <- appMgr$CaseMgr$AdjustmentResult[[1]]
+report <- RenderReportForAdjSpec(
+  adjustmentSpec,
+  fileNameSuffix = 'intermediate',
+  params = adjustResults
 )
 
 

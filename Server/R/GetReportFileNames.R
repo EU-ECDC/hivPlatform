@@ -4,7 +4,7 @@
 #' \code{reports} folder installed with package \code{\link{hivEstimatesAccuracy2}}.
 #'
 #' @param path Path to the folder with adjustment specifications. Optional.
-#'   Default = \code{\link{system.file}("reports", package = "hivEstimatesAccuracy2")}.
+#'   Default = \code{\link{GetSystemFile}('reports')}.
 #'
 #' @return Character vector of adjustment specification file paths.
 #'
@@ -15,14 +15,10 @@
 #'
 #' @export
 GetReportFileNames <- function(
-  path = system.file("reports", package = "hivEstimatesAccuracy2"))
-{
-  reportFileNames <- list.files(path,
-                                pattern = ".Rmd$",
-                                full.names = TRUE)
-
-  reportNames <- sapply(reportFileNames, ReadRmdFrontMatter, section = "name")
-
+  path = GetSystemFile('reports')
+) {
+  reportFileNames <- list.files(path, pattern = '.Rmd$', full.names = TRUE)
+  reportNames <- sapply(reportFileNames, ReadRmdFrontMatter, section = 'name')
   names(reportFileNames) <- reportNames
 
   return(reportFileNames)

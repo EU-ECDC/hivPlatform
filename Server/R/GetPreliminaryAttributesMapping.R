@@ -22,9 +22,7 @@ GetPreliminaryAttributesMapping <- function(
 
   # Get required columns
   columnSpecs <- GetListObject(
-    system.file(
-      'referenceData/requiredColumns.R', package = 'hivEstimatesAccuracy2'
-    ),
+    GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE
   )
   requiredColumnNames <- names(columnSpecs)

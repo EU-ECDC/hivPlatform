@@ -124,7 +124,7 @@ test_that('adjusting is correct', {
 
 test_that('reactive processing is correct', {
   mockAdjustment <- setNames(list(GetListObject(
-    system.file('testData', 'MockMICEAdjustment.R', package = 'hivEstimatesAccuracy2')
+    GetSystemFile('testData', 'MockMICEAdjustment.R')
   )), 'Mock MICE Adjustment')
   session <- shiny::MockShinySession$new()
   caseMgr <- CaseDataManager$new(session)

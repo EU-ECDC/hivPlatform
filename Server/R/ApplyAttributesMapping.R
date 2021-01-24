@@ -48,7 +48,7 @@ ApplyAttributesMapping <- function(
 
   # Ensure columns types
   columnSpecs <- GetListObject(
-    system.file('referenceData/requiredColumns.R', package = 'hivEstimatesAccuracy2'),
+    GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE
   )
 

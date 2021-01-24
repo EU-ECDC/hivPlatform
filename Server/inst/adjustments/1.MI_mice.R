@@ -13,13 +13,13 @@ list(
     # Parameter 1: a specification with label, type and default value
     nimp = list(
       label = 'Number of imputations',
-      value = 2L,
+      value = 5L,
       input = 'numeric'
     ),
     # Parameter 2
     nit = list(
       label = 'Number of mice iterations',
-      value = 10L,
+      value = 5L,
       input = 'numeric'
     ),
     # Parameter 3

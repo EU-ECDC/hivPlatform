@@ -13,17 +13,17 @@ list(
     # Parameter 1: a specification with label, type and default value
     nimp = list(
       label = 'Number of imputations',
-      value = 2L,
+      value = 5L,
       input = 'numeric'),
     # Parameter 2
     nburn = list(
       label = 'Number of burn-in iterations',
-      value = 100L,
+      value = 1000L,
       input = 'numeric'),
     # Parameter 3
     nbetween = list(
       label = 'Number of iterations between two successive imputations',
-      value = 100L,
+      value = 500L,
       input = 'numeric'),
     # Parameter 4
     nsdf = list(

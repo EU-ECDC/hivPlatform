@@ -89,6 +89,17 @@ RunAdjustments <- function(
       TimeStamp = GetTimeStamp()
     )
 
+    report <- RenderReportForAdjSpec(
+      adjustmentSpec,
+      'intermediate',
+      adjustResults
+    )
+
+    adjustResults <- modifyList(
+      adjustResults,
+      list(Report = report)
+    )
+
     # Store intermediate results for later reference
     results[[adjustmentSpec$Key]] <- adjustResults
 

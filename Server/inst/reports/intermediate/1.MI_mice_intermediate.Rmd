@@ -9,7 +9,7 @@ output:
     smart: yes
     fig_caption: yes
 params:
-  InputData: NA    
+  InputData: NA
 ---
 
 ```{r setup, include = FALSE}
@@ -29,7 +29,7 @@ femaleKeptXCols <- params$InputData$Artifacts$F$X_COLS$Kept
 otherAllXCols <- params$InputData$Artifacts$O$X_COLS$All
 otherKeptXCols <- params$InputData$Artifacts$O$X_COLS$Kept
 
-maleRemovedXCols <- setdiff(maleAllXCols, maleKeptXCols) 
+maleRemovedXCols <- setdiff(maleAllXCols, maleKeptXCols)
 femaleRemovedXCols <- setdiff(femaleAllXCols, femaleKeptXCols)
 otherRemovedXCols <- setdiff(otherAllXCols, otherKeptXCols)
 
@@ -44,8 +44,8 @@ maleRemovedYCols <- setdiff(maleAllYCols, maleKeptYCols)
 femaleRemovedYCols <- setdiff(femaleAllYCols, femaleKeptYCols)
 otherRemovedYCols <- setdiff(otherAllYCols, otherKeptYCols)
 
-if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 | 
-    length(femaleRemovedXCols) > 0 | length(femaleRemovedYCols) > 0 | 
+if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 |
+    length(femaleRemovedXCols) > 0 | length(femaleRemovedYCols) > 0 |
     length(otherRemovedXCols) > 0 | length(otherRemovedYCols) > 0) {
   cat("<p>Some attributes in the input data have not been processed with this adjustment due to insufficient data:</p>",
       "<ul>")
@@ -79,7 +79,7 @@ if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 |
     }
     cat("</ul></li>")
   }
-  
+
   cat("</ul>")
 }
 ```
@@ -99,12 +99,12 @@ tabIdx <- 0
 plotTypes <- c("Convergence", "Observed vs. Imputed")
 tabsHeader <- c()
 for (gender in genders) {
-  genderName <- genderNameMapping[gender]
+  genderName <- genderNameMapping[[gender]]
   for (plotType in plotTypes) {
     tabIdx <- tabIdx + 1
     class <- ifelse(tabIdx == 1, " class='active'", "")
     tabTitle <- sprintf("%s - %s", genderName, plotType)
-    tabsHeader[tabIdx] <- 
+    tabsHeader[tabIdx] <-
       knitr::knit_expand(
         text = "<li{{class}}><a href='#miceTab{{tabIdx}}' data-toggle='tab' data-value='miceVal{{tabIdx}}'>{{tabTitle}}</a></li>")
   }
@@ -115,7 +115,7 @@ cat(knitr::knit_expand(text = "<ul class='nav nav-tabs'>{{tabsHeader}}</ul>"))
 cat("<div class='tab-content'>")
 tabIdx <- 0
 for (gender in genders) {
-  genderName <- genderNameMapping[gender]
+  genderName <- genderNameMapping[[gender]]
 
   # Sample plot
   tabIdx <- tabIdx + 1
@@ -123,18 +123,18 @@ for (gender in genders) {
   cat(knitr::knit_expand(text = "<div class='tab-pane{{class}}' id='miceTab{{tabIdx}}' data-value='miceVal{{tabIdx}}'>"))
   knitr::normal_print(GetMiceDiagnosticPlot(params$InputData$Artifacts[[gender]]$Mids))
   cat("</div>")
-  
+
   # Distribution plot
   tabIdx <- tabIdx + 1
   cat(knitr::knit_expand(text = "<div class='tab-pane' id='miceTab{{tabIdx}}' data-value='miceVal{{tabIdx}}'>"))
   colNames <- params$InputData$Artifacts[[gender]]$Y_COLS$Kept
-  dt <- params$InputData$Table[Gender == gender]
+  dt <- params$InputData$Data[Gender == gender]
   charts <- list()
   chartIdx <- 0
   for (colName in colNames) {
     chartIdx <- chartIdx + 1
     charts[[chartIdx]] <- GetImputedDistPlots(colName = colName, dt = dt, missingOnly = TRUE)
-    
+
     chartIdx <- chartIdx + 1
     charts[[chartIdx]] <- GetImputedDistPlots(colName = colName, dt = dt, missingOnly = FALSE)
   }

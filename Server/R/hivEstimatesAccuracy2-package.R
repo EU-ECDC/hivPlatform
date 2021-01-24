@@ -15,10 +15,13 @@
 #' Creator: Daniel Lewandowski \email{<daniel@@nextpagesoft.net>}
 #'
 #' @importFrom grDevices dev.control dev.off hcl pdf recordPlot
-#' @importFrom stats as.formula coef coefficients setNames vcov density quantile
+#' @importFrom grid grid.newpage grid.layout viewport pushViewport
+#' @importFrom stats setNames lowess quantile sd var acf glm poisson as.formula coef coefficients vcov runif
 #' @importFrom utils adist head modifyList tail unzip zip
+#' @importFrom tools file_path_sans_ext
 #' @import shiny
 #' @import data.table
+#' @import ggplot2
 #'
 NULL
 

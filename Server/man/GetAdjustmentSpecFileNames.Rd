@@ -4,13 +4,11 @@
 \alias{GetAdjustmentSpecFileNames}
 \title{GetAdjustmentSpecFileNames}
 \usage{
-GetAdjustmentSpecFileNames(
-  path = system.file("adjustments", package = "hivEstimatesAccuracy2")
-)
+GetAdjustmentSpecFileNames(path = GetSystemFile("adjustments"))
 }
 \arguments{
 \item{path}{Path to the folder with adjustment specifications. Optional.
-Default = \code{\link{system.file}('adjustments', package = 'hivEstimatesAccuracy2')}.}
+Default = \code{\link{GetSystemFile}('adjustments')}.}
 }
 \value{
 Character vector of adjustment specification file paths.

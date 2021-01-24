@@ -87,6 +87,13 @@ const TabAdjustmentsRun = props => {
               style={{ overflowX: 'auto' }}
             />
           </Paper>
+          <Paper style={{ marginTop: 20, padding: 10 }}>
+            <Typography variant='overline'>Intermediate results report</Typography>
+            <div
+              dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsReport}}
+              style={{ overflowX: 'auto' }}
+            />
+          </Paper>
         </Grid>
       </Grid>
     </TabPanel>

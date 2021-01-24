@@ -28,7 +28,7 @@ femaleKeptXCols <- params$InputData$Artifacts$F$X_COLS$Kept
 otherAllXCols <- params$InputData$Artifacts$O$X_COLS$All
 otherKeptXCols <- params$InputData$Artifacts$O$X_COLS$Kept
 
-maleRemovedXCols <- setdiff(maleAllXCols, maleKeptXCols) 
+maleRemovedXCols <- setdiff(maleAllXCols, maleKeptXCols)
 femaleRemovedXCols <- setdiff(femaleAllXCols, femaleKeptXCols)
 otherRemovedXCols <- setdiff(otherAllXCols, otherKeptXCols)
 
@@ -43,8 +43,8 @@ maleRemovedYCols <- setdiff(maleAllYCols, maleKeptYCols)
 femaleRemovedYCols <- setdiff(femaleAllYCols, femaleKeptYCols)
 otherRemovedYCols <- setdiff(otherAllYCols, otherKeptYCols)
 
-if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 | 
-    length(femaleRemovedXCols) > 0 | length(femaleRemovedYCols) > 0 | 
+if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 |
+    length(femaleRemovedXCols) > 0 | length(femaleRemovedYCols) > 0 |
     length(otherRemovedXCols) > 0 | length(otherRemovedYCols) > 0) {
   cat("<p>Some attributes in the input data have not been processed with this adjustment due to insufficient data:</p>",
       "<ul>")
@@ -78,7 +78,7 @@ if (length(maleRemovedXCols) > 0 | length(maleRemovedYCols) > 0 |
     }
     cat("</ul></li>")
   }
-  
+
   cat("</ul>")
 }
 ```
@@ -101,7 +101,7 @@ for (gender in genders) {
     tabIdx <- tabIdx + 1
     class <- ifelse(tabIdx == 1, " class='active'", "")
     tabTitle <- sprintf("%s - %s", genderName, plotType)
-    tabsHeader[tabIdx] <- 
+    tabsHeader[tabIdx] <-
       knitr::knit_expand(
         text = "<li{{class}}><a href='#jomoTab{{tabIdx}}' data-toggle='tab' data-value='jomoVal{{tabIdx}}'>{{tabTitle}}</a></li>")
   }
@@ -126,7 +126,7 @@ for (gender in genders) {
   coefNames <- grep("(Intercept|SplineKnot)", rowNames, value = TRUE)
   covariateNames <- setdiff(rowNames, coefNames)
   cat("\n\n",
-      "Legend:", 
+      "Legend:",
       "\n\n")
   cat(sprintf("Continuous outcomes: %s<br />", paste(continuousNames, collapse = ", ")))
   cat(sprintf("Categorical outcomes (latent normal variables): %s<br />", paste(categoricalNames, collapse = ", ")))
@@ -139,7 +139,7 @@ for (gender in genders) {
   cat(knitr::knit_expand(text = "<div class='tab-pane' id='jomoTab{{tabIdx}}' data-value='jomoVal{{tabIdx}}'>"))
   knitr::normal_print(GetMCMCAutoCorrelationPlot(params$InputData$Artifacts[[gender]]$Covariance))
   cat("\n\n",
-      "Legend:", 
+      "Legend:",
       "\n\n")
   colNames <- colnames(params$InputData$Artifacts$M$Covariance[, , 1])
   categoricalNames <- grep("\\.", colNames, value = TRUE)
@@ -147,7 +147,7 @@ for (gender in genders) {
   cat(sprintf("Continuous outcomes: %s<br />", paste(continuousNames, collapse = ", ")))
   cat(sprintf("Categorical outcomes (latent normal variables): %s<br />", paste(categoricalNames, collapse = ", ")))
   cat("</div>")
-  
+
   # Distribution plot
   tabIdx <- tabIdx + 1
   cat(knitr::knit_expand(text = "<div class='tab-pane' id='jomoTab{{tabIdx}}' data-value='jomoVal{{tabIdx}}'>"))
@@ -158,7 +158,7 @@ for (gender in genders) {
   for (colName in colNames) {
     chartIdx <- chartIdx + 1
     charts[[chartIdx]] <- GetImputedDistPlots(colName = colName, dt = dt, missingOnly = TRUE)
-    
+
     chartIdx <- chartIdx + 1
     charts[[chartIdx]] <- GetImputedDistPlots(colName = colName, dt = dt, missingOnly = FALSE)
   }

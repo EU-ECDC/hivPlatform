@@ -309,7 +309,8 @@ CaseDataManager <- R6::R6Class(
                 'ADJUSTMENTS_RUN_FINISHED',
                 payload = list(
                   ActionStatus = 'SUCCESS',
-                  ActionMessage = 'Running adjustment task finished'
+                  ActionMessage = 'Running adjustment task finished',
+                  AdjustmentsReport = self$AdjustmentsReport
                 )
               )
             },
@@ -494,6 +495,14 @@ CaseDataManager <- R6::R6Class(
       }
 
       return(result)
+    },
+
+    AdjustmentsReport = function() {
+      report <- ''
+      for (i in seq_along(private$Catalogs$AdjustmentResult)) {
+        report <- paste(report, private$Catalogs$AdjustmentResult[[i]]$Report)
+      }
+      return(report)
     },
 
     Data = function() {

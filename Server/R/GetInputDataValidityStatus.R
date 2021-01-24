@@ -23,7 +23,7 @@ GetInputDataValidityStatus <- function(inputData)
   }
 
   columnSpecs <- GetListObject(
-    system.file('referenceData/requiredColumns.R', package = 'hivEstimatesAccuracy2'),
+    GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE
   )
 

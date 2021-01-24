@@ -15,7 +15,7 @@ RenderReportToFile(
 \arguments{
 \item{reportFilePath}{Path to the source RMarkdown file. Required.}
 
-\item{format}{Output format of the report. Optional. Default = \code{"html_fragment"}.}
+\item{format}{Output format of the report. Optional. Default = \code{'html_fragment'}.}
 
 \item{outputFilePath}{Path to the output file. Optional. Default = \code{NULL}.}
 

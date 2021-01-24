@@ -11,7 +11,7 @@
 GetPreliminaryDefaultValues <- function()
 {
   columnSpecs <- GetListObject(
-    system.file('referenceData/requiredColumns.R', package = 'hivEstimatesAccuracy2'),
+    GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE
   )
   defaultValues <- lapply(columnSpecs, function(columnSpec) {

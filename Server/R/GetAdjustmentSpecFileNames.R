@@ -4,7 +4,7 @@
 #' \code{adjustments} folder installed with package \code{\link{hivEstimatesAccuracy2}}.
 #'
 #' @param path Path to the folder with adjustment specifications. Optional.
-#'   Default = \code{\link{system.file}('adjustments', package = 'hivEstimatesAccuracy2')}.
+#'   Default = \code{\link{GetSystemFile}('adjustments')}.
 #'
 #' @return Character vector of adjustment specification file paths.
 #'
@@ -15,7 +15,7 @@
 #'
 #' @export
 GetAdjustmentSpecFileNames <- function(
-  path = system.file('adjustments', package = 'hivEstimatesAccuracy2')
+  path = GetSystemFile('adjustments')
 ) {
   adjustmentFileNames <- list.files(path,
                                     pattern = '\\.R$',

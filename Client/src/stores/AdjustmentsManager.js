@@ -44,6 +44,8 @@ export default class AdjustmentsManager {
 
   adjustmentsRunLog = null;
 
+  adjustmentsReport = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
 
@@ -56,6 +58,7 @@ export default class AdjustmentsManager {
       rdWithTrendSettings: observable,
       adjustmentsRunProgress: observable,
       adjustmentsRunLog: observable,
+      adjustmentsReport: observable,
       miParams: computed,
       rdParams: computed,
       adjustmentSelected: computed,
@@ -88,7 +91,8 @@ export default class AdjustmentsManager {
       runAdjustments: action,
       cancelAdjustments: action,
       setAdjustmentsRunProgress: action,
-      setAdjustmentsRunLog: action
+      setAdjustmentsRunLog: action,
+      setAdjustmentsReport: action
     });
 
     autorun(() => {
@@ -204,4 +208,6 @@ export default class AdjustmentsManager {
   setAdjustmentsRunProgress = progress => this.adjustmentsRunProgress = progress;
 
   setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
+
+  setAdjustmentsReport = report => this.adjustmentsReport = report;
 }
