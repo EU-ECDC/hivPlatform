@@ -17,13 +17,8 @@
 GetAdjustmentSpecFileNames <- function(
   path = GetSystemFile('adjustments')
 ) {
-  adjustmentFileNames <- list.files(path,
-                                    pattern = '\\.R$',
-                                    full.names = TRUE)
-
-  adjustmentNames <- sapply(adjustmentFileNames,
-                            GetListObject,
-                            section = 'Name')
+  adjustmentFileNames <- list.files(path, pattern = '\\.R$', full.names = TRUE)
+  adjustmentNames <- sapply(adjustmentFileNames, GetListObject, section = 'Name')
 
   if (anyDuplicated(adjustmentNames) != 0) {
     stop('Adjustments have duplicated names')

@@ -14,10 +14,10 @@
 #'
 #' @export
 RunApp <- function(
-  launchBrowser = getOption("shiny.launch.browser", interactive()),
+  launchBrowser = getOption('shiny.launch.browser', interactive()),
   trace = FALSE
 ) {
-  options(shiny.maxRequestSize = 150 * 1024^2)
+  options(shiny.maxRequestSize = 100 * 1024^2)
   options(shiny.trace = trace)
   app <- shiny::shinyApp(AppUI, AppServer)
   shiny::runApp(
