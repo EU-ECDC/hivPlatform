@@ -1,4 +1,4 @@
-deployPath<- 'D:/_REPOSITORIES/hivPlatform/'
+deployPath <- 'D:/_REPOSITORIES/hivPlatform/'
 
 # Copy files and folders
 sapply(

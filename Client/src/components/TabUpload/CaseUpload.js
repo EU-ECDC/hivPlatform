@@ -70,7 +70,7 @@ const CaseUpload = (props) => {
           </label>
         </Tooltip>
         <Typography variant='body2' color='textSecondary'>
-          Maximum file size: 70MB<br />
+          Maximum file size: 100MB<br />
           Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)
         </Typography>
         <UploadProgressBar progress={appMgr.caseBasedDataMgr.uploadProgress} />
