@@ -74,6 +74,7 @@ export default class UIStateManager {
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,
+      reportsPageEnabled: computed,
       outputsPageEnabled: computed,
       caseBasedAttrMappingEnabled: computed,
       caseBasedOrigGroupingEnabled: computed
@@ -120,7 +121,7 @@ export default class UIStateManager {
     this.pages[1].disabled = !this.uploadPageEnabled;
     this.pages[2].disabled = !this.summaryPageEnabled;
     this.pages[3].disabled = !this.adjustmentsPageEnabled;
-    // this.pages[5].disabled = !this.reportsPageEnabled;
+    this.pages[5].disabled = !this.reportsPageEnabled;
     this.pages[6].disabled = !this.outputsPageEnabled;
   };
 

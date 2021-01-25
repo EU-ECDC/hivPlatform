@@ -19,10 +19,10 @@ import Btn from './Btn';
 
 const TabReports = (props) => {
 
-  const { appManager } = props;
+  const { appMgr } = props;
 
-  const handleGenerateReportBtnClick = e => {
-    appManager.btnClicked('generateReportBtn');
+  const handleCreateReportBtnClick = e => {
+    appMgr.btnClicked('createReportBtn');
   };
 
   return (
@@ -47,11 +47,11 @@ const TabReports = (props) => {
             <FormHelperText>Select report type</FormHelperText>
           </FormControl>
           <Btn
-            onClick={handleGenerateReportBtnClick}
+            onClick={handleCreateReportBtnClick}
           >
             Create report
           </Btn>
-          <Button color='primary' style={{ marginLeft: 20 }}>Cancel</Button>
+          <Button color='primary' style={{ marginLeft: 20 }} disabled>Cancel</Button>
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
@@ -93,12 +93,12 @@ const TabReports = (props) => {
             </Select>
             <FormHelperText>Select document format</FormHelperText>
           </FormControl>
-          <Btn><CloudDownloadIcon />&nbsp;Download</Btn>
+          <Btn disabled><CloudDownloadIcon />&nbsp;Download</Btn>
         </Grid>
         <Grid item xs={9}>
           <Paper style={{ padding: 10 }}>
             <div
-              dangerouslySetInnerHTML={{ __html: appManager.report }}
+              dangerouslySetInnerHTML={{ __html: appMgr.report }}
               style={{ overflowX: 'auto' }}
             />
           </Paper>

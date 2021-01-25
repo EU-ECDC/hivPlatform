@@ -29,8 +29,8 @@ AppManager <- R6::R6Class(
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
         CompletedSteps = NULL,
-        Report = NULL,
-        ReportTask = NULL
+        ReportTask = NULL,
+        Report = NULL
       )
 
       self$SetCompletedStep('SESSION_INITIALIZED')
@@ -83,64 +83,120 @@ AppManager <- R6::R6Class(
           )
         )
       }
+    },
+
+    # USER ACTIONS =================================================================================
+
+    CreateReport = function(
+      reportName
+    ) {
+      if (!is.element(
+        self$Steps['CASE_BASED_ADJUSTMENTS'],
+        private$Catalogs$CompletedSteps
+      )) {
+        PrintAlert(
+          'Adjustments must be run before creating a report',
+          type = 'danger'
+        )
+        return(invisible(self))
+      }
+
+      tryCatch({
+        PrintAlert('Starting report task')
+
+        private$Catalogs$ReportTask <- Task$new(
+          function(reportName, fileName, filters, adjustedData) {
+            suppressMessages(pkgload::load_all())
+            reportFilePath <- hivEstimatesAccuracy2::GetReportFileNames()[reportName]
+            params <- list(
+              AdjustedData = adjustedData,
+              ReportingDelay = TRUE,
+              Smoothing = TRUE,
+              CD4ConfInt = FALSE
+            )
+            params <- hivEstimatesAccuracy2::GetMainReportArtifacts(params)
+            params <- modifyList(
+              params,
+              list(
+                Artifacts =
+                  list(
+                    FileName = fileName,
+                    Filters = filters
+                  )
+              )
+            )
+            report <- hivEstimatesAccuracy2::RenderReportToHTML(reportFilePath, params)
+
+            return(report)
+          },
+          args = list(
+            reportName = reportName,
+            fileName = private$CaseMgrPriv$FileName,
+            filters = private$CaseMgrPriv$Filters,
+            adjustedData = private$CaseMgrPriv$AdjustmentResult
+          ),
+          session = private$Session,
+          successCallback = function(report) {
+            private$Catalogs$Report <- report
+            PrintAlert('Running report task finished')
+            self$SendMessage(
+              'CREATING_REPORT_FINISHED',
+              payload = list(
+                ActionStatus = 'SUCCESS',
+                ActionMessage = 'Running report task finished',
+                Report = report
+              )
+            )
+            self$SetCompletedStep('REPORTS')
+          },
+          failCallback = function() {
+            PrintAlert('Running adjustment task failed', type = 'danger')
+            self$SendMessage(
+              'CREATING_REPORT_FINISHED',
+              payload = list(
+                ActionStatus = 'FAIL',
+                ActionMessage = 'Running report task failed'
+              )
+            )
+          }
+        )
+        self$SendMessage(
+          'CREATING_REPORT_STARTED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ActionMessage = 'Running report task started'
+          )
+        )
+      },
+      error = function(e) {
+        self$SendMessage(
+          'CREATING_REPORT_STARTED',
+          payload = list(
+            ActionStatus = 'FAIL',
+            ActionMessage = 'Running report task failed'
+          )
+        )
+        print(e)
+      })
+
+      return(invisible(self))
+    },
+
+    CancelReport = function() {
+      if (!is.null(private$Catalogs$ReportTask)) {
+        private$Catalogs$ReportTask$Stop()
+
+        self$SendMessage(
+          'CREATING_REPORT_CANCELLED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ActionMessage = 'Running report task cancelled'
+          )
+        )
+      }
+
+      return(invisible(self))
     }
-
-    # # USER ACTIONS ===============================================================================
-
-    # CreateReport = function(reportName) {
-    #   reportFilePath <- GetReportFileNames()[reportName]
-    #   params <- list(
-    #     AdjustedData = private$Catalogs$AdjustedCaseBasedData,
-    #     ReportingDelay = TRUE,
-    #     Smoothing = TRUE,
-    #     CD4ConfInt = FALSE
-    #   )
-
-    #   if (is.element(reportName, c('Main Report'))) {
-    #     params <- GetMainReportArtifacts(params)
-    #   }
-
-    #   params <- modifyList(
-    #     params,
-    #     list(
-    #       Artifacts = list(
-    #         FileName = private$Catalogs$CaseBasedDataPath,
-    #         DiagYearRange = NULL,
-    #         NotifQuarterRange = NULL,
-    #         DiagYearRangeApply = TRUE
-    #       )
-    #     )
-    #   )
-
-    #   htmlReportFileName <- RenderReportToFile(
-    #     reportFilePath = reportFilePath,
-    #     format = 'html_document',
-    #     params = params,
-    #     outDir = dirname(private$Catalogs$CaseBasedDataPath)
-    #   )
-
-    #   return(htmlReportFileName)
-    # },
-
-    # GenerateReport = function() {
-    #   private$Catalogs$ReportTask <- Task$new(
-    #     function() {
-    #       results <- "<h1>Title</h1><p>Text set in R</p>"
-    #       return(results)
-    #     },
-    #     args = list(),
-    #     session = private$Session
-    #   )
-    #   private$Catalogs$ReportTask$Run()
-
-    #   return(invisible(self))
-    # },
-
-    # CancelReportTask = function() {
-    #   private$Catalogs$ReportTask$Stop()
-
-    #   return(invisible(self))
-    # }
   ),
 
   private = list(
@@ -175,6 +231,14 @@ AppManager <- R6::R6Class(
 
     CompletedSteps = function() {
       return(private$Catalogs$CompletedSteps)
+    },
+
+    ReportTask = function() {
+      return(private$Catalogs$ReportTask)
+    },
+
+    Report = function() {
+      return(private$Catalogs$Report)
     }
 
     # HIVModelParameters = function(xmlModel) {
@@ -184,19 +248,5 @@ AppManager <- R6::R6Class(
     #     private$Catalogs$HIVModelParameters <- ParseXMLModel(xmlModel)
     #   }
     # },
-
-    # ReportTask = function() {
-    #   return(private$Catalogs$ReportTask)
-    # },
-
-    # Report = function(report) {
-    #   if (missing(report)) {
-    #     return(private$Catalogs$Report)
-    #   } else {
-    #     if (!is.null(report)) {
-    #       private$Catalogs$Report <- report
-    #     }
-    #   }
-    # }
   )
 )

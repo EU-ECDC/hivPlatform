@@ -153,6 +153,18 @@ export default class AppManager {
           this.notificationsMgr.setMsg('Adjustment run cancelled');
         }
         break;
+      case 'CREATING_REPORT_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.notificationsMgr.setMsg('Creating report started');
+        }
+        break;
+      case 'CREATING_REPORT_FINISHED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setLastEventType(e.type);
+          this.setReport(e.payload.Report);
+          this.notificationsMgr.setMsg('Creating report finished');
+        }
+        break;
 
       // case 'AGGR_DATA_UPLOADED':
       //   this.aggrDataMgr.setFileName(e.payload.FileName);
@@ -214,9 +226,6 @@ export default class AppManager {
       //   this.modelMgr.setBootstrapRunProgress(null);
       //   this.notificationsMgr.setMsg('Bootstrap run finished');
       //   break
-      // case 'REPORT_SET':
-      //   this.setReport(event.Payload.Report);
-      //   break;
     };
   };
 
@@ -238,12 +247,14 @@ export default class AppManager {
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,
+      report: observable,
       shinyReady: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
       btnClicked: action,
       inputValueSet: action,
       setShinyMessage: action,
+      setReport: action,
       unbindShiny: action,
       bindShiny: action
     });

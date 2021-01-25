@@ -14,18 +14,30 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-appMgr$CaseMgr$RunAdjustments(GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')))
-
-adjustmentSpec <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))[[1]]
-adjustResults <- appMgr$CaseMgr$AdjustmentResult[[1]]
-report <- RenderReportForAdjSpec(
-  adjustmentSpec,
-  fileNameSuffix = 'intermediate',
-  params = adjustResults
+filters <- list(
+  DiagYear = list(
+    ApplyInAdjustments = FALSE,
+    MinYear =  2000,
+    MaxYear =  2014
+  ),
+  NotifQuarter <- list(
+    ApplyInAdjustments = FALSE,
+    MinYear = 2000.125,
+    MaxYear = 2014.875
+  )
+)
+appMgr$CaseMgr$RunAdjustments(
+  # GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')),
+  GetAdjustmentSpecs(c('Reporting Delays')),
+  filters
 )
 
 
-# STEP 4 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 4 - Create adjusted case-based data report --------------------------------------------------
+appMgr$CreateReport(reportName = 'Main Report')
+
+
+# STEP 5 - Fit the HIV model -----------------------------------------------------------------------
 popCombination <- list(
   Case = list(
     list(Values = c('M', 'IDU'), Variables = c('Gender', 'Transmission'))

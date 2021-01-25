@@ -259,6 +259,26 @@ export default appMgr => {
     }
   });
 
+  appMgr.onShinyEvent({
+    type: 'CREATING_REPORT_FINISHED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Running report task finished',
+      Report: 'Test report'
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'COMPLETED_STEPS_SET',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      CompletedSteps: [
+        'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING', 'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS'
+      ]
+    }
+  });
+
+
   // // // 8. Available strata set
   // // appManager.onShinyEvent({
   // //   Type: 'AVAILABLE_STRATA_SET',

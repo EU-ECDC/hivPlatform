@@ -144,6 +144,10 @@ Events <- function(
     CreateDownload('ADJUSTED_DATA', 'dta', output, appMgr)
   })
 
+  observeEvent(input$createReportBtn, {
+    appMgr$CreateReport(reportName = 'Main Report')
+  })
+
   # observeEvent(input$aggrUploadBtn, {
   #   fileInfo <- input$aggrUploadBtn
   #   appMgr$SendMessage(

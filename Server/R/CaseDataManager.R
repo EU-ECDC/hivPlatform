@@ -31,6 +31,7 @@ CaseDataManager <- R6::R6Class(
         OriginGrouping = list(),
         PreProcessArtifacts = NULL,
         Summary = NULL,
+        Filters = NULL,
         PreProcessedData = NULL,
         PreProcessedDataStatus = NULL,
         AdjustedData = NULL,
@@ -248,6 +249,7 @@ CaseDataManager <- R6::R6Class(
       tryCatch({
         PrintAlert('Starting adjustment task')
 
+        private$Catalogs$Filters <- filters
         preProcessedData <- private$Catalogs$PreProcessedData
 
         if (isTRUE(filters$DiagYear$ApplyInAdjustments)) {
@@ -462,6 +464,10 @@ CaseDataManager <- R6::R6Class(
     SummaryJSON = function() {
       summaryJSON <- jsonlite:::asJSON(private$Catalogs$Summary, keep_vec_names = TRUE)
       return(summaryJSON)
+    },
+
+    Filters = function() {
+      return(private$Catalogs$Filters)
     },
 
     PreProcessedData = function() {
