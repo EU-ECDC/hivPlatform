@@ -3,3 +3,4 @@
 *.pdf -text diff
 *.RDS -text diff
 *.png -text diff
+*.zip -text diff

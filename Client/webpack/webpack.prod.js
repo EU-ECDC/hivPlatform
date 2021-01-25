@@ -1,4 +1,3 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const commonPaths = require('./paths');
 
 module.exports = {

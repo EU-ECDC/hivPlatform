@@ -1,16 +1,4 @@
-deployRootPath <- 'd:/_DEPLOYMENT/hivEstimatesAccuracy2'
-
-# Read new version string
-descr <- as.data.frame(read.dcf(file = 'DESCRIPTION'))
-version <- as.character(descr$Version)
-
-# Create deploy folder
-deployPath <- file.path(deployRootPath, 'dist', version)
-
-if (fs::dir_exists(deployPath)) {
-  fs::dir_delete(deployPath)
-}
-fs::dir_create(deployPath)
+deployPath<- 'D:/_REPOSITORIES/hivPlatform/'
 
 # Copy files and folders
 sapply(
