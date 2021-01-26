@@ -2,7 +2,10 @@ deployPath <- 'D:/_REPOSITORIES/hivPlatform/'
 
 # Copy files and folders
 sapply(
-  c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', '.Rprofile', 'renv.lock'),
+  c(
+    'app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', '.Rprofile', 'renv.lock',
+    '../.gitattributes'
+  ),
   fs::file_copy,
   new_path = deployPath
 )
