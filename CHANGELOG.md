@@ -1,5 +1,5 @@
-## 1.9.21
+## 1.9.36
 
-###### _Nov 27 2020_
+###### _Jan 27 2021_
 
-UNDER DEVELOPMENT
+- Support 'YYYY-MM' and 'MM-YYYY' date formats in input data
