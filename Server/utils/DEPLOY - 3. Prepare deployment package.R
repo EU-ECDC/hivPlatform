@@ -7,16 +7,17 @@ sapply(
     '../.gitattributes'
   ),
   fs::file_copy,
-  new_path = deployPath
+  new_path = deployPath,
+  overwrite = TRUE
 )
 
 fs::dir_create(file.path(deployPath, 'renv'))
 fs::file_copy('renv/activate.R', file.path(deployPath, 'renv/'), overwrite = TRUE)
 fs::file_copy('renv/settings.dcf', file.path(deployPath, 'renv/'), overwrite = TRUE)
-fs::dir_copy('man', deployPath)
-fs::dir_copy('inst', deployPath)
-fs::dir_copy('data', deployPath)
-fs::dir_copy('R', deployPath)
+fs::dir_copy('man/', file.path(deployPath, 'man/'), overwrite = TRUE)
+fs::dir_copy('inst/', file.path(deployPath, 'inst/'), overwrite = TRUE)
+fs::dir_copy('data/', file.path(deployPath, 'data/'), overwrite = TRUE)
+fs::dir_copy('R/', file.path(deployPath, 'R/'), overwrite = TRUE)
 
 rProfileFile <- file(file.path(deployPath, '.Rprofile'))
 lines <- readLines(rProfileFile)
