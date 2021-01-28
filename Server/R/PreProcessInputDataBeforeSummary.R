@@ -23,16 +23,6 @@ PreProcessInputDataBeforeSummary <- function(
     return(NULL)
   }
 
-  # Convert all strings to upper case
-  colClasses <- sapply(sapply(inputData, class), '[[', 1)
-  charColNames <- names(colClasses[colClasses == 'character'])
-  inputData[, (charColNames) := lapply(.SD, toupper), .SDcols = charColNames]
-
-  # Replace UNKs and BLANKS with NAs
-  for (colName in charColNames) {
-    inputData[get(colName) %chin% c('UNK', 'NA', ''), (colName) := NA_character_]
-  }
-
   # Merge RegionOfBirth and RegionOfNationality
   inputData[
     unique(countryData[, .(CountryOfBirth = Code, RegionOfBirth = TESSyCode)]),
@@ -115,22 +105,27 @@ PreProcessInputDataBeforeSummary <- function(
 
   # Imput Gender
   selGenderMissing <- inputData[, is.na(Gender)]
+  selHIVDiagnosisYearMissing <- inputData[, is.na(YearOfHIVDiagnosis)]
   selGenderReplaced <- selGenderMissing & inputData$Transmission %chin% 'MSM'
   selGenderImputed <- selGenderMissing & !selGenderReplaced
   # If Gender missing and Transmission is MSM, then set Male gender
   inputData[selGenderReplaced, Gender := 'M']
   # A single imputation based on categorical year and transmission
-  if (any(selGenderImputed)) {
-    inputDataGender <- inputData[, .(
+  if (any(selGenderImputed) || any(selHIVDiagnosisYearMissing)) {
+    imputeData <- inputData[, .(
       Gender = as.factor(Gender),
       YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis),
       Transmission = Transmission
     )]
     set.seed(seed)
-    miceImputation <-
-      suppressWarnings(mice::mice(inputDataGender, m = 1, maxit = 5, printFlag = TRUE))
-    inputDataGender <- setDT(mice::complete(miceImputation, action = 1))
-    inputData[selGenderImputed, Gender := inputDataGender$Gender[selGenderImputed]]
+    miceImputation <- suppressWarnings(mice::mice(imputeData, m = 1, maxit = 5, printFlag = TRUE))
+    imputeData <- setDT(mice::complete(miceImputation, action = 1))
+
+    inputData[selGenderImputed, Gender := imputeData$Gender[selGenderImputed]]
+    inputData[
+      selHIVDiagnosisYearMissing,
+      YearOfHIVDiagnosis := as.integer(imputeData$YearOfHIVDiagnosis[selHIVDiagnosisYearMissing])
+    ]
   }
 
   # Create helper columns for filtering data on diagnosis and notification time
@@ -140,8 +135,7 @@ PreProcessInputDataBeforeSummary <- function(
   )]
 
   # Transform columns to factor
-  inputData[, Gender := factor(Gender, levels = c('M', 'F', 'O'))]
-  inputData[, Gender := droplevels(Gender)]
+  inputData[, Gender := droplevels(factor(Gender, levels = c('M', 'F', 'O')))]
   inputData[, Transmission := factor(Transmission)]
 
   artifacts <- list(

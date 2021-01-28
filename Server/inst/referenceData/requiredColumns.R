@@ -133,7 +133,7 @@ list(
     description = 'Date of HIV diagnosis',
     type = 'date',
     defaultValue = as.Date(NA),
-    restrictedValues = as.Date(NA),
+    # restrictedValues = as.Date(NA),
     candidateOrigColNames = c('dateofdiagnosisisodate')
   ),
   DateOfAIDSDiagnosis = list(
