@@ -55,7 +55,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.6"],
             ["jquery", "npm:3.5.1"],
             ["lodash", "npm:4.17.20"],
-            ["mobx", "npm:6.1.0"],
+            ["mobx", "npm:6.1.1"],
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.1"],
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
@@ -5322,7 +5322,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.0.0-beta.6"],
             ["jquery", "npm:3.5.1"],
             ["lodash", "npm:4.17.20"],
-            ["mobx", "npm:6.1.0"],
+            ["mobx", "npm:6.1.1"],
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.1"],
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
@@ -6521,10 +6521,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mobx", [
-        ["npm:6.1.0", {
-          "packageLocation": "./.yarn/cache/mobx-npm-6.1.0-8dfb14c630-23d8169da5.zip/node_modules/mobx/",
+        ["npm:6.1.1", {
+          "packageLocation": "./.yarn/cache/mobx-npm-6.1.1-d7cba18746-c3ab0929a7.zip/node_modules/mobx/",
           "packageDependencies": [
-            ["mobx", "npm:6.1.0"]
+            ["mobx", "npm:6.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -6543,7 +6543,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["@types/mobx", null],
             ["@types/react", null],
-            ["mobx", "npm:6.1.0"],
+            ["mobx", "npm:6.1.1"],
             ["mobx-react-lite", "virtual:4311bcb9b5c7cb4a2948ac7881d1c7db8a5ccb5c9eb876f07725b7cb854bdf3da2cf0fab1481eec0ad3dadaa1f37949d339a30de8ab037cf053031f3b385412e#npm:3.2.0"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
@@ -6574,7 +6574,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx-react-lite", "virtual:4311bcb9b5c7cb4a2948ac7881d1c7db8a5ccb5c9eb876f07725b7cb854bdf3da2cf0fab1481eec0ad3dadaa1f37949d339a30de8ab037cf053031f3b385412e#npm:3.2.0"],
             ["@types/mobx", null],
             ["@types/react", null],
-            ["mobx", "npm:6.1.0"],
+            ["mobx", "npm:6.1.1"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
             ["react-native", null]

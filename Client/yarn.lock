@@ -3888,7 +3888,7 @@ fsevents@~2.1.2:
     html-webpack-plugin: ^5.0.0-beta.6
     jquery: ^3.5.1
     lodash: ^4.17.20
-    mobx: ^6.1.0
+    mobx: ^6.1.1
     mobx-react: ^7.1.0
     react: ^17.0.1
     react-apexcharts: ^1.3.7
@@ -4977,10 +4977,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "mobx@npm:6.1.0"
-  checksum: 23d8169da5f807a788194dc3b2b150f05ba919131d1ffa093f4f82ee053df43932ce1a23d51b4784efd2667118e7971dbe9cddd85e8c1d20caacc145a7994219
+"mobx@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "mobx@npm:6.1.1"
+  checksum: c3ab0929a7f405be1b70cd6bc2695ae57240fec642260ba1e4a27251ef79a1c842b1dba607f6f509dc902ed4963e1b4f6e2262400efe4716231fe451c09a616a
   languageName: node
   linkType: hard
 
