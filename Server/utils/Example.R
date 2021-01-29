@@ -3,15 +3,17 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_-_2_populations.zip'))
+
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
+
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 filters <- list(

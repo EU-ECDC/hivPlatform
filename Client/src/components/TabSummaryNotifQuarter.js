@@ -30,7 +30,11 @@ const TabSummaryNotifQuarter = (props) => {
   const notifChartOptions = merge(
     {},
     defaultNotifChartOptions,
-    { xaxis: { categories: appMgr.summaryDataMgr.notifQuarterChartCategories } }
+    {
+      xaxis: {
+        categories: appMgr.summaryDataMgr.notifQuarterChartCategories
+      }
+    }
   );
 
   const handleNotifQuarterFilterSwitchChange = e =>

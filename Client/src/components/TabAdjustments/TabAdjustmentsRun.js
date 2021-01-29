@@ -8,6 +8,8 @@ import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import IsNull from '../../utilities/IsNull';
@@ -31,6 +33,12 @@ const AdjustmentsRunProgressBar = (props) => {
 
 const TabAdjustmentsRun = props => {
   const { appMgr } = props;
+
+  const [tabId, setTabId] = React.useState(0);
+
+  const handleTabChange = (event, tabId) => {
+    setTabId(tabId);
+  };
 
   const handleRunAdjustBtnClick = () => {
     appMgr.adjustMgr.runAdjustments();
@@ -81,18 +89,30 @@ const TabAdjustmentsRun = props => {
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
-            <Typography variant='overline'>Run log</Typography>
-            <pre
-              dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsRunLog }}
-              style={{ overflowX: 'auto' }}
-            />
-          </Paper>
-          <Paper style={{ marginTop: 20, padding: 10 }}>
-            <Typography variant='overline'>Intermediate results report</Typography>
-            <div
-              dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsReport}}
-              style={{ overflowX: 'auto' }}
-            />
+            <Tabs
+              value={tabId}
+              onChange={handleTabChange}
+              indicatorColor='primary'
+              textColor='primary'
+            >
+              <Tab label='Run log' />
+              <Tab label='Diagnostics' />
+            </Tabs>
+
+            {tabId === 0 && <React.Fragment>
+              <Typography variant='overline'>Run log</Typography>
+              <pre
+                dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsRunLog }}
+                style={{ overflowX: 'auto' }}
+              />
+            </React.Fragment>}
+            {tabId === 1 && <React.Fragment>
+              <Typography variant='overline'>Intermediate results report</Typography>
+              <div
+                dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsReport }}
+                style={{ overflowX: 'auto' }}
+              />
+            </React.Fragment>}
           </Paper>
         </Grid>
       </Grid>

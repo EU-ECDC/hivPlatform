@@ -93,40 +93,46 @@ PreProcessInputDataBeforeSummary <- function(
   # Transform CD4
   inputData[, SqCD4 := sqrt(FirstCD4Count)]
 
-  # AIDS close to diagnosis
-  inputData[, AIDS := factor(ifelse(
-    !is.na(DateOfAIDSDiagnosis),
-    ifelse(DateOfAIDSDiagnosis <= DateOfHIVDiagnosis, 'AIDS-Yes', 'AIDS-No'),
-    'AIDS-No'))
-  ]
-
   # Add year of diagnosis. It is used in many places, so cache it here
   inputData[, YearOfHIVDiagnosis := year(DateOfHIVDiagnosis)]
 
-  # Imput Gender
+  # Imput missing Gender and YearOfHIVDiagnosis
   selGenderMissing <- inputData[, is.na(Gender)]
-  selHIVDiagnosisYearMissing <- inputData[, is.na(YearOfHIVDiagnosis)]
   selGenderReplaced <- selGenderMissing & inputData$Transmission %chin% 'MSM'
   selGenderImputed <- selGenderMissing & !selGenderReplaced
   # If Gender missing and Transmission is MSM, then set Male gender
   inputData[selGenderReplaced, Gender := 'M']
   # A single imputation based on categorical year and transmission
-  if (any(selGenderImputed) || any(selHIVDiagnosisYearMissing)) {
+  if (any(selGenderImputed)) {
     imputeData <- inputData[, .(
       Gender = as.factor(Gender),
       YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis),
       Transmission = Transmission
     )]
+    imputeWhere <- data.table(
+      Gender = selGenderImputed,
+      YearOfHIVDiagnosis = FALSE,
+      Transmission = FALSE
+    )
     set.seed(seed)
-    miceImputation <- suppressWarnings(mice::mice(imputeData, m = 1, maxit = 5, printFlag = TRUE))
+    miceImputation <- suppressWarnings(mice::mice(
+      imputeData,
+      where = imputeWhere,
+      m = 1,
+      maxit = 5,
+      printFlag = TRUE
+    ))
     imputeData <- setDT(mice::complete(miceImputation, action = 1))
 
     inputData[selGenderImputed, Gender := imputeData$Gender[selGenderImputed]]
-    inputData[
-      selHIVDiagnosisYearMissing,
-      YearOfHIVDiagnosis := as.integer(imputeData$YearOfHIVDiagnosis[selHIVDiagnosisYearMissing])
-    ]
   }
+
+  # AIDS close to diagnosis
+  inputData[, AIDS := factor(ifelse(
+    !is.na(DateOfAIDSDiagnosis),
+    ifelse(DateOfAIDSDiagnosis <= DateOfHIVDiagnosis, 'AIDS-Yes', 'AIDS-No'),
+    'AIDS-No'
+  ))]
 
   # Create helper columns for filtering data on diagnosis and notification time
   inputData[, ':='(

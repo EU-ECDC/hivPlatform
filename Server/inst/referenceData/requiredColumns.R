@@ -26,7 +26,7 @@ list(
     attribute = 'Gender',
     description = 'Gender',
     type = 'character',
-    values = c('', 'UNK', 'F', 'M', 'O'),
+    values = c('', 'UNK', 'NA', NA_character_, 'F', 'M', 'O'),
     defaultValue = NA_character_,
     candidateOrigColNames = c('gender')
   ),
@@ -133,7 +133,7 @@ list(
     description = 'Date of HIV diagnosis',
     type = 'date',
     defaultValue = as.Date(NA),
-    # restrictedValues = as.Date(NA),
+    restrictedValues = as.Date(NA),
     candidateOrigColNames = c('dateofdiagnosisisodate')
   ),
   DateOfAIDSDiagnosis = list(

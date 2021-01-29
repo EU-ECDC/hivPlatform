@@ -53,6 +53,12 @@ export const defaultDiagChartOptions = {
       show: false,
     },
     tickPlacement: 'between',
+    tickAmount: 31,
+    labels: {
+      style: {
+        fontSize: '10px'
+      },
+    }
   },
   yaxis: {
     title: {
@@ -69,7 +75,12 @@ export const defaultDiagChartOptions = {
     },
     labels: {
       minWidth: 50,
-      maxWidth: 50
+      maxWidth: 50,
+      style: {
+        fontSize: '10px'
+      },
+      hideOverlappingLabels: true,
+      showDuplicates: false
     }
   },
   grid: {
@@ -120,14 +131,8 @@ export const defaultNotifChartOptions = {
     },
     parentHeightOffset: 0
   },
-  colors: ["#69b023", "#7bbcc0", "#ce80ce", "#9d8b56"],
-  /*
-  theme: {
-    palette: 'palette6'
-  },
-  */
+  colors: ['#69b023', '#7bbcc0', '#ce80ce', '#9d8b56'],
   title: {
-    // text: 'Histogram of cases count per quarter of notification',
     style: {
       fontWeight: 'normal'
     }
@@ -166,10 +171,13 @@ export const defaultNotifChartOptions = {
       show: false
     },
     tickPlacement: 'between',
+    tickAmount: 31,
     labels: {
       style: {
-        fontSize: '9px'
-      }
+        fontSize: '10px'
+      },
+      hideOverlappingLabels: true,
+      showDuplicates: false
     }
   },
   yaxis: {
@@ -187,7 +195,10 @@ export const defaultNotifChartOptions = {
     },
     labels: {
       minWidth: 50,
-      maxWidth: 50
+      maxWidth: 50,
+      style: {
+        fontSize: '10px'
+      }
     }
   },
   grid: {
