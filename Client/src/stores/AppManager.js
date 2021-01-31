@@ -130,6 +130,7 @@ export default class AppManager {
       case 'ADJUSTMENTS_RUN_STARTED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.adjustMgr.setAdjustmentsRunProgress(1);
+          this.adjustMgr.setAdjustmentsReport(null);
         }
         break;
       case 'ADJUSTMENTS_RUN_LOG_SET':

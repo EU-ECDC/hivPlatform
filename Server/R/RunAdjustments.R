@@ -89,6 +89,7 @@ RunAdjustments <- function(
       TimeStamp = GetTimeStamp()
     )
 
+    PrintH2('Rendering diagnostics report')
     report <- RenderReportForAdjSpec(
       adjustmentSpec,
       'intermediate',

@@ -1,7 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 import InArray from '../utilities/InArray';
 import EnsureArray from '../utilities/EnsureArray';
-// import { EVENT_TO_ENABLED_STAGES_MAP } from '../settings';
 
 export default class UIStateManager {
 
@@ -66,11 +65,6 @@ export default class UIStateManager {
       setSubPageDisabledStatus: action,
       lastEventType: observable,
       setLastEventType: action,
-      // enabledStages: computed,
-      // caseBasedUploadStageEnabled: computed,
-      // caseBasedAttrMappingStageEnabled: computed,
-      // caseBasedOrigGrpngStageEnabled: computed,
-      // outputsStageEnabled: computed
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,

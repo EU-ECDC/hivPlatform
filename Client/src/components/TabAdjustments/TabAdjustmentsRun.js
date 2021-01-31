@@ -95,19 +95,23 @@ const TabAdjustmentsRun = props => {
               indicatorColor='primary'
               textColor='primary'
             >
-              <Tab label='Run log' />
-              <Tab label='Diagnostics' />
+              <Tab
+                label='Run log'
+                disabled={IsNull(appMgr.adjustMgr.adjustmentsRunLog)}
+              />
+              <Tab
+                label='Diagnostics'
+                disabled={IsNull(appMgr.adjustMgr.adjustmentsReport)}
+              />
             </Tabs>
 
             {tabId === 0 && <React.Fragment>
-              <Typography variant='overline'>Run log</Typography>
               <pre
                 dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsRunLog }}
                 style={{ overflowX: 'auto' }}
               />
             </React.Fragment>}
             {tabId === 1 && <React.Fragment>
-              <Typography variant='overline'>Intermediate results report</Typography>
               <div
                 dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsReport }}
                 style={{ overflowX: 'auto' }}

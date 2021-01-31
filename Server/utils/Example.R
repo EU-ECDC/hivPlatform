@@ -3,9 +3,9 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_-_2_populations.zip'))
 
@@ -28,12 +28,20 @@ filters <- list(
     MaxYear = 2014.875
   )
 )
+
 appMgr$CaseMgr$RunAdjustments(
-  GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')),
+  # GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')),
   # GetAdjustmentSpecs(c('Reporting Delays')),
+  GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation')),
   filters
 )
 
+adjustmentSpecs <- GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation'))
+adjustmentSpecs[[1]]$Parameters$nimp$value <- 2
+adjustmentSpecs[[1]]$Parameters$nburn$value <- 100
+adjustmentSpecs[[1]]$Parameters$nbetween$value <- 100
+adjustmentSpecs[[1]]$Parameters$nsdf$value <- 2
+data <- appMgr$CaseMgr$PreProcessedData
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(reportName = 'Main Report')
