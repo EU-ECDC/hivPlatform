@@ -10,6 +10,7 @@ import AdjustmentsManager from './AdjustmentsManager';
 import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
 import ModelsManager from './ModelsManager';
+import ReportManager from './ReportManager';
 import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
 import FloatToQuarter from '../utilities/FloatToQuarter';
@@ -30,13 +31,12 @@ export default class AppManager {
   adjustMgr = null;
   popMgr = null;
   popCombMgr = null;
-  modelMgr = null
+  modelMgr = null;
+  reportMgr = null;
 
   shinyState = 'DISCONNECTED';
 
   shinyMessage = {};
-
-  report = '';
 
   // Shiny custom event handlers
   onShinyEvent = e => {
@@ -161,13 +161,15 @@ export default class AppManager {
         break;
       case 'CREATING_REPORT_STARTED':
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.reportMgr.setCreatingReportInProgress(true);
           this.notificationsMgr.setMsg('Creating report started');
         }
         break;
       case 'CREATING_REPORT_FINISHED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
-          this.setReport(e.payload.Report);
+          this.reportMgr.setReport(e.payload.Report);
+          this.reportMgr.setCreatingReportInProgress(false);
           this.notificationsMgr.setMsg('Creating report finished');
         }
         break;
@@ -247,20 +249,17 @@ export default class AppManager {
     this.popMgr = new PopulationsManager(this);
     this.popCombMgr = new PopCombinationsManager(this);
     this.modelMgr = new ModelsManager(this);
-
-    // this.uiStateMgr.setLastEventType('START');
+    this.reportMgr = new ReportManager(this);
 
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,
-      report: observable,
       shinyReady: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
       btnClicked: action,
       inputValueSet: action,
       setShinyMessage: action,
-      setReport: action,
       unbindShiny: action,
       bindShiny: action
     });
@@ -299,8 +298,6 @@ export default class AppManager {
       Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
     }
   };
-
-  setReport = report => this.report = report;
 
   btnClicked = (btnId, value = '') => {
     if (!IsNull(window.Shiny) && this.shinyReady) {

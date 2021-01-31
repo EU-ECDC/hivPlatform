@@ -87,15 +87,36 @@ const TabAdjustmentsInputsRDWith = (props) => {
             Stratify by:
             <FormGroup row>
               <FormControlLabel
-                control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratGender} onChange={handleRDWithStratGenderChange} name='check' color='primary' />}
+                control={
+                  <Checkbox
+                    checked={appMgr.adjustMgr.rdWithTrendSettings.stratGender}
+                    onChange={handleRDWithStratGenderChange}
+                    name='check'
+                    color='primary'
+                  />
+                }
                 label='Gender'
               />
               <FormControlLabel
-                control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratTrans} onChange={handleRDWithStratTransChange} name='check' color='primary' />}
+                control={
+                  <Checkbox
+                    checked={appMgr.adjustMgr.rdWithTrendSettings.stratTrans}
+                    onChange={handleRDWithStratTransChange}
+                    name='check'
+                    color='primary'
+                  />
+                }
                 label='Transmission'
               />
               <FormControlLabel
-                control={<Checkbox checked={appMgr.adjustMgr.rdWithTrendSettings.stratMigr} onChange={handleRDWithStratMigrChange} name='check' color='primary' />}
+                control={
+                  <Checkbox
+                    checked={appMgr.adjustMgr.rdWithTrendSettings.stratMigr}
+                    onChange={handleRDWithStratMigrChange}
+                    name='check'
+                    color='primary'
+                  />
+                }
                 label='Migration'
               />
             </FormGroup>

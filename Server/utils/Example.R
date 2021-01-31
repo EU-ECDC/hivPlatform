@@ -31,20 +31,28 @@ filters <- list(
 
 appMgr$CaseMgr$RunAdjustments(
   # GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')),
-  # GetAdjustmentSpecs(c('Reporting Delays')),
-  GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation')),
+  GetAdjustmentSpecs(c('Reporting Delays with trend')),
+  # GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation')),
   filters
 )
 
-adjustmentSpecs <- GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation'))
-adjustmentSpecs[[1]]$Parameters$nimp$value <- 2
-adjustmentSpecs[[1]]$Parameters$nburn$value <- 100
-adjustmentSpecs[[1]]$Parameters$nbetween$value <- 100
-adjustmentSpecs[[1]]$Parameters$nsdf$value <- 2
-data <- appMgr$CaseMgr$PreProcessedData
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
-appMgr$CreateReport(reportName = 'Main Report')
+appMgr$CreateReport(
+  reportSpec = list(
+    name = 'Main Report',
+    reportingDelay = TRUE,
+    smoothing = FALSE,
+    cd4ConfInt = FALSE
+  )
+)
+
+fileName <- RenderReportToFile(
+  reportFilePath = GetReportFileNames()['Main Report'],
+  format = 'pdf_document',
+  params = appMgr$ReportArtifacts
+)
+browseURL(fileName)
 
 
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------

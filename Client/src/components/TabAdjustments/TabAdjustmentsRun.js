@@ -34,19 +34,15 @@ const AdjustmentsRunProgressBar = (props) => {
 const TabAdjustmentsRun = props => {
   const { appMgr } = props;
 
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(5);
+
   const [tabId, setTabId] = React.useState(0);
 
-  const handleTabChange = (event, tabId) => {
-    setTabId(tabId);
-  };
+  const handleTabChange = (event, tabId) => setTabId(tabId);
 
-  const handleRunAdjustBtnClick = () => {
-    appMgr.adjustMgr.runAdjustments();
-  }
+  const handleRunAdjustBtnClick = () => appMgr.adjustMgr.runAdjustments();
 
-  const handleCancelAdjustBtnClick = () => {
-    appMgr.adjustMgr.cancelAdjustments();
-  }
+  const handleCancelAdjustBtnClick = () => appMgr.adjustMgr.cancelAdjustments();
 
   return (
     <TabPanel>
@@ -56,7 +52,8 @@ const TabAdjustmentsRun = props => {
             <Button
               size='small'
               color='primary'
-              disabled
+              disabled={!appMgr.uiStateMgr.reportsPageEnabled}
+              onClick={handleNextpageBtnClick}
             >
               Next step
             </Button>

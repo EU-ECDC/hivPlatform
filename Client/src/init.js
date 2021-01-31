@@ -311,7 +311,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(3);
+  appMgr.uiStateMgr.setActivePageId(5);
 
   // // // 8. Available strata set
   // // appManager.onShinyEvent({

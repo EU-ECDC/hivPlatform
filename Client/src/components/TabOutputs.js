@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -11,61 +10,6 @@ import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import TabPanel from './TabPanel';
-
-// const useRowStyles = makeStyles({
-//   root: {
-//     '& > *': {
-//       borderBottom: 'unset',
-//     },
-//   },
-// });
-
-// const Row = (props) => {
-//   const { row } = props;
-//   const [open, setOpen] = React.useState(false);
-//   const classes = useRowStyles();
-
-//   return (
-//     <React.Fragment>
-//       <TableRow className={classes.root} hover>
-//         {/* <TableCell>
-//           <IconButton aria-label='expand row' size='small' onClick={() => setOpen(!open)}>
-//             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-//           </IconButton>
-//         </TableCell> */}
-//         <TableCell>{row.description}</TableCell>
-//         <TableCell>{row.timestamp}</TableCell>
-//         <TableCell></TableCell>
-//       </TableRow>
-//       {/* <TableRow>
-//         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
-//           <Collapse in={open} timeout='auto' unmountOnExit>
-//             <Box margin={1}>
-//               <Table size='small' aria-label='purchases'>
-//                 <TableHead>
-//                   <TableRow>
-//                     <TableCell>Format</TableCell>
-//                     <TableCell>URL</TableCell>
-//                     <TableCell>Size</TableCell>
-//                   </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                   {row.formats.map((formatRow) => (
-//                     <TableRow key={formatRow.format}>
-//                       <TableCell>{formatRow.format}</TableCell>
-//                       <TableCell>{formatRow.url}</TableCell>
-//                       <TableCell>{formatRow.size}</TableCell>
-//                     </TableRow>
-//                   ))}
-//                 </TableBody>
-//               </Table>
-//             </Box>
-//           </Collapse>
-//         </TableCell>
-//       </TableRow> */}
-//     </React.Fragment>
-//   );
-// }
 
 const TabOutputs = (props) => {
   const { appMgr } = props;
