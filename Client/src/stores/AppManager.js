@@ -106,11 +106,16 @@ export default class AppManager {
           this.summaryDataMgr.setDiagYearPlotData(e.payload.Summary.DiagYearPlotData);
           this.summaryDataMgr.setNotifQuarterPlotData(e.payload.Summary.NotifQuarterPlotData);
           this.adjustMgr.setRDWithoutStartYear(e.payload.Summary.DiagYearPlotData.filter.scaleMinYear);
-          this.adjustMgr.setRDWithoutEndYear(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear);
+          this.adjustMgr.setRDWithoutEndYear(Math.round(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
           this.adjustMgr.setRDWithoutEndQrt(FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
           this.adjustMgr.setRDWithStartYear(e.payload.Summary.DiagYearPlotData.filter.scaleMinYear);
-          this.adjustMgr.setRDWithEndYear(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear);
+          this.adjustMgr.setRDWithEndYear(Math.round(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
           this.adjustMgr.setRDWithEndQrt(FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear));
+          this.adjustMgr.setDataBounds({
+            startYear: e.payload.Summary.DiagYearPlotData.filter.scaleMinYear,
+            endYear: Math.round(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear),
+            endQrt: FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear)
+          })
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');

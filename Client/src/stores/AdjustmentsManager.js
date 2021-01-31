@@ -22,6 +22,12 @@ export default class AdjustmentsManager {
 
   rdAdjustType = 'none';
 
+  dataBounds = {
+    startYear: 2000,
+    endYear: 2017,
+    endQrt: 1
+  };
+
   rdWithoutTrendSettings = {
     startYear: 2000,
     endYear: 2017,
@@ -92,7 +98,8 @@ export default class AdjustmentsManager {
       cancelAdjustments: action,
       setAdjustmentsRunProgress: action,
       setAdjustmentsRunLog: action,
-      setAdjustmentsReport: action
+      setAdjustmentsReport: action,
+      setDataBounds: action
     });
 
     autorun(() => {
@@ -170,22 +177,23 @@ export default class AdjustmentsManager {
   setRDWithStratGender = stratGender => this.rdWithTrendSettings.stratGender = stratGender;
   setRDWithStratTrans = stratTrans => this.rdWithTrendSettings.stratTrans = stratTrans;
   setRDWithStratMigr = stratMigr => this.rdWithTrendSettings.stratMigr = stratMigr;
+  setDataBounds = dataBounds => this.dataBounds = dataBounds;
 
   restoreRDDefaults = type => {
     if (type === 'withoutTrend') {
       this.rdWithoutTrendSettings = {
-        startYear: 2000,
-        endYear: 2017,
-        endQrt: 1,
+        startYear: this.dataBounds.startYear,
+        endYear: this.dataBounds.endYear,
+        endQrt: this.dataBounds.endQrt,
         stratGender: false,
         stratTrans: false,
         stratMigr: false
       };
     } else if (type === 'withTrend') {
       this.rdWithTrendSettings = {
-        startYear: 2000,
-        endYear: 2017,
-        endQrt: 1,
+        startYear: this.dataBounds.startYear,
+        endYear: this.dataBounds.endYear,
+        endQrt: this.dataBounds.endQrt,
         stratGender: false,
         stratTrans: false,
         stratMigr: false
