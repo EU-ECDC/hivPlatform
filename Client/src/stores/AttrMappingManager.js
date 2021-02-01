@@ -49,6 +49,7 @@ export default class AttrMappingManager {
     const idx = this.mapping.findIndex(el => el.attribute === attribute);
     if (idx !== -1) {
       this.mapping[idx].defaultValue = defVal !== '' ? defVal : null;
+      this.runCheck();
     } else {
       console.log(`AttrMappingManager.setDefVal: cannot find element with Attribute "${attribute}"`)
     }

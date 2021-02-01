@@ -18,7 +18,7 @@ export default class UIStateManager {
       disabled: true,
       subPages: [
         { title: 'Case-based data', disabled: false },
-        { title: 'Aggregated data', disabled: true }
+        { title: 'Aggregated data', disabled: false }
       ],
       activeSubStepId: 0
     },
@@ -38,12 +38,12 @@ export default class UIStateManager {
       completed: false,
       disabled: true,
       subPages: [
-        { title: 'Populations' },
-        { title: 'Inputs' },
-        { title: 'Advanced' },
-        { title: 'Run Main Fit' },
-        { title: 'Run Bootstrap' },
-        { title: 'Tables and charts' }
+        { title: 'Populations', disabled: true },
+        { title: 'Inputs', disabled: true },
+        { title: 'Advanced', disabled: true },
+        { title: 'Run Main Fit', disabled: true },
+        { title: 'Run Bootstrap', disabled: true },
+        { title: 'Tables and charts', disabled: true }
       ],
       activeSubStepId: 0
     },
@@ -68,6 +68,7 @@ export default class UIStateManager {
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,
+      modellingPageEnabled: computed,
       reportsPageEnabled: computed,
       outputsPageEnabled: computed,
       caseBasedAttrMappingEnabled: computed,
@@ -115,6 +116,7 @@ export default class UIStateManager {
     this.pages[1].disabled = !this.uploadPageEnabled;
     this.pages[2].disabled = !this.summaryPageEnabled;
     this.pages[3].disabled = !this.adjustmentsPageEnabled;
+    this.pages[4].disabled = !this.modellingPageEnabled;
     this.pages[5].disabled = !this.reportsPageEnabled;
     this.pages[6].disabled = !this.outputsPageEnabled;
   };
@@ -129,6 +131,13 @@ export default class UIStateManager {
 
   get adjustmentsPageEnabled() {
     return InArray('CASE_BASED_SUMMARY', this.completedSteps);
+  };
+
+  get modellingPageEnabled() {
+    return (
+      InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps) ||
+      InArray('AGGR_READ', this.completedSteps)
+    );
   };
 
   get reportsPageEnabled() {

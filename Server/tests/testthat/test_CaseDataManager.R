@@ -2,10 +2,6 @@ context('CaseDataManager')
 
 caseMgr <- CaseDataManager$new()
 
-test_that('creating the manager object is correct', {
-  expect_equal(caseMgr$LastStep, 0)
-})
-
 test_that('reading data is correct', {
   capture.output(
     caseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
@@ -25,7 +21,6 @@ test_that('reading data is correct', {
   expect_null(caseMgr$PreProcessedData)
   expect_null(caseMgr$AdjustmentResult)
   expect_null(caseMgr$Data)
-  expect_equal(caseMgr$LastStep, 1)
 })
 
 test_that('applying atrributes mapping is correct', {
@@ -50,7 +45,6 @@ test_that('applying atrributes mapping is correct', {
   expect_true(caseMgr$PreProcessedData[, all(Imputation == 0)])
   expect_null(caseMgr$AdjustmentResult)
   expect_null(caseMgr$Summary)
-  expect_equal(caseMgr$LastStep, 2)
 })
 
 test_that('applying origin grouping is correct', {
@@ -80,7 +74,6 @@ test_that('applying origin grouping is correct', {
     names(caseMgr$Summary),
     c('DiagYearPlotData', 'NotifQuarterPlotData', 'MissPlotData', 'RepDelPlotData')
   )
-  expect_equal(caseMgr$LastStep, 3)
 })
 
 test_that('adjusting is correct', {
@@ -114,7 +107,6 @@ test_that('adjusting is correct', {
     names(caseMgr$Summary),
     c('DiagYearPlotData', 'NotifQuarterPlotData', 'MissPlotData', 'RepDelPlotData')
   )
-  expect_equal(caseMgr$LastStep, 4)
   expect_equal(caseMgr$AdjustmentTask$Status, 'SUCCESS')
   expect_is(caseMgr$AdjustmentResult, 'list')
   expect_equal(length(caseMgr$AdjustmentResult), 1)
@@ -140,12 +132,10 @@ test_that('reactive processing is correct', {
   expect_is(isolate(caseMgr$Data), 'data.table')
   expect_equal(nrow(isolate(caseMgr$Data)), 7619)
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'CREATED')
-  expect_equal(isolate(caseMgr$LastStep), 3)
 
   Sys.sleep(5)
   capture.output(session$flushReact())
 
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'SUCCESS')
   expect_equal(nrow(isolate(caseMgr$Data)), 15238)
-  expect_equal(isolate(caseMgr$LastStep), 4)
 })

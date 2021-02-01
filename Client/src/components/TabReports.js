@@ -16,7 +16,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Typography from '@material-ui/core/Typography';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import TabPanel from './TabPanel';
 import Btn from './Btn';
 
@@ -41,7 +40,7 @@ const TabReports = (props) => {
 
   const { appMgr } = props;
 
-  const downloadLinkIds = ['reportHTML', 'reportPDF', 'reportLATEX', 'reportWord'];
+  const downloadLinkIds = ['reportHTML', 'reportPDF', 'reportLATEX', 'reportWORD'];
 
   React.useEffect(
     () => {

@@ -75,7 +75,6 @@ const RootElem = props => {
           Engine state: {appMgr.shinyStateHuman}
         </Typography>
         <IconButton
-          disabled
           onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}
         >
           <MenuIcon />
@@ -90,7 +89,7 @@ const RootElem = props => {
 
   return (
     <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}} p={0}>
-      <RightNav open={rightNavState} onClose={() => setRightNavState(false)}/>
+      <RightNav {...props} open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
       <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}} p={0}>
         <LeftNav

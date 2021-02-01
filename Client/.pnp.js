@@ -46,7 +46,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.23.1"],
+            ["apexcharts", "npm:3.24.0"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["copyfiles", "npm:2.4.1"],
@@ -3261,10 +3261,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["apexcharts", [
-        ["npm:3.23.1", {
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.23.1-26079442ad-05a5c1f626.zip/node_modules/apexcharts/",
+        ["npm:3.24.0", {
+          "packageLocation": "./.yarn/cache/apexcharts-npm-3.24.0-9914ed61d2-a6dc823c4a.zip/node_modules/apexcharts/",
           "packageDependencies": [
-            ["apexcharts", "npm:3.23.1"],
+            ["apexcharts", "npm:3.24.0"],
             ["svg.draggable.js", "npm:2.2.2"],
             ["svg.easing.js", "npm:2.0.0"],
             ["svg.filter.js", "npm:2.0.2"],
@@ -5313,7 +5313,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.23.1"],
+            ["apexcharts", "npm:3.24.0"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["copyfiles", "npm:2.4.1"],
@@ -7367,7 +7367,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["@types/apexcharts", null],
             ["@types/react", null],
-            ["apexcharts", "npm:3.23.1"],
+            ["apexcharts", "npm:3.24.0"],
             ["prop-types", "npm:15.7.2"],
             ["react", "npm:17.0.1"]
           ],

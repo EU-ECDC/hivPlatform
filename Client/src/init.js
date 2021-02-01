@@ -53,36 +53,37 @@ export default appMgr => {
     }
   });
 
-  // // appMgr.onShinyEvent({
-  // //   type: 'AGGR_DATA_UPLOADED',
-  // //   status: 'SUCCESS',
-  // //   payload: {
-  // //     FileName: 'asdasd',
-  // //     FilePath: 'asdd ads',
-  // //     FileSize: 7000,
-  // //     FileType: 'asdas asd'
-  // //   }
-  // // });
+  appMgr.onShinyEvent({
+    type: 'AGGR_DATA_UPLOADED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'asd asd',
+      FileName: 'asdasd',
+      FilePath: 'asdd ads',
+      FileSize: 7000,
+      FileType: 'asdas asd'
+    }
+  });
 
-  // // // 2b. Upload aggregated data
-  // // appMgr.onShinyEvent({
-  // //   type: 'AGGR_DATA_READ',
-  // //   status: 'SUCCESS',
-  // //   payload: {
-  // //     DataFiles: [
-  // //       { name: 'Dead', use: true, years: [1990, 2015] },
-  // //       { name: 'AIDS', use: true, years: [1991, 2019] },
-  // //       { name: 'HIV', use: true, years: [1992, 2013] },
-  // //       { name: 'HIVAIDS', use: true, years: [1992, 2013] },
-  // //       { name: 'HIV_CD4_1', use: true, years: [1992, 2013] },
-  // //       { name: 'HIV_CD4_2', use: true, years: [1992, 2013] },
-  // //       { name: 'HIV_CD4_3', use: true, years: [1992, 2013] },
-  // //       { name: 'HIV_CD4_4', use: true, years: [1992, 2013] }
-
-  // //     ],
-  // //     PopulationNames: ['pop_0', 'pop_1'],
-  // //   }
-  // // });
+  // 2b. Upload aggregated data
+  appMgr.onShinyEvent({
+    type: 'AGGR_DATA_READ',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'asd asd',
+      DataFiles: [
+        { name: 'Dead', use: true, years: [1990, 2015] },
+        { name: 'AIDS', use: true, years: [1991, 2019] },
+        { name: 'HIV', use: true, years: [1992, 2013] },
+        { name: 'HIVAIDS', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_1', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_2', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_3', use: true, years: [1992, 2013] },
+        { name: 'HIV_CD4_4', use: true, years: [1992, 2013] }
+      ],
+      PopulationNames: ['pop_0', 'pop_1'],
+    }
+  });
 
   appMgr.onShinyEvent({
     type: 'CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END',
@@ -311,7 +312,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(5);
+  appMgr.uiStateMgr.setActivePageId(1, 1);
 
   // // // 8. Available strata set
   // // appManager.onShinyEvent({

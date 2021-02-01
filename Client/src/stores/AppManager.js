@@ -173,18 +173,25 @@ export default class AppManager {
           this.notificationsMgr.setMsg('Creating report finished');
         }
         break;
-
-      // case 'AGGR_DATA_UPLOADED':
-      //   this.aggrDataMgr.setFileName(e.payload.FileName);
-      //   this.aggrDataMgr.setFilePath(e.payload.FilePath);
-      //   this.aggrDataMgr.setFileSize(e.payload.FileSize);
-      //   this.aggrDataMgr.setFileType(e.payload.FileType);
-      //   break;
-      // case 'AGGR_DATA_READ':
-      //   this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
-      //   this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
-      //   this.notificationsMgr.setMsg('Aggregated data uploaded');
-      //   break;
+      case 'AGGR_DATA_UPLOADED':
+        this.aggrDataMgr.setActionStatus(e.payload.ActionStatus);
+        this.aggrDataMgr.setActionMessage(e.payload.ActionMessage);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.aggrDataMgr.setFileName(e.payload.FileName);
+          this.aggrDataMgr.setFilePath(e.payload.FilePath);
+          this.aggrDataMgr.setFileSize(e.payload.FileSize);
+          this.aggrDataMgr.setFileType(e.payload.FileType);
+        }
+        break;
+      case 'AGGR_DATA_READ':
+        this.aggrDataMgr.setActionStatus(e.payload.ActionStatus);
+        this.aggrDataMgr.setActionMessage(e.payload.ActionMessage);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
+          this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
+          this.notificationsMgr.setMsg('Aggregated data uploaded');
+        }
+        break;
       // case 'AVAILABLE_STRATA_SET':
       //   this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
       //   break;

@@ -1,6 +1,8 @@
 import { observable, action, computed, makeObservable } from 'mobx';
+import ReactFileUploader from '../utilities/Uploader';
 import EnsureArray from '../utilities/EnsureArray';
 import { nonGroupedDataNames } from '../settings'
+import IsNull from '../utilities/IsNull';
 
 export default class AggrDataManager {
 
@@ -13,6 +15,8 @@ export default class AggrDataManager {
   dataFileNameToIdxMap = new Map();
   populationNames = [];
   fileUploadProgress = null;
+  actionStatus = null;
+  actionMessage = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -24,6 +28,8 @@ export default class AggrDataManager {
       populationNames: observable,
       fileUploadProgress: observable,
       dataFiles: observable,
+      actionStatus: observable,
+      actionMessage: observable,
       dataFilesGrouped: computed,
       dataFilesNonGrouped: computed,
       dataNames: computed,
@@ -39,7 +45,11 @@ export default class AggrDataManager {
       setDataFileUse: action,
       setDataFileYears: action,
       setPopulationNames: action,
-      setFileUploadProgress: action
+      setFileUploadProgress: action,
+      uploadData: action,
+      setActionStatus: action,
+      setActionMessage: action,
+      actionValid: computed
     });
   };
 
@@ -63,8 +73,25 @@ export default class AggrDataManager {
       this.dataFilesGrouped.forEach(el => el.years = years);
     }
   }
-  setPopulationNames = populationNames => this.populationNames = EnsureArray(populationNames).sort();
+  setPopulationNames = populationNames =>
+    this.populationNames = EnsureArray(populationNames).sort();
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
+
+  uploadData = el => {
+    var $el = $(el);
+
+    $el.data(
+      'currentUploader',
+      new ReactFileUploader(
+        Shiny.shinyapp,
+        el,
+        this.setFileUploadProgress
+      )
+    );
+  };
+
+  setActionStatus = status => this.actionStatus = status;
+  setActionMessage = message => this.actionMessage = message;
 
   get dataFilesNonGrouped() {
     return this.dataFiles.filter(el => nonGroupedDataNames.includes(el.name.toUpperCase()));
@@ -98,5 +125,13 @@ export default class AggrDataManager {
       return '';
     }
     return this.populationNames.join(', ');
+  };
+
+  get actionValid() {
+    if (IsNull(this.actionStatus)) {
+      return (null);
+    } else {
+      return this.actionStatus === 'SUCCESS';
+    }
   };
 }

@@ -10,16 +10,16 @@ import TabModellingTables from './TabModellingTables';
 const TabModelling = (props) => {
   const { appMgr } = props;
 
-  const activeSubStepId = appMgr.uiStateMgr.steps[appMgr.uiStateMgr.activeStepId].activeSubStepId;
+  const activeSubPageId = appMgr.uiStateMgr.activeSubPageId;
 
   return (
     <React.Fragment>
-      {activeSubStepId === 0 && <TabModellingPopulation {...props} />}
-      {activeSubStepId === 1 && <TabModellingInputs {...props} />}
-      {activeSubStepId === 2 && <TabModellingAdvanced {...props} />}
-      {activeSubStepId === 3 && <TabModellingRunMain {...props} />}
-      {activeSubStepId === 4 && <TabModellingRunBootstrap {...props} />}
-      {activeSubStepId === 5 && <TabModellingTables {...props} />}
+      {activeSubPageId === 0 && <TabModellingPopulation {...props} />}
+      {activeSubPageId === 1 && <TabModellingInputs {...props} />}
+      {activeSubPageId === 2 && <TabModellingAdvanced {...props} />}
+      {activeSubPageId === 3 && <TabModellingRunMain {...props} />}
+      {activeSubPageId === 4 && <TabModellingRunBootstrap {...props} />}
+      {activeSubPageId === 5 && <TabModellingTables {...props} />}
     </React.Fragment>
   );
 };
