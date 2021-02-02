@@ -458,8 +458,7 @@ CaseDataManager <- R6::R6Class(
     },
 
     SummaryJSON = function() {
-      summaryJSON <- jsonlite:::asJSON(private$Catalogs$Summary, keep_vec_names = TRUE)
-      return(summaryJSON)
+      return(jsonlite::toJSON(private$Catalogs$Summary, keep_vec_names = TRUE))
     },
 
     Filters = function() {

@@ -23,6 +23,7 @@ Imports:
     ggplot2 (>= 3.3.3),
     hivModelling (>= 0.9.14),
     jomo (>= 2.6-10),
+    jsonlite (>= 1.7.2),
     knitr (>= 1.28),
     mice (>= 3.8.0),
     mitools (>= 2.4),
