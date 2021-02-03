@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const commonPaths = require('./paths');
@@ -52,10 +51,12 @@ module.exports = {
       inject: 'body',
       includeShinyJS: process.env.NODE_ENV === 'production',
     }),
-    new webpack.ProgressPlugin(),
   ],
   performance: {
     maxEntrypointSize: 2048000,
     maxAssetSize: 2048000
   },
+  cache: {
+    type: 'filesystem'
+  }
 };

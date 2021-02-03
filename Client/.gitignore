@@ -2,5 +2,6 @@
 **/build
 yarn-error.log
 .yarn/cache
+.yarn/.cache
 .yarn/unplagged
 .yarn/install-state.gz

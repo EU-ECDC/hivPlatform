@@ -3,7 +3,7 @@ const commonPaths = require('./paths');
 module.exports = {
   name: 'client',
   mode: 'production',
-  devtool: 'source-map',
+  // devtool: 'source-map',
   output: {
     path: commonPaths.outputPath,
     filename: `${commonPaths.jsFolder}/[name].js`,
@@ -11,7 +11,11 @@ module.exports = {
     publicPath: 'www/'
   },
   optimization: {
-    minimize: true
+    minimize: true,
+    splitChunks: {
+      chunks: 'all',
+      name: 'vendors'
+    },
   },
   watch: false
 };
