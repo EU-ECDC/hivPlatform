@@ -83,7 +83,7 @@ const CreatePopulations = (props) => {
                 key={i}
                 i={i}
                 population={el}
-                appManager={appMgr}
+                appMgr={appMgr}
                 isSelected={isSelected(i)}
                 onSelectClick={handleSelectClick(i)}
               />

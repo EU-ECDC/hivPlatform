@@ -88,7 +88,7 @@ const TabReports = (props) => {
             Select report
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <FormControl style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
             <Select
               value={1}
@@ -114,7 +114,7 @@ const TabReports = (props) => {
           </Button>
           <ReportsProgressBar progress={appMgr.reportMgr.creatingReportInProgress} />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Report on adjusted data parameters</Typography>
             <FormGroup>
@@ -161,7 +161,7 @@ const TabReports = (props) => {
               View and download
           </Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <Link href='#'
               id='reportHTML'
               className='shiny-download-link'
@@ -190,7 +190,7 @@ const TabReports = (props) => {
               MS Word
             </Link>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={10}>
             <Paper style={{ padding: 10 }}>
               <div
                 dangerouslySetInnerHTML={{ __html: appMgr.reportMgr.report }}
