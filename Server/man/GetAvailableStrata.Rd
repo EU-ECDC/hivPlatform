@@ -13,7 +13,7 @@ GetAvailableStrata(
 \arguments{
 \item{dt}{dt}
 
-\item{colNames}{colNames}
+\item{variables}{variables}
 }
 \value{
 list

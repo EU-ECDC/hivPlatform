@@ -3,7 +3,7 @@
 #' Get available strata
 #'
 #' @param dt dt
-#' @param colNames colNames
+#' @param variables variables
 #'
 #' @return list
 #'
