@@ -192,9 +192,13 @@ export default class AppManager {
           this.notificationsMgr.setMsg('Aggregated data uploaded');
         }
         break;
-      // case 'AVAILABLE_STRATA_SET':
-      //   this.popMgr.setAvailableStrata(event.Payload.AvailableStrata);
-      //   break;
+      case 'AVAILABLE_STRATA_SET':
+        console.log(e.payload.AvailableVariables);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.popMgr.setAvailableVariables(e.payload.AvailableVariables);
+          this.popMgr.setAvailableStrata(e.payload.AvailableStrata);
+        }
+        break;
       // case 'MODELS_PARAMS_SET':
       //   this.modelMgr.setMinYear(event.Payload.Params.minYear);
       //   this.modelMgr.setMaxYear(event.Payload.Params.maxYear);

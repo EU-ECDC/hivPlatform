@@ -71,9 +71,8 @@ const CreatePopulations = (props) => {
                 checked={rowCount > 0 && selectedCount === rowCount}
               />
             </TableCell>
-            <TableCell width='30%' padding='none'>Stratification name</TableCell>
-            <TableCell width='30%'>Selected variables</TableCell>
-            <TableCell width='40%'>Defined populations</TableCell>
+            <TableCell width='50%'>Selected variables</TableCell>
+            <TableCell width='50%'>Defined populations</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

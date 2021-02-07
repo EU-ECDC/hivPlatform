@@ -38,7 +38,7 @@ export default class UIStateManager {
       completed: false,
       disabled: true,
       subPages: [
-        { title: 'Populations', disabled: true },
+        { title: 'Populations', disabled: false },
         { title: 'Inputs', disabled: true },
         { title: 'Advanced', disabled: true },
         { title: 'Run Main Fit', disabled: true },
@@ -130,12 +130,12 @@ export default class UIStateManager {
   };
 
   get adjustmentsPageEnabled() {
-    return InArray('CASE_BASED_SUMMARY', this.completedSteps);
+    return InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps);
   };
 
   get modellingPageEnabled() {
     return (
-      InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps) ||
+      InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps) ||
       InArray('AGGR_READ', this.completedSteps)
     );
   };

@@ -15,6 +15,13 @@ appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
+unlist(lapply(
+  seq_along(variables), function(i) {
+    combn(names(variables), i, simplify = FALSE)
+  }
+), recursive = FALSE)
+
+
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 filters <- list(
@@ -36,7 +43,6 @@ appMgr$CaseMgr$RunAdjustments(
   # GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation')),
   filters
 )
-
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(

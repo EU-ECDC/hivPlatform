@@ -36,7 +36,7 @@ const TabModellingPopulation = props => {
         <Grid item xs={10}>
           <CreatePopulations {...props} />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={2}>
@@ -60,7 +60,7 @@ const TabModellingPopulation = props => {
         </Grid>
         <Grid item xs={10}>
           <CombinePopulations {...props} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </TabPanel>
   );

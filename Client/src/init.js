@@ -312,18 +312,164 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 0);
+  // 8. Available strata set
+  appMgr.onShinyEvent({
+    type: 'AVAILABLE_STRATA_SET',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      AvailableVariables: [
+        { 'Name': 'Gender', 'Code': 'G' },
+        { 'Name': 'Transmission', 'Code': 'T' },
+        { 'Name': 'GroupedRegionOfOrigin', 'Code': 'O' },
+        { 'Name': 'PlaceOfResidence', 'Code': 'R' }
+      ],
+      AvailableStrata: {
+        'Gender': [
+          { 'Combination': 'F [G]', 'Count': 2706, 'Perc': 0.3552 },
+          { 'Combination': 'M [G]', 'Count': 4913, 'Perc': 0.6448 }
+        ],
+        'Transmission': [
+          { 'Combination': 'HETERO [T]', 'Count': 3368, 'Perc': 0.4421 },
+          { 'Combination': 'IDU [T]', 'Count': 144, 'Perc': 0.0189 },
+          { 'Combination': 'MSM [T]', 'Count': 2526, 'Perc': 0.3315 },
+          { 'Combination': 'NA [T]', 'Count': 1581, 'Perc': 0.2075 }
+        ],
+        'GroupedRegionOfOrigin': [
+          { 'Combination': 'NA [O]', 'Count': 1944, 'Perc': 0.2552 },
+          { 'Combination': 'OTHER [O]', 'Count': 4113, 'Perc': 0.5398 },
+          { 'Combination': 'REPCOUNTRY [O]', 'Count': 1562, 'Perc': 0.205 }
+        ],
+        'PlaceOfResidence': [
+          { 'Combination': 'NA [R]', 'Count': 7619, 'Perc': 1 }
+        ],
+        'Gender, Transmission': [
+          { 'Combination': 'F [G], HETERO [T]', 'Count': 2092, 'Perc': 0.2746 },
+          { 'Combination': 'F [G], IDU [T]', 'Count': 36, 'Perc': 0.0047 },
+          { 'Combination': 'F [G], NA [T]', 'Count': 578, 'Perc': 0.0759 },
+          { 'Combination': 'M [G], HETERO [T]', 'Count': 1276, 'Perc': 0.1675 },
+          { 'Combination': 'M [G], IDU [T]', 'Count': 108, 'Perc': 0.0142 },
+          { 'Combination': 'M [G], MSM [T]', 'Count': 2526, 'Perc': 0.3315 },
+          { 'Combination': 'M [G], NA [T]', 'Count': 1003, 'Perc': 0.1316 }
+        ],
+        'Gender, GroupedRegionOfOrigin': [
+          { 'Combination': 'F [G], NA [O]', 'Count': 708, 'Perc': 0.0929 },
+          { 'Combination': 'F [G], OTHER [O]', 'Count': 1775, 'Perc': 0.233 },
+          { 'Combination': 'F [G], REPCOUNTRY [O]', 'Count': 223, 'Perc': 0.0293 },
+          { 'Combination': 'M [G], NA [O]', 'Count': 1236, 'Perc': 0.1622 },
+          { 'Combination': 'M [G], OTHER [O]', 'Count': 2338, 'Perc': 0.3069 },
+          { 'Combination': 'M [G], REPCOUNTRY [O]', 'Count': 1339, 'Perc': 0.1757 }
+        ],
+        'Gender, PlaceOfResidence': [
+          { 'Combination': 'F [G], NA [R]', 'Count': 2706, 'Perc': 0.3552 },
+          { 'Combination': 'M [G], NA [R]', 'Count': 4913, 'Perc': 0.6448 }
+        ],
+        'Transmission, GroupedRegionOfOrigin': [
+          { 'Combination': 'HETERO [T], NA [O]', 'Count': 868, 'Perc': 0.1139 },
+          { 'Combination': 'HETERO [T], OTHER [O]', 'Count': 2179, 'Perc': 0.286 },
+          { 'Combination': 'HETERO [T], REPCOUNTRY [O]', 'Count': 321, 'Perc': 0.0421 },
+          { 'Combination': 'IDU [T], NA [O]', 'Count': 42, 'Perc': 0.0055 },
+          { 'Combination': 'IDU [T], OTHER [O]', 'Count': 69, 'Perc': 0.0091 },
+          { 'Combination': 'IDU [T], REPCOUNTRY [O]', 'Count': 33, 'Perc': 0.0043 },
+          { 'Combination': 'MSM [T], NA [O]', 'Count': 634, 'Perc': 0.0832 },
+          { 'Combination': 'MSM [T], OTHER [O]', 'Count': 1017, 'Perc': 0.1335 },
+          { 'Combination': 'MSM [T], REPCOUNTRY [O]', 'Count': 875, 'Perc': 0.1148 },
+          { 'Combination': 'NA [T], NA [O]', 'Count': 400, 'Perc': 0.0525 },
+          { 'Combination': 'NA [T], OTHER [O]', 'Count': 848, 'Perc': 0.1113 },
+          { 'Combination': 'NA [T], REPCOUNTRY [O]', 'Count': 333, 'Perc': 0.0437 }
+        ],
+        'Transmission, PlaceOfResidence': [
+          { 'Combination': 'HETERO [T], NA [R]', 'Count': 3368, 'Perc': 0.4421 },
+          { 'Combination': 'IDU [T], NA [R]', 'Count': 144, 'Perc': 0.0189 },
+          { 'Combination': 'MSM [T], NA [R]', 'Count': 2526, 'Perc': 0.3315 },
+          { 'Combination': 'NA [T], NA [R]', 'Count': 1581, 'Perc': 0.2075 }
+        ],
+        'GroupedRegionOfOrigin, PlaceOfResidence': [
+          { 'Combination': 'NA [O], NA [R]', 'Count': 1944, 'Perc': 0.2552 },
+          { 'Combination': 'OTHER [O], NA [R]', 'Count': 4113, 'Perc': 0.5398 },
+          { 'Combination': 'REPCOUNTRY [O], NA [R]', 'Count': 1562, 'Perc': 0.205 }
+        ],
+        'Gender, Transmission, GroupedRegionOfOrigin': [
+          { 'Combination': 'F [G], HETERO [T], NA [O]', 'Count': 545, 'Perc': 0.0715 },
+          { 'Combination': 'F [G], HETERO [T], OTHER [O]', 'Count': 1389, 'Perc': 0.1823 },
+          { 'Combination': 'F [G], HETERO [T], REPCOUNTRY [O]', 'Count': 158, 'Perc': 0.0207 },
+          { 'Combination': 'F [G], IDU [T], NA [O]', 'Count': 9, 'Perc': 0.0012 },
+          { 'Combination': 'F [G], IDU [T], OTHER [O]', 'Count': 18, 'Perc': 0.0024 },
+          { 'Combination': 'F [G], IDU [T], REPCOUNTRY [O]', 'Count': 9, 'Perc': 0.0012 },
+          { 'Combination': 'F [G], NA [T], NA [O]', 'Count': 154, 'Perc': 0.0202 },
+          { 'Combination': 'F [G], NA [T], OTHER [O]', 'Count': 368, 'Perc': 0.0483 },
+          { 'Combination': 'F [G], NA [T], REPCOUNTRY [O]', 'Count': 56, 'Perc': 0.0074 },
+          { 'Combination': 'M [G], HETERO [T], NA [O]', 'Count': 323, 'Perc': 0.0424 },
+          { 'Combination': 'M [G], HETERO [T], OTHER [O]', 'Count': 790, 'Perc': 0.1037 },
+          { 'Combination': 'M [G], HETERO [T], REPCOUNTRY [O]', 'Count': 163, 'Perc': 0.0214 },
+          { 'Combination': 'M [G], IDU [T], NA [O]', 'Count': 33, 'Perc': 0.0043 },
+          { 'Combination': 'M [G], IDU [T], OTHER [O]', 'Count': 51, 'Perc': 0.0067 },
+          { 'Combination': 'M [G], IDU [T], REPCOUNTRY [O]', 'Count': 24, 'Perc': 0.0032 },
+          { 'Combination': 'M [G], MSM [T], NA [O]', 'Count': 634, 'Perc': 0.0832 },
+          { 'Combination': 'M [G], MSM [T], OTHER [O]', 'Count': 1017, 'Perc': 0.1335 },
+          { 'Combination': 'M [G], MSM [T], REPCOUNTRY [O]', 'Count': 875, 'Perc': 0.1148 },
+          { 'Combination': 'M [G], NA [T], NA [O]', 'Count': 246, 'Perc': 0.0323 },
+          { 'Combination': 'M [G], NA [T], OTHER [O]', 'Count': 480, 'Perc': 0.063 },
+          { 'Combination': 'M [G], NA [T], REPCOUNTRY [O]', 'Count': 277, 'Perc': 0.0364 }
+        ],
+        'Gender, Transmission, PlaceOfResidence': [
+          { 'Combination': 'F [G], HETERO [T], NA [R]', 'Count': 2092, 'Perc': 0.2746 },
+          { 'Combination': 'F [G], IDU [T], NA [R]', 'Count': 36, 'Perc': 0.0047 },
+          { 'Combination': 'F [G], NA [T], NA [R]', 'Count': 578, 'Perc': 0.0759 },
+          { 'Combination': 'M [G], HETERO [T], NA [R]', 'Count': 1276, 'Perc': 0.1675 },
+          { 'Combination': 'M [G], IDU [T], NA [R]', 'Count': 108, 'Perc': 0.0142 },
+          { 'Combination': 'M [G], MSM [T], NA [R]', 'Count': 2526, 'Perc': 0.3315 },
+          { 'Combination': 'M [G], NA [T], NA [R]', 'Count': 1003, 'Perc': 0.1316 }
+        ],
+        'Gender, GroupedRegionOfOrigin, PlaceOfResidence': [
+          { 'Combination': 'F [G], NA [O], NA [R]', 'Count': 708, 'Perc': 0.0929 },
+          { 'Combination': 'F [G], OTHER [O], NA [R]', 'Count': 1775, 'Perc': 0.233 },
+          { 'Combination': 'F [G], REPCOUNTRY [O], NA [R]', 'Count': 223, 'Perc': 0.0293 },
+          { 'Combination': 'M [G], NA [O], NA [R]', 'Count': 1236, 'Perc': 0.1622 },
+          { 'Combination': 'M [G], OTHER [O], NA [R]', 'Count': 2338, 'Perc': 0.3069 },
+          { 'Combination': 'M [G], REPCOUNTRY [O], NA [R]', 'Count': 1339, 'Perc': 0.1757 }
+        ],
+        'Transmission, GroupedRegionOfOrigin, PlaceOfResidence': [
+          { 'Combination': 'HETERO [T], NA [O], NA [R]', 'Count': 868, 'Perc': 0.1139 },
+          { 'Combination': 'HETERO [T], OTHER [O], NA [R]', 'Count': 2179, 'Perc': 0.286 },
+          { 'Combination': 'HETERO [T], REPCOUNTRY [O], NA [R]', 'Count': 321, 'Perc': 0.0421 },
+          { 'Combination': 'IDU [T], NA [O], NA [R]', 'Count': 42, 'Perc': 0.0055 },
+          { 'Combination': 'IDU [T], OTHER [O], NA [R]', 'Count': 69, 'Perc': 0.0091 },
+          { 'Combination': 'IDU [T], REPCOUNTRY [O], NA [R]', 'Count': 33, 'Perc': 0.0043 },
+          { 'Combination': 'MSM [T], NA [O], NA [R]', 'Count': 634, 'Perc': 0.0832 },
+          { 'Combination': 'MSM [T], OTHER [O], NA [R]', 'Count': 1017, 'Perc': 0.1335 },
+          { 'Combination': 'MSM [T], REPCOUNTRY [O], NA [R]', 'Count': 875, 'Perc': 0.1148 },
+          { 'Combination': 'NA [T], NA [O], NA [R]', 'Count': 400, 'Perc': 0.0525 },
+          { 'Combination': 'NA [T], OTHER [O], NA [R]', 'Count': 848, 'Perc': 0.1113 },
+          { 'Combination': 'NA [T], REPCOUNTRY [O], NA [R]', 'Count': 333, 'Perc': 0.0437 }
+        ],
+        'Gender, Transmission, GroupedRegionOfOrigin, PlaceOfResidence': [
+          { 'Combination': 'F [G], HETERO [T], NA [O], NA [R]', 'Count': 545, 'Perc': 0.0715 },
+          { 'Combination': 'F [G], HETERO [T], OTHER [O], NA [R]', 'Count': 1389, 'Perc': 0.1823 },
+          { 'Combination': 'F [G], HETERO [T], REPCOUNTRY [O], NA [R]', 'Count': 158, 'Perc': 0.0207 },
+          { 'Combination': 'F [G], IDU [T], NA [O], NA [R]', 'Count': 9, 'Perc': 0.0012 },
+          { 'Combination': 'F [G], IDU [T], OTHER [O], NA [R]', 'Count': 18, 'Perc': 0.0024 },
+          { 'Combination': 'F [G], IDU [T], REPCOUNTRY [O], NA [R]', 'Count': 9, 'Perc': 0.0012 },
+          { 'Combination': 'F [G], NA [T], NA [O], NA [R]', 'Count': 154, 'Perc': 0.0202 },
+          { 'Combination': 'F [G], NA [T], OTHER [O], NA [R]', 'Count': 368, 'Perc': 0.0483 },
+          { 'Combination': 'F [G], NA [T], REPCOUNTRY [O], NA [R]', 'Count': 56, 'Perc': 0.0074 },
+          { 'Combination': 'M [G], HETERO [T], NA [O], NA [R]', 'Count': 323, 'Perc': 0.0424 },
+          { 'Combination': 'M [G], HETERO [T], OTHER [O], NA [R]', 'Count': 790, 'Perc': 0.1037 },
+          { 'Combination': 'M [G], HETERO [T], REPCOUNTRY [O], NA [R]', 'Count': 163, 'Perc': 0.0214 },
+          { 'Combination': 'M [G], IDU [T], NA [O], NA [R]', 'Count': 33, 'Perc': 0.0043 },
+          { 'Combination': 'M [G], IDU [T], OTHER [O], NA [R]', 'Count': 51, 'Perc': 0.0067 },
+          { 'Combination': 'M [G], IDU [T], REPCOUNTRY [O], NA [R]', 'Count': 24, 'Perc': 0.0032 },
+          { 'Combination': 'M [G], MSM [T], NA [O], NA [R]', 'Count': 634, 'Perc': 0.0832 },
+          { 'Combination': 'M [G], MSM [T], OTHER [O], NA [R]', 'Count': 1017, 'Perc': 0.1335 },
+          { 'Combination': 'M [G], MSM [T], REPCOUNTRY [O], NA [R]', 'Count': 875, 'Perc': 0.1148 },
+          { 'Combination': 'M [G], NA [T], NA [O], NA [R]', 'Count': 246, 'Perc': 0.0323 },
+          { 'Combination': 'M [G], NA [T], OTHER [O], NA [R]', 'Count': 480, 'Perc': 0.063 },
+          { 'Combination': 'M [G], NA [T], REPCOUNTRY [O], NA [R]', 'Count': 277, 'Perc': 0.0364 }
+        ]
+      }
+    }
+  });
 
-  // // // 8. Available strata set
-  // // appManager.onShinyEvent({
-  // //   Type: 'AVAILABLE_STRATA_SET',
-  // //   Status: 'SUCCESS',
-  // //   Payload: {
-  // //     AvailableStrata: {
-  // //       Gender: ['F', 'M']
-  // //     }
-  // //   }
-  // // });
+  appMgr.uiStateMgr.setActivePageId(4, 0);
 
   // // // 9. Read model parameters
   // // // appManager.onShinyEvent({

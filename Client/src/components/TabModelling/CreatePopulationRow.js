@@ -4,19 +4,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
+import FormatPercentage from '../../utilities/FormatPercentage';
+import PercentageToShade from '../../utilities/PercentageToShade';
 
 const CreatePopulationRow = (props) => {
   const { i, isSelected, onSelectClick, population: el, appMgr } = props;
 
-  const handleStratNameChange = e => {
-    appMgr.popMgr.setPopulationName(i, e.target.value);
-  };
-
   const handleStrataChange = e => {
-    appMgr.popMgr.setPopulationStrata(i, e.target.value);
+    appMgr.popMgr.setPopulationVariables(i, e.target.value);
   };
 
   return (
@@ -29,13 +26,6 @@ const CreatePopulationRow = (props) => {
           onClick={onSelectClick}
         />
       </TableCell>
-      <TableCell id={`labelId${i}`} scope='row' padding='none'>
-        <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
-          value={el.name}
-          onChange={handleStratNameChange}
-        />
-      </TableCell>
       <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
         <Select
           multiple
@@ -46,25 +36,28 @@ const CreatePopulationRow = (props) => {
               ))}
             </div>
           )}
-          value={el.strata}
+          value={el.variables}
           style={{ width: '100%', fontSize: '0.75rem' }}
           onChange={handleStrataChange}
           disableUnderline
         >
           {
-            appMgr.popMgr.availableStrataNames.map((el2, j) => (
-              <MenuItem key={j} value={el2} dense>{el2}</MenuItem>
+            appMgr.popMgr.availableVariables.map((el2, j) => (
+              <MenuItem key={j} value={el2.Name} dense>{`${el2.Name} (${el2.Code})`}</MenuItem>
             ))
           }
         </Select>
       </TableCell>
       <TableCell>
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {el.populations.map((value) => (
+          {el.strata.map((el2) => (
             <Chip
-              key={value}
-              label={value}
-              style={{ margin: 2 }}
+              key={el2.Combination}
+              label={`${el2.Combination} (${FormatPercentage(el2.Perc)})`}
+              style={{
+                margin: 2,
+                backgroundColor: `${PercentageToShade(el2.Perc, 214)}`
+              }}
             />
           ))}
         </div>
