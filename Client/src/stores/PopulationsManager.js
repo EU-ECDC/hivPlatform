@@ -44,6 +44,7 @@ export default class PopulationsManager {
       variables = [];
     }
     this.availableVariables = variables;
+    this.populations = [];
   };
 
   setAvailableStrata = strata => {
@@ -51,6 +52,7 @@ export default class PopulationsManager {
       strata = {};
     }
     this.availableStrata = strata;
+    this.populations = [];
   };
 
   removePopulations = idxs => {
