@@ -15,18 +15,11 @@ appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
-unlist(lapply(
-  seq_along(variables), function(i) {
-    combn(names(variables), i, simplify = FALSE)
-  }
-), recursive = FALSE)
-
-
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 filters <- list(
   DiagYear = list(
-    ApplyInAdjustments = FALSE,
+    ApplyInAdjustments = TRUE,
     MinYear =  2000,
     MaxYear =  2014
   ),
@@ -53,6 +46,11 @@ appMgr$CreateReport(
     cd4ConfInt = FALSE
   )
 )
+
+test <- appMgr$ReportTask$TaskHandle$read_all_error()
+cat(test)
+
+appMgr$ReportTask$FailMessage
 
 fileName <- RenderReportToFile(
   reportFilePath = GetReportFileNames()['Main Report'],

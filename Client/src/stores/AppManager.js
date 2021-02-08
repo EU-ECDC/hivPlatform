@@ -162,6 +162,7 @@ export default class AppManager {
       case 'CREATING_REPORT_STARTED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.reportMgr.setCreatingReportInProgress(true);
+          this.reportMgr.setReport(null);
           this.notificationsMgr.setMsg('Creating report started');
         }
         break;
@@ -169,9 +170,11 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
           this.reportMgr.setReport(e.payload.Report);
-          this.reportMgr.setCreatingReportInProgress(false);
           this.notificationsMgr.setMsg('Creating report finished');
+        } else {
+          this.notificationsMgr.setMsg('Creating report failed');
         }
+        this.reportMgr.setCreatingReportInProgress(false);
         break;
       case 'AGGR_DATA_UPLOADED':
         this.aggrDataMgr.setActionStatus(e.payload.ActionStatus);
@@ -193,7 +196,6 @@ export default class AppManager {
         }
         break;
       case 'AVAILABLE_STRATA_SET':
-        console.log(e.payload.AvailableVariables);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.popMgr.setAvailableVariables(e.payload.AvailableVariables);
           this.popMgr.setAvailableStrata(e.payload.AvailableStrata);
