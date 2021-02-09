@@ -14,11 +14,8 @@ import QuarterToString from '../utilities/QuarterToString';
 
 const userStyles = makeStyles({
   valueLabel: {
-    '& span': {
-      '& span': {
-        // color: 'white',
-        fontSize: 8
-      }
+    '& *': {
+      fontSize: 8
     }
   }
 });

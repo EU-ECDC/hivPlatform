@@ -1,6 +1,13 @@
-## 1.9.41
+## 1.9.42
 
 ###### _Feb 9 2021_
+
+- UNDER DEVELOPMENT
+
+
+## 1.9.41
+
+###### _Feb 8 2021_
 
 - Fix creating adjustments report when data is filtered
 - Fix stopping reports that are failing

@@ -22,7 +22,13 @@ export default class UIStateManager {
       ],
       activeSubStepId: 0
     },
-    { title: 'Case-based data summary', completed: false, disabled: true, subPages: [] },
+    {
+      title: 'Case-based data summary',
+      completed: false,
+      disabled: true,
+      subPages: [],
+      description: 'Subset of case-based data can be selected here for adjustments and modelling'
+    },
     {
       title: 'Adjustments',
       completed: false,

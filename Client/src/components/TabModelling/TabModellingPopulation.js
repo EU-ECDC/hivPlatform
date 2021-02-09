@@ -36,21 +36,26 @@ const TabModellingPopulation = props => {
         <Grid item xs={10}>
           <CreatePopulations {...props} />
         </Grid>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <Grid item xs={2}>
-          <Typography color='textSecondary'>
-            Aggregated data: Select data
+        <Grid item xs={12}>
+          <Typography variant='h6'>
+            Aggregated data
           </Typography>
-          <Typography variant='body2' color='textSecondary' style={{ marginTop: 10 }}>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>
+            Select data for modelling
+          </Typography>
+          <Typography variant='body2' color='textSecondary'>
             Only years present in the aggregated data set will overwrite case-based derived data.
           </Typography>
         </Grid>
         <Grid item xs={10}>
           <AggregatedDataPopulations {...props} />
         </Grid>
-        <Grid item xs={12}>
+        {/*<Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
         <Grid item xs={2}>

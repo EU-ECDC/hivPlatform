@@ -23,24 +23,13 @@ const AggregatedDataPopulations = (props) => {
         </TableHead>
         <TableBody>
           {
-            appMgr.aggrDataMgr.dataFilesNonGrouped.map((dataFile, i) => (
+            appMgr.aggrDataMgr.dataFiles.map((dataFile, i) => (
               <AggregatedDataPopulationsRow
                 key={i}
                 i={i}
                 rowCount={1}
                 dataFile={dataFile}
-                appManager={appMgr}
-              />
-            ))
-          }
-          {
-            appMgr.aggrDataMgr.dataFilesGrouped.map((dataFile, i) => (
-              <AggregatedDataPopulationsRow
-                key={i}
-                i={i}
-                rowCount={appMgr.aggrDataMgr.dataFilesGrouped.length}
-                dataFile={dataFile}
-                appManager={appMgr}
+                appMgr={appMgr}
               />
             ))
           }
