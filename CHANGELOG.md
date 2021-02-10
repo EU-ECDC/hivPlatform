@@ -2,7 +2,8 @@
 
 ###### _Feb 9 2021_
 
-- UNDER DEVELOPMENT
+- Fix filtering of data in Reporting Delays adjustment
+- Reimplement UI for aggregated data selection
 
 
 ## 1.9.41

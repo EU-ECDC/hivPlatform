@@ -17,6 +17,7 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
+adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays'))
 filters <- list(
   DiagYear = list(
     ApplyInAdjustments = TRUE,
@@ -30,12 +31,9 @@ filters <- list(
   )
 )
 
-appMgr$CaseMgr$RunAdjustments(
-  # GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE')),
-  GetAdjustmentSpecs(c('Reporting Delays with trend')),
-  # GetAdjustmentSpecs(c('Joint Modelling Multiple Imputation')),
-  filters
-)
+
+
+appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, filters)
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
