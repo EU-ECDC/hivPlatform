@@ -465,7 +465,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 0);
+  appMgr.uiStateMgr.setActivePageId(4, 1);
 
   // // // 9. Read model parameters
   // // // appManager.onShinyEvent({

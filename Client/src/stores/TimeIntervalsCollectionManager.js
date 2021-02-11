@@ -44,11 +44,12 @@ export default class TimeIntervalsCollectionManager {
 
   collections = new Map();
 
-  minYear = 1980;
+  minYear = null;
 
-  maxYear = 2016;
+  maxYear = null;
 
   selectedEditCollectionId = null;
+
   selectedRunCollectionId = null;
 
   setMinYear = minYear => this.minYear = minYear;
