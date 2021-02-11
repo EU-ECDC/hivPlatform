@@ -19,8 +19,7 @@ export default class PopulationsManager {
       setAvailableStrata: action,
       populationsJS: computed,
       availableVarNames: computed,
-      // definedPopulations: computed,
-      // populationsNames: computed,
+      definedPopulations: computed,
     });
   }
 
@@ -73,33 +72,7 @@ export default class PopulationsManager {
     return this.availableVariables.map(el => el.Name);
   }
 
-  // get availableStrataNames() {
-  //   return Object.keys(this.availableStrata);
-  // };
-
-  // get populationsNames() {
-  //   return this.populations.map(el => el.name);
-  // };
-
-  // get definedPopulations() {
-  //   return [...new Set(this.populations.map(el => el.populations).flat())];
-  // };
-
-  // recreatePopulations = (i) => {
-  //   let strataGroup = this.populations[i];
-  //   let populations = [];
-
-  //   if (strataGroup.strata.length > 0) {
-  //     const variable = strataGroup.strata[0];
-  //     const code = this.stratToCode[variable];
-  //     populations = this.availableStrata[variable].map(el => `${el} [${code}]`);
-  //     for (let j = 1; j < strataGroup.strata.length; ++j) {
-  //       const variable = strataGroup.strata[j];
-  //       const code = this.stratToCode[variable];
-  //       let extraPopulations = this.availableStrata[variable].map(el => `${el} [${code}]`);
-  //       populations = populations.map(el1 => extraPopulations.map(el2 => [el1, el2].join(', '))).flat();
-  //     }
-  //   }
-  //   this.populations[i].populations = populations;
-  // };
+  get definedPopulations() {
+    return [...new Set(this.populations.map(el => el.strata.map(el2 => el2.Combination)).flat())];
+  };
 }

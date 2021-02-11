@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
 const EnhancedTableToolbar = (props) => {
-  const { selectedCount, onAddClick, onDeleteClick } = props;
+  const { selectedCount, onAddClick, onDeleteClick, addDisabled } = props;
 
   const deleteDisabled = selectedCount === 0;
 
@@ -15,7 +15,7 @@ const EnhancedTableToolbar = (props) => {
       </Typography>
 
       <Button color='primary' disabled={deleteDisabled} onClick={onDeleteClick}>Delete</Button>
-      <Button color='primary' onClick={onAddClick}>Add</Button>
+      <Button color='primary' disabled={addDisabled} onClick={onAddClick}>Add</Button>
     </Toolbar>
   );
 };

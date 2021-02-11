@@ -4,15 +4,17 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
+import ValidationTextField from '../ValidationTextField';
 
 const CombinePopulationsRow = (props) => {
   const { i, isSelected, onSelectClick, combination: el, appMgr } = props;
 
-  const handleCombinationNameChange = e => {
-    appMgr.popCombMgr.setCombinationName(i, e.target.value);
+  const handleCombinationNameChange = (value, valid) => {
+    if (valid) {
+      appMgr.popCombMgr.setCombinationName(i, value);
+    }
   };
 
   const handlePopulationsChange = e => {
@@ -23,25 +25,28 @@ const CombinePopulationsRow = (props) => {
     appMgr.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
   };
 
+  const validateName = name => {
+    let result = '';
+    if (name === '') {
+      result = 'Please, specify a unique name';
+    }
+    return result;
+  };
+
   let name = null;
   let caseBasedPopulations = null;
   let aggrPopulations = null;
   if (el.name === 'ALL') {
     name = 'ALL';
     caseBasedPopulations = 'All data available';
-    aggrPopulations =
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {
-          appMgr.aggrDataMgr.populationNames.map((value, i) => (
-            <Chip key={value} label={value} style={{ margin: 2 }} />
-          ))
-        }
-      </div>
+    aggrPopulations= 'All data available after selection above';
   } else {
-    name = <Input
-      style={{ width: '100%', fontSize: '0.75rem' }}
+    name = <ValidationTextField
       value={el.name}
+      validationFunc = {validateName}
       onChange={handleCombinationNameChange}
+      helperText = ''
+      style={{ width: '100%', fontSize: '0.75rem' }}
     />
     caseBasedPopulations = <Select
       multiple
@@ -53,8 +58,9 @@ const CombinePopulationsRow = (props) => {
         </div>
       )}
       value={el.populations}
-      style={{ width: '100%', fontSize: '0.75rem' }}
+      disabled={appMgr.popMgr.definedPopulations.length === 0}
       onChange={handlePopulationsChange}
+      style={{ width: '100%', fontSize: '0.75rem' }}
       disableUnderline
     >
       {

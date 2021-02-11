@@ -55,17 +55,22 @@ const TabModellingPopulation = props => {
         <Grid item xs={10}>
           <AggregatedDataPopulations {...props} />
         </Grid>
-        {/*<Grid item xs={12}>
+        <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <Grid item xs={2}>
-          <Typography color='textSecondary'>
+        <Grid item xs={12}>
+          <Typography variant='h6'>
             Combine populations
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant='body2' color='textSecondary'>
+            Combine case-based and aggregated data populations.
           </Typography>
         </Grid>
         <Grid item xs={10}>
           <CombinePopulations {...props} />
-        </Grid> */}
+        </Grid>
       </Grid>
     </TabPanel>
   );

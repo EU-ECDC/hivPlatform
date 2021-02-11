@@ -14,7 +14,7 @@ const LeftNav = (props) => {
   const { pages, activePageId, onPageChange } = props;
 
   return (
-    <div style={{ minWidth: 250, backgroundColor: 'white' }}>
+    <div style={{ minWidth: 250, maxWidth: 250, backgroundColor: 'white' }}>
       <Stepper nonLinear activeStep={activePageId} orientation='vertical'>
         {pages.map((page, i) => {
 
