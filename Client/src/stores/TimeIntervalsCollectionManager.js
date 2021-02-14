@@ -20,6 +20,7 @@ export default class TimeIntervalsCollectionManager {
       collections: observable,
       selectedEditCollectionId: observable,
       selectedRunCollectionId: observable,
+      setIntervals: action,
       setMinYear: action,
       setMaxYear: action,
       addNewCollection: action,
@@ -51,6 +52,12 @@ export default class TimeIntervalsCollectionManager {
   selectedEditCollectionId = null;
 
   selectedRunCollectionId = null;
+
+  setIntervals = (minYear, maxYear, intervals) => {
+    if (!IsNull(this.selectedEditCollection)) {
+      this.selectedEditCollection.setIntervals(minYear, maxYear, intervals);
+    }
+  };
 
   setMinYear = minYear => this.minYear = minYear;
 

@@ -26,15 +26,15 @@ const TabModellingInputs = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary'>Next step</Button>
+            <Button size='small' color='primary' disabled={true}>Next step</Button>
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Typography color='textSecondary'>
+          <Typography variant='h6'>
             Upload model parameters file
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <input style={{ display: 'none' }} id='modelUploadBtn' type='file' onChange={handleModelUploadChange} />
           <label htmlFor='modelUploadBtn'>
             <Btn><CloudUploadIcon />&nbsp;Upload model</Btn>
@@ -44,7 +44,7 @@ const TabModellingInputs = props => {
             Supported files types: xml (uncompressed and zip archives)
           </Typography>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Uploaded file details</Typography>
             <Grid container spacing={2}>
@@ -64,13 +64,15 @@ const TabModellingInputs = props => {
         <Grid item xs={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <Grid item xs={3}>
-          <Typography color='textSecondary'>
+        <Grid item xs={12}>
+          <Typography variant='h6'>
             Time intervals and diagnosis rates modelling
           </Typography>
+        </Grid>
+        <Grid item xs={2}>
           <DiagnosisRatesSelect timeIntCollMgr={appMgr.modelMgr.timeIntCollMgr} />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <DiagnosisRates timeIntCollMgr={appMgr.modelMgr.timeIntCollMgr} />
         </Grid>
       </Grid>

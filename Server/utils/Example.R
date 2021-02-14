@@ -29,9 +29,6 @@ filters <- list(
     MaxYear = 2014.875
   )
 )
-
-
-
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, filters)
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
@@ -43,11 +40,6 @@ appMgr$CreateReport(
     cd4ConfInt = FALSE
   )
 )
-
-test <- appMgr$ReportTask$TaskHandle$read_all_error()
-cat(test)
-
-appMgr$ReportTask$FailMessage
 
 fileName <- RenderReportToFile(
   reportFilePath = GetReportFileNames()['Main Report'],
@@ -98,14 +90,3 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIV_Obs_M
 appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIVAIDS_M
-
-
-# # STEP 7 - Generate report -----------------------------------------------------------------------
-# appMgr$GenerateReport()
-# appMgr$Report <- appMgr$ReportTask$Result
-
-# Interface codes for case-based populations
-# 'M [G], MSM [T]'
-# 'M [G], IDU [T]'
-# 'MSM [T], REPCOUNTRY [Reg]'
-# 'OTHER [Res], REPCOUNTRY [Reg]'

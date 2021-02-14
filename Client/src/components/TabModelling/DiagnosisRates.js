@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -62,7 +63,8 @@ const DiagnosisRates = (props) => {
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
-    <Paper>
+    <Paper style={{ padding: 10 }}>
+      <Typography variant='overline'>Collection: {collection.name}</Typography>
       <Table>
         <TableHead>
           <TableRow>

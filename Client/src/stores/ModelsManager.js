@@ -1,4 +1,4 @@
-import { observable, action, computed, makeObservable, autorun } from 'mobx';
+import { observable, action, computed, makeObservable, autorun, toJS } from 'mobx';
 import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 
@@ -153,29 +153,33 @@ export default class ModelsManager {
 
   setModelsRunProgress = progress => this.modelsRunProgress = progress;
   setModelsRunLog = runLog => this.modelsRunLog = runLog;
-  runModels = () => this.parentMgr.btnClicked('runModelBtn:HIVModelParams', {
-    minYear: this.minYear,
-    maxYear: this.maxYear,
-    minFitPos: this.minFitPos,
-    maxFitPos: this.maxFitPos,
-    minFitCD4: this.minFitCD4,
-    maxFitCD4: this.maxFitCD4,
-    minFitAIDS: this.minFitAIDS,
-    maxFitAIDS: this.maxFitAIDS,
-    minFitHIVAIDS: this.minFitHIVAIDS,
-    maxFitHIVAIDS: this.maxFitHIVAIDS,
-    fullData: this.fullData,
-    knotsCount: this.knotsCount,
-    startIncZero: this.startIncZero,
-    maxIncCorr: this.maxIncCorr,
-    distributionFit: this.distributionFit,
-    delta4Fac: this.delta4Fac,
-    country: this.country,
-    rDisp: this.rDisp,
-    splineType: this.splineType,
-    timeIntervals: this.timeIntCollMgr.selectedRunCollection.intervals,
-    popCombination: this.parentMgr.popCombMgr.selectedCombination
-  });
+  runModels = () => {
+    const params = {
+      minYear: this.minYear,
+      maxYear: this.maxYear,
+      minFitPos: this.minFitPos,
+      maxFitPos: this.maxFitPos,
+      minFitCD4: this.minFitCD4,
+      maxFitCD4: this.maxFitCD4,
+      minFitAIDS: this.minFitAIDS,
+      maxFitAIDS: this.maxFitAIDS,
+      minFitHIVAIDS: this.minFitHIVAIDS,
+      maxFitHIVAIDS: this.maxFitHIVAIDS,
+      fullData: this.fullData,
+      knotsCount: this.knotsCount,
+      startIncZero: this.startIncZero,
+      maxIncCorr: this.maxIncCorr,
+      distributionFit: this.distributionFit,
+      delta4Fac: this.delta4Fac,
+      country: this.country,
+      rDisp: this.rDisp,
+      splineType: this.splineType,
+      timeIntervals: this.timeIntCollMgr.selectedRunCollection.intervals,
+      popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
+      aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)
+    };
+    this.parentMgr.btnClicked('runModelBtn:HIVModelParams', params);
+  };
 
   cancelModels = () => this.parentMgr.btnClicked('cancelModelBtn');
 

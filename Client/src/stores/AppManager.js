@@ -201,42 +201,58 @@ export default class AppManager {
           this.popMgr.setAvailableStrata(e.payload.AvailableStrata);
         }
         break;
-      // case 'MODELS_PARAMS_SET':
-      //   this.modelMgr.setMinYear(event.Payload.Params.minYear);
-      //   this.modelMgr.setMaxYear(event.Payload.Params.maxYear);
-      //   this.modelMgr.setMinFitPos(event.Payload.Params.minFitPos);
-      //   this.modelMgr.setMaxFitPos(event.Payload.Params.maxFitPos);
-      //   this.modelMgr.setMinFitCD4(event.Payload.Params.minFitCD4);
-      //   this.modelMgr.setMaxFitCD4(event.Payload.Params.maxFitCD4);
-      //   this.modelMgr.setMinFitAIDS(event.Payload.Params.minFitAIDS);
-      //   this.modelMgr.setMaxFitAIDS(event.Payload.Params.maxFitAIDS);
-      //   this.modelMgr.setMinFitHIVAIDS(event.Payload.Params.minFitHIVAIDS);
-      //   this.modelMgr.setMaxFitHIVAIDS(event.Payload.Params.maxFitHIVAIDS);
-      //   this.modelMgr.setFullData(event.Payload.Params.fullData);
-      //   this.modelMgr.setKnotsCount(event.Payload.Params.knotsCount);
-      //   this.modelMgr.setStartIncZero(event.Payload.Params.startIncZero);
-      //   this.modelMgr.setMaxIncCorr(event.Payload.Params.maxIncCorr);
-      //   this.modelMgr.setDistributionFit(event.Payload.Params.distributionFit);
-      //   this.modelMgr.setDelta4Fac(event.Payload.Params.delta4Fac);
-      //   this.modelMgr.setCountry(event.Payload.Params.country);
-      //   this.modelMgr.setRDisp(event.Payload.Params.rDisp);
-      //   this.modelMgr.setSplineType(event.Payload.Params.splineType);
-      //   this.modelMgr.timeIntMgr.setIntervals(
-      //     event.Payload.Params.minYear,
-      //     event.Payload.Params.maxYear,
-      //     event.Payload.Params.timeIntervals
-      //   );
-      //   break;
-      // case 'MODELS_RUN_STARTED':
-      //   this.modelMgr.setModelsRunProgress(1);
-      //   break;
-      // case 'MODELS_RUN_LOG_SET':
-      //   this.modelMgr.setModelsRunLog(event.Payload.RunLog);
-      //   break;
-      // case 'MODELS_RUN_FINISHED':
-      //   this.modelMgr.setModelsRunProgress(null);
-      //   this.notificationsMgr.setMsg('Model run finished');
-      //   break;
+      case 'MODELS_PARAMS_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setMinYear(e.payload.Params.minYear);
+          this.modelMgr.setMaxYear(e.payload.Params.maxYear);
+          this.modelMgr.setMinFitPos(e.payload.Params.minFitPos);
+          this.modelMgr.setMaxFitPos(e.payload.Params.maxFitPos);
+          this.modelMgr.setMinFitCD4(e.payload.Params.minFitCD4);
+          this.modelMgr.setMaxFitCD4(e.payload.Params.maxFitCD4);
+          this.modelMgr.setMinFitAIDS(e.payload.Params.minFitAIDS);
+          this.modelMgr.setMaxFitAIDS(e.payload.Params.maxFitAIDS);
+          this.modelMgr.setMinFitHIVAIDS(e.payload.Params.minFitHIVAIDS);
+          this.modelMgr.setMaxFitHIVAIDS(e.payload.Params.maxFitHIVAIDS);
+          this.modelMgr.setFullData(e.payload.Params.fullData);
+          this.modelMgr.setKnotsCount(e.payload.Params.knotsCount);
+          this.modelMgr.setStartIncZero(e.payload.Params.startIncZero);
+          this.modelMgr.setMaxIncCorr(e.payload.Params.maxIncCorr);
+          this.modelMgr.setDistributionFit(e.payload.Params.distributionFit);
+          this.modelMgr.setDelta4Fac(e.payload.Params.delta4Fac);
+          this.modelMgr.setCountry(e.payload.Params.country);
+          this.modelMgr.setRDisp(e.payload.Params.rDisp);
+          this.modelMgr.setSplineType(e.payload.Params.splineType);
+          this.modelMgr.timeIntCollMgr.setIntervals(
+            e.payload.Params.minYear,
+            e.payload.Params.maxYear,
+            e.payload.Params.timeIntervals
+          );
+        }
+        break;
+      case 'MODELS_RUN_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setModelsRunProgress(1);
+          this.modelMgr.setModelsRunLog(null);
+        }
+        break;
+      case 'MODELS_RUN_LOG_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setModelsRunLog(e.payload.RunLog);
+        }
+        break;
+      case 'MODELS_RUN_FINISHED':
+        this.modelMgr.setModelsRunProgress(null);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setLastEventType(e.type);
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        break;
+      case 'MODELS_RUN_CANCELLED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setModelsRunProgress(null);
+          this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        }
+        break;
       // case 'BOOTSTRAP_RUN_STARTED':
       //   this.modelMgr.setBootstrapRunProgress(1);
       //   break;

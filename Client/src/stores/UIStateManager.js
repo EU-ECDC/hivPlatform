@@ -46,8 +46,8 @@ export default class UIStateManager {
       subPages: [
         { title: 'Populations', disabled: false },
         { title: 'Inputs', disabled: false },
-        { title: 'Advanced', disabled: true },
-        { title: 'Run Main Fit', disabled: true },
+        { title: 'Advanced', disabled: false },
+        { title: 'Run Main Fit', disabled: false },
         { title: 'Run Bootstrap', disabled: true },
         { title: 'Tables and charts', disabled: true }
       ],

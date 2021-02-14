@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -12,11 +13,23 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
+import IsNull from '../../utilities/IsNull';
+
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: 10,
+    marginBottom: 10,
+    height: 10,
+  }
+}));
 
 const ModelRunProgressBar = (props) => {
   const { progress } = props;
-  if (progress === null) return null;
-  return <LinearProgress color='secondary' variant='determinate' value={progress} />
+  if (IsNull(progress)) return null;
+
+  const classes = useStyles();
+
+  return <LinearProgress color='secondary' className={classes.root} />
 };
 
 const TabModellingRunMain = props => {
@@ -43,13 +56,15 @@ const TabModellingRunMain = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary'>Next step</Button>
+            <Button size='small' color='primary' disabled={true}>Next step</Button>
           </Box>
         </Grid>
-        <Grid item xs={3}>
-          <Typography color='textSecondary'>
+        <Grid item xs={12}>
+          <Typography variant='h6'>
             Perform main fit of HIV model
           </Typography>
+        </Grid>
+        <Grid item xs={2}>
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Select
               value={appMgr.popCombMgr.selectedCombinationName}
@@ -90,7 +105,7 @@ const TabModellingRunMain = props => {
           </Button>
           <ModelRunProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
