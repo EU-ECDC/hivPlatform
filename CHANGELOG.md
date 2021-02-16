@@ -1,8 +1,15 @@
+## 1.9.45
+
+###### _Feb 17 2021_
+
+- UNDER DEVELOPMENT
+
+
 ## 1.9.44
 
 ###### _Feb 14 2021_
 
-- UNDER DEVELOPMENT
+- HIV Modelling page reimplemented
 
 
 ## 1.9.43
