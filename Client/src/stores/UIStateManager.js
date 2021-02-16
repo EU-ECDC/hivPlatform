@@ -48,7 +48,7 @@ export default class UIStateManager {
         { title: 'Inputs', disabled: false },
         { title: 'Advanced', disabled: false },
         { title: 'Run Main Fit', disabled: false },
-        { title: 'Run Bootstrap', disabled: true },
+        { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: true }
       ],
       activeSubStepId: 0
@@ -78,7 +78,8 @@ export default class UIStateManager {
       reportsPageEnabled: computed,
       outputsPageEnabled: computed,
       caseBasedAttrMappingEnabled: computed,
-      caseBasedOrigGroupingEnabled: computed
+      caseBasedOrigGroupingEnabled: computed,
+      bootstrapEnabled: computed,
     });
   };
 
@@ -160,6 +161,10 @@ export default class UIStateManager {
 
   get caseBasedOrigGroupingEnabled() {
     return InArray('CASE_BASED_ATTR_MAPPING', this.completedSteps);
+  };
+
+  get bootstrapEnabled() {
+    return InArray('MODELLING', this.completedSteps);
   };
 
   // get enabledStages() {

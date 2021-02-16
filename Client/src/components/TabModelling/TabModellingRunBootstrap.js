@@ -100,11 +100,17 @@ const TabModellingRunBootstrap = props => {
             </RadioGroup>
             <FormHelperText>Set the bootstrap type</FormHelperText>
           </FormControl>
-          <Btn onClick={handleRunBootstrapBtnClick}>Run bootstrap</Btn>
+          <Btn
+            onClick={handleRunBootstrapBtnClick}
+            disabled={appMgr.modelMgr.bootstrapRunInProgress}
+          >
+            Run bootstrap
+          </Btn>
           <Button
             onClick={handleCancelBootstrapBtnClick}
             color='primary'
             style={{ marginLeft: 20 }}
+            disabled={!appMgr.modelMgr.bootstrapRunInProgress}
           >
             Cancel
           </Button>

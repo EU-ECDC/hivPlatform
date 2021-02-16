@@ -19,6 +19,7 @@ const CombinePopulations = (props) => {
   const handleSelectAllClick = e => {
     if (e.target.checked) {
       const newSelectedIds = combinations.map((el, i) => i);
+
       setSelected(newSelectedIds);
       return;
     }
@@ -56,6 +57,7 @@ const CombinePopulations = (props) => {
 
   const rowCount = combinations.length;
   const selectedCount = selected.length;
+  console.log(selectedCount);
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (

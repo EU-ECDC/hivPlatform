@@ -33,6 +33,7 @@ const CombinePopulationsRow = (props) => {
     return result;
   };
 
+  let checkBox = null;
   let name = null;
   let caseBasedPopulations = null;
   let aggrPopulations = null;
@@ -41,6 +42,12 @@ const CombinePopulationsRow = (props) => {
     caseBasedPopulations = 'All data available';
     aggrPopulations= 'All data available after selection above';
   } else {
+    checkBox = <Checkbox
+      inputProps={{ 'aria-labelledby': `labelId${i}` }}
+      color='primary'
+      checked={isSelected}
+      onClick={onSelectClick}
+    />
     name = <ValidationTextField
       value={el.name}
       validationFunc = {validateName}
@@ -94,12 +101,7 @@ const CombinePopulationsRow = (props) => {
   return (
     <TableRow hover role='checkbox'>
       <TableCell padding='checkbox'>
-        <Checkbox
-          inputProps={{ 'aria-labelledby': `labelId${i}` }}
-          color='primary'
-          checked={isSelected}
-          onClick={onSelectClick}
-        />
+        {checkBox}
       </TableCell>
       <TableCell id={`labelId${i}`} scope='row' padding='none'>
         {name}

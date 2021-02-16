@@ -69,6 +69,7 @@ export default class ModelsManager {
       runBootstrap: action,
       cancelBootstrap: action,
       modelsRunInProgress: computed,
+      bootstrapRunInProgress: computed,
     });
 
     autorun(() => {
@@ -196,5 +197,9 @@ export default class ModelsManager {
 
   get modelsRunInProgress() {
     return this.modelsRunProgress !== null;
+  };
+
+  get bootstrapRunInProgress() {
+    return this.bootstrapRunProgress !== null;
   };
 }

@@ -234,6 +234,7 @@ export default class AppManager {
           this.modelMgr.setModelsRunProgress(1);
           this.modelMgr.setModelsRunLog(null);
         }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
       case 'MODELS_RUN_LOG_SET':
         if (e.payload.ActionStatus === 'SUCCESS') {
@@ -253,16 +254,30 @@ export default class AppManager {
           this.notificationsMgr.setMsg(e.payload.ActionMessage);
         }
         break;
-      // case 'BOOTSTRAP_RUN_STARTED':
-      //   this.modelMgr.setBootstrapRunProgress(1);
-      //   break;
-      // case 'BOOTSTRAP_RUN_LOG_SET':
-      //   this.modelMgr.setBootstrapRunLog(event.Payload.RunLog);
-      //   break;
-      // case 'BOOTSTRAP_RUN_FINISHED':
-      //   this.modelMgr.setBootstrapRunProgress(null);
-      //   this.notificationsMgr.setMsg('Bootstrap run finished');
-      //   break
+      case 'BOOTSTRAP_RUN_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setBootstrapRunProgress(1);
+          this.modelMgr.setBootstrapRunLog(null);
+        }
+        break;
+      case 'BOOTSTRAP_RUN_LOG_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setBootstrapRunLog(e.payload.RunLog);
+        }
+        break;
+      case 'BOOTSTRAP_RUN_FINISHED':
+        this.modelMgr.setBootstrapRunProgress(null);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setLastEventType(e.type);
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        break;
+      case 'BOOTSTRAP_RUN_CANCELLED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setBootstrapRunProgress(null);
+          this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        }
+        break;
     };
   };
 
