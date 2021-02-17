@@ -34,7 +34,7 @@ const AdjustmentsRunProgressBar = (props) => {
 const TabAdjustmentsRun = props => {
   const { appMgr } = props;
 
-  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(5);
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
 
   const [tabId, setTabId] = React.useState(0);
 

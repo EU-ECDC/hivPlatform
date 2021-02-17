@@ -8,12 +8,22 @@ import AdvancedParameters from './AdvancedParameters';
 
 const TabModellingAdvanced = props => {
 
+  const { appMgr } = props;
+
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 3);
+
   return (
     <TabPanel>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary' disabled={true}>Next step</Button>
+            <Button
+              size='small'
+              color='primary'
+              onClick={handleNextpageBtnClick}
+            >
+              Next step
+            </Button>
           </Box>
         </Grid>
         <Grid item xs={12}>

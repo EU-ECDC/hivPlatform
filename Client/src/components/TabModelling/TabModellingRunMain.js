@@ -35,6 +35,8 @@ const ModelRunProgressBar = (props) => {
 const TabModellingRunMain = props => {
   const { appMgr } = props;
 
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 4);
+
   const handleRunModelsBtnClick = () => {
     appMgr.modelMgr.runModels();
   };
@@ -56,7 +58,14 @@ const TabModellingRunMain = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary' disabled={!appMgr.uiStateMgr.bootstrapEnabled}>Next step</Button>
+            <Button
+              size='small'
+              color='primary'
+              disabled={!appMgr.uiStateMgr.bootstrapEnabled}
+              onClick={handleNextpageBtnClick}
+            >
+              Next step
+            </Button>
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -87,7 +96,9 @@ const TabModellingRunMain = props => {
                 <MenuItem key={i} value={el.id} dense>{el.name}</MenuItem>
               )}
             </Select>
-            <FormHelperText>Select time intervals and diagnosis rates modelling matrix</FormHelperText>
+            <FormHelperText>
+              Select time intervals and diagnosis rates modelling matrix
+            </FormHelperText>
           </FormControl>
           <Btn
             onClick={handleRunModelsBtnClick}

@@ -512,5 +512,17 @@ export default appMgr => {
     }
   });
 
+  appMgr.onShinyEvent({
+    type: 'COMPLETED_STEPS_SET',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      CompletedSteps: [
+        'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS',
+        'AGGR_READ', 'MODELLING'
+      ]
+    }
+  });
+
   appMgr.uiStateMgr.setActivePageId(4, 4);
 };

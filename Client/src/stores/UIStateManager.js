@@ -49,7 +49,7 @@ export default class UIStateManager {
         { title: 'Advanced', disabled: false },
         { title: 'Run Main Fit', disabled: false },
         { title: 'Run Bootstrap', disabled: false },
-        { title: 'Tables and charts', disabled: true }
+        { title: 'Tables and charts', disabled: false }
       ],
       activeSubStepId: 0
     },
@@ -80,6 +80,7 @@ export default class UIStateManager {
       caseBasedAttrMappingEnabled: computed,
       caseBasedOrigGroupingEnabled: computed,
       bootstrapEnabled: computed,
+      modellingOutputsEnabled: computed,
     });
   };
 
@@ -126,6 +127,8 @@ export default class UIStateManager {
     this.pages[4].disabled = !this.modellingPageEnabled;
     this.pages[5].disabled = !this.reportsPageEnabled;
     this.pages[6].disabled = !this.outputsPageEnabled;
+
+    this.setSubPageDisabledStatus(4, 5, !this.modellingOutputsEnabled);
   };
 
   get uploadPageEnabled() {
@@ -167,31 +170,7 @@ export default class UIStateManager {
     return InArray('MODELLING', this.completedSteps);
   };
 
-  // get enabledStages() {
-  //   return EVENT_TO_ENABLED_STAGES_MAP[this.lastEventType];
-  // };
-
-  // get caseBasedUploadStageEnabled() {
-  //   return this.enabledStages.indexOf('CASE_BASED_READ') !== -1;
-  // };
-
-  // get caseBasedAttrMappingStageEnabled() {
-  //   return this.enabledStages.indexOf('CASE_BASED_ATTR_MAPPING') !== -1;
-  // };
-
-  // get caseBasedOrigGrpngStageEnabled() {
-  //   return this.enabledStages.indexOf('CASE_BASED_ORIGIN_GROUPING') !== -1;
-  // };
-
-  // get caseBasedSummaryStageEnabled() {
-  //   return this.enabledStages.indexOf('CASE_BASED_SUMMARY') !== -1;
-  // };
-
-  // get caseBasedAdjustmentsStageEnabled() {
-  //   return this.enabledStages.indexOf('CASE_BASED_ADJUSTMENTS') !== -1;
-  // };
-
-  // get outputsStageEnabled() {
-  //   return this.enabledStages.indexOf('OUTPUTS') !== -1;
-  // };
+  get modellingOutputsEnabled() {
+    return InArray('MODELLING', this.completedSteps);
+  };
 }

@@ -14,6 +14,11 @@ import TabPanel from '../TabPanel';
 import { defaultHIVOutput1ChartOptions } from '../ChartsData';
 
 const TabModellingTables = props => {
+
+  const { appMgr } = props;
+
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(5);
+
   const hivOutput1ChartOptions = defaultHIVOutput1ChartOptions;
 
   return (
@@ -21,13 +26,21 @@ const TabModellingTables = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary'>Next step</Button>
+            <Button
+              size='small'
+              color='primary'
+              onClick={handleNextpageBtnClick}
+            >
+              Next step
+            </Button>
           </Box>
         </Grid>
-        <Grid item xs={3}>
-          <Typography color='textSecondary'>
+        <Grid item xs={12}>
+          <Typography variant='h6'>
             HIV Modelling results
-        </Typography>
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
           <FormControl component='fieldset'>
             <RadioGroup
               name='repDelDataSelection'
@@ -46,7 +59,7 @@ const TabModellingTables = props => {
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Chart
               options={hivOutput1ChartOptions}

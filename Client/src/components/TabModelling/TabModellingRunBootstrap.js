@@ -49,6 +49,7 @@ const TabModellingRunBootstrap = props => {
   const { appMgr } = props;
   const classes = userStyles();
 
+  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 5);
   const handleRunBootstrapBtnClick = () => appMgr.modelMgr.runBootstrap();
   const handleCancelBootstrapBtnClick = () => appMgr.modelMgr.cancelBootstrap();
   const handleBootstrapCountChange = e => appMgr.modelMgr.setBootstrapCount(e.target.value);
@@ -59,7 +60,12 @@ const TabModellingRunBootstrap = props => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box display='flex' justifyContent='flex-end'>
-            <Button size='small' color='primary' disabled={true} >
+            <Button
+              size='small'
+              color='primary'
+              disabled={!appMgr.uiStateMgr.modellingOutputsEnabled}
+              onClick={handleNextpageBtnClick}
+            >
               Next step
             </Button>
           </Box>
