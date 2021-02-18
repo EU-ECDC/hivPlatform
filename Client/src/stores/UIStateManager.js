@@ -20,7 +20,7 @@ export default class UIStateManager {
         { title: 'Case-based data', disabled: false },
         { title: 'Aggregated data', disabled: false }
       ],
-      activeSubStepId: 0
+      activeSubPageId: 0
     },
     {
       title: 'Case-based data summary',
@@ -37,7 +37,7 @@ export default class UIStateManager {
         { title: 'Inputs', disabled: false },
         { title: 'Run', disabled: false },
       ],
-      activeSubStepId: 0
+      activeSubPageId: 0
     },
     {
       title: 'Modelling',
@@ -51,7 +51,7 @@ export default class UIStateManager {
         { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: false }
       ],
-      activeSubStepId: 0
+      activeSubPageId: 0
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
     { title: 'Outputs', completed: false, disabled: true, subPages: [] },
@@ -97,12 +97,12 @@ export default class UIStateManager {
     this.refreshPagesStatus();
   }
 
-  setActivePageId = (pageId, subPageId = 0) => {
+  setActivePageId = (pageId, subPageId = -1) => {
     if (!this.pages[pageId].disabled) {
-      if (this.pages[pageId].subPages.length > subPageId) {
+      this.activePageId = pageId;
+      if (subPageId !== -1 && subPageId < this.pages[pageId].subPages.length) {
         this.pages[pageId].activeSubPageId = subPageId;
       }
-      this.activePageId = pageId;
       this.refreshPagesStatus();
     } else {
       this.rootMgr.notificationsMgr.setMsg('Page this link refers to is not enabled');

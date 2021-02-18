@@ -81,10 +81,10 @@
     },
     "SparseM": {
       "Package": "SparseM",
-      "Version": "1.78",
+      "Version": "1.81",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "fbe4ac267bf42a91e495cc68ad3f8b63"
+      "Hash": "2042cd9759cc89a453c4aefef0ce9aae"
     },
     "assertthat": {
       "Package": "assertthat",

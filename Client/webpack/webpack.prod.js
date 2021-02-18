@@ -1,5 +1,6 @@
 const commonPaths = require('./paths');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   name: 'client',
@@ -28,6 +29,7 @@ module.exports = {
           ],
         }
       }
-    })
+    }),
+    new BundleAnalyzerPlugin()
   ]
 };

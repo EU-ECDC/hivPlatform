@@ -1,8 +1,9 @@
 ## 1.9.45
 
-###### _Feb 17 2021_
+###### _Feb 18 2021_
 
-- UNDER DEVELOPMENT
+- Introduce draft implementation of HIV Model outputs charts using echarts library.
+- Fix setting selected sub tab.
 
 
 ## 1.9.44
