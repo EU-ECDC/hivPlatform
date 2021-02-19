@@ -3403,16 +3403,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts-for-react@npm:3.0.0-beta.2":
-  version: 3.0.0-beta.2
-  resolution: "echarts-for-react@npm:3.0.0-beta.2"
+"echarts-for-react@npm:3.0.0":
+  version: 3.0.0
+  resolution: "echarts-for-react@npm:3.0.0"
   dependencies:
     fast-deep-equal: ^3.1.3
-    size-sensor: ^1.0.0
+    size-sensor: ^1.0.1
   peerDependencies:
     echarts: ^3.0.0 || ^4.0.0 || ^5.0.0
     react: ^15.0.0 || >=16.0.0
-  checksum: 7ef73f8065ebb6fcc30b9c97b6c587da2df7c3a07c653241fe118a41e7cbd771f92f0708583e16a3dbb8699291250d79c9ac25c643541dec6cd7dde02c58bd5d
+  checksum: 9a3f779d76eb604b0e9c41b095b2c47e917a85d51323f43159607df3c10055a9aeca17d8385d46c35684e29bcfcf9ab34e022f4c5b21d731c6bc5695649095a7
   languageName: node
   linkType: hard
 
@@ -4420,10 +4420,10 @@ fsevents@~2.1.2:
     clean-webpack-plugin: 3.0.0
     cross-env: 7.0.3
     echarts: ^5.0.2
-    echarts-for-react: 3.0.0-beta.2
+    echarts-for-react: 3.0.0
     file-loader: 6.2.0
     filemanager-webpack-plugin: ^3.1.0
-    html-webpack-plugin: ^5.1.0
+    html-webpack-plugin: ^5.2.0
     jquery: ^3.5.1
     lodash: ^4.17.20
     mobx: ^6.1.7
@@ -4485,9 +4485,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "html-webpack-plugin@npm:5.1.0"
+"html-webpack-plugin@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "html-webpack-plugin@npm:5.2.0"
   dependencies:
     "@types/html-minifier-terser": ^5.0.0
     html-minifier-terser: ^5.0.1
@@ -4497,7 +4497,7 @@ fsevents@~2.1.2:
     tapable: ^2.0.0
   peerDependencies:
     webpack: ^5.20.0
-  checksum: ad67436ac7f4fa9450d2184538b42fb3ffb0801008b61d46b17efdb95a38d650d4ed025765945c355a97b2ff55a45af0b4832357405bf430343062204f354ea2
+  checksum: a7476f0fb75c6728754bd963f1f09abaebacf6a238bf75a852ec2b07afaa3c0c1872d74ea81175598dccd0b9375093034035a505454919a708be7c7453ca6df6
   languageName: node
   linkType: hard
 
@@ -7151,7 +7151,7 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"size-sensor@npm:^1.0.0":
+"size-sensor@npm:^1.0.1":
   version: 1.0.1
   resolution: "size-sensor@npm:1.0.1"
   checksum: d99febc95401b542caaba246861cbb0cdffc4ac5a93608340c99336d653fa558d9dd6bb181c6e414c61f6913ff4cb936a4a9b4c69160e108507fdf742c72414e
