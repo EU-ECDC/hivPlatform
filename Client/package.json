@@ -7,13 +7,15 @@
     "./src/utilities/*.js"
   ],
   "browserslist": [
-    "> 5%"
+    "> 5% and last 2 versions",
+    "not IE 11"
   ],
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve",
     "build": "cross-env NODE_ENV=production webpack",
     "build-watch": "cross-env NODE_ENV=production webpack --watch",
-    "build-stats": "cross-env NODE_ENV=production webpack --profile --json=compilation-stats.json"
+    "build-stats": "cross-env NODE_ENV=production webpack --profile --json=./analyze/compilation-stats.json",
+    "build-analyze": "webpack-bundle-analyzer ./analyze/compilation-stats.json ./build --mode 'static' --report ./analyze/report.html"
   },
   "repository": "https://github.com/nextpagesoft/hivEstimatesAccuracy2",
   "author": "NextPage Software Daniel Lewandowski",

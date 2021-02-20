@@ -56,8 +56,6 @@ const TabModellingTables = props => {
         alignWithLabel: true
       },
       boundaryGap: false,
-      // min: 'dataMin',
-      // max: 'dataMax'
     },
     yAxis: {
       type: 'value',
@@ -79,8 +77,16 @@ const TabModellingTables = props => {
         name: 'Mean',
         smooth: true,
         color: '#bbb',
+        lineStyle: {
+          type: 'dashed',
+        },
         emphasis: {
           scale: false,
+          focus: 'none',
+          lineStyle: {
+            width: 2,
+            color: '#aaa',
+          }
         }
       },
       {
@@ -89,29 +95,30 @@ const TabModellingTables = props => {
         data: [ 730, 832, 821, 824, 1000, 1030, 1020 ],
         stack: 'confidence-bounds',
         symbol: 'none',
+        silent: true,
+        color: '#e0e0e0',
         lineStyle: {
-          opacity: 0
-        },
-        color: 'transparent',
-        emphasis: {
-          scale: false,
+          width: 1,
         },
         smooth: true,
       },
       {
-        name: 'Mean-max',
+        name: 'Mean min-max',
         type: 'line',
-        data: [ 100, 150, 200, 200, 300, 340, 370 ],
+        data: [100, 150, 200, 200, 300, 340, 370],
+        silent: true,
         areaStyle: {
           color: '#eee'
         },
-        lineStyle: {
-          opacity: 0
-        },
         emphasis: {
-          scale: false,
+          areaStyle: {
+            color: '#eee'
+          },
         },
-        color: 'transparent',
+        color: '#e0e0e0',
+        lineStyle: {
+          width: 1,
+        },
         stack: 'confidence-bounds',
         symbol: 'none',
         smooth: true,
@@ -124,15 +131,18 @@ const TabModellingTables = props => {
       show: true,
       feature: {
         dataZoom: {
-          yAxisIndex: "none"
+          yAxisIndex: 'none'
         },
-        saveAsImage: {}
+        saveAsImage: {
+          pixelRatio: 2
+        }
       }
     },
     legend: {
       data: [
         { name: 'Data' },
-        { name: 'Mean' }
+        { name: 'Mean' },
+        { name: 'Mean min-max' }
       ]
     }
   };

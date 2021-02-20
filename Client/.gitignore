@@ -1,5 +1,6 @@
 **/node_modules
 **/build
+**/analyze
 yarn-error.log
 .yarn/cache
 .yarn/.cache
