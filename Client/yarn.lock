@@ -418,19 +418,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-decorators@npm:7.12.13":
-  version: 7.12.13
-  resolution: "@babel/plugin-proposal-decorators@npm:7.12.13"
-  dependencies:
-    "@babel/helper-create-class-features-plugin": ^7.12.13
-    "@babel/helper-plugin-utils": ^7.12.13
-    "@babel/plugin-syntax-decorators": ^7.12.13
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: be73666ef9851ec2a448aad72d908d0ca3d9735c7098a7ceb9f51e42f4f91eedc859d2b69b1a965e13817eccbb5920eae032f5276078b4f87ead9996c50994e0
-  languageName: node
-  linkType: hard
-
 "@babel/plugin-proposal-dynamic-import@npm:^7.12.17":
   version: 7.12.17
   resolution: "@babel/plugin-proposal-dynamic-import@npm:7.12.17"
@@ -596,17 +583,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 3023dec8acd42e0b691d9cdf21bc6931fe3e3d53c2231bdfe3eca3afeab168723f7315991550a163748bc49dbcd3c95632b77ec56f5e1d89bc5029cfeb7f0f7b
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-syntax-decorators@npm:^7.12.13":
-  version: 7.12.13
-  resolution: "@babel/plugin-syntax-decorators@npm:7.12.13"
-  dependencies:
-    "@babel/helper-plugin-utils": ^7.12.13
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 6a07456fe84979ff1417cb14db464827c361d685472ece866eed188ef4c4a4d926cf66d904e1d9c194081e10daa68656d19a18bf8759ac608bfd71be242f5de0
   languageName: node
   linkType: hard
 
@@ -4408,7 +4384,6 @@ fsevents@~2.1.2:
   dependencies:
     "@babel/core": 7.12.17
     "@babel/plugin-proposal-class-properties": 7.12.13
-    "@babel/plugin-proposal-decorators": 7.12.13
     "@babel/preset-env": 7.12.17
     "@babel/preset-react": 7.12.13
     "@material-ui/core": ^4.11.3
@@ -4431,12 +4406,14 @@ fsevents@~2.1.2:
     react: ^17.0.1
     react-apexcharts: ^1.3.7
     react-dom: ^17.0.1
+    terser-webpack-plugin: ^5.1.1
     tslib: ^2.1.0
     webpack: ^5.23.0
     webpack-bundle-analyzer: ^4.4.0
     webpack-cli: ^4.5.0
     webpack-dev-server: ^4.0.0-beta.0
     webpack-merge: 5.7.3
+    webpack-plugin-modern-npm: ^0.1.0
   languageName: unknown
   linkType: soft
 
@@ -8082,6 +8059,13 @@ resolve@^1.9.0:
     clone-deep: ^4.0.1
     wildcard: ^2.0.0
   checksum: 5e28f66f597cb34ac5f7ca0881cd3f106265091e47d7cda9ae00f4902283efdfdab36a70e34a9cf7b1467aac021178981513393b7dcddbb84caf11920f269379
+  languageName: node
+  linkType: hard
+
+"webpack-plugin-modern-npm@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "webpack-plugin-modern-npm@npm:0.1.0"
+  checksum: 356c95fb2c0c730f0e693ae41ff1e2612b04d4aa088217a54625a58b288a9938c5c0421609a4e3c49e9f3ed00fd701f9296e82c29c9e0e2685e909896b3755b3
   languageName: node
   linkType: hard
 

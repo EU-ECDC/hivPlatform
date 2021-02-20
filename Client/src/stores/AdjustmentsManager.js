@@ -218,4 +218,5 @@ export default class AdjustmentsManager {
   setAdjustmentsRunLog = runLog => this.adjustmentsRunLog = runLog;
 
   setAdjustmentsReport = report => this.adjustmentsReport = report;
+
 }

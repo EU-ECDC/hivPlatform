@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const commonPaths = require('./paths');
 
 module.exports = {
+  target: ["web", "es2017"],
   entry: commonPaths.entryPath,
   module: {
     rules: [
@@ -57,6 +58,6 @@ module.exports = {
     maxAssetSize: 2048000
   },
   cache: {
-    type: 'filesystem'
+    type: 'memory'
   }
 };

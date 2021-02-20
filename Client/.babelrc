@@ -3,18 +3,15 @@
     [
       "@babel/preset-env", {
         "targets": {
-          "node": "current",
-          "esmodules": true
+          "browsers": "> 5%"
         },
-        "bugfixes": false
+        "modules": false,
+        "bugfixes": true
       }
     ],
     "@babel/preset-react"
   ],
   "plugins": [
-    ["@babel/plugin-proposal-decorators", {
-      "legacy": true
-    }],
     [
       "@babel/plugin-proposal-class-properties",
       {

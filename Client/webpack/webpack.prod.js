@@ -1,6 +1,7 @@
 const commonPaths = require('./paths');
+const TerserPlugin = require("terser-webpack-plugin");
 const FileManagerPlugin = require('filemanager-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   name: 'client',
@@ -9,10 +10,18 @@ module.exports = {
     path: commonPaths.outputPath,
     filename: `${commonPaths.jsFolder}/[name].js`,
     chunkFilename: '[name].[chunkhash].js',
-    publicPath: 'www/'
+    publicPath: 'www/',
   },
   optimization: {
     minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 'es2017'
+        }
+      }),
+    ],
     splitChunks: {
       chunks: 'all',
       name: 'vendors'
@@ -30,6 +39,9 @@ module.exports = {
         }
       }
     }),
-    new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   openAnalyzer: false
+    // })
   ]
 };
