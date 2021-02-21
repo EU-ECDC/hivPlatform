@@ -547,7 +547,7 @@ export const defaultRepDelChartOptions = {
   },
   stroke: {
     width: 2,
-    curve: 'smooth',
+    curve: 'straight',
   },
   xaxis: {
     type: 'numeric',

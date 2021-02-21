@@ -11,7 +11,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import TabPanel from '../TabPanel';
 import HIVChart from '../HIVChart';
-import HistChart from '../HistChart ';
+import HistChart from '../HistChart';
+import MissChart from '../MissChart';
 
 const TabModellingTables = props => {
 
@@ -59,8 +60,9 @@ const TabModellingTables = props => {
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
-            <HIVChart />
+            <MissChart />
             <HistChart />
+            <HIVChart />
           </Paper>
         </Grid>
       </Grid>
