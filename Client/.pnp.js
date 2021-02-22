@@ -45,7 +45,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.25.0"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["cross-env", "npm:7.0.3"],
@@ -59,7 +58,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx", "npm:6.1.7"],
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.1"],
-            ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
             ["terser-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.1.1"],
             ["tslib", "npm:2.1.0"],
@@ -3226,21 +3224,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["apexcharts", [
-        ["npm:3.25.0", {
-          "packageLocation": "./.yarn/cache/apexcharts-npm-3.25.0-41a83c0c4d-c3f5831067.zip/node_modules/apexcharts/",
-          "packageDependencies": [
-            ["apexcharts", "npm:3.25.0"],
-            ["svg.draggable.js", "npm:2.2.2"],
-            ["svg.easing.js", "npm:2.0.0"],
-            ["svg.filter.js", "npm:2.0.2"],
-            ["svg.pathmorphing.js", "npm:0.1.3"],
-            ["svg.resize.js", "npm:1.4.3"],
-            ["svg.select.js", "npm:3.0.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["aproba", [
         ["npm:1.2.0", {
           "packageLocation": "./.yarn/cache/aproba-npm-1.2.0-34129f0778-d4bac3e640.zip/node_modules/aproba/",
@@ -5915,7 +5898,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@material-ui/icons", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.11.2"],
             ["@material-ui/lab", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.57"],
             ["@types/webpack-merge", "npm:4.1.5"],
-            ["apexcharts", "npm:3.25.0"],
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.0"],
             ["cross-env", "npm:7.0.3"],
@@ -5929,7 +5911,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx", "npm:6.1.7"],
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.1"],
-            ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.1"],
             ["terser-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.1.1"],
             ["tslib", "npm:2.1.0"],
@@ -8349,33 +8330,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["react-apexcharts", [
-        ["npm:1.3.7", {
-          "packageLocation": "./.yarn/cache/react-apexcharts-npm-1.3.7-b4b88f2d9e-2ec8a31a00.zip/node_modules/react-apexcharts/",
-          "packageDependencies": [
-            ["react-apexcharts", "npm:1.3.7"]
-          ],
-          "linkType": "SOFT",
-        }],
-        ["virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7", {
-          "packageLocation": "./.yarn/$$virtual/react-apexcharts-virtual-0c6960d9fb/0/cache/react-apexcharts-npm-1.3.7-b4b88f2d9e-2ec8a31a00.zip/node_modules/react-apexcharts/",
-          "packageDependencies": [
-            ["react-apexcharts", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:1.3.7"],
-            ["@types/apexcharts", null],
-            ["@types/react", null],
-            ["apexcharts", "npm:3.25.0"],
-            ["prop-types", "npm:15.7.2"],
-            ["react", "npm:17.0.1"]
-          ],
-          "packagePeers": [
-            "@types/apexcharts",
-            "@types/react",
-            "apexcharts",
-            "react"
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["react-dom", [
         ["npm:17.0.1", {
           "packageLocation": "./.yarn/cache/react-dom-npm-17.0.1-588d0088ca-6a70028fbe.zip/node_modules/react-dom/",
@@ -9380,84 +9334,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["supports-color", "npm:7.2.0"],
             ["has-flag", "npm:4.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.draggable.js", [
-        ["npm:2.2.2", {
-          "packageLocation": "./.yarn/cache/svg.draggable.js-npm-2.2.2-91cd7475f3-848aeb2869.zip/node_modules/svg.draggable.js/",
-          "packageDependencies": [
-            ["svg.draggable.js", "npm:2.2.2"],
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.easing.js", [
-        ["npm:2.0.0", {
-          "packageLocation": "./.yarn/cache/svg.easing.js-npm-2.0.0-0c84ce8158-96fe897038.zip/node_modules/svg.easing.js/",
-          "packageDependencies": [
-            ["svg.easing.js", "npm:2.0.0"],
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.filter.js", [
-        ["npm:2.0.2", {
-          "packageLocation": "./.yarn/cache/svg.filter.js-npm-2.0.2-f65ff6d47e-1da46610e6.zip/node_modules/svg.filter.js/",
-          "packageDependencies": [
-            ["svg.filter.js", "npm:2.0.2"],
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.js", [
-        ["npm:2.7.1", {
-          "packageLocation": "./.yarn/cache/svg.js-npm-2.7.1-c232ccf7aa-4a20d2b1bc.zip/node_modules/svg.js/",
-          "packageDependencies": [
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.pathmorphing.js", [
-        ["npm:0.1.3", {
-          "packageLocation": "./.yarn/cache/svg.pathmorphing.js-npm-0.1.3-83b910d5a4-80337759cf.zip/node_modules/svg.pathmorphing.js/",
-          "packageDependencies": [
-            ["svg.pathmorphing.js", "npm:0.1.3"],
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.resize.js", [
-        ["npm:1.4.3", {
-          "packageLocation": "./.yarn/cache/svg.resize.js-npm-1.4.3-9e6b42a70f-90928fa180.zip/node_modules/svg.resize.js/",
-          "packageDependencies": [
-            ["svg.resize.js", "npm:1.4.3"],
-            ["svg.js", "npm:2.7.1"],
-            ["svg.select.js", "npm:2.1.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["svg.select.js", [
-        ["npm:2.1.2", {
-          "packageLocation": "./.yarn/cache/svg.select.js-npm-2.1.2-d8be268fcb-fb2cfe18de.zip/node_modules/svg.select.js/",
-          "packageDependencies": [
-            ["svg.select.js", "npm:2.1.2"],
-            ["svg.js", "npm:2.7.1"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:3.0.1", {
-          "packageLocation": "./.yarn/cache/svg.select.js-npm-3.0.1-9baa0ca5b5-f5b6db853b.zip/node_modules/svg.select.js/",
-          "packageDependencies": [
-            ["svg.select.js", "npm:3.0.1"],
-            ["svg.js", "npm:2.7.1"]
           ],
           "linkType": "HARD",
         }]

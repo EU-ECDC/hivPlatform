@@ -162,30 +162,18 @@ export default class SummaryDataManager {
   };
 
   get missPlot1Series() {
-    return [{
-      name: 'Missingness',
-      data: this.missPlotData.plot1.chartData[this.missPlotSelection]
-    }];
+    return this.missPlotData.plot1.chartData[this.missPlotSelection];
   };
 
   get missPlot2Series() {
-    const data = this.missPlotData.plot2.chartData[this.missPlotSelection].map(
-      (layer, i) => ({
-        name: `Combination ${i + 1}`,
-        data: layer.map((cat, j) => ({ x: this.missPlotData.plot2.chartCategories[j], y: cat }))
-      })
-    );
-    return data;
+    return this.missPlotData.plot2.chartData[this.missPlotSelection];
   };
 
   get missPlot3Series() {
     const data = ['Present', 'Missing'].map(
-      name => ({
-        name: name,
-        data: this.missPlotData.plot3.chartData[this.missPlotSelection].map(
-          (el, i) => ({ x: `Combination ${i + 1}`, y: el.name === name ? el.y : 0 })
-        )
-      })
+      name => this.missPlotData.plot3.chartData[this.missPlotSelection].map(
+        el => el.name === name ? el.y : 0
+      )
     );
     return data;
   };

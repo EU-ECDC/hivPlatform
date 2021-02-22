@@ -4,30 +4,13 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Chart from 'react-apexcharts';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
-import merge from 'lodash/merge';
-import { defaultRepDelChartOptions } from './ChartsData';
+import RepDelChart from './RepDelChart';
 
 const TabSummaryReportingDelays = (props) => {
   const { appMgr } = props;
-
-  const repDelChartOptions = merge(
-    {},
-    defaultRepDelChartOptions,
-    {
-      annotations: {
-        xaxis: [{
-          x: appMgr.summaryDataMgr.repDelPlot.q95,
-          label: {
-            text: `95% of cases reported by ${appMgr.summaryDataMgr.repDelPlot.q95} quarters`,
-          }
-        }]
-      }
-    }
-  );
 
   const handleDataSelection = (e) => appMgr.summaryDataMgr.setRepDelPlotSelection(e.target.value);
 
@@ -70,11 +53,10 @@ const TabSummaryReportingDelays = (props) => {
       </Grid>
       <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
-          <Chart
-            options={repDelChartOptions}
-            series={appMgr.summaryDataMgr.repDelPlot.series}
-            type='area'
-            height={400}
+          <RepDelChart
+            yLabelName='Proportion of reported with delay'
+            data={appMgr.summaryDataMgr.repDelPlot.series}
+            q95={appMgr.summaryDataMgr.repDelPlot.q95}
           />
         </Paper>
       </Grid>

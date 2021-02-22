@@ -7,9 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Chart from 'react-apexcharts';
-import merge from 'lodash/merge';
-import { defaultDiagChartOptions } from './ChartsData';
+import HistChart from './HistChart';
 
 const userStyles = makeStyles({
   valueLabel: {
@@ -23,12 +21,6 @@ const TabSummaryDiagYear = (props) => {
   const { appMgr } = props;
   const classes = userStyles();
 
-  const diagChartOptions = merge(
-    {},
-    defaultDiagChartOptions,
-    { xaxis: { categories: appMgr.summaryDataMgr.diagYearPlotData.chartCategories } }
-  );
-
   const handleDiagYearFilterSwitchChange = e =>
     appMgr.summaryDataMgr.setDiagYearFilterApply(e.target.checked);
 
@@ -36,15 +28,6 @@ const TabSummaryDiagYear = (props) => {
     appMgr.summaryDataMgr.setDiagYearFilterMinYear(value[0]);
     appMgr.summaryDataMgr.setDiagYearFilterMaxYear(value[1]);
   };
-
-  const diagChart = (
-    <Chart
-      options={diagChartOptions}
-      series={appMgr.summaryDataMgr.diagYearPlotData.chartData}
-      type='bar'
-      height={200}
-    />
-  )
 
   return (
     <React.Fragment>
@@ -85,7 +68,12 @@ const TabSummaryDiagYear = (props) => {
               color='secondary'
             />
           </div>
-          {diagChart}
+          <HistChart
+            xAxisLabel='Diagnosis year'
+            xCategories={appMgr.summaryDataMgr.diagYearPlotData.chartCategories}
+            maleData={appMgr.summaryDataMgr.diagYearPlotData.chartData[0].data}
+            femaleData={appMgr.summaryDataMgr.diagYearPlotData.chartData[1].data}
+          />
         </Paper>
       </Grid>
     </React.Fragment>

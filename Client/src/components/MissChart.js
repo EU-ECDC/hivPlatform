@@ -1,5 +1,4 @@
 import React from 'react';
-import { observer } from 'mobx-react';
 import ReactEchartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
 import { BarChart, HeatmapChart } from 'echarts/charts';
@@ -28,21 +27,9 @@ echarts.use([
   SVGRenderer
 ]);
 
-const MissChart = () => {
+const MissChart = (props) => {
 
-  const xCategories = ['CD4', 'Migrant', 'Transmission', 'Age'];
-  const yCategories = ['Combination 1', 'Combination 2', 'Combination 3', 'Combination 4'];
-  const data1 = [0.25234234, 0.23, 0.19, 0.12];
-  const data2 = [
-    [0, 0, 1], [0, 1, 0], [0, 2, 1], [0, 3, 1],
-    [1, 0, 1], [1, 1, 1], [1, 2, 0], [1, 3, 0],
-    [2, 0, 1], [2, 1, 0], [2, 2, 1], [2, 3, 0],
-    [3, 0, 1], [3, 1, 1], [3, 2, 1], [3, 3, 0],
-  ];
-  const data3 = [
-    [0.2622, 0, 0, 0],
-    [0, 0.14, 0.07, 0.03]
-  ];
+  const { xCategories, data1, data2, data3 } = props;
 
   const options = {
     textStyle: {
@@ -125,7 +112,6 @@ const MissChart = () => {
           align: 'left'
         },
         nameLocation: 'end',
-        data: yCategories,
         axisLabel: {
           show: false
         },
@@ -238,4 +224,4 @@ const MissChart = () => {
   );
 };
 
-export default observer(MissChart);
+export default MissChart;

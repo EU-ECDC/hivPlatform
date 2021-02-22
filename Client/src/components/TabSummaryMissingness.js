@@ -4,36 +4,14 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Chart from 'react-apexcharts';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
-import merge from 'lodash/merge';
-import {
-  defaultMissChart1Options, defaultMissChart2Options, defaultMissChart3Options,
-  defaultMissChart4Options
-} from './ChartsData';
+import MissChart from './MissChart';
+import AreaChart from './AreaChart';
 
 const TabSummaryMissingness = (props) => {
   const { appMgr } = props;
-
-  const missChart1Options = merge(
-    {},
-    defaultMissChart1Options,
-    { xaxis: { categories: appMgr.summaryDataMgr.missPlotData.plot1.chartCategories } }
-  );
-
-  const missChart3Options = merge(
-    {},
-    defaultMissChart3Options,
-    { xaxis: { categories: appMgr.summaryDataMgr.missPlot3Categories } }
-  );
-
-  const missChart4Options = merge(
-    {},
-    defaultMissChart4Options,
-    { xaxis: { categories: appMgr.summaryDataMgr.missPlot4Categories } }
-  );
 
   const handleDataSelection = (e) => appMgr.summaryDataMgr.setMissPlotSelection(e.target.value);
 
@@ -76,36 +54,19 @@ const TabSummaryMissingness = (props) => {
       <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
           <Grid container>
-            <Grid item xs={3}>
-              <Chart
-                options={missChart1Options}
-                series={appMgr.summaryDataMgr.missPlot1Series}
-                type='bar'
-                height={400}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <Chart
-                options={defaultMissChart2Options}
-                series={appMgr.summaryDataMgr.missPlot2Series}
-                type='heatmap'
-                height={400}
-              />
-            </Grid>
-            <Grid item xs={5}>
-              <Chart
-                options={missChart3Options}
-                series={appMgr.summaryDataMgr.missPlot3Series}
-                type='bar'
-                height={400}
+            <Grid item xs={12}>
+              <MissChart
+                xCategories={appMgr.summaryDataMgr.missPlotData.plot1.chartCategories}
+                data1={appMgr.summaryDataMgr.missPlot1Series}
+                data2={appMgr.summaryDataMgr.missPlot2Series}
+                data3={appMgr.summaryDataMgr.missPlot3Series}
               />
             </Grid>
             <Grid item xs={12}>
-              <Chart
-                options={missChart4Options}
-                series={appMgr.summaryDataMgr.missPlot4Series}
-                type='area'
-                height={400}
+              <AreaChart
+                yLabelName='Proportion of missing values'
+                xCategories={appMgr.summaryDataMgr.missPlot4Categories}
+                data={appMgr.summaryDataMgr.missPlot4Series}
               />
             </Grid>
           </Grid>

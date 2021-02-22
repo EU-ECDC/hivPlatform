@@ -8,7 +8,6 @@ import {
   ToolboxComponent,
   TooltipComponent,
   LegendPlainComponent,
-  DatasetComponent
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 
@@ -17,55 +16,65 @@ echarts.use([
   ToolboxComponent,
   TooltipComponent,
   LegendPlainComponent,
-  DatasetComponent,
   BarChart,
   SVGRenderer
 ]);
 
-const HistChart = () => {
+const HistChart = (props) => {
 
-  const dataSet = {
-    source: {
-      'Year': [1980, 1981, 1982, 1983, 1984, 1985, 1986],
-      'Male': [730, 832, 821, 824, 1000, 1030, 1020],
-      'Female': [100, 150, 200, 200, 300, 340, 370]
-    }
-  };
+  const echart = React.useRef(null);
+
+  const { xAxisLabel, xCategories, maleData, femaleData } = props;
 
   const options = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
     grid: { top: 40, right: 90, bottom: 40, left: 60 },
-    dataset: dataSet,
     xAxis: {
       type: 'category',
-      name: 'Year',
+      name: xAxisLabel,
+      data: xCategories,
       nameLocation: 'center',
       nameTextStyle: {
         padding: [10, 0, 0, 0],
       },
+      axisTick: {
+        show: false
+      },
+      axisLine: {
+        show: false
+      }
     },
     yAxis: {
       type: 'value',
       name: 'Count',
       nameLocation: 'center',
-      nameGap: 45
+      nameGap: 45,
+      splitLine: { show: false }
     },
     series: [
       {
+        name: 'Male',
+        data: maleData,
         type: 'bar',
         stack: true,
         barCategoryGap: 1,
-        color: '#69b023'
+        color: '#69b023',
       },
       {
+        name: 'Female',
+        data: femaleData,
         type: 'bar',
         stack: true,
         barCategoryGap: 1,
-        color: '#7bbcc0'
+        color: '#7bbcc0',
       },
     ],
+    animationEasing: 'elasticOut',
+    animationDelayUpdate: function (idx) {
+      return idx * 5;
+    },
     tooltip: {
       trigger: 'axis',
     },
@@ -76,13 +85,25 @@ const HistChart = () => {
     }
   };
 
+  // React.useEffect(
+  //   () => {
+  //     let echartInstance = echart.current.getEchartsInstance();
+  //     setTimeout(() => {
+  //       echartInstance.clear();
+  //       echartInstance.setOption(options);
+  //     }, 1000);
+  //   }
+  // );
+
   return (
     <ReactEchartsCore
       echarts={echarts}
       option={options}
+      style={{ height: '200px', width: '100%' }}
       notMerge={true}
       lazyUpdate={true}
       opts={{}}
+      ref={echart}
     />
   );
 };

@@ -196,25 +196,43 @@ export default appMgr => {
           plot2: {
             chartCategories: ['CD4', 'Migrant', 'Transmission', 'Age'],
             chartData: {
-              all: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1], [1, 0, 0, 0]],
-              female: [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1]],
-              male: [[1, 1, 1, 1], [0, 1, 0, 1]]
+              all: [
+                [0, 0, 1], [0, 1, 0], [0, 2, 1], [0, 3, 1],
+                [1, 0, 1], [1, 1, 1], [1, 2, 0], [1, 3, 0],
+                [2, 0, 1], [2, 1, 0], [2, 2, 1], [2, 3, 0],
+                [3, 0, 1], [3, 1, 1], [3, 2, 1], [3, 3, 0],
+              ],
+              female: [
+                [0, 0, 1], [0, 1, 0], [0, 2, 1],
+                [1, 0, 1], [1, 1, 1], [1, 2, 0],
+                [2, 0, 1], [2, 1, 0], [2, 2, 1],
+                [3, 0, 1], [3, 1, 1], [3, 2, 1],
+              ],
+              male: [
+                [0, 0, 1], [0, 1, 0],
+                [1, 0, 1], [1, 1, 1],
+                [2, 0, 1], [2, 1, 0],
+                [3, 0, 1], [3, 1, 1],
+              ]
             }
           },
           plot3: {
             chartData: {
               all: [
-                { name: 'Missing', y: 0.03 },
-                { name: 'Missing', y: 0.07 },
+                { name: 'Present', y: 0.2622 },
                 { name: 'Missing', y: 0.14 },
-                { name: 'Present', y: 0.2622 }
+                { name: 'Missing', y: 0.07 },
+                { name: 'Missing', y: 0.03 },
               ],
               female: [
-                { name: 'Missing', y: 0.07 },
+                { name: 'Present', y: 0.2622 },
                 { name: 'Missing', y: 0.14 },
-                { name: 'Present', y: 0.2622 }
+                { name: 'Missing', y: 0.07 }
               ],
-              male: [{ name: 'Missing', y: 0.14 }, { name: 'Present', y: 0.2622 }]
+              male: [
+                { name: 'Present', y: 0.2622 },
+                { name: 'Missing', y: 0.14 },
+              ]
             },
           },
           plot4: {
@@ -524,5 +542,5 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 5);
+  appMgr.uiStateMgr.setActivePageId(2);
 };

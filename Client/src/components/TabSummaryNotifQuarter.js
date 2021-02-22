@@ -7,10 +7,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Chart from 'react-apexcharts';
-import merge from 'lodash/merge';
-import { defaultNotifChartOptions } from './ChartsData';
 import QuarterToString from '../utilities/QuarterToString';
+import HistChart from './HistChart';
 
 const userStyles = makeStyles({
   valueLabel: {
@@ -24,16 +22,6 @@ const TabSummaryNotifQuarter = (props) => {
   const { appMgr } = props;
   const classes = userStyles();
 
-  const notifChartOptions = merge(
-    {},
-    defaultNotifChartOptions,
-    {
-      xaxis: {
-        categories: appMgr.summaryDataMgr.notifQuarterChartCategories
-      }
-    }
-  );
-
   const handleNotifQuarterFilterSwitchChange = e =>
     appMgr.summaryDataMgr.setNotifQuarterFilterApply(e.target.checked);
 
@@ -41,15 +29,6 @@ const TabSummaryNotifQuarter = (props) => {
     appMgr.summaryDataMgr.setNotifQuarterFilterMinYear(value[0]);
     appMgr.summaryDataMgr.setNotifQuarterFilterMaxYear(value[1]);
   };
-
-  const notifChart = (
-    <Chart
-      options={notifChartOptions}
-      series={appMgr.summaryDataMgr.notifQuarterPlotData.chartData}
-      type='bar'
-      height={200}
-    />
-  )
 
   return (
     <React.Fragment>
@@ -90,7 +69,12 @@ const TabSummaryNotifQuarter = (props) => {
               color='secondary'
             />
           </div>
-          {notifChart}
+          <HistChart
+            xAxisLabel='Notification quarter'
+            xCategories={appMgr.summaryDataMgr.notifQuarterChartCategories}
+            maleData={appMgr.summaryDataMgr.notifQuarterPlotData.chartData[0].data}
+            femaleData={appMgr.summaryDataMgr.notifQuarterPlotData.chartData[1].data}
+          />
         </Paper>
       </Grid>
     </React.Fragment>
