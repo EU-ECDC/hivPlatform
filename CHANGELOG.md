@@ -1,8 +1,9 @@
 ## 1.9.46
 
-###### _Feb 20 2021_
+###### _Feb 23 2021_
 
-- UNDER DEVELOPMENT
+- Change JS charting library from apexcharts to echarts
+- Optimize client webpack setup
 
 
 ## 1.9.45

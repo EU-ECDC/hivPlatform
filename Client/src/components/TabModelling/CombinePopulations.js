@@ -57,7 +57,6 @@ const CombinePopulations = (props) => {
 
   const rowCount = combinations.length;
   const selectedCount = selected.length;
-  console.log(selectedCount);
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
