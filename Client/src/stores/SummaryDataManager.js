@@ -1,5 +1,6 @@
 import { observable, action, computed, toJS, makeObservable, autorun } from 'mobx';
 import QuarterToString from '../utilities/QuarterToString';
+import FormatPercentage from '../utilities/FormatPercentage';
 export default class SummaryDataManager {
   rootMgr = null;
 
@@ -170,11 +171,11 @@ export default class SummaryDataManager {
   };
 
   get missPlot3Series() {
-    const data = ['Present', 'Missing'].map(
-      name => this.missPlotData.plot3.chartData[this.missPlotSelection].map(
-        el => el.name === name ? el.y : 0
-      )
+    const selectedData = this.missPlotData.plot3.chartData[this.missPlotSelection];
+    let data = ['Present', 'Missing'].map(
+      name => selectedData.map(el => el.name === name ? el.y : 0)
     );
+    data[2] = selectedData.map(el => FormatPercentage(el.y));
     return data;
   };
 

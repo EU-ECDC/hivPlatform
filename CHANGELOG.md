@@ -1,3 +1,11 @@
+## 1.9.47
+
+###### _Feb 24 2021_
+
+- UNDER DEVELOPMENT
+- Adjust summary plots visual style
+
+
 ## 1.9.46
 
 ###### _Feb 23 2021_

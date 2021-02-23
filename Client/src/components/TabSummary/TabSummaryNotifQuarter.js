@@ -7,8 +7,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import QuarterToString from '../utilities/QuarterToString';
-import HistChart from './HistChart';
+import QuarterToString from '../../utilities/QuarterToString';
+import HistChart from '../Charts/HistChart';
 
 const userStyles = makeStyles({
   valueLabel: {

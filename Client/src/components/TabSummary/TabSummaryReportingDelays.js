@@ -7,30 +7,30 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
-import MissChart from './MissChart';
-import AreaChart from './AreaChart';
+import RepDelChart from '../Charts/RepDelChart';
 
-const TabSummaryMissingness = (props) => {
+const TabSummaryReportingDelays = (props) => {
   const { appMgr } = props;
 
-  const handleDataSelection = (e) => appMgr.summaryDataMgr.setMissPlotSelection(e.target.value);
+  const handleDataSelection = (e) => appMgr.summaryDataMgr.setRepDelPlotSelection(e.target.value);
 
   return (
     <React.Fragment>
       <Grid item xs={12}>
         <Typography variant='h6'>
-          Missing data summary: key variables
+          Reporting delays summary
         </Typography>
       </Grid>
       <Grid item xs={2}>
         <Typography variant='body2' color='textSecondary'>
-          Percentages of cases for which the information was not available (missing) for one or
-          more of the key variables: CD4 count, transmission category, migrant status or age.
+          Average reporting delay for cases notified within a quarter and the upper bound for
+          typical average delay values. Quarters when the average delay exceeds the upper bound
+          may indicate cleaning events in surveillance.
         </Typography>
         <FormControl component='fieldset'>
           <RadioGroup
-            name='missDataSelection'
-            value={appMgr.summaryDataMgr.missPlotSelection}
+            name='repDelDataSelection'
+            value={appMgr.summaryDataMgr.repDelPlotSelection}
             onChange={handleDataSelection}
           >
             <FormControlLabel
@@ -53,27 +53,15 @@ const TabSummaryMissingness = (props) => {
       </Grid>
       <Grid item xs={10}>
         <Paper style={{ padding: 10 }}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MissChart
-                xCategories={appMgr.summaryDataMgr.missPlotData.plot1.chartCategories}
-                data1={appMgr.summaryDataMgr.missPlot1Series}
-                data2={appMgr.summaryDataMgr.missPlot2Series}
-                data3={appMgr.summaryDataMgr.missPlot3Series}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <AreaChart
-                yLabelName='Proportion of missing values'
-                xCategories={appMgr.summaryDataMgr.missPlot4Categories}
-                data={appMgr.summaryDataMgr.missPlot4Series}
-              />
-            </Grid>
-          </Grid>
+          <RepDelChart
+            yLabelName='Proportion of reported with delay'
+            data={appMgr.summaryDataMgr.repDelPlot.series}
+            q95={appMgr.summaryDataMgr.repDelPlot.q95}
+          />
         </Paper>
       </Grid>
     </React.Fragment>
   )
 };
 
-export default observer(TabSummaryMissingness);
+export default observer(TabSummaryReportingDelays);

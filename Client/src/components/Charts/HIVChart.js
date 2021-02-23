@@ -142,7 +142,8 @@ const HIVChart = () => {
           yAxisIndex: 'none'
         },
         saveAsImage: {
-          pixelRatio: 2
+          pixelRatio: 2,
+          title: 'Save'
         }
       }
     },

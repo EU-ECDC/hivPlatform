@@ -8,10 +8,10 @@ import {
   ToolboxComponent,
   TooltipComponent,
   TitleComponent,
-  LegendPlainComponent,
-  MarkLineComponent
+  LegendPlainComponent
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
+import FormatPercentage from '../../utilities/FormatPercentage';
 
 echarts.use([
   GridComponent,
@@ -19,23 +19,23 @@ echarts.use([
   TooltipComponent,
   TitleComponent,
   LegendPlainComponent,
-  MarkLineComponent,
   LineChart,
   SVGRenderer
 ]);
 
-const RepDelChart = (props) => {
+const AreaChart = (props) => {
 
-  const { yLabelName, data, q95 } = props;
+  const { yLabelName, xCategories, data } = props;
 
   const options = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 10, bottom: 40, left: 60 },
+    grid: { top: 40, right: 15, bottom: 40, left: 60 },
     xAxis: {
-      type: 'value',
-      name: 'Notification time in quarters of the year',
+      type: 'category',
+      name: 'Diagnosis year',
+      data: xCategories,
       nameLocation: 'center',
       nameTextStyle: {
         padding: [10, 0, 0, 0],
@@ -47,45 +47,30 @@ const RepDelChart = (props) => {
       name: yLabelName,
       nameLocation: 'center',
       nameGap: 45,
+      axisLabel: {
+        formatter: (val) => FormatPercentage(val, 0)
+      }
     },
     series: [
       {
         name: data[0].name,
         type: 'line',
         data: data[0].data,
-        showSymbol: false,
-        areaStyle: {
-          opacity: 0.4,
-        },
-        markLine: {
-          data: [[
-            {
-              name: `95% of cases reported by ${q95} quarters`,
-              xAxis: q95,
-              y: 40,
-            },
-            {
-              xAxis: q95,
-              y: 260,
-            }
-          ]],
-          lineStyle: {
-            color: '#69b023'
-          },
-          label: {
-            position: 'start',
-            distance: 10,
-            formatter: '{a|{b}}',
-            rich: {
-              a: {
-                color: '#fff',
-                backgroundColor: '#69b023',
-                padding: 5,
-                borderRadius: 5
-              }
-            }
-          }
-        }
+      },
+      {
+        name: data[1].name,
+        type: 'line',
+        data: data[1].data,
+      },
+      {
+        name: data[2].name,
+        type: 'line',
+        data: data[2].data,
+      },
+      {
+        name: data[3].name,
+        type: 'line',
+        data: data[3].data,
       },
     ],
     tooltip: {
@@ -101,11 +86,20 @@ const RepDelChart = (props) => {
     toolbox: {
       show: true,
       feature: {
-        dataZoom: {},
+        dataZoom: { },
         restore: {},
-        saveAsImage: { pixelRatio: 2 },
+        saveAsImage: {
+          pixelRatio: 2,
+          name: 'MissingnessDistribution',
+          title: 'Save'
+        },
       },
     },
+    legend: {
+      // orient: 'vertical',
+      // right: 0,
+      // top: 'middle'
+    }
   };
 
   return (
@@ -119,4 +113,4 @@ const RepDelChart = (props) => {
   );
 };
 
-export default observer(RepDelChart);
+export default observer(AreaChart);

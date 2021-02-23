@@ -12,7 +12,7 @@ import {
   DatasetComponent
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
-import FormatPercentage from '../utilities/FormatPercentage';
+import FormatPercentage from '../../utilities/FormatPercentage';
 
 echarts.use([
   GridComponent,
@@ -36,7 +36,7 @@ const MissChart = (props) => {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
     grid: [
-      { left: 15, width: '30%', height: '347px', containLabel: true },
+      { left: 5, width: '30%', height: '347px', containLabel: true },
       { left: 'center', width: '30%', height: '347px', containLabel: true },
       { right: 15, width: '30%', height: '300px', containLabel: true }
     ],
@@ -124,13 +124,25 @@ const MissChart = (props) => {
       },
       {
         gridIndex: 2,
-        type: 'category', axisTick: {
+        type: 'category',
+        axisTick: {
           show: false
         },
         axisLine: {
           show: false
         }
-
+      },
+      {
+        gridIndex: 2,
+        position: 'right',
+        type: 'category',
+        data: data3[2],
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: false
+        }
       },
     ],
     visualMap: {
@@ -178,7 +190,7 @@ const MissChart = (props) => {
         yAxisIndex: 2,
         barCategoryGap: 1,
         color: '#69b023',
-        stack: 'test',
+        stack: true,
       },
       {
         name: 'Missing',
@@ -188,7 +200,7 @@ const MissChart = (props) => {
         yAxisIndex: 2,
         barCategoryGap: 1,
         color: '#ccc',
-        stack: 'test',
+        stack: true,
       }
     ],
     tooltip: {
@@ -201,22 +213,20 @@ const MissChart = (props) => {
           yAxisIndex: 'none'
         },
         saveAsImage: {
-          pixelRatio: 2
+          pixelRatio: 2,
+          name: 'MissingnessPattern',
+          title: 'Save'
         }
       }
     },
-    legend: {
-      orient: 'vertical',
-      right: 0,
-      top: 'middle'
-    }
+    legend: { }
   };
 
   return (
     <ReactEchartsCore
       echarts={echarts}
       option={options}
-      style={{ height: '400px', width: '100%' }}
+      style={{ height: '410px', width: '100%' }}
       notMerge={true}
       lazyUpdate={true}
       opts={{}}

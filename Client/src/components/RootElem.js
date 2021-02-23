@@ -11,7 +11,7 @@ import LeftNav from './LeftNav';
 import RightNav from './RightNav';
 import TabWelcome from './TabWelcome';
 import TabUpload from './TabUpload/TabUpload';
-import TabSummary from './TabSummary';
+import TabSummary from './TabSummary/TabSummary';
 import TabAdjustments from './TabAdjustments/TabAdjustments';
 import TabModelling from './TabModelling/TabModelling';
 import TabReports from './TabReports';

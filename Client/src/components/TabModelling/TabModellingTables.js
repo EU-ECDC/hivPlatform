@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import TabPanel from '../TabPanel';
-import HIVChart from '../HIVChart';
+import HIVChart from '../Charts/HIVChart';
 
 const TabModellingTables = props => {
 

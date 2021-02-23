@@ -5,18 +5,18 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import TabPanel from './TabPanel';
+import TabPanel from '../TabPanel';
 import TabSummaryDiagYear from './TabSummaryDiagYear';
 import TabSummaryNotifQuarter from './TabSummaryNotifQuarter';
 import TabSummaryMissingness from './TabSummaryMissingness';
 import TabSummaryReportingDelays from './TabSummaryReportingDelays';
-import FormatPercentage from '../utilities/FormatPercentage';
+import FormatPercentage from '../../utilities/FormatPercentage';
 
 const TabSummary = (props) => {
 
   const { appMgr } = props;
 
-  const handleNextStepBtnClick = e => appMgr.uiStateMgr.setActiveStepId(3);
+  const handleNextStepBtnClick = () => appMgr.uiStateMgr.setActiveStepId(3);
 
   return (
     <TabPanel>

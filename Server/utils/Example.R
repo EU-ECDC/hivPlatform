@@ -69,6 +69,7 @@ appMgr$HIVModelMgr$RunMainFit(
   settings = list(), parameters = list(), popCombination, aggrDataSelection
 )
 
+names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)
 
 # STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
