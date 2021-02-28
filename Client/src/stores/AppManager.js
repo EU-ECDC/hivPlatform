@@ -268,6 +268,7 @@ export default class AppManager {
       case 'BOOTSTRAP_RUN_FINISHED':
         this.modelMgr.setBootstrapRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setPlotData(e.payload.PlotData);
           this.uiStateMgr.setLastEventType(e.type);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);

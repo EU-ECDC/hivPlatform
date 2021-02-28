@@ -1,5 +1,7 @@
 import { DEBUG } from './settings';
-import { AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData } from './initData';
+import {
+  AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData
+} from './initData';
 
 export default appMgr => {
   if (!DEBUG) return;
@@ -542,5 +544,27 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(2);
+  // 10. Model run log set
+  appMgr.onShinyEvent({
+    type: 'BOOTSTRAP_RUN_FINISHED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Running HIV Model bootstrap fit task finished',
+      PlotData: HIVPlotData
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'COMPLETED_STEPS_SET',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      CompletedSteps: [
+        'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS',
+        'AGGR_READ', 'MODELLING', 'BOOTSTRAP'
+      ]
+    }
+  });
+
+  appMgr.uiStateMgr.setActivePageId(4, 5);
 };

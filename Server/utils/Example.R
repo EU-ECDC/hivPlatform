@@ -17,7 +17,7 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays'))
+adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 filters <- list(
   DiagYear = list(
     ApplyInAdjustments = TRUE,
@@ -66,15 +66,15 @@ aggrDataSelection <- data.table(
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
 appMgr$HIVModelMgr$RunMainFit(
-  settings = list(), parameters = list(), popCombination, aggrDataSelection
+  settings = list(),
+  parameters = list(),
+  popCombination = NULL,
+  aggrDataSelection = NULL
 )
-
-names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)
 
 # STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
-
 
 # STEP 6 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
@@ -90,5 +90,9 @@ appMgr$HIVModelMgr$BootstrapFitStats$Theta
 pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
-appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIV_Obs_M
-appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats$N_HIVAIDS_M
+# STEP 7 - Charts ----------------------------------------------------------------------------------
+
+# saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+# appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+
+appMgr$HIVModelMgr$PlotData

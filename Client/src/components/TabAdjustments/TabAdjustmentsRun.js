@@ -38,7 +38,7 @@ const TabAdjustmentsRun = props => {
 
   const [tabId, setTabId] = React.useState(0);
 
-  const handleTabChange = (event, tabId) => setTabId(tabId);
+  const handleTabChange = (e, tabId) => setTabId(tabId);
 
   const handleRunAdjustBtnClick = () => appMgr.adjustMgr.runAdjustments();
 

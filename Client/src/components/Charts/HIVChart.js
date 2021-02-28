@@ -9,9 +9,9 @@ import {
   TooltipComponent,
   TitleComponent,
   LegendPlainComponent,
-  DatasetComponent
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
+import IsNull from '../../utilities/IsNull';
 
 echarts.use([
   GridComponent,
@@ -19,35 +19,121 @@ echarts.use([
   TooltipComponent,
   TitleComponent,
   LegendPlainComponent,
-  DatasetComponent,
   LineChart,
   SVGRenderer
 ]);
 
-const HIVChart = () => {
+const HIVChart = (props) => {
 
-  const dataSet = {
-    source: {
-      'Year': [1980, 1981, 1982, 1983, 1984, 1985, 1986],
-      'Mean min': [730, 832, 821, 824, 1000, 1030, 1020],
-      'Mean range': [100, 150, 200, 200, 300, 340, 370],
-      'Mean': [800, 900, 900, 910, 1050, 1100, 1100],
-      'Data': [680, 772, 751, 774, 1000, 1130, 1220]
-    }
-  };
+  const { title, year, data, model, min, range } = props;
+
+  let legendData = [];
+  let series = [];
+
+  if (!IsNull(min)) {
+    series.push({
+      name: 'Min',
+      data: min,
+      type: 'line',
+      stack: 'confidence-bounds',
+      symbol: 'none',
+      silent: true,
+      color: '#eee',
+      lineStyle: {
+        width: 0,
+      },
+      emphasis: {
+        areaStyle: {
+          color: '#eee'
+        },
+        lineStyle: {
+          width: 0,
+        }
+      },
+    });
+  }
+
+  if (!IsNull(range)) {
+    series.push({
+      name: 'Min-max',
+      data: range,
+      type: 'line',
+      silent: true,
+      areaStyle: {
+        color: '#eee'
+      },
+      emphasis: {
+        areaStyle: {
+          color: '#eee'
+        },
+        lineStyle: {
+          width: 0,
+        }
+      },
+      color: '#eee',
+      lineStyle: {
+        width: 0,
+      },
+      stack: 'confidence-bounds',
+      symbol: 'none',
+      smooth: true,
+    });
+  }
+
+  if (!IsNull(model)) {
+    series.push({
+      name: 'Model',
+      type: 'line',
+      smooth: true,
+      color: '#bbb',
+      data: model,
+      lineStyle: {
+        type: 'dashed',
+      },
+      emphasis: {
+        scale: false,
+        focus: 'none',
+        lineStyle: {
+          width: 2,
+          color: '#888',
+        }
+      }
+    });
+  }
+
+  if (!IsNull(data)) {
+    series.push({
+      name: 'Data',
+      type: 'line',
+      data: data,
+      smooth: true,
+      color: '#69b023',
+    });
+    legendData.push({ name: 'Data' });
+  }
+
+  if (!IsNull(model)) {
+    legendData.push({ name: 'Model' });
+  }
+
+  if (!IsNull(range)) {
+    legendData.push({ name: 'Min-max' });
+  }
+
 
   const options = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 20, bottom: 40, left: 60 },
+    grid: { top: 40, right: 20, bottom: 40, left: 80 },
     title: {
-      text: 'A. HIV diagnoses, total'
+      text: title
     },
-    dataset: dataSet,
     xAxis: {
       type: 'category',
       nameLocation: 'center',
+      data: year,
+      name: 'Year',
       nameTextStyle: {
         padding: [10, 0, 0, 0],
       },
@@ -60,80 +146,11 @@ const HIVChart = () => {
       type: 'value',
       name: 'Count',
       nameLocation: 'center',
-      nameGap: 45
+      nameGap: 65
     },
-    series: [
-      {
-        type: 'line',
-        stack: 'confidence-bounds',
-        symbol: 'none',
-        silent: true,
-        color: '#eee',
-        lineStyle: {
-          width: 0,
-        },
-        emphasis: {
-          areaStyle: {
-            color: '#eee'
-          },
-          lineStyle: {
-            width: 0,
-          }
-        },
-      },
-      {
-        type: 'line',
-        silent: true,
-        areaStyle: {
-          color: '#eee'
-        },
-        emphasis: {
-          areaStyle: {
-            color: '#eee'
-          },
-          lineStyle: {
-            width: 0,
-          }
-        },
-        color: '#eee',
-        lineStyle: {
-          width: 0,
-        },
-        stack: 'confidence-bounds',
-        symbol: 'none',
-        smooth: true,
-      },
-      {
-        type: 'line',
-        smooth: true,
-        color: '#bbb',
-        lineStyle: {
-          type: 'dashed',
-        },
-        emphasis: {
-          scale: false,
-          focus: 'none',
-          lineStyle: {
-            width: 2,
-            color: '#888',
-          }
-        }
-      },
-      {
-        type: 'line',
-        smooth: true,
-        color: '#69b023',
-      },
-    ],
+    series: series,
     tooltip: {
       trigger: 'axis',
-      // formatter: (params) => {
-      //   return `
-      //     Year: ${params[0].axisValue}<br/ >
-      //     ${params[0].seriesName}: ${params[0].value}<br />
-      //     ${params[1].seriesName}: ${params[1].value} (${params[2].value}, ${params[2].value + params[3].value})<br />
-      //   `
-      // }
     },
     toolbox: {
       show: true,
@@ -148,11 +165,7 @@ const HIVChart = () => {
       }
     },
     legend: {
-      data: [
-        { name: 'Data' },
-        { name: 'Mean' },
-        { name: 'Mean range' }
-      ]
+      data: legendData
     }
   };
 
@@ -160,6 +173,7 @@ const HIVChart = () => {
     <ReactEchartsCore
       echarts={echarts}
       option={options}
+      style={{ height: '300px', width: '100%' }}
       notMerge={true}
       lazyUpdate={true}
       opts={{}}

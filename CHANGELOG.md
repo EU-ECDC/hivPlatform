@@ -1,10 +1,9 @@
 ## 1.9.47
 
-###### _Feb 24 2021_
+###### _Mar 1 2021_
 
-- UNDER DEVELOPMENT
 - Adjust summary plots visual style
-
+- Implement HIV output plots
 
 ## 1.9.46
 

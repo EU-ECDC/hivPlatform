@@ -39,6 +39,7 @@ export default class ModelsManager {
       bootstrapRunLog: observable,
       bootstrapCount: observable,
       bootstrapType: observable,
+      plotData: observable,
       setModelsParamFile: action,
       setModelsParamFileName: action,
       setMinYear: action,
@@ -119,6 +120,8 @@ export default class ModelsManager {
   bootstrapRunProgress = null;
   bootstrapRunLog = null;
 
+  plotData = null;
+
   setModelsParamFile = paramFile => {
     if (paramFile) {
       this.modelsParamFile = paramFile;
@@ -151,6 +154,7 @@ export default class ModelsManager {
   setSplineType = splineType => this.splineType = splineType;
   setBootstrapCount = bootstrapCount => this.bootstrapCount = bootstrapCount;
   setBootstrapType = bootstrapType => this.bootstrapType = bootstrapType;
+  setPlotData = plotData => this.plotData = plotData;
 
   setModelsRunProgress = progress => this.modelsRunProgress = progress;
   setModelsRunLog = runLog => this.modelsRunLog = runLog;
