@@ -1,10 +1,15 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import HIVChart from '../Charts/HIVChart';
+import IsNull from '../../utilities/IsNull';
 
 const TabModellingCharts = props => {
 
   const { appMgr } = props;
+
+  if (IsNull(appMgr.modelMgr.plotData)) {
+    return (null);
+  }
 
   return (
     <React.Fragment>

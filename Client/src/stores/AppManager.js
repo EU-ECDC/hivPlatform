@@ -244,6 +244,7 @@ export default class AppManager {
       case 'MODELS_RUN_FINISHED':
         this.modelMgr.setModelsRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.modelMgr.setPlotData(e.payload.PlotData);
           this.uiStateMgr.setLastEventType(e.type);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);

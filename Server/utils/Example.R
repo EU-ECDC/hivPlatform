@@ -90,9 +90,7 @@ appMgr$HIVModelMgr$BootstrapFitStats$Theta
 pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
-# STEP 7 - Charts ----------------------------------------------------------------------------------
+# STEP 7 - Save and load ---------------------------------------------------------------------------
 
-# saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
-# appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
-
-appMgr$HIVModelMgr$PlotData
+saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
