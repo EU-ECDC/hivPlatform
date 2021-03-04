@@ -233,12 +233,16 @@ Events <- function(
     params <- runSettings$Params
     popCombination <- runSettings$PopCombination
     aggrDataSelection <- runSettings$AggrDataSelection
-    appMgr$HIVModelMgr$RunMainFit(
-      settings = list(Verbose = TRUE),
-      parameters = params,
-      popCombination = popCombination,
-      aggrDataSelection = aggrDataSelection
-    )
+
+    print(params)
+    print(popCombination)
+    print(aggrDataSelection)
+    # appMgr$HIVModelMgr$RunMainFit(
+    #   settings = list(Verbose = FALSE),
+    #   parameters = params,
+    #   popCombination = popCombination,
+    #   aggrDataSelection = aggrDataSelection
+    # )
   })
 
   observeEvent(input$cancelModelBtn, {

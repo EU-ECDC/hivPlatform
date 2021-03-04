@@ -1207,9 +1207,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.13.8":
-  version: 7.13.8
-  resolution: "@babel/preset-env@npm:7.13.8"
+"@babel/preset-env@npm:7.13.9":
+  version: 7.13.9
+  resolution: "@babel/preset-env@npm:7.13.9"
   dependencies:
     "@babel/compat-data": ^7.13.8
     "@babel/helper-compilation-targets": ^7.13.8
@@ -1281,7 +1281,7 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: fa41587bdb31900499a3d8661e251e93e2b075590660985de3b63efdf72f1a4c1588a25c9148d0f91046639d324b7730ebf8c4fb0230b3dfcc70ac7937fd6a7e
+  checksum: 55ef45c648da2cf98d703a3f5128eeb883285580f02717059c1ac708ac8cb291e40705838dfdd4f4c59da3c96b816c13e2d2d0d9a7490e3bace4cf41ec8ba151
   languageName: node
   linkType: hard
 
@@ -4483,7 +4483,7 @@ fsevents@~2.1.2:
   dependencies:
     "@babel/core": 7.13.8
     "@babel/plugin-proposal-class-properties": 7.13.0
-    "@babel/preset-env": 7.13.8
+    "@babel/preset-env": 7.13.9
     "@babel/preset-react": 7.12.13
     "@material-ui/core": ^4.11.3
     "@material-ui/icons": ^4.11.2
@@ -4497,15 +4497,15 @@ fsevents@~2.1.2:
     file-loader: 6.2.0
     filemanager-webpack-plugin: ^3.1.0
     html-webpack-plugin: ^5.2.0
-    jquery: ^3.5.1
+    jquery: ^3.6.0
     lodash: ^4.17.21
-    mobx: ^6.1.7
+    mobx: ^6.1.8
     mobx-react: ^7.1.0
     react: ^17.0.1
     react-dom: ^17.0.1
     terser-webpack-plugin: ^5.1.1
     tslib: ^2.1.0
-    webpack: ^5.24.2
+    webpack: ^5.24.3
     webpack-bundle-analyzer: ^4.4.0
     webpack-cli: ^4.5.0
     webpack-dev-server: ^4.0.0-beta.0
@@ -5192,10 +5192,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "jquery@npm:3.5.1"
-  checksum: c50818c84837902a60938c85786feb612f346a9918f7285409d605449460790b3815ad8aaf5806f19e89f1a79b27d327802b421ab354fe213f3fd1801e3562e6
+"jquery@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "jquery@npm:3.6.0"
+  checksum: a0a819022a1bdff5efa79bbd9d4d7352de5bd32dabe42108e6ec0797238dba36c09c108e0eea2724f5d03acc1b30ee87d76bec80e15b9510106532292ebe6ba4
   languageName: node
   linkType: hard
 
@@ -5856,10 +5856,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.1.7":
-  version: 6.1.7
-  resolution: "mobx@npm:6.1.7"
-  checksum: 4576c76181408ad217650e008cdb1b595078aae36aa3888d75460e31fcbe5a779d5497ab617f9527c82246f81fc58ef5fc70a170f367f91387e3ce1d1d46d3d1
+"mobx@npm:^6.1.8":
+  version: 6.1.8
+  resolution: "mobx@npm:6.1.8"
+  checksum: 4b039ffa800686c5f4af76efee71599e1c2569104516b60d1eaf1b902e50ee6f751769715a6d0727fc6f5a859207a96ecc922cc971aa55b53e68b85aa3b813d7
   languageName: node
   linkType: hard
 
@@ -8125,9 +8125,9 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.24.2":
-  version: 5.24.2
-  resolution: "webpack@npm:5.24.2"
+"webpack@npm:^5.24.3":
+  version: 5.24.3
+  resolution: "webpack@npm:5.24.3"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.46
@@ -8157,7 +8157,7 @@ resolve@^1.9.0:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 18408ddd3e5d5849179d6f5ebb44bad28783315da22a19a7f5ad9901e0ef96157a1747db52745fbdb25081f1f73162313088e4895b42f725e2b1221bdcec8a6f
+  checksum: 025181b6a4ba57caabd81047ab5751835a1b00e04cd15d3dca36e33f2034a194f73135b468da402001e5f9042bdad41d38587aec2a747b9fd7846044092655bb
   languageName: node
   linkType: hard
 

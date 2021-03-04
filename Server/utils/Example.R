@@ -3,13 +3,14 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-
+appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
@@ -53,7 +54,7 @@ browseURL(fileName)
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
 popCombination <- list(
   Case = list(
-    list(Values = c('M', 'IDU'), Variables = c('Gender', 'Transmission'))
+    # list(Values = c('M', 'IDU'), Variables = c('Gender', 'Transmission'))
   ),
   Aggr = c('pop_0')
 )
@@ -66,9 +67,9 @@ aggrDataSelection <- data.table(
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
 appMgr$HIVModelMgr$RunMainFit(
-  settings = list(),
+  settings = list(Verbose = FALSE),
   parameters = list(),
-  popCombination = NULL,
+  popCombination = popCombination,
   aggrDataSelection = NULL
 )
 
@@ -94,3 +95,15 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+
+appMgr$HIVModelMgr$MainFitResult
+appMgr$HIVModelMgr$MainFitTask$Status
+cat(appMgr$HIVModelMgr$MainFitTask$RunLog)
+
+caseData <- appMgr$CaseMgr$Data
+aggrData <- appMgr$AggrMgr$Data
+popCombination <- list(
+  Case = NULL,
+  Aggr = c('pop_0')
+)
+dataSets <- CombineData(caseData, aggrData, popCombination)

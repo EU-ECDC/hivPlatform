@@ -113,7 +113,12 @@ HIVModelManager <- R6::R6Class(
               popData <- hivModelling::GetPopulationData(context)
 
               startTime <- Sys.time()
-              fitResults <- hivModelling::PerformMainFit(context, popData, attemptSimplify = TRUE)
+              fitResults <- hivModelling::PerformMainFit(
+                context,
+                popData,
+                attemptSimplify = TRUE,
+                verbose = TRUE
+              )
               runTime <- Sys.time() - startTime
 
               impResult[[imp]] <- list(
@@ -125,7 +130,7 @@ HIVModelManager <- R6::R6Class(
               )
             }
 
-            plotData <- GetHIVPlotData(impResult, NULL)
+            plotData <- hivEstimatesAccuracy2::GetHIVPlotData(impResult, NULL)
 
             result <- list(
               MainFitResult = impResult,
@@ -165,8 +170,10 @@ HIVModelManager <- R6::R6Class(
               )
             )
           },
-          failCallback = function(failMsg) {
-            print(failMsg)
+          failCallback = function(msg = null) {
+            if (!is.null(msg)) {
+              PrintAlert(msg, type = 'danger')
+            }
             PrintAlert('Running HIV Model main fit task failed', type = 'danger')
             private$SendMessage(
               'MODELS_RUN_FINISHED',
@@ -383,7 +390,10 @@ HIVModelManager <- R6::R6Class(
               )
             )
           },
-          failCallback = function() {
+          failCallback = function(msg = NULL) {
+            if (!is.null(msg)) {
+              PrintAlert(msg, type = 'danger')
+            }
             PrintAlert('Running HIV Model bootstrap fit task failed', type = 'danger')
             private$SendMessage(
               'BOOTSTRAP_RUN_FINISHED',

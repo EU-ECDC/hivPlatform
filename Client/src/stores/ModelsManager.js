@@ -179,7 +179,7 @@ export default class ModelsManager {
       country: this.country,
       rDisp: this.rDisp,
       splineType: this.splineType,
-      timeIntervals: this.timeIntCollMgr.selectedRunCollection.intervals,
+      timeIntervals: toJS(this.timeIntCollMgr.selectedRunCollection.intervals),
       popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
       aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)
     };
