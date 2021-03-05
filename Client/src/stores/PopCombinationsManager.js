@@ -17,6 +17,7 @@ export default class PopCombinationsManager {
       setCombinationPopulations: action,
       setAggrCombinationPopulations: action,
       syncPopulations: action,
+      syncAggrPopulations: action,
       combinationAll: computed,
       combinationsJS: computed,
       combinationsNames: computed,
@@ -34,6 +35,10 @@ export default class PopCombinationsManager {
 
     autorun(() => {
       this.syncPopulations(this.parentMgr.popMgr.definedPopulations);
+    });
+
+    autorun(() => {
+      this.syncAggrPopulations(this.parentMgr.aggrDataMgr.populationNames);
     });
   }
 
@@ -57,6 +62,7 @@ export default class PopCombinationsManager {
   }
 
   setCombinationName = (i, name) => {
+    console.log(name);
     this.combinations[i].name = name;
   };
 
@@ -70,8 +76,15 @@ export default class PopCombinationsManager {
 
   syncPopulations = (definedPopulations) => {
     this.combinations.forEach(el => {
-      el.populations = el.populations.filter(value => definedPopulations.includes(value))
+      el.populations = el.populations.filter(value => definedPopulations.includes(value));
     });
+  };
+
+  syncAggrPopulations = (definedPopulations) => {
+    this.combinations.forEach(el => {
+      el.aggrPopulations = el.aggrPopulations.filter(value => definedPopulations.includes(value));
+    });
+    this.combinations[0].aggrPopulations = definedPopulations;
   };
 
   get combinationAll() {

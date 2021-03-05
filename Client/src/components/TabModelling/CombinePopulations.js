@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CombinePopulationsRow from './CombinePopulationsRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
+import RemoveElementsFromArray from '../../utilities/RemoveElementsFromArray';
 
 const CombinePopulations = (props) => {
   const { appMgr } = props;
@@ -18,7 +19,7 @@ const CombinePopulations = (props) => {
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = combinations.map((el, i) => i);
+      const newSelectedIds = RemoveElementsFromArray(combinations.map((el, i) => i), 0);
 
       setSelected(newSelectedIds);
       return;
@@ -55,7 +56,7 @@ const CombinePopulations = (props) => {
     setSelected([]);
   }
 
-  const rowCount = combinations.length;
+  const rowCount = combinations.length - 1;
   const selectedCount = selected.length;
   const isSelected = i => selected.indexOf(i) !== -1;
 
