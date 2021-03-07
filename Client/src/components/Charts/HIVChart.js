@@ -76,7 +76,7 @@ const HIVChart = (props) => {
       },
       stack: 'confidence-bounds',
       symbol: 'none',
-      smooth: true,
+      smooth: false,
     });
   }
 
@@ -84,7 +84,7 @@ const HIVChart = (props) => {
     series.push({
       name: 'Model',
       type: 'line',
-      smooth: true,
+      smooth: false,
       color: '#bbb',
       data: model,
       lineStyle: {
@@ -106,7 +106,7 @@ const HIVChart = (props) => {
       name: 'Data',
       type: 'line',
       data: data,
-      smooth: true,
+      smooth: false,
       color: '#69b023',
     });
     legendData.push({ name: 'Data' });

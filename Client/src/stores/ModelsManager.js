@@ -112,7 +112,7 @@ export default class ModelsManager {
   rDisp = 50;
   splineType = 'B-SPLINE';
   bootstrapCount = 100;
-  bootstrapType = 'NON-PARAMETRIC';
+  bootstrapType = 'PARAMETRIC';
 
   // Run details
   modelsRunProgress = null;
@@ -183,7 +183,6 @@ export default class ModelsManager {
       popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
       aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)
     };
-    console.log(params);
     this.parentMgr.btnClicked('runModelBtn:HIVModelParams', params);
   };
 

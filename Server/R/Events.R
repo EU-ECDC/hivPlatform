@@ -259,7 +259,7 @@ Events <- function(
   observeEvent(input$runBootstrapBtn, {
     params <- input$runBootstrapBtn
     appMgr$HIVModelMgr$RunBootstrapFit(
-      bsCount = params$count,
+      bsCount = as.integer(params$count),
       bsType = params$type
     )
   })

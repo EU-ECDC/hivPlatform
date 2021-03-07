@@ -68,7 +68,10 @@ aggrDataSelection <- data.table(
 )
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
-  parameters = list(),
+  parameters = list(
+    FitAIDSPosMinYear = 1996,
+    FitAIDSPosMaxYear = 2016
+  ),
   popCombination = popCombination,
   aggrDataSelection = NULL
 )
@@ -76,6 +79,8 @@ appMgr$HIVModelMgr$RunMainFit(
 # STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
+
+appMgr$HIVModelMgr$BootstrapFitStats$MainOutputs$N_HIV_Obs_M
 
 # STEP 6 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets

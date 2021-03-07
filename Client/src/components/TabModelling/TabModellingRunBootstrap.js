@@ -95,6 +95,7 @@ const TabModellingRunBootstrap = props => {
                 value='NON-PARAMETRIC'
                 control={<Radio color="primary" />}
                 label='Non-parametric'
+                disabled={true}
                 className={classes.btOption}
               />
               <FormControlLabel

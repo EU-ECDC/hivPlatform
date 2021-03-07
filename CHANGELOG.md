@@ -2,7 +2,7 @@
 
 ###### _Mar 1 2021_
 
-- UNDER DEVELOPMENT
+- HIV Modelling and parametric bootstrap implemented
 
 
 ## 1.9.47

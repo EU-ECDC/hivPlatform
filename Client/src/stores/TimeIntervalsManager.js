@@ -13,7 +13,7 @@ export default class TimeIntervalsManager {
     this.minYear = mgr.minYear;
     this.maxYear = mgr.maxYear;
     if (IsNull(intervals)) {
-      this.createIntervals(this.minYear, this.maxYear, 5)
+      this.createIntervals(this.minYear, this.maxYear, 5, 1984)
     } else {
       this.intervals = intervals;
     }

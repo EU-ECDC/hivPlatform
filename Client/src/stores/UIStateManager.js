@@ -128,6 +128,7 @@ export default class UIStateManager {
     this.pages[5].disabled = !this.reportsPageEnabled;
     this.pages[6].disabled = !this.outputsPageEnabled;
 
+    this.setSubPageDisabledStatus(4, 4, !this.bootstrapEnabled);
     this.setSubPageDisabledStatus(4, 5, !this.modellingOutputsEnabled);
   };
 
