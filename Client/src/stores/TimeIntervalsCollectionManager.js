@@ -85,6 +85,7 @@ export default class TimeIntervalsCollectionManager {
     }
     const ids = keys(this.collections);
     this.selectedEditCollectionId = ids[ids.length - 1];
+    this.selectedRunCollectionId = this.selectedEditCollectionId;
   };
 
   setSelectedEditCollectionId = id => {

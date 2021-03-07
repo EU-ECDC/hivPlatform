@@ -94,14 +94,57 @@ HIVModelManager <- R6::R6Class(
       tryCatch({
         PrintAlert('Starting HIV Model main fit task')
 
-        caseData <- private$AppMgr$CaseMgr$Data
-        aggrData <- private$AppMgr$AggrMgr$Data
-        dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
-
         private$Catalogs$MainFitTask <- Task$new(
-          function(dataSets, settings, parameters) {
+          function(caseData, aggrData, settings, parameters, popCombination, aggrDataSelection) {
             suppressMessages(pkgload::load_all())
             options(width = 120)
+
+            if (length(popCombination$Aggr) > 0) {
+              PrintH1('Aggregated data selection')
+              cli::cli_text(
+                '{.val {cat(capture.output(aggrDataSelection), sep = "\n")}}'
+              )
+            }
+
+            PrintH1('Population combination')
+            if (!is.null(caseData)) {
+              if (length(popCombination$CaseAbbr) > 0) {
+                PrintAlert('Case-based populations: {.val {popCombination$CaseAbbr}}')
+              } else {
+                PrintAlert('Case-based populations: {.val \'All data available\'}')
+              }
+            } else {
+              PrintAlert('Case-based populations: {.val \'None\'}')
+            }
+
+            if (!is.null(aggrData) && length(popCombination$Aggr) > 0) {
+              PrintAlert('Aggregated populations: {.val {popCombination$Aggr}}')
+            } else {
+              PrintAlert('Aggregated populations: {.val \'None\'}')
+            }
+
+            PrintH1('Time intervals and diagnosis rates modelling')
+            cli::cli_text(
+              '{.val {cat(capture.output(parameters$Intervals), sep = "\n")}}'
+            )
+
+            PrintH1('Advanced paramaters')
+            PrintAlert(' 1. Range of calculations                                : {.val {parameters$ModelMinYear} - {parameters$ModelMaxYear}}')
+            PrintAlert(' 2. HIV diagnoses, total                                 : {.val {parameters$FitPosMinYear} - {parameters$FitPosMaxYear}}')
+            PrintAlert(' 3. HIV diagnoses, by CD4 count                          : {.val {parameters$FitPosCD4MinYear} - {parameters$FitPosCD4MaxYear}}')
+            PrintAlert(' 4. AIDS diagnoses, total                                : {.val {parameters$FitAIDSMinYear} - {parameters$FitAIDSMaxYear}}')
+            PrintAlert(' 5. HIV/AIDS diagnoses, total                            : {.val {parameters$FitAIDSPosMinYear} - {parameters$FitAIDSPosMaxYear}}')
+            PrintAlert(' 6. Do you have data from the start of the epidemic      : {.val {ifelse(parameters$FullData, "Yes", "No")}}')
+            PrintAlert(' 7. Knots count                                          : {.val {parameters$ModelNoKnots}}')
+            PrintAlert(' 8. Start at zero                                        : {.val {ifelse(parameters$StartIncZero, "Yes", "No")}}')
+            PrintAlert(' 9. Prevent sudden changes at end of observation interval: {.val {ifelse(parameters$MaxIncCorr, "Yes", "No")}}')
+            PrintAlert('10. Maximum likelihood distribution                      : {.val {parameters$FitDistribution}}')
+            PrintAlert('11. Extra diagnosis rate due to non-AIDS symptoms        : {.val {parameters$Delta4Fac}}')
+            PrintAlert('12. Country-specific settings                            : {.val {parameters$Country}}')
+
+            dataSets <- hivEstimatesAccuracy2::CombineData(
+              caseData, aggrData, popCombination, aggrDataSelection
+            )
 
             impResult <- list()
             for (imp in names(dataSets)) {
@@ -140,9 +183,12 @@ HIVModelManager <- R6::R6Class(
             return(result)
           },
           args = list(
-            dataSets = dataSets,
+            caseData = private$AppMgr$CaseMgr$Data,
+            aggrData = private$AppMgr$AggrMgr$Data,
             settings = settings,
-            parameters = parameters
+            parameters = parameters,
+            popCombination = popCombination,
+            aggrDataSelection = aggrDataSelection
           ),
           session = private$Session,
           progressCallback = function(runLog) {
@@ -184,6 +230,7 @@ HIVModelManager <- R6::R6Class(
             )
           }
         )
+
         private$SendMessage(
           'MODELS_RUN_STARTED',
           payload = list(

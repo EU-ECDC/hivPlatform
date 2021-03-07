@@ -183,6 +183,7 @@ export default class ModelsManager {
       popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
       aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)
     };
+    console.log(params);
     this.parentMgr.btnClicked('runModelBtn:HIVModelParams', params);
   };
 

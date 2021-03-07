@@ -231,7 +231,7 @@ const AdvancedParameters = (props) => {
           </TableRow>
           <TableRow>
             <TableCell>12.</TableCell>
-            <TableCell>Country-specific settingss</TableCell>
+            <TableCell>Country-specific settings</TableCell>
             <TableCell>
               <Select
                 value={appMgr.modelMgr.country}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
@@ -8,21 +9,31 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import ValidationTextField from '../ValidationTextField';
 
+const useStyles = makeStyles(() => ({
+  textField: {
+    '& .MuiInputBase-root': {
+      fontSize: '0.75rem'
+    }
+  }
+}));
+
 const CombinePopulationsRow = (props) => {
-  const { i, isSelected, onSelectClick, combination: el, appMgr } = props;
+  const { isSelected, onSelectClick, combination: el, appMgr } = props;
+
+  const classes = useStyles();
 
   const handleCombinationNameChange = (value, valid) => {
     if (valid) {
-      appMgr.popCombMgr.setCombinationName(i, value);
+      appMgr.popCombMgr.setCombinationName(el.id, value);
     }
   };
 
-  const handlePopulationsChange = e => {
-    appMgr.popCombMgr.setCombinationPopulations(i, e.target.value);
+  const handleCasePopulationsChange = e => {
+    appMgr.popCombMgr.setCombinationCasePopulations(el.id, e.target.value);
   };
 
   const handleAggrPopulationsChange = e => {
-    appMgr.popCombMgr.setAggrCombinationPopulations(i, e.target.value);
+    appMgr.popCombMgr.setCombinationAggrPopulations(el.id, e.target.value);
   };
 
   const validateName = name => {
@@ -35,15 +46,15 @@ const CombinePopulationsRow = (props) => {
 
   let checkBox = null;
   let name = null;
-  let caseBasedPopulations = null;
+  let casePopulations = null;
   let aggrPopulations = null;
-  if (el.name === 'ALL') {
-    name = 'ALL';
-    caseBasedPopulations = 'All data available';
-    aggrPopulations= 'All data available after selection above';
+  if (el.id === appMgr.popCombMgr.combinationAllId) {
+    name = el.name;
+    casePopulations = 'All data available';
+    aggrPopulations = 'All data available after selection above';
   } else {
     checkBox = <Checkbox
-      inputProps={{ 'aria-labelledby': `labelId${i}` }}
+      inputProps={{ 'aria-labelledby': `labelId${el.id}` }}
       color='primary'
       checked={isSelected}
       onClick={onSelectClick}
@@ -53,9 +64,10 @@ const CombinePopulationsRow = (props) => {
       validationFunc = {validateName}
       onChange={handleCombinationNameChange}
       helperText = ''
-      style={{ width: '100%', fontSize: '0.75rem' }}
+      style={{ width: '100%' }}
+      className={classes.textField}
     />
-    caseBasedPopulations = <Select
+    casePopulations = <Select
       multiple
       renderValue={selected => (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -64,9 +76,9 @@ const CombinePopulationsRow = (props) => {
           ))}
         </div>
       )}
-      value={el.populations}
+      value={el.casePopulations}
       disabled={appMgr.popMgr.definedPopulations.length === 0}
-      onChange={handlePopulationsChange}
+      onChange={handleCasePopulationsChange}
       style={{ width: '100%', fontSize: '0.75rem' }}
       disableUnderline
     >
@@ -103,13 +115,13 @@ const CombinePopulationsRow = (props) => {
       <TableCell padding='checkbox'>
         {checkBox}
       </TableCell>
-      <TableCell id={`labelId${i}`} scope='row' padding='none'>
+      <TableCell id={`labelId${el.id}`} scope='row' style={{ padding: '6px 4px 6px 0px' }}>
         {name}
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
-        {caseBasedPopulations}
+      <TableCell style={{ padding: '4px 4px 0px 16px' }}>
+        {casePopulations}
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+      <TableCell style={{ padding: '4px 4px 0px 16px' }}>
         {aggrPopulations}
       </TableCell>
     </TableRow>

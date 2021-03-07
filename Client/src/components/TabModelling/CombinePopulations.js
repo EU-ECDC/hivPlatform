@@ -9,41 +9,35 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CombinePopulationsRow from './CombinePopulationsRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
-import RemoveElementsFromArray from '../../utilities/RemoveElementsFromArray';
+import RemoveValuesFromArray from '../../utilities/RemoveValuesFromArray';
 
 const CombinePopulations = (props) => {
   const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
 
-  const combinations = appMgr.popCombMgr.combinationsJS;
+  const combinations = appMgr.popCombMgr.combinationsArray;
 
   const handleSelectAllClick = e => {
     if (e.target.checked) {
-      const newSelectedIds = RemoveElementsFromArray(combinations.map((el, i) => i), 0);
-
+      const newSelectedIds = RemoveValuesFromArray(
+        combinations.map(el => el.id),
+        appMgr.popCombMgr.combinationAllId
+      );
       setSelected(newSelectedIds);
-      return;
+    } else {
+      setSelected([]);
     }
-    setSelected([]);
   };
 
-  const handleSelectClick = i => e => {
-    const selectedIndex = selected.indexOf(i);
+  const handleSelectClick = id => () => {
+    const selectedIndex = selected.indexOf(id);
+
     let newSelected = [];
-
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, i);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+      newSelected = newSelected.concat(selected, id);
+    } else {
+      newSelected = RemoveValuesFromArray(selected, id);
     }
-
     setSelected(newSelected);
   };
 
@@ -58,7 +52,7 @@ const CombinePopulations = (props) => {
 
   const rowCount = combinations.length - 1;
   const selectedCount = selected.length;
-  const isSelected = i => selected.indexOf(i) !== -1;
+  const isSelected = id => selected.indexOf(id) !== -1;
 
   return (
     <Paper>
@@ -83,11 +77,10 @@ const CombinePopulations = (props) => {
             combinations.map((el, i) => (
               <CombinePopulationsRow
                 key={i}
-                i={i}
                 combination={el}
                 appMgr={appMgr}
-                isSelected={isSelected(i)}
-                onSelectClick={handleSelectClick(i)}
+                isSelected={isSelected(el.id)}
+                onSelectClick={handleSelectClick(el.id)}
               />
             ))
           }

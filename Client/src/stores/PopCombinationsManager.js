@@ -1,40 +1,44 @@
-import { observable, computed, action, toJS, makeObservable, autorun } from 'mobx';
-import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
+import { observable, computed, action, makeObservable, autorun } from 'mobx';
 import GetNextId from '../utilities/GetNextId';
+import GenerateId from '../utilities/GenerateId';
+import IsNull from '../utilities/IsNull';
 
 export default class PopCombinationsManager {
   parentMgr = null;
+
+  combinations = new Map();
+
+  selectedCombination = null;
+
+  combinationAllId = null;
 
   constructor(mgr) {
     this.parentMgr = mgr;
     makeObservable(this, {
       combinations: observable,
-      selectedCombinationName: observable,
+      combinationAllId: observable,
+      selectedCombination: observable,
       addEmptyCombination: action,
       removeCombinations: action,
+      setSelectedCombination: action,
       setCombinationName: action,
-      setSelectedCombinationName: action,
-      setCombinationPopulations: action,
-      setAggrCombinationPopulations: action,
-      syncPopulations: action,
+      setCombinationName: action,
+      setCombinationCasePopulations: action,
+      setCombinationAggrPopulations: action,
+      syncCasePopulations: action,
       syncAggrPopulations: action,
       combinationAll: computed,
-      combinationsJS: computed,
+      combinationsArray: computed,
       combinationsNames: computed,
-      aggrCombinationsJS: computed,
-      selectedCombination: computed,
     });
 
-    this.combinations.push({
-      name: 'ALL',
-      populations: [],
-      aggrPopulations: [],
-    });
-
-    this.setSelectedCombinationName('ALL');
+    const combId = GenerateId('combination');
+    this.addEmptyCombination(combId, 'All data');
+    this.setSelectedCombination(combId);
+    this.combinationAllId = combId;
 
     autorun(() => {
-      this.syncPopulations(this.parentMgr.popMgr.definedPopulations);
+      this.syncCasePopulations(this.parentMgr.popMgr.definedPopulations);
     });
 
     autorun(() => {
@@ -42,41 +46,60 @@ export default class PopCombinationsManager {
     });
   }
 
-  combinations = [];
-  selectedCombinationName = '';
+  addEmptyCombination = (id = null, name = null) => {
+    if (IsNull(id)) {
+      id = GenerateId('combination');
+    }
 
-  addEmptyCombination = () => {
-    this.combinations.push({
-      name: `Combination ${GetNextId('Combination ', this.combinationsNames)}`,
-      populations: [],
+    if (IsNull(name)) {
+      name = `Combination ${GetNextId('Combination ', this.combinationsNames)}`
+    }
+    const combination = {
+      id: id,
+      name: name,
+      casePopulations: [],
       aggrPopulations: []
+    };
+    this.combinations.set(id, combination);
+    return id;
+  };
+
+  removeCombinations = ids => {
+    ids.forEach(id => {
+      if (this.combinations.has(id)) {
+        this.combinations.delete(id);
+      }
     });
+    this.selectedCombination = this.combinationsArray[this.combinationsArray.length - 1];
   };
 
-  removeCombinations = selectedIds => {
-    this.combinations = RemoveElementsFromArray(this.combinations, selectedIds);
+  setSelectedCombination = id => {
+    if (this.combinations.has(id)) {
+      this.selectedCombination = this.combinations.get(id);
+    }
   };
 
-  setSelectedCombinationName = combName => {
-    this.selectedCombinationName = combName;
-  }
-
-  setCombinationName = (i, name) => {
-    console.log(name);
-    this.combinations[i].name = name;
+  setCombinationName = (id, name) => {
+    if (this.combinations.has(id)) {
+      this.combinations.get(id).name = name;
+    }
   };
 
-  setCombinationPopulations = (i, populations) => {
-    this.combinations[i].populations = populations;
+  setCombinationCasePopulations = (id, populations) => {
+    if (this.combinations.has(id)) {
+      this.combinations.get(id).casePopulations = populations;
+    }
   };
 
-  setAggrCombinationPopulations = (i, populations) => {
-    this.combinations[i].aggrPopulations = populations;
+  setCombinationAggrPopulations = (id, populations) => {
+    if (this.combinations.has(id)) {
+      this.combinations.get(id).aggrPopulations = populations;
+    }
   };
 
-  syncPopulations = (definedPopulations) => {
+  syncCasePopulations = (definedPopulations) => {
     this.combinations.forEach(el => {
-      el.populations = el.populations.filter(value => definedPopulations.includes(value));
+      el.casePopulations = el.casePopulations.filter(value => definedPopulations.includes(value));
     });
   };
 
@@ -84,27 +107,23 @@ export default class PopCombinationsManager {
     this.combinations.forEach(el => {
       el.aggrPopulations = el.aggrPopulations.filter(value => definedPopulations.includes(value));
     });
-    this.combinations[0].aggrPopulations = definedPopulations;
+    this.combinationAll.aggrPopulations = definedPopulations;
   };
 
   get combinationAll() {
-    return this.combinations.filter(el => el.name.toUpperCase() === 'ALL');
+    if (this.combinations.has(this.combinationAllId)) {
+      return this.combinations.get(this.combinationAllId);
+    } else {
+      return null;
+    }
   };
 
-  get combinationsJS() {
-    return toJS(this.combinations);
+  get combinationsArray() {
+    return Array.from(this.combinations.values());
   };
 
   get combinationsNames() {
-    return this.combinations.map(el => el.name);
+    return this.combinationsArray.map(el => el.name);
   };
-
-  get aggrCombinationsJS() {
-    return toJS(this.aggrCombinations);
-  };
-
-  get selectedCombination() {
-    return this.combinations.filter(el => el.name === this.selectedCombinationName)[0];
-  }
 
 }

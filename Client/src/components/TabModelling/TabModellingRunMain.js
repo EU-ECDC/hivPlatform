@@ -45,8 +45,8 @@ const TabModellingRunMain = props => {
     appMgr.modelMgr.cancelModels();
   };
 
-  const handleSelectedPopCombName = e => {
-    appMgr.popCombMgr.setSelectedCombinationName(e.target.value);
+  const handleSelectedPopCombId = e => {
+    appMgr.popCombMgr.setSelectedCombination(e.target.value);
   };
 
   const handleSelectedCollectionId = e => {
@@ -76,12 +76,12 @@ const TabModellingRunMain = props => {
         <Grid item xs={2}>
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Select
-              value={appMgr.popCombMgr.selectedCombinationName}
-              onChange={handleSelectedPopCombName}
+              value={appMgr.popCombMgr.selectedCombination.id}
+              onChange={handleSelectedPopCombId}
               style={{ width: '100%', fontSize: '0.75rem' }}
             >
-              {appMgr.popCombMgr.combinationsNames.map((combName, i) =>
-                <MenuItem key={i} value={combName} dense>{combName}</MenuItem>
+              {appMgr.popCombMgr.combinationsArray.map(el =>
+                <MenuItem key={el.id} value={el.id} dense>{el.name}</MenuItem>
               )}
             </Select>
             <FormHelperText>Select population</FormHelperText>

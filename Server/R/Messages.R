@@ -100,7 +100,7 @@ PrintBullets <- function(
 ) {
   formattedText <- capt0({
     cli::cli_ul()
-    sapply(items, cli::cli_li)
+    sapply(items, cli::cli_li, .envir = .envir)
     cli::cli_end()
   })
   cat(formattedText)
