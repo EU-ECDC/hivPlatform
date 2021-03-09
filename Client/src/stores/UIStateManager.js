@@ -174,4 +174,8 @@ export default class UIStateManager {
   get modellingOutputsEnabled() {
     return InArray('MODELLING', this.completedSteps);
   };
+
+  get nonParametricBootstrapEnabled() {
+    return InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps);
+  }
 }

@@ -25,7 +25,7 @@ const OriginGroupings = (props) => {
         </Btn>
         <Typography variant='body2' color='textSecondary'>
           Migrant variable can be created by grouping regions.<br />
-          Choose present or define custom grouping and press 'Apply regrouping' button.
+          Choose preset or define custom grouping and press 'Apply regrouping' button.
         </Typography>
         <MessageAlert
           valid={appMgr.origGroupMgr.actionValid}

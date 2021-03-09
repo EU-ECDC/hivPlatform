@@ -55,7 +55,7 @@ const HIVChart = (props) => {
 
   if (!IsNull(range)) {
     series.push({
-      name: 'Min-max',
+      name: 'Confidence bounds',
       data: range,
       type: 'line',
       silent: true,
@@ -117,7 +117,7 @@ const HIVChart = (props) => {
   }
 
   if (!IsNull(range)) {
-    legendData.push({ name: 'Min-max' });
+    legendData.push({ name: 'Confidence bounds' });
   }
 
 

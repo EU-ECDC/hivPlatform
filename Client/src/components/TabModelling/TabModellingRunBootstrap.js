@@ -92,16 +92,16 @@ const TabModellingRunBootstrap = props => {
               onChange={handleBootstrapTypeChange}
             >
               <FormControlLabel
-                value='NON-PARAMETRIC'
-                control={<Radio color="primary" />}
-                label='Non-parametric'
-                disabled={true}
-                className={classes.btOption}
-              />
-              <FormControlLabel
                 value='PARAMETRIC'
                 control={<Radio color="primary" />}
                 label='Parametric'
+                className={classes.btOption}
+              />
+              <FormControlLabel
+                value='NON-PARAMETRIC'
+                control={<Radio color="primary" />}
+                label='Non-parametric'
+                disabled={!appMgr.uiStateMgr.nonParametricBootstrapEnabled}
                 className={classes.btOption}
               />
             </RadioGroup>
