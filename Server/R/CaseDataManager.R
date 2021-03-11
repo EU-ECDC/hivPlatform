@@ -50,7 +50,10 @@ CaseDataManager <- R6::R6Class(
     ReadData = function(
       fileName
     ) {
-      if (!is.element(private$AppMgr$Steps['SESSION_INITIALIZED'], private$AppMgr$CompletedSteps)) {
+      if (!is.null(private$AppMgr) && !is.element(
+        private$AppMgr$Steps['SESSION_INITIALIZED'],
+        private$AppMgr$CompletedSteps
+      )) {
         PrintAlert(
           'AppManager is not initialized properly before reading data',
           type = 'danger'
@@ -108,7 +111,9 @@ CaseDataManager <- R6::R6Class(
         list(ActionStatus = 'SUCCESS')
       )
 
-      if (!is.element(private$AppMgr$Steps['CASE_BASED_READ'], private$AppMgr$CompletedSteps)) {
+      if (!is.null(private$AppMgr) && !is.element(
+        private$AppMgr$Steps['CASE_BASED_READ'], private$AppMgr$CompletedSteps
+      )) {
         PrintAlert('Data must be read before applying atrributes mapping', type = 'danger')
         return(invisible(self))
       }
@@ -178,7 +183,7 @@ CaseDataManager <- R6::R6Class(
       originGrouping,
       originGroupingType = 'CUSTOM'
     ) {
-      if (!is.element(
+      if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ATTR_MAPPING'],
         private$AppMgr$CompletedSteps
       )) {
@@ -232,7 +237,7 @@ CaseDataManager <- R6::R6Class(
       adjustmentSpecs,
       filters = NULL
     ) {
-      if (!is.element(
+      if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ORIGIN_GROUPING'],
         private$AppMgr$CompletedSteps
       )) {
@@ -286,19 +291,11 @@ CaseDataManager <- R6::R6Class(
                 notifQuarterRange = NULL,
                 seed = NULL
               )
+
               return(result)
             },
             args = list(data = preProcessedData, adjustmentSpecs = adjustmentSpecs),
             session = private$Session,
-            progressCallback = function(runLog) {
-              private$SendMessage(
-                'ADJUSTMENTS_RUN_LOG_SET',
-                payload = list(
-                  ActionStatus = 'SUCCESS',
-                  RunLog = runLog
-                )
-              )
-            },
             successCallback = function(result) {
               private$Catalogs$AdjustmentResult <- result
               private$Catalogs$AdjustedData <- copy(self$LastAdjustmentResult$Data)
@@ -313,7 +310,10 @@ CaseDataManager <- R6::R6Class(
                 )
               )
             },
-            failCallback = function() {
+            failCallback = function(msg = NULL) {
+              if (!is.null(msg)) {
+                PrintAlert(msg, type = 'danger')
+              }
               PrintAlert('Running adjustment task failed', type = 'danger')
               private$SendMessage(
                 'ADJUSTMENTS_RUN_FINISHED',
@@ -419,7 +419,9 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$AdjustmentResult <- NULL
       }
 
-      private$AppMgr$SetCompletedStep(step)
+      if (!is.null(private$AppMgr)) {
+        private$AppMgr$SetCompletedStep(step)
+      }
 
       return(invisible(self))
     }

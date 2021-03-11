@@ -2,10 +2,10 @@ context('CombineData')
 
 capture.output({
   appMgr <- AppManager$new()
-  appMgr$CaseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
+  appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
   appMgr$CaseMgr$ApplyAttributesMapping()
   appMgr$CaseMgr$ApplyOriginGrouping()
-  appMgr$AggrMgr$ReadData(GetSystemFile('TestData', 'test_NL_-_2_populations.zip'))
+  appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
   caseData <- appMgr$CaseMgr$Data
   aggrData <- appMgr$AggrMgr$Data
 })

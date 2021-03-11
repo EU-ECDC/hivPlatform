@@ -4,7 +4,7 @@ caseMgr <- CaseDataManager$new()
 
 test_that('reading data is correct', {
   capture.output(
-    caseMgr$ReadData(GetSystemFile('TestData', 'dummy_miss1.zip'))
+    caseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
   )
 
   expect_equal(basename(caseMgr$FileName), 'dummy_miss1.zip')
@@ -72,7 +72,7 @@ test_that('applying origin grouping is correct', {
   expect_is(caseMgr$Summary, 'list')
   expect_setequal(
     names(caseMgr$Summary),
-    c('DiagYearPlotData', 'NotifQuarterPlotData', 'MissPlotData', 'RepDelPlotData')
+    c('DiagYearPlotData', 'NotifQuarterPlotData')
   )
 })
 
@@ -97,15 +97,15 @@ test_that('adjusting is correct', {
   expect_equal(length(caseMgr$PreProcessedDataStatus$CheckStatus), 25)
   expect_is(caseMgr$PreProcessedData, 'data.table')
   expect_equal(nrow(caseMgr$PreProcessedData), 7619)
-  expect_equal(nrow(caseMgr$AdjustedData), 15238)
-  expect_equal(nrow(caseMgr$Data), 15238)
+  expect_equal(nrow(caseMgr$AdjustedData), 22857)
+  expect_equal(nrow(caseMgr$Data), 22857)
   expect_true(caseMgr$Data[, all(Imputation %in% c(0, 1, 2))])
   expect_is(caseMgr$OriginGrouping, 'list')
   expect_equal(length(caseMgr$OriginGrouping), 15)
   expect_is(caseMgr$Summary, 'list')
   expect_setequal(
     names(caseMgr$Summary),
-    c('DiagYearPlotData', 'NotifQuarterPlotData', 'MissPlotData', 'RepDelPlotData')
+    c('DiagYearPlotData', 'NotifQuarterPlotData')
   )
   expect_equal(caseMgr$AdjustmentTask$Status, 'SUCCESS')
   expect_is(caseMgr$AdjustmentResult, 'list')
@@ -137,5 +137,5 @@ test_that('reactive processing is correct', {
   capture.output(session$flushReact())
 
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'SUCCESS')
-  expect_equal(nrow(isolate(caseMgr$Data)), 15238)
+  expect_equal(nrow(isolate(caseMgr$Data)), 22857)
 })

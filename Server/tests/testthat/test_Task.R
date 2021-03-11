@@ -29,3 +29,45 @@ test_that('running the task is correct', {
   expect_is(task$TaskHandle, 'r_process')
   expect_equal(task$Result, 2)
 })
+
+session <- shiny::MockShinySession$new()
+taskShiny <- Task$new(
+  function() {
+    print('Running task')
+    Sys.sleep(5)
+    print('Ending task')
+    return(1 + 1)
+  },
+  autorun = FALSE,
+  session = session
+)
+taskShiny$Run()
+isolate(taskShiny$HTMLRunLog)
+session$flushReact()
+isolate(taskShiny$HTMLRunLog)
+isolate(taskShiny$IsCancelled)
+isolate(taskShiny$IsFinished)
+isolate(taskShiny$Result)
+
+session <- shiny::MockShinySession$new()
+taskShiny <- Task$new(
+  function() {
+    stop('Problem')
+    return(1)
+  },
+  autorun = FALSE,
+  session = session,
+  failCallback = function(msg = NULL) {
+    if (!is.null(msg)) {
+      PrintAlert(msg, type = 'danger')
+    }
+  }
+)
+taskShiny$Run()
+isolate(taskShiny$HTMLRunLog)
+session$flushReact()
+isolate(taskShiny$HTMLRunLog)
+isolate(taskShiny$IsCancelled)
+isolate(taskShiny$IsFinished)
+isolate(taskShiny$Status)
+isolate(taskShiny$Result)

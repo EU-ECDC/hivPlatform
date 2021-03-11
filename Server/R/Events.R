@@ -225,7 +225,7 @@ Events <- function(
   })
 
   observeEvent(input$xmlModel, {
-    appMgr$HIVModelMgr$SetParameters(input$xmlModel)
+    appMgr$HIVModelMgr$LoadParameters(input$xmlModel)
   })
 
   observeEvent(input$runModelBtn, {

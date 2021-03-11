@@ -201,7 +201,7 @@ export default class AppManager {
           this.popMgr.setAvailableStrata(e.payload.AvailableStrata);
         }
         break;
-      case 'MODELS_PARAMS_SET':
+      case 'MODELS_PARAMS_LOADED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.modelMgr.setMinYear(e.payload.Params.minYear);
           this.modelMgr.setMaxYear(e.payload.Params.maxYear);
@@ -228,6 +228,12 @@ export default class AppManager {
             e.payload.Params.timeIntervals
           );
         }
+        break;
+      case 'MODELS_ALLOWED_PARAMS_DETERMINED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
       case 'MODELS_RUN_STARTED':
         if (e.payload.ActionStatus === 'SUCCESS') {

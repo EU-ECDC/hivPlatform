@@ -3,7 +3,7 @@ library(hivEstimatesAccuracy2)
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -12,10 +12,22 @@ appMgr <- AppManager$new()
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 
+appMgr$AggrMgr$Data
+appMgr$CaseMgr$Data
+
+
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
+caseData <- appMgr$CaseMgr$Data[Imputation == 0]
+aggrData <- appMgr$AggrMgr$Data
+popCombination <- list(
+  Case = NULL,
+  Aggr = appMgr$AggrMgr$PopulationNames
+)
+aggrDataSelection <- NULL
+dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
@@ -53,10 +65,8 @@ browseURL(fileName)
 
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
 popCombination <- list(
-  Case = list(
-    # list(Values = c('M', 'IDU'), Variables = c('Gender', 'Transmission'))
-  ),
-  Aggr = c('pop_0')
+  Case = NULL,
+  Aggr = appMgr$AggrMgr$PopulationNames
 )
 aggrDataSelection <- data.table(
   Name = c(

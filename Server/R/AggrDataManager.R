@@ -24,7 +24,8 @@ AggrDataManager <- R6::R6Class(
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
         FileName = NULL,
-        Data = NULL
+        Data = NULL,
+        PopulationNames = NULL
       )
     },
 
@@ -38,7 +39,10 @@ AggrDataManager <- R6::R6Class(
     ReadData = function(
       fileName
     ) {
-      if (!is.element(private$AppMgr$Steps['SESSION_INITIALIZED'], private$AppMgr$CompletedSteps)) {
+      if (!is.null(private$AppMgr) && !is.element(
+        private$AppMgr$Steps['SESSION_INITIALIZED'],
+        private$AppMgr$CompletedSteps
+      )) {
         PrintAlert(
           'AppManager is not initialized properly before reading data',
           type = 'danger'
@@ -74,7 +78,10 @@ AggrDataManager <- R6::R6Class(
       if (status == 'SUCCESS') {
         private$Catalogs$FileName <- fileName
         private$Catalogs$Data <- data
-        private$AppMgr$SetCompletedStep('AGGR_READ')
+        private$Catalogs$PopulationNames <- populationNames
+        if (!is.null(private$AppMgr)) {
+          private$AppMgr$SetCompletedStep('AGGR_READ')
+        }
         PrintAlert('Data file {.file {fileName}} loaded')
         payload <- list(
           ActionStatus = status,
@@ -120,6 +127,10 @@ AggrDataManager <- R6::R6Class(
 
     Data = function() {
       return(private$Catalogs$Data)
+    },
+
+    PopulationNames = function() {
+      return(private$Catalogs$PopulationNames)
     }
   )
 )
