@@ -11,6 +11,8 @@ export default class AggrDataManager {
   fileType = null;
   filePath = null;
   dataFiles = [];
+  origDataFiles = [];
+  allowedYears = null;
   dataFileNameToIdxMap = new Map();
   populationNames = [];
   fileUploadProgress = null;
@@ -27,6 +29,8 @@ export default class AggrDataManager {
       populationNames: observable,
       fileUploadProgress: observable,
       dataFiles: observable,
+      origDataFiles: observable,
+      allowedYears: observable,
       actionStatus: observable,
       actionMessage: observable,
       dataNames: computed,
@@ -53,6 +57,7 @@ export default class AggrDataManager {
   setFileType = fileType => this.fileType = fileType;
   setFilePath = filePath => this.filePath = filePath;
   setDataFiles = dataFiles => {
+    this.origDataFiles = EnsureArray(dataFiles);
     this.dataFiles = EnsureArray(dataFiles);
     this.dataFileNameToIdxMap = new Map(this.dataFiles.map((el, i) => [el.name, i]));
   };
@@ -60,6 +65,7 @@ export default class AggrDataManager {
   setDataFileYears = (name, years) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].years = years;
   setPopulationNames = populationNames => this.populationNames = EnsureArray(populationNames).sort();
   setFileUploadProgress = progress => this.fileUploadProgress = progress;
+  setAllowedYears = allowedYears => this.allowedYears = allowedYears;
 
   uploadData = el => {
     var $el = $(el);

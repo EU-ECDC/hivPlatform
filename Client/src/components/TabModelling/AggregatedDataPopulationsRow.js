@@ -34,9 +34,8 @@ const AggregatedDataPopulationsRow = (props) => {
     lastColumn =
       <TableCell rowSpan={rowCount}>
         <Slider
-          min={1975}
-          max={2025}
-          marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
+          min={appMgr.aggrDataMgr.allowedYears[0]}
+          max={appMgr.aggrDataMgr.allowedYears[1]}
           value={dataFile.years}
           onChange={handleYearsChange}
           classes={{

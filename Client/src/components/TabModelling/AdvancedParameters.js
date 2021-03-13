@@ -2,11 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
@@ -30,16 +26,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const YearsSlider = (props) => {
-  const { minYear, maxYear, onChange } = props;
+  const { minYear, maxYear, value, onChange } = props;
 
   const classes = useStyles();
 
   return (
     <Slider
-      min={1975}
-      max={2025}
-      marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
-      value={[minYear, maxYear]}
+      min={minYear}
+      max={maxYear}
+      // marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
+      value={value}
       onChange={onChange}
       classes={{
         valueLabel: classes.valueLabel
@@ -112,8 +108,9 @@ const AdvancedParameters = (props) => {
             <TableCell>Range of calculations</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.minYear}
-                maxYear={appMgr.modelMgr.maxYear}
+                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
+                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                value={[appMgr.modelMgr.minYear, appMgr.modelMgr.maxYear]}
                 onChange={handleYearsChange}
               />
             </TableCell>
@@ -123,8 +120,9 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.minFitPos}
-                maxYear={appMgr.modelMgr.maxFitPos}
+                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
+                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                value={[appMgr.modelMgr.minFitPos, appMgr.modelMgr.maxFitPos]}
                 onChange={handleFitPosChange}
               />
             </TableCell>
@@ -134,8 +132,9 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV diagnoses, by CD4 count</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.minFitCD4}
-                maxYear={appMgr.modelMgr.maxFitCD4}
+                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
+                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                value={[appMgr.modelMgr.minFitCD4, appMgr.modelMgr.maxFitCD4]}
                 onChange={handleFitCD4Change}
               />
             </TableCell>
@@ -145,8 +144,9 @@ const AdvancedParameters = (props) => {
             <TableCell>AIDS diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.minFitAIDS}
-                maxYear={appMgr.modelMgr.maxFitAIDS}
+                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
+                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                value={[appMgr.modelMgr.minFitAIDS, appMgr.modelMgr.maxFitAIDS]}
                 onChange={handleFitAIDSChange}
               />
             </TableCell>
@@ -156,8 +156,9 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV/AIDS diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.minFitHIVAIDS}
-                maxYear={appMgr.modelMgr.maxFitHIVAIDS}
+                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
+                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                value={[appMgr.modelMgr.minFitHIVAIDS, appMgr.modelMgr.maxFitHIVAIDS]}
                 onChange={handleFitHIVAIDSChange}
               />
             </TableCell>

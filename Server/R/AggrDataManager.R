@@ -55,10 +55,11 @@ AggrDataManager <- R6::R6Class(
       tryCatch({
         data <- hivModelling::ReadInputData(fileName)
         dataNames <- names(data)
+        dataYears <- lapply(data, '[[', 'Year')
         dataTypesGroupings <- c('^Dead$', '^AIDS$', '^(HIV|HIVAIDS)$', '^HIV_CD4_[1-4]{1}$')
         dataFiles <- lapply(dataTypesGroupings, function(grouping) {
           names <- grep(grouping, dataNames, value = TRUE)
-          years <- lapply(data[names], '[[', 'Year')
+          years <- dataYears[names]
           minYear <- min(sapply(years, min))
           maxYear <- max(sapply(years, max))
           list(
@@ -67,6 +68,7 @@ AggrDataManager <- R6::R6Class(
             years = c(minYear, maxYear)
           )
         })
+        allowedYears <- c(min(sapply(dataYears, min)), max(sapply(dataYears, max)))
         populationNames <- names(data[[1]])[-1]
       },
       error = function(e) {
@@ -87,8 +89,10 @@ AggrDataManager <- R6::R6Class(
           ActionStatus = status,
           ActionMessage = msg,
           DataFiles = dataFiles,
-          PopulationNames = names(data[[1]])[-1]
+          PopulationNames = names(data[[1]])[-1],
+          AllowedYears = allowedYears
         )
+        private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
         payload <- list(

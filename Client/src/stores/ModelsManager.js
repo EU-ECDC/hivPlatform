@@ -14,6 +14,9 @@ export default class ModelsManager {
       modelsParamFile: observable,
       modelsParamFileName: observable,
       modelsParamFileContent: observable,
+
+      allowedYears: observable,
+
       minYear: observable,
       maxYear: observable,
       minFitPos: observable,
@@ -24,15 +27,14 @@ export default class ModelsManager {
       maxFitAIDS: observable,
       minFitHIVAIDS: observable,
       maxFitHIVAIDS: observable,
-      country: observable,
+      fullData: observable,
       knotsCount: observable,
       startIncZero: observable,
-      distributionFit: observable,
-      rDisp: observable,
-      delta4Fac: observable,
       maxIncCorr: observable,
-      splineType: observable,
-      fullData: observable,
+      distributionFit: observable,
+      delta4Fac: observable,
+      country: observable,
+
       modelsRunProgress: observable,
       modelsRunLog: observable,
       bootstrapRunProgress: observable,
@@ -59,8 +61,6 @@ export default class ModelsManager {
       setDistributionFit: action,
       setDelta4Fac: action,
       setCountry: action,
-      setRDisp: action,
-      setSplineType: action,
       setBootstrapCount: action,
       setBootstrapType: action,
       runModels: action,
@@ -92,6 +92,8 @@ export default class ModelsManager {
   modelsParamFileContent = null;
 
   // Parameters
+  allowedYears = null;
+
   minYear = 1980;
   maxYear = 2016;
   minFitPos = 1979;
@@ -102,6 +104,7 @@ export default class ModelsManager {
   maxFitAIDS = 1995;
   minFitHIVAIDS = 1996;
   maxFitHIVAIDS = 2016;
+
   fullData = true;
   knotsCount = 4;
   startIncZero = true;
@@ -109,8 +112,6 @@ export default class ModelsManager {
   distributionFit = 'POISSON';
   delta4Fac = 0;
   country = 'OTHER';
-  rDisp = 50;
-  splineType = 'B-SPLINE';
   bootstrapCount = 100;
   bootstrapType = 'PARAMETRIC';
 
@@ -133,6 +134,19 @@ export default class ModelsManager {
     }
   };
   setModelsParamFileName = fileName => this.modelsParamFileName = fileName;
+  setAllowedYears = allowedYears => {
+    this.allowedYears = allowedYears;
+    this.setMinYear(allowedYears.All[0]);
+    this.setMaxYear(allowedYears.All[1]);
+    this.setMinFitPos(allowedYears.HIV[0]);
+    this.setMaxFitPos(allowedYears.HIV[1]);
+    this.setMinFitCD4(allowedYears.HIVCD4[0]);
+    this.setMaxFitCD4(allowedYears.HIVCD4[1]);
+    this.setMinFitAIDS(allowedYears.AIDS[0]);
+    this.setMaxFitAIDS(allowedYears.AIDS[1]);
+    this.setMinFitHIVAIDS(allowedYears.HIVAIDS[0]);
+    this.setMaxFitHIVAIDS(allowedYears.HIVAIDS[1]);
+  }
   setMinYear = minYear => this.minYear = minYear;
   setMaxYear = maxYear => this.maxYear = maxYear;
   setMinFitPos = minFitPos => this.minFitPos = minFitPos;
@@ -150,8 +164,6 @@ export default class ModelsManager {
   setDistributionFit = distributionFit => this.distributionFit = distributionFit;
   setDelta4Fac = delta4Fac => this.delta4Fac = delta4Fac;
   setCountry = country => this.country = country;
-  setRDisp = rDisp => this.rDisp = rDisp;
-  setSplineType = splineType => this.splineType = splineType;
   setBootstrapCount = bootstrapCount => this.bootstrapCount = bootstrapCount;
   setBootstrapType = bootstrapType => this.bootstrapType = bootstrapType;
   setPlotData = plotData => this.plotData = plotData;
@@ -177,8 +189,6 @@ export default class ModelsManager {
       distributionFit: this.distributionFit,
       delta4Fac: this.delta4Fac,
       country: this.country,
-      rDisp: this.rDisp,
-      splineType: this.splineType,
       timeIntervals: toJS(this.timeIntCollMgr.selectedRunCollection.intervals),
       popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
       aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)

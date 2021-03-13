@@ -30,7 +30,6 @@ CaseDataManager <- R6::R6Class(
         OriginDistribution = NULL,
         OriginGrouping = list(),
         PreProcessArtifacts = NULL,
-        Summary = NULL,
         Filters = NULL,
         PreProcessedData = NULL,
         PreProcessedDataStatus = NULL,
@@ -195,7 +194,7 @@ CaseDataManager <- R6::R6Class(
       }
 
       status <- 'SUCCESS'
-      msg <- 'Grouping applied correctly'
+      msg <- 'Origin grouping applied correctly'
       tryCatch({
         if (missing(originGrouping)) {
           originDistribution <- private$Catalogs$OriginDistribution
@@ -203,36 +202,111 @@ CaseDataManager <- R6::R6Class(
         }
         preProcessedData <- copy(private$Catalogs$PreProcessedData)
         ApplyOriginGrouping(preProcessedData, originGrouping)
-        summary <- GetCaseDataSummary(preProcessedData)
+        summaryFilterPlots <- GetCaseDataSummaryFilterPlots(preProcessedData)
       },
       error = function(e) {
         status <<- 'FAIL'
-        msg <<- 'Applying grouping failed'
+        msg <<- 'Applying origin grouping failed'
       })
 
       if (status == 'SUCCESS') {
         private$Catalogs$OriginGrouping <- originGrouping
         private$Catalogs$PreProcessedData <- preProcessedData
-        private$Catalogs$Summary <- summary
         private$InvalidateAfterStep('CASE_BASED_ORIGIN_GROUPING')
         PrintAlert('Origin grouping {.val {originGroupingType}} has been applied')
-      } else {
-        PrintAlert('Origin grouping cannot be applied', type = 'danger')
-      }
-
-      private$SendMessage(
-        'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED',
-        payload = list(
+        payload <- list(
           ActionStatus = status,
           ActionMessage = msg,
-          Summary = summary
+          Summary = summaryFilterPlots
         )
-      )
+        private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
+      } else {
+        PrintAlert('Origin grouping cannot be applied', type = 'danger')
+        payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg
+        )
+      }
+
+      private$SendMessage('CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED', payload)
 
       return(invisible(self))
     },
 
-    # 4. Adjust data -------------------------------------------------------------------------------
+    # 4. Set filters -------------------------------------------------------------------------------
+    SetFilters = function(
+      filters
+    ) {
+      private$Catalogs$Filters <- filters
+      PrintAlert('Case-based data filters set')
+
+      diagYearRange <- c(
+        filters$DiagYear$MinYear,
+        filters$DiagYear$MaxYear
+      )
+
+      notifQuarterRange <- c(
+        filters$NotifQuarter$MinYear,
+        filters$NotifQuarter$MaxYear
+      )
+
+      if (
+        any(is.null(diagYearRange)) ||
+          any(is.null(notifQuarterRange)) ||
+          is.null(private$Catalogs$PreProcessedData)
+      ) {
+        return(NULL)
+      }
+
+      # Update summary plots
+      tryCatch({
+        data <- private$Catalogs$PreProcessedData[
+          is.na(YearOfHIVDiagnosis) |
+            is.na(NotificationTime) |
+            (
+              YearOfHIVDiagnosis %between% diagYearRange &
+                NotificationTime %between% notifQuarterRange
+            )
+        ]
+
+        missPlotData <- GetMissingnessPlots(data)
+        repDelPlotData <- GetReportingDelaysPlots(data)
+
+        summary <- list(
+          SelectedCount = nrow(data),
+          TotalCount = nrow(private$Catalogs$PreProcessedData),
+          MissPlotData = missPlotData,
+          RepDelPlotData = repDelPlotData
+        )
+
+        private$AppMgr$SendMessage(
+          type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ActionMessage = 'Summary has been prepared',
+            Summary = summary
+          )
+        )
+
+        PrintAlert('Summary plots created')
+        private$AppMgr$SetCompletedStep('CASE_BASED_SUMMARY')
+
+      },
+      error = function(e) {
+        private$SendMessage(
+          type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
+          payload = list(
+            ActionStatus = 'FAIL',
+            ActionMessage = 'Summary has not been prepared'
+          )
+        )
+      })
+
+      # Determine allowed year ranges for HIV model
+      private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
+    },
+
+    # 5. Adjust data -------------------------------------------------------------------------------
     RunAdjustments = function(
       adjustmentSpecs,
       filters = NULL
@@ -347,6 +421,7 @@ CaseDataManager <- R6::R6Class(
       return(invisible(self))
     },
 
+    # 6. Cancel adjustments ------------------------------------------------------------------------
     CancelAdjustments = function() {
       if (!is.null(private$Catalogs$AdjustmentTask)) {
         private$Catalogs$AdjustmentTask$Stop()
@@ -387,7 +462,6 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$OriginDistribution <- NULL
         private$Catalogs$OriginGrouping <- list()
         private$Catalogs$PreProcessArtifacts <- NULL
-        private$Catalogs$Summary <- NULL
         private$Catalogs$PreProcessedData <- NULL
         private$Catalogs$PreProcessedDataStatus <- NULL
         private$Catalogs$AdjustedData <- NULL
@@ -402,7 +476,6 @@ CaseDataManager <- R6::R6Class(
         step %in% c('CASE_BASED_ATTR_MAPPING')
       ) {
         private$Catalogs$OriginGrouping <- list()
-        private$Catalogs$Summary <- NULL
         private$Catalogs$AdjustedData <- NULL
         private$Catalogs$AdjustmentTask <- NULL
         private$Catalogs$AdjustmentResult <- NULL
@@ -454,14 +527,6 @@ CaseDataManager <- R6::R6Class(
 
     PreProcessArtifacts = function() {
       return(private$Catalogs$PreProcessArtifacts)
-    },
-
-    Summary = function() {
-      return(private$Catalogs$Summary)
-    },
-
-    SummaryJSON = function() {
-      return(jsonlite::toJSON(private$Catalogs$Summary, keep_vec_names = TRUE))
     },
 
     Filters = function() {

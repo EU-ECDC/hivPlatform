@@ -1,4 +1,4 @@
-GetCaseDataSummary <- function(
+GetCaseDataSummaryFilterPlots <- function(
   data
 ) {
   genders <- levels(data$Gender)

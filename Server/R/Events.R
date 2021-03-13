@@ -114,53 +114,7 @@ Events <- function(
   })
 
   observeEvent(input$summaryFilters, {
-    diagYearRange <- c(
-      input$summaryFilters$DiagYear$MinYear,
-      input$summaryFilters$DiagYear$MaxYear
-    )
-
-    notifQuarterRange <- c(
-      input$summaryFilters$NotifQuarter$MinYear,
-      input$summaryFilters$NotifQuarter$MaxYear
-    )
-
-    if (
-      any(is.null(diagYearRange)) ||
-      any(is.null(notifQuarterRange)) ||
-      is.null(appMgr$CaseMgr$PreProcessedData)
-    ) {
-      return(NULL)
-    }
-
-    data <- appMgr$CaseMgr$PreProcessedData[
-      is.na(YearOfHIVDiagnosis) |
-      is.na(NotificationTime) |
-      (
-        YearOfHIVDiagnosis %between% diagYearRange &
-        NotificationTime %between% notifQuarterRange
-      )
-    ]
-
-    missPlotData <- GetMissingnessPlots(data)
-    repDelPlotData <- GetReportingDelaysPlots(data)
-
-    summary <- list(
-      SelectedCount = nrow(data),
-      TotalCount = nrow(appMgr$CaseMgr$PreProcessedData),
-      MissPlotData = missPlotData,
-      RepDelPlotData = repDelPlotData
-    )
-
-    appMgr$SendMessage(
-      type = 'CASE_BASED_SUMMARY_DATA_PREPARED',
-      payload = list(
-        ActionStatus = 'SUCCESS',
-        ActionMessage = 'Summary has been prepared',
-        Summary = summary
-      )
-    )
-
-    appMgr$SetCompletedStep('CASE_BASED_SUMMARY')
+    appMgr$CaseMgr$SetFilters(input$summaryFilters)
   }, ignoreInit = TRUE)
 
   observeEvent(input$runAdjustBtn, {

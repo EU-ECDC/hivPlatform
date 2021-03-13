@@ -80,6 +80,22 @@ export default appMgr => {
         { name: 'HIV_CD4_1, HIV_CD4_2, HIV_CD4_3, HIV_CD4_4', use: true, years: [1992, 2013] },
       ],
       PopulationNames: ['pop_0', 'pop_1'],
+      AllowedYears: [1990, 2019]
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'MODELS_ALLOWED_PARAMS_DETERMINED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'asd asd',
+      Years: {
+        All: [1980, 2016],
+        AIDS: [1980, 1995],
+        HIVCD4: [1984, 2016],
+        HIV: [1979, 1979],
+        HIVAIDS: [1996, 2016]
+      }
     }
   });
 

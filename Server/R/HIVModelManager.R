@@ -23,7 +23,6 @@ HIVModelManager <- R6::R6Class(
       private$Session <- session
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
-        AllowedParameters = NULL,
         PopCombination = NULL,
         AggrDataSelection = NULL,
         MainFitTask = NULL,
@@ -77,33 +76,34 @@ HIVModelManager <- R6::R6Class(
       status <- 'SUCCESS'
       msg <- 'Alllowed parameters determined'
       tryCatch({
-        caseData <- private$AppMgr$CaseMgr$Data[Imputation == 0]
+        caseData <- private$AppMgr$CaseMgr$PreProcessedData
         aggrData <- private$AppMgr$AggrMgr$Data
         popCombination <- list(
           Case = NULL,
-          Aggr = private$ApMgr$AggrMgr$PopulationNames
+          Aggr = private$AppMgr$AggrMgr$PopulationNames
         )
         aggrDataSelection <- NULL
         dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)[[1]]
         years <- hivModelling::GetAllowedYearRanges(dataSets)
-        intervals <- hivModelling::GetIntervalsFromData(
-          minYear = years[['All']][[1]],
-          maxYear = years[['All']][[2]],
-          numIntervals = 5,
-          firstIntervalEndYear = 1984
-        )
+        # nolint start
+        # intervals <- hivModelling::GetIntervalsFromData(
+        #   minYear = years[['All']][[1]],
+        #   maxYear = years[['All']][[2]],
+        #   numIntervals = 5,
+        #   firstIntervalEndYear = 1984
+        # )
+        # nolint end
       }, error = function(e) {
         status <<- 'FAIL'
-        msg <<-
-          'There was a difficulty encountered when determining allowed parameters.'
+        msg <<- 'There was a difficulty encountered when determining allowed parameters.'
       })
 
       if (status == 'SUCCESS') {
         payload <- list(
           ActionStatus = status,
           ActionMessage = msg,
-          Years = years,
-          Intervals = intervals
+          Years = years
+          # Intervals = intervals # nolint
         )
       } else {
         payload <- list(
@@ -113,6 +113,8 @@ HIVModelManager <- R6::R6Class(
       }
 
       private$SendMessage('MODELS_ALLOWED_PARAMS_DETERMINED', payload)
+      PrintAlert('HIV model allowed year ranges determined')
+      return(invisible(self))
     },
 
     RunMainFit = function(
@@ -179,6 +181,7 @@ HIVModelManager <- R6::R6Class(
             )
 
             PrintH2('Advanced paramaters')
+            # nolint start
             PrintAlert('Range of calculations                                : {parameters$ModelMinYear} - {parameters$ModelMaxYear}')
             PrintAlert('HIV diagnoses, total                                 : {parameters$FitPosMinYear} - {parameters$FitPosMaxYear}')
             PrintAlert('HIV diagnoses, by CD4 count                          : {parameters$FitPosCD4MinYear} - {parameters$FitPosCD4MaxYear}')
@@ -191,6 +194,7 @@ HIVModelManager <- R6::R6Class(
             PrintAlert('Maximum likelihood distribution                      : {parameters$FitDistribution}')
             PrintAlert('Extra diagnosis rate due to non-AIDS symptoms        : {parameters$Delta4Fac}')
             PrintAlert('Country-specific settings                            : {parameters$Country}')
+            # nolint end
 
             dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
