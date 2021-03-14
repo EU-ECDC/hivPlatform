@@ -38,13 +38,13 @@ const HIVChart = (props) => {
       stack: 'confidence-bounds',
       symbol: 'none',
       silent: true,
-      color: '#eee',
+      color: '#69b023',
       lineStyle: {
         width: 0,
       },
       emphasis: {
         areaStyle: {
-          color: '#eee'
+          color: '#69b023'
         },
         lineStyle: {
           width: 0,
@@ -60,17 +60,18 @@ const HIVChart = (props) => {
       type: 'line',
       silent: true,
       areaStyle: {
-        color: '#eee'
+        color: '#69b023',
+        opacity: 0.15
       },
       emphasis: {
         areaStyle: {
-          color: '#eee'
+          color: '#69b023'
         },
         lineStyle: {
           width: 0,
         }
       },
-      color: '#eee',
+      color: '#69b023',
       lineStyle: {
         width: 0,
       },
@@ -85,17 +86,14 @@ const HIVChart = (props) => {
       name: 'Model',
       type: 'line',
       smooth: false,
-      color: '#bbb',
+      color: '#69b023',
       data: model,
-      lineStyle: {
-        type: 'dashed',
-      },
       emphasis: {
         scale: false,
         focus: 'none',
         lineStyle: {
           width: 2,
-          color: '#888',
+          color: '#69b023',
         }
       }
     });
@@ -106,8 +104,19 @@ const HIVChart = (props) => {
       name: 'Data',
       type: 'line',
       data: data,
+      lineStyle: {
+        type: 'dashed',
+      },
+      emphasis: {
+        scale: false,
+        focus: 'none',
+        lineStyle: {
+          width: 2,
+          color: '#000',
+        }
+      },
       smooth: false,
-      color: '#69b023',
+      color: '#777',
     });
     legendData.push({ name: 'Data' });
   }

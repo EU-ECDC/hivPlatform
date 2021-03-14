@@ -1,6 +1,8 @@
 import { observable, action, computed, makeObservable, autorun, toJS } from 'mobx';
 import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
+import IsNull from '../utilities/IsNull';
+import FormatNumber from '../utilities/FormatNumber';
 
 export default class ModelsManager {
   parentMgr = null;
@@ -73,6 +75,17 @@ export default class ModelsManager {
       cancelBootstrap: action,
       modelsRunInProgress: computed,
       bootstrapRunInProgress: computed,
+      gofTable1Data: computed,
+      gofTable2Data: computed,
+      gofTable3Data: computed,
+      gofTable4Data: computed,
+      gofTable5Data: computed,
+      gofTable6Data: computed,
+      gofTable7Data: computed,
+      outputTable1Data: computed,
+      outputTable2Data: computed,
+      outputTable3Data: computed,
+      outputTable4Data: computed,
     });
 
     autorun(() => {
@@ -226,4 +239,72 @@ export default class ModelsManager {
   get bootstrapRunInProgress() {
     return this.bootstrapRunProgress !== null;
   };
+
+  get gofTable1Data() {
+    return (this.getTableData(['Year', 'N_HIV_D', 'N_HIV_Obs_M', 'N_HIV_Obs_M_LB', 'N_HIV_Obs_M_UB']));
+  };
+
+  get gofTable2Data() {
+    return (this.getTableData(['Year', 'N_CD4_1_D', 'N_CD4_1_Obs_M', 'N_CD4_1_Obs_M_LB', 'N_CD4_1_Obs_M_UB']));
+  };
+
+  get gofTable3Data() {
+    return (this.getTableData(['Year', 'N_CD4_2_D', 'N_CD4_2_Obs_M', 'N_CD4_2_Obs_M_LB', 'N_CD4_2_Obs_M_UB']));
+  };
+
+  get gofTable4Data() {
+    return (this.getTableData(['Year', 'N_CD4_3_D', 'N_CD4_3_Obs_M', 'N_CD4_3_Obs_M_LB', 'N_CD4_3_Obs_M_UB']));
+  };
+
+  get gofTable5Data() {
+    return (this.getTableData(['Year', 'N_CD4_4_D', 'N_CD4_4_Obs_M', 'N_CD4_4_Obs_M_LB', 'N_CD4_4_Obs_M_UB']));
+  };
+
+  get gofTable6Data() {
+    return (this.getTableData(['Year', 'N_HIVAIDS_D', 'N_HIVAIDS_Obs_M', 'N_HIVAIDS_Obs_M_LB', 'N_HIVAIDS_Obs_M_UB']));
+  };
+
+  get gofTable7Data() {
+    return (this.getTableData(['Year', 'N_AIDS_D', 'N_AIDS_M', 'N_AIDS_M_LB', 'N_AIDS_M_UB']));
+  };
+
+  get outputTable1Data() {
+    return (this.getTableData(['Year', 'N_Inf_M', 'N_Inf_M_LB', 'N_Inf_M_UB']));
+  };
+
+  get outputTable2Data() {
+    return (this.getTableData(['Year', 't_diag', 't_diag_LB', 't_diag_UB']));
+  };
+
+  get outputTable3Data() {
+    return (this.getTableData(['Year', 'N_Alive', 'N_Alive_LB', 'N_Alive_UB']));
+  };
+
+  get outputTable4Data() {
+    return (this.getTableData(['Year', 'N_Und_Alive_p', 'N_Und_Alive_p_LB', 'N_Und_Alive_p_UB']));
+  };
+
+  getTableData = colNames => {
+    if (!IsNull(this.plotData)) {
+      let finalColNames = colNames.filter(colName => !IsNull(this.plotData[colName]));
+
+      const data = finalColNames.map(colName => {
+        if (colName === 'Year') {
+          return (this.plotData.Year);
+        } else {
+          return (this.plotData[colName].map(val => FormatNumber(val)));
+        }
+      })
+
+      return ({
+        ColNames: finalColNames,
+        Data: data
+      });
+    } else {
+      return ({
+        ColNames: [],
+        Data: []
+      });
+    }
+  }
 }

@@ -12,7 +12,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 const TabModellingTables = props => {
-
   const { appMgr } = props;
 
   const [tabId, setTabId] = React.useState(0);
