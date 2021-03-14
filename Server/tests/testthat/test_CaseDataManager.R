@@ -69,11 +69,6 @@ test_that('applying origin grouping is correct', {
   expect_null(caseMgr$AdjustmentResult)
   expect_is(caseMgr$OriginGrouping, 'list')
   expect_equal(length(caseMgr$OriginGrouping), 15)
-  expect_is(caseMgr$Summary, 'list')
-  expect_setequal(
-    names(caseMgr$Summary),
-    c('DiagYearPlotData', 'NotifQuarterPlotData')
-  )
 })
 
 test_that('adjusting is correct', {
@@ -102,11 +97,6 @@ test_that('adjusting is correct', {
   expect_true(caseMgr$Data[, all(Imputation %in% c(0, 1, 2))])
   expect_is(caseMgr$OriginGrouping, 'list')
   expect_equal(length(caseMgr$OriginGrouping), 15)
-  expect_is(caseMgr$Summary, 'list')
-  expect_setequal(
-    names(caseMgr$Summary),
-    c('DiagYearPlotData', 'NotifQuarterPlotData')
-  )
   expect_equal(caseMgr$AdjustmentTask$Status, 'SUCCESS')
   expect_is(caseMgr$AdjustmentResult, 'list')
   expect_equal(length(caseMgr$AdjustmentResult), 1)

@@ -1,8 +1,11 @@
 ## 1.9.49
 
-###### _Mar 9 2021_
+###### _Mar 14 2021_
 
-- UNDER DEVELOPMENT
+- Support allowed year ranges and optimal year ranges in HIV model inputs
+- Print tables next to charts in the HIV model outputs
+- Fix loading and handling time intervals and diagnosis rates matrix
+- Fix tasks errors being propagated to the main thread
 
 
 ## 1.9.48

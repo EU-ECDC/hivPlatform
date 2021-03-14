@@ -219,7 +219,9 @@ CaseDataManager <- R6::R6Class(
           ActionMessage = msg,
           Summary = summaryFilterPlots
         )
-        private$AppMgr$HIVModelMgr$DetermineYearRanges()
+        if (is.function(private$AppMgr$HIVModelMgr$DetermineYearRanges)) {
+          private$AppMgr$HIVModelMgr$DetermineYearRanges()
+        }
       } else {
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
         payload <- list(
@@ -285,7 +287,9 @@ CaseDataManager <- R6::R6Class(
       })
 
       # Determine allowed year ranges for HIV model
-      private$AppMgr$HIVModelMgr$DetermineYearRanges()
+      if (is.function(private$AppMgr$HIVModelMgr$DetermineYearRanges)) {
+        private$AppMgr$HIVModelMgr$DetermineYearRanges()
+      }
     },
 
     # 5. Adjust data -------------------------------------------------------------------------------

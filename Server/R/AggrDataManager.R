@@ -92,7 +92,9 @@ AggrDataManager <- R6::R6Class(
           PopulationNames = names(data[[1]])[-1],
           RangeYears = rangeYears
         )
-        private$AppMgr$HIVModelMgr$DetermineYearRanges()
+        if (is.function(private$AppMgr$HIVModelMgr$DetermineYearRanges)) {
+          private$AppMgr$HIVModelMgr$DetermineYearRanges()
+        }
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
         payload <- list(
