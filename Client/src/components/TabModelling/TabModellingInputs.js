@@ -19,9 +19,13 @@ import DiagnosisRatesSelect from './DiagnosisRatesSelect';
 const TabModellingInputs = props => {
   const { appMgr } = props;
 
-  const handleModelUploadChange = e => appMgr.modelMgr.setModelsParamFile(e.nativeEvent.target.files[0]);
+  const handleModelUploadChange = e => {
+    const file = e.target.files[0];
+    appMgr.modelMgr.setModelsParamFile(file);
+    e.target.value = null;
+  }
 
-  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 2);
+  const handleNextpageBtnClick = () => appMgr.uiStateMgr.setActivePageId(4, 2);
 
   return (
     <TabPanel>
@@ -43,7 +47,12 @@ const TabModellingInputs = props => {
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <input style={{ display: 'none' }} id='modelUploadBtn' type='file' onChange={handleModelUploadChange} />
+          <input
+            style={{ display: 'none' }}
+            id='modelUploadBtn'
+            type='file'
+            onChange={handleModelUploadChange}
+          />
           <label htmlFor='modelUploadBtn'>
             <Btn><CloudUploadIcon />&nbsp;Upload model</Btn>
           </label>

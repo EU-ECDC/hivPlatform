@@ -13,7 +13,7 @@ export default class SummaryDataManager {
       scaleMaxYear: null,
       valueMinYear: null,
       valueMaxYear: null,
-      applyInAdjustments: false
+      applyInAdjustments: null
     },
     chartCategories: [],
     chartData: [],
@@ -25,7 +25,7 @@ export default class SummaryDataManager {
       scaleMaxYear: null,
       valueMinYear: null,
       valueMaxYear: null,
-      applyInAdjustments: false
+      applyInAdjustments: null
     },
     chartCategories: [],
     chartData: []
@@ -115,9 +115,10 @@ export default class SummaryDataManager {
       filters: computed,
     });
 
-    autorun(() => {
-      this.rootMgr.inputValueSet('summaryFilters', this.filters);
-    }, { delay: 1000 });
+    autorun(
+      () => this.rootMgr.inputValueSet('summaryFilters', this.filters),
+      { delay: 1000 }
+    );
   };
 
   setSelectedCount = count => this.selectedCount = count;

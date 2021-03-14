@@ -114,18 +114,25 @@ Events <- function(
   })
 
   observeEvent(input$summaryFilters, {
-    appMgr$CaseMgr$SetFilters(input$summaryFilters)
+    filters <- input$summaryFilters
+    if (!(all(sapply(filters$DiagYear, is.null)) || all(sapply(filters$NotifQuarter, is.null)))) {
+      appMgr$CaseMgr$SetFilters(input$summaryFilters)
+    }
   }, ignoreInit = TRUE)
 
   observeEvent(input$runAdjustBtn, {
     params <- input$runAdjustBtn
     adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)
-    appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, params$Filter)
+    appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
   })
 
   observeEvent(input$cancelAdjustBtn, {
     appMgr$CaseMgr$CancelAdjustments()
   })
+
+  observeEvent(input$aggrFilters, {
+    appMgr$HIVModelMgr$SetAggrFilters(input$aggrFilters)
+  }, ignoreInit = TRUE)
 
   observeEvent(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog, {
     appMgr$SendMessage(
@@ -186,13 +193,11 @@ Events <- function(
     runSettings <- input$runModelBtn
     params <- runSettings$Params
     popCombination <- runSettings$PopCombination
-    aggrDataSelection <- runSettings$AggrDataSelection
 
     appMgr$HIVModelMgr$RunMainFit(
       settings = list(Verbose = FALSE),
       parameters = params,
-      popCombination = popCombination,
-      aggrDataSelection = aggrDataSelection
+      popCombination = popCombination
     )
   })
 

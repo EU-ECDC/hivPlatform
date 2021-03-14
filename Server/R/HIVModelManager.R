@@ -27,6 +27,7 @@ HIVModelManager <- R6::R6Class(
         AggrDataSelection = NULL,
         MainFitTask = NULL,
         MainFitResult = NULL,
+        Years = NULL,
         BootstrapFitTask = NULL,
         BootstrapFitResult = NULL,
         BootstrapFitStats = NULL,
@@ -72,19 +73,30 @@ HIVModelManager <- R6::R6Class(
       private$SendMessage('MODELS_PARAMS_LOADED', payload)
     },
 
-    DetermineAllowedParameters = function() {
+    DetermineYearRanges = function() {
       status <- 'SUCCESS'
       msg <- 'Alllowed parameters determined'
       tryCatch({
-        caseData <- private$AppMgr$CaseMgr$PreProcessedData
+        # Data
+        caseData <- FilterCaseBasedData(
+          private$AppMgr$CaseMgr$PreProcessedData,
+          private$AppMgr$CaseMgr$Filters
+        )
         aggrData <- private$AppMgr$AggrMgr$Data
+
+        # Combination 'All data'
         popCombination <- list(
           Case = NULL,
           Aggr = private$AppMgr$AggrMgr$PopulationNames
         )
-        aggrDataSelection <- NULL
+
+        # Aggregated data filters
+        aggrDataSelection <- private$Catalogs$AggrDataSelection
+
         dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)[[1]]
-        years <- hivModelling::GetAllowedYearRanges(dataSets)
+        optimalYears <- hivModelling::GetAllowedYearRanges(dataSets)
+        rangeYears <- lapply(dataSets, function(dt) dt[, c(min(Year), max(Year))])
+
         # nolint start
         # intervals <- hivModelling::GetIntervalsFromData(
         #   minYear = years[['All']][[1]],
@@ -95,14 +107,18 @@ HIVModelManager <- R6::R6Class(
         # nolint end
       }, error = function(e) {
         status <<- 'FAIL'
-        msg <<- 'There was a difficulty encountered when determining allowed parameters.'
+        msg <<- 'There was a difficulty encountered when determining year ranges.'
       })
 
       if (status == 'SUCCESS') {
+        private$Catalogs$Years <- list(
+          Range = rangeYears,
+          Optimal = optimalYears
+        )
         payload <- list(
           ActionStatus = status,
           ActionMessage = msg,
-          Years = years
+          Years = private$Catalogs$Years
           # Intervals = intervals # nolint
         )
       } else {
@@ -112,16 +128,25 @@ HIVModelManager <- R6::R6Class(
         )
       }
 
-      private$SendMessage('MODELS_ALLOWED_PARAMS_DETERMINED', payload)
-      PrintAlert('HIV model allowed year ranges determined')
+      private$SendMessage('MODELS_YEAR_RANGES_DETERMINED', payload)
+      PrintAlert('HIV model year ranges determined')
       return(invisible(self))
+    },
+
+    SetAggrFilters = function(
+      aggrFilters
+    ) {
+      private$Catalogs$AggrDataSelection <- aggrFilters
+      PrintAlert('Aggregated data filters set')
+      print(aggrFilters)
+
+      self$DetermineYearRanges()
     },
 
     RunMainFit = function(
       settings = list(),
       parameters = list(),
-      popCombination = NULL,
-      aggrDataSelection = NULL
+      popCombination = NULL
     ) {
       if (!any(is.element(
         private$AppMgr$Steps[c('CASE_BASED_READ', 'AGGR_READ')],
@@ -163,7 +188,7 @@ HIVModelManager <- R6::R6Class(
               if (length(popCombination$CaseAbbr) > 0) {
                 PrintAlert('Case-based populations: {.val {popCombination$CaseAbbr}}')
               } else {
-                PrintAlert('Case-based populations: All data available}')
+                PrintAlert('Case-based populations: All data available')
               }
             } else {
               PrintAlert('Case-based populations: None')
@@ -172,7 +197,7 @@ HIVModelManager <- R6::R6Class(
             if (!is.null(aggrData) && length(popCombination$Aggr) > 0) {
               PrintAlert('Aggregated populations: {.val {popCombination$Aggr}}')
             } else {
-              PrintAlert('Aggregated populations: None}')
+              PrintAlert('Aggregated populations: None')
             }
 
             PrintH2('Time intervals and diagnosis rates modelling')
@@ -245,12 +270,11 @@ HIVModelManager <- R6::R6Class(
             settings = settings,
             parameters = parameters,
             popCombination = popCombination,
-            aggrDataSelection = aggrDataSelection
+            aggrDataSelection = private$Catalogs$AggrDataSelection
           ),
           session = private$Session,
           successCallback = function(result) {
             private$Catalogs$PopCombination <- popCombination
-            private$Catalogs$AggrDataSelection <- aggrDataSelection
             private$Catalogs$MainFitResult <- result$MainFitResult
             private$Catalogs$PlotData <- result$PlotData
             private$InvalidateAfterStep('MODELLING')
@@ -579,6 +603,10 @@ HIVModelManager <- R6::R6Class(
 
     AggrDataSelection = function() {
       return(private$Catalogs$AggrDataSelection)
+    },
+
+    Years = function() {
+      return(private$Catalogs$Years)
     },
 
     MainFitTask = function() {

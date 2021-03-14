@@ -13,9 +13,9 @@ export default class ModelsManager {
     makeObservable(this, {
       modelsParamFile: observable,
       modelsParamFileName: observable,
-      modelsParamFileContent: observable,
 
-      allowedYears: observable,
+      rangeYears: observable,
+      optimalYears: observable,
 
       minYear: observable,
       maxYear: observable,
@@ -63,6 +63,8 @@ export default class ModelsManager {
       setCountry: action,
       setBootstrapCount: action,
       setBootstrapType: action,
+      setRangeYears: action,
+      setOptimalYears: action,
       runModels: action,
       cancelModels: action,
       setModelsRunProgress: action,
@@ -71,10 +73,6 @@ export default class ModelsManager {
       cancelBootstrap: action,
       modelsRunInProgress: computed,
       bootstrapRunInProgress: computed,
-    });
-
-    autorun(() => {
-      this.parentMgr.inputValueSet('xmlModel', this.modelsParamFileContent);
     });
 
     autorun(() => {
@@ -89,10 +87,10 @@ export default class ModelsManager {
   // File details
   modelsParamFile = null;
   modelsParamFileName = '';
-  modelsParamFileContent = null;
 
   // Parameters
-  allowedYears = null;
+  rangeYears = null;
+  optimalYears = null;
 
   minYear = 1980;
   maxYear = 2016;
@@ -128,35 +126,48 @@ export default class ModelsManager {
       this.modelsParamFile = paramFile;
       this.modelsParamFileName = paramFile.name;
       LoadTxtFile(this.modelsParamFile).then(
-        action('success', content => this.modelsParamFileContent = content),
+        action('success', content => {
+          this.parentMgr.btnClicked('xmlModel', content);
+        }),
         action('error', error => console.log(error))
       );
     }
   };
   setModelsParamFileName = fileName => this.modelsParamFileName = fileName;
-  setAllowedYears = allowedYears => {
-    this.allowedYears = allowedYears;
-    this.setMinYear(allowedYears.All[0]);
-    this.setMaxYear(allowedYears.All[1]);
-    this.setMinFitPos(allowedYears.HIV[0]);
-    this.setMaxFitPos(allowedYears.HIV[1]);
-    this.setMinFitCD4(allowedYears.HIVCD4[0]);
-    this.setMaxFitCD4(allowedYears.HIVCD4[1]);
-    this.setMinFitAIDS(allowedYears.AIDS[0]);
-    this.setMaxFitAIDS(allowedYears.AIDS[1]);
-    this.setMinFitHIVAIDS(allowedYears.HIVAIDS[0]);
-    this.setMaxFitHIVAIDS(allowedYears.HIVAIDS[1]);
-  }
-  setMinYear = minYear => this.minYear = minYear;
-  setMaxYear = maxYear => this.maxYear = maxYear;
-  setMinFitPos = minFitPos => this.minFitPos = minFitPos;
-  setMaxFitPos = maxFitPos => this.maxFitPos = maxFitPos;
-  setMinFitCD4 = minFitCD4 => this.minFitCD4 = minFitCD4;
-  setMaxFitCD4 = maxFitCD4 => this.maxFitCD4 = maxFitCD4;
-  setMinFitAIDS = minFitAIDS => this.minFitAIDS = minFitAIDS;
-  setMaxFitAIDS = maxFitAIDS => this.maxFitAIDS = maxFitAIDS;
-  setMinFitHIVAIDS = minFitHIVAIDS => this.minFitHIVAIDS = minFitHIVAIDS;
-  setMaxFitHIVAIDS = maxFitHIVAIDS => this.maxFitHIVAIDS = maxFitHIVAIDS;
+  setRangeYears = rangeYears => this.rangeYears = rangeYears;
+  setOptimalYears = optimalYears => {
+    this.optimalYears = optimalYears;
+    this.setMinYear(optimalYears.All[0]);
+    this.setMaxYear(optimalYears.All[1]);
+    this.setMinFitPos(optimalYears.HIV[0]);
+    this.setMaxFitPos(optimalYears.HIV[1]);
+    this.setMinFitCD4(optimalYears.HIVCD4[0]);
+    this.setMaxFitCD4(optimalYears.HIVCD4[1]);
+    this.setMinFitAIDS(optimalYears.AIDS[0]);
+    this.setMaxFitAIDS(optimalYears.AIDS[1]);
+    this.setMinFitHIVAIDS(optimalYears.HIVAIDS[0]);
+    this.setMaxFitHIVAIDS(optimalYears.HIVAIDS[1]);
+  };
+  setMinYear = minYear =>
+    this.minYear = Math.min(Math.max(this.optimalYears.All[0] - 1, minYear), this.optimalYears.All[1]);
+  setMaxYear = maxYear =>
+    this.maxYear = Math.min(Math.max(this.optimalYears.All[0] - 1, maxYear), this.optimalYears.All[1]);
+  setMinFitPos = minFitPos =>
+    this.minFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitPos), this.optimalYears.All[1]);
+  setMaxFitPos = maxFitPos =>
+    this.maxFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitPos), this.optimalYears.All[1]);
+  setMinFitCD4 = minFitCD4 =>
+    this.minFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitCD4), this.optimalYears.All[1]);
+  setMaxFitCD4 = maxFitCD4 =>
+    this.maxFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitCD4), this.optimalYears.All[1]);
+  setMinFitAIDS = minFitAIDS =>
+    this.minFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitAIDS), this.optimalYears.All[1]);
+  setMaxFitAIDS = maxFitAIDS =>
+    this.maxFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitAIDS), this.optimalYears.All[1]);
+  setMinFitHIVAIDS = minFitHIVAIDS =>
+    this.minFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitHIVAIDS), this.optimalYears.All[1]);
+  setMaxFitHIVAIDS = maxFitHIVAIDS =>
+    this.maxFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitHIVAIDS), this.optimalYears.All[1]);
   setFullData = fullData => this.fullData = fullData;
   setKnotsCount = knotsCount => this.knotsCount = knotsCount;
   setStartIncZero = startIncZero => this.startIncZero = startIncZero;
@@ -190,8 +201,7 @@ export default class ModelsManager {
       delta4Fac: this.delta4Fac,
       country: this.country,
       timeIntervals: toJS(this.timeIntCollMgr.selectedRunCollection.intervals),
-      popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination),
-      aggrDataSelection: toJS(this.parentMgr.aggrDataMgr.dataFiles)
+      popCombination: toJS(this.parentMgr.popCombMgr.selectedCombination)
     };
     this.parentMgr.btnClicked('runModelBtn:HIVModelParams', params);
   };

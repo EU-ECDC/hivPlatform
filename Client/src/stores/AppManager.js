@@ -192,7 +192,7 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.aggrDataMgr.setDataFiles(e.payload.DataFiles);
           this.aggrDataMgr.setPopulationNames(e.payload.PopulationNames);
-          this.aggrDataMgr.setAllowedYears(e.payload.AllowedYears);
+          this.aggrDataMgr.setRangeYears(e.payload.RangeYears);
           this.notificationsMgr.setMsg('Aggregated data uploaded');
         }
         break;
@@ -228,9 +228,10 @@ export default class AppManager {
           );
         }
         break;
-      case 'MODELS_ALLOWED_PARAMS_DETERMINED':
+      case 'MODELS_YEAR_RANGES_DETERMINED':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.modelMgr.setAllowedYears(e.payload.Years);
+          this.modelMgr.setRangeYears(e.payload.Years.Range);
+          this.modelMgr.setOptimalYears(e.payload.Years.Optimal);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;

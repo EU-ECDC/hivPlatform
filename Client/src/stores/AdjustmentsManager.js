@@ -203,7 +203,6 @@ export default class AdjustmentsManager {
 
   runAdjustments = () => {
     this.rootMgr.btnClicked('runAdjustBtn', {
-      Filters: this.rootMgr.summaryDataMgr.filters,
       MIAdjustType: this.miAdjustType,
       MIParams: this.miParams,
       RDAdjustType: this.rdAdjustType,

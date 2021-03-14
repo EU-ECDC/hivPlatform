@@ -219,7 +219,7 @@ CaseDataManager <- R6::R6Class(
           ActionMessage = msg,
           Summary = summaryFilterPlots
         )
-        private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
+        private$AppMgr$HIVModelMgr$DetermineYearRanges()
       } else {
         PrintAlert('Origin grouping cannot be applied', type = 'danger')
         payload <- list(
@@ -239,35 +239,17 @@ CaseDataManager <- R6::R6Class(
     ) {
       private$Catalogs$Filters <- filters
       PrintAlert('Case-based data filters set')
-
-      diagYearRange <- c(
-        filters$DiagYear$MinYear,
-        filters$DiagYear$MaxYear
-      )
-
-      notifQuarterRange <- c(
-        filters$NotifQuarter$MinYear,
-        filters$NotifQuarter$MaxYear
-      )
-
-      if (
-        any(is.null(diagYearRange)) ||
-          any(is.null(notifQuarterRange)) ||
-          is.null(private$Catalogs$PreProcessedData)
-      ) {
-        return(NULL)
-      }
+      print(filters)
 
       # Update summary plots
       tryCatch({
-        data <- private$Catalogs$PreProcessedData[
-          is.na(YearOfHIVDiagnosis) |
-            is.na(NotificationTime) |
-            (
-              YearOfHIVDiagnosis %between% diagYearRange &
-                NotificationTime %between% notifQuarterRange
-            )
-        ]
+        data <- FilterCaseBasedData(
+          private$Catalogs$PreProcessedData,
+          private$Catalogs$Filters
+        )
+        if (is.null(data)) {
+          return(NULL)
+        }
 
         missPlotData <- GetMissingnessPlots(data)
         repDelPlotData <- GetReportingDelaysPlots(data)
@@ -303,13 +285,12 @@ CaseDataManager <- R6::R6Class(
       })
 
       # Determine allowed year ranges for HIV model
-      private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
+      private$AppMgr$HIVModelMgr$DetermineYearRanges()
     },
 
     # 5. Adjust data -------------------------------------------------------------------------------
     RunAdjustments = function(
-      adjustmentSpecs,
-      filters = NULL
+      adjustmentSpecs
     ) {
       if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ORIGIN_GROUPING'],
@@ -325,8 +306,8 @@ CaseDataManager <- R6::R6Class(
       tryCatch({
         PrintAlert('Starting adjustment task')
 
-        private$Catalogs$Filters <- filters
-        preProcessedData <- private$Catalogs$PreProcessedData
+        data <- private$Catalogs$PreProcessedData
+        filters <- private$Catalogs$Filters
 
         if (isTRUE(filters$DiagYear$ApplyInAdjustments)) {
           diagYearRange <- c(
@@ -334,10 +315,7 @@ CaseDataManager <- R6::R6Class(
             filters$DiagYear$MaxYear
           )
 
-          preProcessedData <- preProcessedData[
-            is.na(YearOfHIVDiagnosis) |
-            YearOfHIVDiagnosis %between% diagYearRange
-          ]
+          data  <- data[is.na(YearOfHIVDiagnosis) | YearOfHIVDiagnosis %between% diagYearRange]
         }
 
         if (isTRUE(filters$NotifQuarter$ApplyInAdjustments)) {
@@ -346,13 +324,10 @@ CaseDataManager <- R6::R6Class(
             filters$NotifQuarter$MaxYear
           )
 
-          preProcessedData <- preProcessedData[
-            is.na(NotificationTime) |
-              NotificationTime %between% notifQuarterRange
-          ]
+          data <- data[is.na(NotificationTime) | NotificationTime %between% notifQuarterRange]
         }
 
-        if (nrow(preProcessedData)) {
+        if (nrow(data)) {
           private$Catalogs$AdjustmentTask <- Task$new(
             function(data, adjustmentSpecs) {
               suppressMessages(pkgload::load_all())
@@ -368,7 +343,7 @@ CaseDataManager <- R6::R6Class(
 
               return(result)
             },
-            args = list(data = preProcessedData, adjustmentSpecs = adjustmentSpecs),
+            args = list(data = data, adjustmentSpecs = adjustmentSpecs),
             session = private$Session,
             successCallback = function(result) {
               private$Catalogs$AdjustmentResult <- result

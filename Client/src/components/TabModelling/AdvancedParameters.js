@@ -34,7 +34,6 @@ const YearsSlider = (props) => {
     <Slider
       min={minYear}
       max={maxYear}
-      // marks={[{ value: 1975, label: '1975' }, { value: 2025, label: '2025' }]}
       value={value}
       onChange={onChange}
       classes={{
@@ -92,14 +91,17 @@ const AdvancedParameters = (props) => {
 
   const handleCountryChange = e => appMgr.modelMgr.setCountry(e.target.value);
 
+  const minYear = appMgr.modelMgr.optimalYears.All[0] - 1;
+  const maxYear = appMgr.modelMgr.optimalYears.All[1];
+
   return (
     <Paper>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell width='5%'>Idx</TableCell>
-            <TableCell width='20%'>Parameter</TableCell>
-            <TableCell width='75%'>Value</TableCell>
+            <TableCell width='50px'>Idx</TableCell>
+            <TableCell width='330px'>Parameter</TableCell>
+            <TableCell>Value</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -108,8 +110,8 @@ const AdvancedParameters = (props) => {
             <TableCell>Range of calculations</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
-                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                minYear={minYear}
+                maxYear={maxYear}
                 value={[appMgr.modelMgr.minYear, appMgr.modelMgr.maxYear]}
                 onChange={handleYearsChange}
               />
@@ -120,8 +122,8 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
-                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                minYear={minYear}
+                maxYear={maxYear}
                 value={[appMgr.modelMgr.minFitPos, appMgr.modelMgr.maxFitPos]}
                 onChange={handleFitPosChange}
               />
@@ -132,8 +134,8 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV diagnoses, by CD4 count</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
-                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                minYear={minYear}
+                maxYear={maxYear}
                 value={[appMgr.modelMgr.minFitCD4, appMgr.modelMgr.maxFitCD4]}
                 onChange={handleFitCD4Change}
               />
@@ -144,8 +146,8 @@ const AdvancedParameters = (props) => {
             <TableCell>AIDS diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
-                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                minYear={minYear}
+                maxYear={maxYear}
                 value={[appMgr.modelMgr.minFitAIDS, appMgr.modelMgr.maxFitAIDS]}
                 onChange={handleFitAIDSChange}
               />
@@ -156,8 +158,8 @@ const AdvancedParameters = (props) => {
             <TableCell>HIV/AIDS diagnoses, total</TableCell>
             <TableCell>
               <YearsSlider
-                minYear={appMgr.modelMgr.allowedYears.All[0] - 1}
-                maxYear={appMgr.modelMgr.allowedYears.All[1]}
+                minYear={minYear}
+                maxYear={maxYear}
                 value={[appMgr.modelMgr.minFitHIVAIDS, appMgr.modelMgr.maxFitHIVAIDS]}
                 onChange={handleFitHIVAIDSChange}
               />

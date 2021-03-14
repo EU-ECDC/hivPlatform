@@ -121,7 +121,7 @@ const TabModellingRunMain = props => {
             <Typography variant='overline'>Run log</Typography>
             <pre
               dangerouslySetInnerHTML={{ __html: appMgr.modelMgr.modelsRunLog }}
-              style={{ overflowX: 'auto' }}
+              style={{ overflowX: 'auto', fontSize: '0.75rem' }}
             />
           </Paper>
         </Grid>

@@ -68,7 +68,7 @@ AggrDataManager <- R6::R6Class(
             years = c(minYear, maxYear)
           )
         })
-        allowedYears <- c(min(sapply(dataYears, min)), max(sapply(dataYears, max)))
+        rangeYears <- c(min(sapply(dataYears, min)), max(sapply(dataYears, max)))
         populationNames <- names(data[[1]])[-1]
       },
       error = function(e) {
@@ -90,9 +90,9 @@ AggrDataManager <- R6::R6Class(
           ActionMessage = msg,
           DataFiles = dataFiles,
           PopulationNames = names(data[[1]])[-1],
-          AllowedYears = allowedYears
+          RangeYears = rangeYears
         )
-        private$AppMgr$HIVModelMgr$DetermineAllowedParameters()
+        private$AppMgr$HIVModelMgr$DetermineYearRanges()
       } else {
         PrintAlert('Loading data file {.file {fileName}} failed', type = 'danger')
         payload <- list(

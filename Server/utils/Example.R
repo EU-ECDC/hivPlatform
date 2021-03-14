@@ -19,6 +19,19 @@ appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 
+appMgr$CaseMgr$SetFilters(filters = list(
+  DiagYear = list(
+    ApplyInAdjustments = TRUE,
+    MinYear =  2000,
+    MaxYear =  2014
+  ),
+  NotifQuarter <- list(
+    ApplyInAdjustments = FALSE,
+    MinYear = 2000.125,
+    MaxYear = 2014.875
+  )
+))
+
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 filters <- list(

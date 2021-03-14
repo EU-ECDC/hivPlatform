@@ -130,8 +130,8 @@ ParseXMLModel <- function(
     list(
       startYear = as.integer(el$StartYear[[1]]),
       jump = as.logical(el$Jump[[1]]),
-      changeInInterval = as.logical(el$ChangingInInterval[[1]]),
-      diffByCD4 = as.logical(el$ChangingInInterval[[1]])
+      diffByCD4 = as.logical(el$DifferentByCD4[[1]]),
+      changeInInterval = as.logical(el$ChangingInInterval[[1]])
     )
   })
 
