@@ -1,3 +1,10 @@
+## 1.9.50
+
+###### _Mar 15 2021_
+
+- Download links for HIV model outputs, boostrap iterations and statistics added
+
+
 ## 1.9.49
 
 ###### _Mar 14 2021_

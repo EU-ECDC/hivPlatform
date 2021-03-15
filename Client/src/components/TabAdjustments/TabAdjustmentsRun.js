@@ -105,13 +105,13 @@ const TabAdjustmentsRun = props => {
             {tabId === 0 && <React.Fragment>
               <pre
                 dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsRunLog }}
-                style={{ overflowX: 'auto' }}
+                style={{ overflowX: 'auto', fontSize: '0.75rem' }}
               />
             </React.Fragment>}
             {tabId === 1 && <React.Fragment>
               <div
                 dangerouslySetInnerHTML={{ __html: appMgr.adjustMgr.adjustmentsReport }}
-                style={{ overflowX: 'auto', fontSize: '0.75rem' }}
+                style={{ overflowX: 'auto' }}
               />
             </React.Fragment>}
           </Paper>

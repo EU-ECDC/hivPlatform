@@ -80,7 +80,9 @@ export default class UIStateManager {
       caseBasedAttrMappingEnabled: computed,
       caseBasedOrigGroupingEnabled: computed,
       bootstrapEnabled: computed,
+      adjustmentsOutputsEnabled: computed,
       modellingOutputsEnabled: computed,
+      bootstrapOutputsEnabled: computed
     });
   };
 
@@ -156,7 +158,10 @@ export default class UIStateManager {
   };
 
   get outputsPageEnabled() {
-    return InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps);
+    return (
+      InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps) ||
+      InArray('MODELLING', this.completedSteps)
+    );
   };
 
   get caseBasedAttrMappingEnabled() {
@@ -171,11 +176,19 @@ export default class UIStateManager {
     return InArray('MODELLING', this.completedSteps);
   };
 
+  get nonParametricBootstrapEnabled() {
+    return InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps);
+  };
+
+  get adjustmentsOutputsEnabled() {
+    return InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps);
+  };
+
   get modellingOutputsEnabled() {
     return InArray('MODELLING', this.completedSteps);
   };
 
-  get nonParametricBootstrapEnabled() {
-    return InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps);
-  }
+  get bootstrapOutputsEnabled() {
+    return InArray('BOOTSTRAP', this.completedSteps);
+  };
 }

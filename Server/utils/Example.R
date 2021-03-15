@@ -5,7 +5,7 @@ appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -14,6 +14,7 @@ appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # nolint end
+
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
@@ -32,21 +33,10 @@ appMgr$CaseMgr$SetFilters(filters = list(
   )
 ))
 
+
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-filters <- list(
-  DiagYear = list(
-    ApplyInAdjustments = TRUE,
-    MinYear =  2000,
-    MaxYear =  2014
-  ),
-  NotifQuarter <- list(
-    ApplyInAdjustments = FALSE,
-    MinYear = 2000.125,
-    MaxYear = 2014.875
-  )
-)
-appMgr$CaseMgr$RunAdjustments(adjustmentSpecs, filters)
+appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -67,10 +57,6 @@ browseURL(fileName)
 
 
 # STEP 5 - Fit the HIV model -----------------------------------------------------------------------
-popCombination <- list(
-  Case = NULL,
-  Aggr = appMgr$AggrMgr$PopulationNames
-)
 aggrDataSelection <- data.table(
   Name = c(
     'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
@@ -79,6 +65,12 @@ aggrDataSelection <- data.table(
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
+appMgr$HIVModelMgr$SetAggrFilter(aggrDataSelection)
+
+popCombination <- list(
+  Case = NULL,
+  Aggr = appMgr$AggrMgr$PopulationNames
+)
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
   parameters = list(
@@ -86,15 +78,53 @@ appMgr$HIVModelMgr$RunMainFit(
     FitAIDSPosMaxYear = 2016,
     KnotsCount = 6
   ),
-  popCombination = popCombination,
-  aggrDataSelection = NULL
+  popCombination = popCombination
 )
+
+# 1. Detailed HIV Model main fit results (rds)
+names(appMgr$HIVModelMgr$MainFitResult)
+
+# 2. Main outputs (txt, rds, stata)
+data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter) {
+  dt <- appMgr$HIVModelMgr$MainFitResult[[iter]]$Results$MainOutputs
+  dt[, ':='(
+    Imputation = iter,
+    Run = NULL
+  )]
+  setcolorder(dt, 'Imputation')
+}))
 
 # STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
-appMgr$HIVModelMgr$BootstrapFitStats$MainOutputs$N_HIV_Obs_M
+# 3. Detailed HIV Model bootstrap results (rds)
+appMgr$HIVModelMgr$BootstrapFitResult
+
+# 4. Main outputs of bootstrap (txt, rds, stata)
+succFlatList <- Filter(
+  function(item) item$Results$Converged,
+  Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult)
+)
+mainOutputs <- rbindlist(lapply(succFlatList, function(res) {
+  mainOutputs <- res$Results$MainOutputs
+  mainOutputs[, ':='(
+    DataSet = res$DataSet,
+    BootIteration = res$BootIteration
+  )]
+  return(mainOutputs)
+}))
+setcolorder(
+  mainOutputs,
+  c('DataSet', 'BootIteration')
+)
+
+# 5. Detailed bootstrap statistics (rds)
+appMgr$HIVModelMgr$BootstrapFitStats
+
+# 6. Main output stats (rds)
+bootstrap <- rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
+
 
 # STEP 6 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
@@ -110,6 +140,7 @@ appMgr$HIVModelMgr$BootstrapFitStats$Theta
 pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
+
 # STEP 7 - Save and load ---------------------------------------------------------------------------
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
@@ -118,11 +149,3 @@ appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr$HIVModelMgr$MainFitResult
 appMgr$HIVModelMgr$MainFitTask$Status
 cat(appMgr$HIVModelMgr$MainFitTask$RunLog)
-
-caseData <- appMgr$CaseMgr$Data
-aggrData <- appMgr$AggrMgr$Data
-popCombination <- list(
-  Case = NULL,
-  Aggr = c('pop_0')
-)
-dataSets <- CombineData(caseData, aggrData, popCombination)
