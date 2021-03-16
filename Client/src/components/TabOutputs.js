@@ -129,7 +129,7 @@ const TabOutputs = (props) => {
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
-            <Table hover>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell width='300px'>Description</TableCell>
@@ -141,7 +141,7 @@ const TabOutputs = (props) => {
                 <TableRow hover>
                   <TableCell>Adjusted case-based data</TableCell>
                   <TableCell>{adjustmentsLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>Flat table</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Reporting delays distributions</TableCell>
@@ -169,32 +169,32 @@ const TabOutputs = (props) => {
                 <TableRow hover>
                   <TableCell>Detailed main fit model results</TableCell>
                   <TableCell>{hivModelFitDetailedLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>R list object with the following items:</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs of main fit model</TableCell>
                   <TableCell>{hivModelFitLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>Flat table</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Detailed bootstrap fits model results</TableCell>
                   <TableCell>{hivModelBootDetailedLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>R list object with the following items:</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs of bootstrap fits</TableCell>
                   <TableCell>{hivModelBootLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>Flat table</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Detailed bootstrap statistics results</TableCell>
                   <TableCell>{hivModelStatDetailedLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>R list object with the following items:</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs bootstrap statistics</TableCell>
                   <TableCell>{hivModelStatLinks}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>Flat table</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

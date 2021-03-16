@@ -1,7 +1,6 @@
 library(hivEstimatesAccuracy2)
 
 appMgr <- AppManager$new()
-
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start

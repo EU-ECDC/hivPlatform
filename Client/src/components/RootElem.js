@@ -59,6 +59,15 @@ const RootElem = props => {
   const classes = userStyles();
   const [rightNavState, setRightNavState] = React.useState(false);
 
+  const confirmExit = e => {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+  React.useEffect(() => {
+    window.addEventListener('beforeunload', confirmExit);
+    return () => window.removeEventListener('beforeunload', confirmExit);
+  }, [])
+
   const bgColor = appMgr.shinyReady ? '#69b023' : '#f44336';
 
   const appBar = (

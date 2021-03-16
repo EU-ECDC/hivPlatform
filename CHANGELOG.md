@@ -2,6 +2,7 @@
 
 ###### _Mar 16 2021_
 
+- Add exit confirmation dialog
 - UNDER DEVELOPMENT
 
 
