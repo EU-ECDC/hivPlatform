@@ -1,9 +1,9 @@
 ## 1.9.51
 
-###### _Mar 16 2021_
+###### _Mar 28 2021_
 
 - Add exit confirmation dialog
-- UNDER DEVELOPMENT
+- Fix applying changes to diagnosis rates matrix
 
 
 ## 1.9.50

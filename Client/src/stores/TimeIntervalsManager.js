@@ -26,6 +26,7 @@ export default class TimeIntervalsManager {
       setMinYear: action,
       setMaxYear: action,
       setIntervals: action,
+      addInterval: action,
       addEmptyInterval: action,
       removeIntervals: action,
       setId: action,
@@ -96,19 +97,13 @@ export default class TimeIntervalsManager {
     }
   };
 
-  addEmptyInterval = () => {
-    this.intervals.push({
-      startYear: this.maxStartYear,
-      endYear: this.maxYear,
-      jump: false,
-      changeInInterval: false,
-      diffByCD4: false,
-    });
-    this.reinitializeEndYears();
-  };
-
   addInterval = (startYear, endYear, jump, changeInInterval, diffByCD4) => {
     this.intervals.push({startYear, endYear, jump, changeInInterval, diffByCD4});
+  };
+
+  addEmptyInterval = () => {
+    this.addInterval(this.maxStartYear, this.maxYear, false, false, false);
+    this.reinitializeEndYears();
   };
 
   removeIntervals = selectedIds => {
