@@ -37,8 +37,6 @@ const useStyles = makeStyles(() => ({
 const SmallTable = props => {
   const { tableData } = props;
 
-  console.log(tableData);
-
   const classes = useStyles();
   return (
     <TableContainer style={{ maxHeight: 300 }}>
