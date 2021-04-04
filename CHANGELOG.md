@@ -1,8 +1,8 @@
 ## 1.9.52
 
-###### _Mar 29 2021_
+###### _Apr 04 2021_
 
-- UNDER DEVELOPMENT
+- Fix applying changes to HIV model paremeters (types)
 
 
 ## 1.9.51

@@ -162,31 +162,31 @@ export default class ModelsManager {
     this.setMaxFitHIVAIDS(optimalYears.HIVAIDS[1]);
   };
   setMinYear = minYear =>
-    this.minYear = Math.min(Math.max(this.optimalYears.All[0] - 1, minYear), this.optimalYears.All[1]);
+    this.minYear = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(minYear)), this.optimalYears.All[1]);
   setMaxYear = maxYear =>
-    this.maxYear = Math.min(Math.max(this.optimalYears.All[0] - 1, maxYear), this.optimalYears.All[1]);
+    this.maxYear = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxYear)), this.optimalYears.All[1]);
   setMinFitPos = minFitPos =>
-    this.minFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitPos), this.optimalYears.All[1]);
+    this.minFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(minFitPos)), this.optimalYears.All[1]);
   setMaxFitPos = maxFitPos =>
-    this.maxFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitPos), this.optimalYears.All[1]);
+    this.maxFitPos = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxFitPos)), this.optimalYears.All[1]);
   setMinFitCD4 = minFitCD4 =>
-    this.minFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitCD4), this.optimalYears.All[1]);
+    this.minFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(minFitCD4)), this.optimalYears.All[1]);
   setMaxFitCD4 = maxFitCD4 =>
-    this.maxFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitCD4), this.optimalYears.All[1]);
+    this.maxFitCD4 = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxFitCD4)), this.optimalYears.All[1]);
   setMinFitAIDS = minFitAIDS =>
-    this.minFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitAIDS), this.optimalYears.All[1]);
+    this.minFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(minFitAIDS)), this.optimalYears.All[1]);
   setMaxFitAIDS = maxFitAIDS =>
-    this.maxFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitAIDS), this.optimalYears.All[1]);
+    this.maxFitAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxFitAIDS)), this.optimalYears.All[1]);
   setMinFitHIVAIDS = minFitHIVAIDS =>
-    this.minFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, minFitHIVAIDS), this.optimalYears.All[1]);
+    this.minFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(minFitHIVAIDS)), this.optimalYears.All[1]);
   setMaxFitHIVAIDS = maxFitHIVAIDS =>
-    this.maxFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, maxFitHIVAIDS), this.optimalYears.All[1]);
+    this.maxFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxFitHIVAIDS)), this.optimalYears.All[1]);
   setFullData = fullData => this.fullData = fullData;
-  setKnotsCount = knotsCount => this.knotsCount = knotsCount;
+  setKnotsCount = knotsCount => this.knotsCount = parseInt(knotsCount);
   setStartIncZero = startIncZero => this.startIncZero = startIncZero;
   setMaxIncCorr = maxIncCorr => this.maxIncCorr = maxIncCorr;
   setDistributionFit = distributionFit => this.distributionFit = distributionFit;
-  setDelta4Fac = delta4Fac => this.delta4Fac = delta4Fac;
+  setDelta4Fac = delta4Fac => this.delta4Fac = parseFloat(delta4Fac);
   setCountry = country => this.country = country;
   setBootstrapCount = bootstrapCount => this.bootstrapCount = bootstrapCount;
   setBootstrapType = bootstrapType => this.bootstrapType = bootstrapType;

@@ -123,7 +123,7 @@ test_that('reactive processing is correct', {
   expect_equal(nrow(isolate(caseMgr$Data)), 7619)
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'CREATED')
 
-  Sys.sleep(5)
+  Sys.sleep(7)
   capture.output(session$flushReact())
 
   expect_equal(isolate(caseMgr$AdjustmentTask$Status), 'SUCCESS')
