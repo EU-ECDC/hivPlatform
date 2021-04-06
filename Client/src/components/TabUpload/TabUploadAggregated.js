@@ -36,7 +36,7 @@ const TabUploadAggregated = props => {
   const classes = userStyles();
 
   const handleUploadBtnClick = e => appMgr.aggrDataMgr.uploadData(e.target);
-  const handleNextPageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
+  const handleNextPageBtnClick = () => appMgr.uiStateMgr.setActivePageId(4);
 
   return (
     <TabPanel>
@@ -70,6 +70,15 @@ const TabUploadAggregated = props => {
             <label htmlFor='aggrUploadBtn'>
               <Btn style={{ marginBottom: 6 }}><CloudUploadIcon />&nbsp;Upload data</Btn>
             </label>
+          </Tooltip>
+          <Tooltip title='Remove aggregated data from analysis'>
+            <Button
+              style={{ marginBottom: 6, marginLeft: 20 }}
+              color='primary'
+              disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
+            >
+              Unload data
+            </Button>
           </Tooltip>
           <Typography variant='body2' color='textSecondary'>
             Maximum file size: 100MB<br />

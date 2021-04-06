@@ -11,7 +11,8 @@ appMgr <- AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
 
 
@@ -36,6 +37,10 @@ appMgr$CaseMgr$SetFilters(filters = list(
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+
+WriteDataFile(appMgr$CaseMgr$AdjustedData, 'D:/VirtualBox_Shared/BE_adjusted.rds')
+adjData <- appMgr$CaseMgr$AdjustedData
+names(adjData)
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(

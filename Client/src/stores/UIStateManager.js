@@ -82,7 +82,9 @@ export default class UIStateManager {
       bootstrapEnabled: computed,
       adjustmentsOutputsEnabled: computed,
       modellingOutputsEnabled: computed,
-      bootstrapOutputsEnabled: computed
+      bootstrapOutputsEnabled: computed,
+      caseBasedDataUnloadEnabled: computed,
+      aggrDataUnloadEnabled: computed
     });
   };
 
@@ -166,6 +168,14 @@ export default class UIStateManager {
 
   get caseBasedAttrMappingEnabled() {
     return InArray('CASE_BASED_READ', this.completedSteps);
+  };
+
+  get caseBasedDataUnloadEnabled() {
+    return InArray('CASE_BASED_READ', this.completedSteps);
+  };
+
+  get aggrDataUnloadEnabled() {
+    return InArray('AGGR_READ', this.completedSteps);
   };
 
   get caseBasedOrigGroupingEnabled() {

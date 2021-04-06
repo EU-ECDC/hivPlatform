@@ -17,7 +17,7 @@ import TabModelling from './TabModelling/TabModelling';
 import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';
 import MessageBar from './MessageBar';
-import { NAME, VERSION } from '../settings';
+import { NAME, VERSION, DEBUG } from '../settings';
 
 const userStyles = makeStyles({
   appBar: {
@@ -59,14 +59,17 @@ const RootElem = props => {
   const classes = userStyles();
   const [rightNavState, setRightNavState] = React.useState(false);
 
-  const confirmExit = e => {
-    e.preventDefault();
-    e.returnValue = '';
+  if (!DEBUG) {
+    const confirmExit = e => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    React.useEffect(() => {
+      window.addEventListener('beforeunload', confirmExit);
+      return () => window.removeEventListener('beforeunload', confirmExit);
+    }, []);
   }
-  React.useEffect(() => {
-    window.addEventListener('beforeunload', confirmExit);
-    return () => window.removeEventListener('beforeunload', confirmExit);
-  }, [])
 
   const bgColor = appMgr.shinyReady ? '#69b023' : '#f44336';
 
