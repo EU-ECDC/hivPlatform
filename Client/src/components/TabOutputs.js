@@ -37,9 +37,9 @@ const TabOutputs = (props) => {
   if (appMgr.uiStateMgr.adjustmentsOutputsEnabled) {
     adjustmentsLinks =
       <React.Fragment>
-        <Link href='#' id='downAdjDataCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downAdjDataRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downAdjDataDTA' className='shiny-download-link'>dta (Stata)</Link>
+        <Link download href='#' id='downAdjDataCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downAdjDataRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downAdjDataDTA' className='shiny-download-link'>dta (Stata)</Link>
       </React.Fragment>;
   } else {
     adjustmentsLinks =
@@ -53,13 +53,13 @@ const TabOutputs = (props) => {
   if (appMgr.uiStateMgr.modellingOutputsEnabled) {
     hivModelFitDetailedLinks =
       <React.Fragment>
-        <Link href='#' id='downMainFitDetailedRDS' className='shiny-download-link'>rds (R)</Link>
+        <Link download href='#' id='downMainFitDetailedRDS' className='shiny-download-link'>rds (R)</Link>
       </React.Fragment>;
     hivModelFitLinks =
       <React.Fragment>
-        <Link href='#' id='downMainFitCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downMainFitRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downMainFitDTA' className='shiny-download-link'>dta (Stata)</Link>
+        <Link download href='#' id='downMainFitCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downMainFitRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downMainFitDTA' className='shiny-download-link'>dta (Stata)</Link>
       </React.Fragment>;
   } else {
     hivModelFitDetailedLinks =
@@ -79,23 +79,23 @@ const TabOutputs = (props) => {
   if (appMgr.uiStateMgr.bootstrapOutputsEnabled) {
     hivModelBootDetailedLinks =
       <React.Fragment>
-        <Link href='#' id='downBootFitDetailedRDS' className='shiny-download-link'>rds (R)</Link>
+        <Link download href='#' id='downBootFitDetailedRDS' className='shiny-download-link'>rds (R)</Link>
       </React.Fragment>;
     hivModelBootLinks =
       <React.Fragment>
-        <Link href='#' id='downBootFitCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downBootFitRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downBootFitDTA' className='shiny-download-link'>dta (Stata)</Link>
+        <Link download href='#' id='downBootFitCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downBootFitRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downBootFitDTA' className='shiny-download-link'>dta (Stata)</Link>
       </React.Fragment>;
     hivModelStatDetailedLinks =
       <React.Fragment>
-        <Link href='#' id='downBootStatDetailedRDS' className='shiny-download-link'>rds (R)</Link>
+        <Link download href='#' id='downBootStatDetailedRDS' className='shiny-download-link'>rds (R)</Link>
       </React.Fragment>;
     hivModelStatLinks =
       <React.Fragment>
-        <Link href='#' id='downBootStatCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downBootStatRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
-        <Link href='#' id='downBootStatDTA' className='shiny-download-link'>dta (Stata)</Link>
+        <Link download href='#' id='downBootStatCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downBootStatRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downBootStatDTA' className='shiny-download-link'>dta (Stata)</Link>
       </React.Fragment>;
   } else {
     hivModelBootDetailedLinks =

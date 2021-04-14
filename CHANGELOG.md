@@ -1,8 +1,16 @@
+## 1.9.54
+
+###### _Apr 14 2021_
+
+- Enhance fix saving thetaF params in the main fit (hivModelling package)
+- Do not show "page leave" popup when downloading files
+
+
 ## 1.9.53
 
 ###### _Apr 06 2021_
 
-- UNDER DEVELOPMENT
+- Fix saving thetaF params in the main fit (hivModelling package)
 
 
 ## 1.9.52

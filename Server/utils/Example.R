@@ -4,7 +4,7 @@ appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -71,18 +71,11 @@ aggrDataSelection <- data.table(
 )
 appMgr$HIVModelMgr$SetAggrFilter(aggrDataSelection)
 
-popCombination <- list(
-  Case = NULL,
-  Aggr = appMgr$AggrMgr$PopulationNames
-)
+test <- readRDS('D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/Parameters.RDS')
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
-  parameters = list(
-    FitAIDSPosMinYear = 1996,
-    FitAIDSPosMaxYear = 2016,
-    KnotsCount = 6
-  ),
-  popCombination = popCombination
+  parameters = test$params,
+  popCombination = test$popCombination
 )
 
 # 1. Detailed HIV Model main fit results (rds)
