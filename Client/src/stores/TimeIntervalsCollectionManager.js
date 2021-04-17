@@ -4,6 +4,7 @@ import IsNull from '../utilities/IsNull';
 import GetNextId from '../utilities/GetNextId';
 
 export default class TimeIntervalsCollectionManager {
+  id = 'TimeIntervalsCollectionManager';
   parentMgr = null;
 
   constructor(mgr) {

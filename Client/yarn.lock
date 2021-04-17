@@ -3599,13 +3599,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "echarts@npm:5.0.2"
+"echarts@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "echarts@npm:5.1.0"
   dependencies:
     tslib: 2.0.3
-    zrender: 5.0.4
-  checksum: 1e0953adca47d3c8d954c5702d27bd39dd99047c5ccde8f08c709b63f39e11df015ab7b6253ee1336dd7797c6c2ba362c69e788d417aecf18fc8d0139764282a
+    zrender: 5.1.0
+  checksum: d35c9bd87466eb9e4523773260038f46a22274d19272bb449431ec6afe229e8805773e808943935fbe3859bbe652495161756b1df67dbdd473edcf698710d12b
   languageName: node
   linkType: hard
 
@@ -4580,7 +4580,7 @@ fsevents@~2.3.1:
     babel-loader: 8.2.2
     clean-webpack-plugin: 4.0.0-alpha.0
     cross-env: 7.0.3
-    echarts: ^5.0.2
+    echarts: ^5.1.0
     echarts-for-react: 3.0.1
     file-loader: 6.2.0
     filemanager-webpack-plugin: ^4.0.0
@@ -4591,6 +4591,7 @@ fsevents@~2.3.1:
     mobx-react: ^7.1.0
     react: ^17.0.2
     react-dom: ^17.0.2
+    serializr: ^2.0.5
     terser-webpack-plugin: ^5.1.1
     tslib: ^2.2.0
     webpack: ^5.33.2
@@ -7217,6 +7218,13 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
+"serializr@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "serializr@npm:2.0.5"
+  checksum: 3ca553de17dd2cf0761cfa63b0787147458e0329235be9b127b8ae096db4896c36f71119cb2a0c7095aea0e6bd551503113764fcac64ebc3483f111a9dfd8dde
+  languageName: node
+  linkType: hard
+
 "serve-index@npm:^1.9.1":
   version: 1.9.1
   resolution: "serve-index@npm:1.9.1"
@@ -8302,11 +8310,11 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"zrender@npm:5.0.4":
-  version: 5.0.4
-  resolution: "zrender@npm:5.0.4"
+"zrender@npm:5.1.0":
+  version: 5.1.0
+  resolution: "zrender@npm:5.1.0"
   dependencies:
     tslib: 2.0.3
-  checksum: dc8cf5c1c9cbecf4a06b65b0adfb2501798791c88ca5f75b3f2022160fcebdbb2e26e323abd27b31acba757215f992dc497c80aa2ff0ffbb3687499d9781225e
+  checksum: 1d5b5b37a4d9259787d958acf0b310de6f93e8e9bd689879008e7d501d57dbddd66c76e50c2680a2d162c9165fe8d8edd133c8912ff75bcccf474989518d75b7
   languageName: node
   linkType: hard

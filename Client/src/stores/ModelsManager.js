@@ -5,6 +5,7 @@ import IsNull from '../utilities/IsNull';
 import FormatNumber from '../utilities/FormatNumber';
 
 export default class ModelsManager {
+  id = 'ModelsManager';
   parentMgr = null;
   timeIntCollMgr = null;
 

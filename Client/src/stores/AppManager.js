@@ -1,4 +1,5 @@
 import { observable, action, configure, computed, toJS, makeObservable } from 'mobx';
+import { createModelSchema, serialize, identifier, primitive, reference, list, raw, map, object } from 'serializr';
 import UIStateManager from './UIStateManager'
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
@@ -21,6 +22,9 @@ configure({
 });
 
 export default class AppManager {
+
+  id = 'AppManager';
+
   uiStateMgr = null;
   notificationsMgr = null;
   attrMappingMgr = null;
@@ -313,7 +317,8 @@ export default class AppManager {
       inputValueSet: action,
       setShinyMessage: action,
       unbindShiny: action,
-      bindShiny: action
+      bindShiny: action,
+      save: action
     });
   };
 
@@ -367,11 +372,9 @@ export default class AppManager {
     }
   };
 
-  setShinyMessage = msg => {
-    this.shinyMessage = msg;
-  };
+  setShinyMessage = msg => this.shinyMessage = msg;
 
-  unbindShiny = (els) => {
+  unbindShiny = els => {
     if (!IsNull(window.Shiny) && this.shinyReady) {
       window.Shiny.unbindAll();
       EnsureArray(els).forEach(el => delete window.Shiny.shinyapp.$bindings[el]);
@@ -387,4 +390,196 @@ export default class AppManager {
       console.log('bindShinyInputs: Shiny is not available');
     }
   };
-}
+
+  save = () => {
+    const js = serialize(this);
+    const json = JSON.stringify(js, {}, 2);
+    console.log(json);
+  }
+};
+
+class TimeIntervalsCollectionManager { };
+class TimeIntervalsManager { };
+createModelSchema(TimeIntervalsManager, {
+  parentMgr: reference(TimeIntervalsCollectionManager),
+  id: primitive(),
+  name: primitive(),
+  intervals: list(raw()),
+  minYear: primitive(),
+  maxYear: primitive()
+});
+
+createModelSchema(TimeIntervalsCollectionManager, {
+  id: identifier(),
+  parentMgr: reference(ModelsManager),
+  collections: map(object(TimeIntervalsManager)),
+  minYear: primitive(),
+  maxYear: primitive(),
+  selectedEditCollectionId: primitive(),
+  selectedRunCollectionId: primitive()
+});
+
+createModelSchema(ModelsManager, {
+  id: identifier(),
+  parentMgr: reference(AppManager),
+  timeIntCollMgr: object(TimeIntervalsCollectionManager),
+  modelsParamFile: primitive(),
+  modelsParamFileName: primitive(),
+  rangeYears: raw(),
+  optimalYears: raw(),
+  minYear: primitive(),
+  maxYear: primitive(),
+  minFitPos: primitive(),
+  maxFitPos: primitive(),
+  minFitCD4: primitive(),
+  maxFitCD4: primitive(),
+  minFitAIDS: primitive(),
+  maxFitAIDS: primitive(),
+  minFitHIVAIDS: primitive(),
+  maxFitHIVAIDS: primitive(),
+  fullData: primitive(),
+  knotsCount: primitive(),
+  startIncZero: primitive(),
+  maxIncCorr: primitive(),
+  distributionFit: primitive(),
+  delta4Fac: primitive(),
+  country: primitive(),
+  bootstrapCount: primitive(),
+  bootstrapType: primitive(),
+  modelsRunProgress: primitive(),
+  modelsRunLog: primitive(),
+  bootstrapRunProgress: primitive(),
+  bootstrapRunLog: primitive(),
+  plotData: raw(),
+});
+
+createModelSchema(ReportManager, {
+  rootMgr: reference(AppManager),
+  report: primitive(),
+  adjustReportParams: raw(),
+  creatingReportInProgress: primitive()
+});
+
+class PopCombinationsManagerCombination { };
+createModelSchema(PopCombinationsManagerCombination, {
+  id: identifier(),
+  name: primitive(),
+  aggrPopulations: list(primitive()),
+  casePopulations: list(primitive())
+});
+
+createModelSchema(PopCombinationsManager, {
+  rootMgr: reference(AppManager),
+  combinations: map(object(PopCombinationsManagerCombination)),
+  selectedCombination: reference(PopCombinationsManagerCombination),
+  combinationAllId: primitive()
+});
+
+createModelSchema(PopulationsManager, {
+  rootMgr: reference(AppManager),
+  availableVariables: list(raw()),
+  availableStrata: raw(),
+  populations: list(raw())
+});
+
+createModelSchema(AdjustmentsManager, {
+  rootMgr: reference(AppManager),
+  miAdjustType: primitive(),
+  miJomoSettings: raw(),
+  miMiceSettings: raw(),
+  rdAdjustType: primitive(),
+  dataBounds: raw(),
+  rdWithoutTrendSettings: raw(),
+  rdWithTrendSettings: raw(),
+  adjustmentsRunProgress: primitive(),
+  adjustmentsRunLog: primitive(),
+  adjustmentsReport: primitive()
+});
+
+createModelSchema(SummaryDataManager, {
+  rootMgr: reference(AppManager),
+  selectedCount: primitive(),
+  totalCount: primitive(),
+  diagYearPlotData: raw(),
+  notifQuarterPlotData: raw(),
+  missPlotData: raw(),
+  missPlotSelection: primitive(),
+  repDelPlotData: raw(),
+  repDelPlotSelection: primitive()
+});
+
+createModelSchema(AggrDataManager, {
+  rootMgr: reference(AppManager),
+  fileName: primitive(),
+  fileSize: primitive(),
+  fileType: primitive(),
+  filePath: primitive(),
+  dataFiles: raw(),
+  origDataFiles: raw(),
+  rangeYears: list(primitive()),
+  dataFileNameToIdxMap: map(),
+  populationNames: list(primitive()),
+  fileUploadProgress: primitive(),
+  actionStatus: primitive(),
+  actionMessage: primitive()
+});
+
+createModelSchema(CaseBasedDataManager, {
+  rootMgr: reference(AppManager),
+  fileName: primitive(),
+  fileSize: primitive(),
+  fileType: primitive(),
+  filePath: primitive(),
+  columnNames: list(primitive()),
+  recordCount: primitive(),
+  uploadProgress: primitive(),
+  actionStatus: primitive(),
+  actionMessage: primitive()
+});
+
+createModelSchema(OriginGroupingsManager, {
+  rootMgr: reference(AppManager),
+  distribution: raw(),
+  groupings: list(raw()),
+  type: primitive(),
+  actionStatus: primitive(),
+  actionMessage: primitive()
+});
+
+createModelSchema(AttrMappingManager, {
+  rootMgr: reference(AppManager),
+  mapping: list(raw()),
+  actionStatus: primitive(),
+  actionMessage: primitive()
+});
+
+createModelSchema(NotificationsManager, {
+  rootMgr: reference(AppManager),
+  msgInfo: raw()
+});
+
+createModelSchema(UIStateManager, {
+  rootMgr: reference(AppManager),
+  lastEventType: primitive(),
+  completedSteps: list(primitive()),
+  pages: list(raw()),
+  activePageId: primitive()
+});
+
+createModelSchema(AppManager, {
+  id: identifier(),
+  shinyState: primitive(),
+  shinyMessage: raw(),
+  uiStateMgr: object(UIStateManager),
+  notificationsMgr: object(NotificationsManager),
+  attrMappingMgr: object(AttrMappingManager),
+  origGroupMgr: object(OriginGroupingsManager),
+  caseBasedDataMgr: object(CaseBasedDataManager),
+  aggrDataMgr: object(AggrDataManager),
+  summaryDataMgr: object(SummaryDataManager),
+  adjustMgr: object(AdjustmentsManager),
+  popMgr: object(PopulationsManager),
+  popCombMgr: object(PopCombinationsManager),
+  modelMgr: object(ModelsManager),
+  reportMgr: object(ReportManager)
+});

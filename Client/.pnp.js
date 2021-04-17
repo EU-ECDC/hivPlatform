@@ -48,7 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.0"],
             ["cross-env", "npm:7.0.3"],
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.0"],
             ["echarts-for-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.1"],
             ["file-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:6.2.0"],
             ["filemanager-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0"],
@@ -59,6 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.2"],
+            ["serializr", "npm:2.0.5"],
             ["terser-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.1.1"],
             ["tslib", "npm:2.2.0"],
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.33.2"],
@@ -5019,12 +5020,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["echarts", [
-        ["npm:5.0.2", {
-          "packageLocation": "./.yarn/cache/echarts-npm-5.0.2-408940d253-1e0953adca.zip/node_modules/echarts/",
+        ["npm:5.1.0", {
+          "packageLocation": "./.yarn/cache/echarts-npm-5.1.0-57c2fa0367-d35c9bd874.zip/node_modules/echarts/",
           "packageDependencies": [
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.0"],
             ["tslib", "npm:2.0.3"],
-            ["zrender", "npm:5.0.4"]
+            ["zrender", "npm:5.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -5043,7 +5044,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts-for-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.1"],
             ["@types/echarts", null],
             ["@types/react", null],
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.0"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["react", "npm:17.0.2"],
             ["size-sensor", "npm:1.0.1"]
@@ -6151,7 +6152,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:8.2.2"],
             ["clean-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0-alpha.0"],
             ["cross-env", "npm:7.0.3"],
-            ["echarts", "npm:5.0.2"],
+            ["echarts", "npm:5.1.0"],
             ["echarts-for-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:3.0.1"],
             ["file-loader", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:6.2.0"],
             ["filemanager-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:4.0.0"],
@@ -6162,6 +6163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mobx-react", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:7.1.0"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:17.0.2"],
+            ["serializr", "npm:2.0.5"],
             ["terser-webpack-plugin", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.1.1"],
             ["tslib", "npm:2.2.0"],
             ["webpack", "virtual:83d3817d8b3299d79071653d49503d249cf913eda75a91e969b1801c4e7f4b6a8a143c04c9ac22066efe8645645fb9ee03b2722439a9a90f9091b5eb576acf6b#npm:5.33.2"],
@@ -9128,6 +9130,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["serializr", [
+        ["npm:2.0.5", {
+          "packageLocation": "./.yarn/cache/serializr-npm-2.0.5-85a8abcd86-3ca553de17.zip/node_modules/serializr/",
+          "packageDependencies": [
+            ["serializr", "npm:2.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["serve-index", [
         ["npm:1.9.1", {
           "packageLocation": "./.yarn/cache/serve-index-npm-1.9.1-4927052df8-035c0b7d5f.zip/node_modules/serve-index/",
@@ -10387,10 +10398,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["zrender", [
-        ["npm:5.0.4", {
-          "packageLocation": "./.yarn/cache/zrender-npm-5.0.4-b886181d36-dc8cf5c1c9.zip/node_modules/zrender/",
+        ["npm:5.1.0", {
+          "packageLocation": "./.yarn/cache/zrender-npm-5.1.0-eb6f618bba-1d5b5b37a4.zip/node_modules/zrender/",
           "packageDependencies": [
-            ["zrender", "npm:5.0.4"],
+            ["zrender", "npm:5.1.0"],
             ["tslib", "npm:2.0.3"]
           ],
           "linkType": "HARD",

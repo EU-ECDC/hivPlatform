@@ -18,11 +18,21 @@ const RightNav = (props) => {
     }
   );
 
+  const handleSaveBtnClick = () => appMgr.save();
+
   return (
     <Drawer anchor='right' open={open} onClose={onClose}>
       <Box width={300} p={2}>
         <Typography variant='h6'>Application</Typography>
-        <Link href='#' id='downState' className='shiny-download-link'>Save state</Link>
+        {/* <Link href='#' id='downState' className='shiny-download-link'>Save state</Link> */}
+        <Link
+          href='#'
+          id='downState'
+          className='shiny-download-link'
+          onClick={handleSaveBtnClick}
+        >
+          Save state
+        </Link>
         <Link href='#' style={{ marginLeft: 10 }}>Load state</Link>
         {/* <Typography variant='h6'>Options:</Typography>
         <ul>

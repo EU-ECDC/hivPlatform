@@ -4,9 +4,9 @@ import EnsureArray from '../utilities/EnsureArray';
 
 export default class UIStateManager {
 
-  lastEventType = null;
-
   rootMgr = null;
+
+  lastEventType = null;
 
   completedSteps = null;
 
