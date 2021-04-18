@@ -42,6 +42,12 @@ export default class AppManager {
 
   shinyMessage = {};
 
+  seed = null;
+
+  onApiURL = e => {
+    console.log(e);
+  };
+
   // Shiny custom event handlers
   onShinyEvent = e => {
     console.log('onShinyEvent', e);
@@ -290,6 +296,12 @@ export default class AppManager {
           this.notificationsMgr.setMsg(e.payload.ActionMessage);
         }
         break;
+      case 'SEED_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.setSeed(e.payload.Seed);
+          this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        }
+        break;
     };
   };
 
@@ -310,6 +322,8 @@ export default class AppManager {
     makeObservable(this, {
       shinyState: observable,
       shinyMessage: observable,
+      seed: observable,
+      seedText: computed,
       shinyReady: computed,
       jsonShinyMessage: computed,
       setShinyState: action,
@@ -318,7 +332,8 @@ export default class AppManager {
       setShinyMessage: action,
       unbindShiny: action,
       bindShiny: action,
-      save: action
+      save: action,
+      setSeed: action
     });
   };
 
@@ -329,6 +344,14 @@ export default class AppManager {
 
   get jsonShinyMessage() {
     return JSON.stringify(this.shinyMessage);
+  };
+
+  get seedText() {
+    if (IsNull(this.seed)) {
+      return ''
+    } else {
+      return this.seed;
+    }
   };
 
   get shinyStateHuman() {
@@ -353,6 +376,7 @@ export default class AppManager {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
       Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
+      Shiny.addCustomMessageHandler('apiURL', this.onApiURL);
     }
   };
 
@@ -374,6 +398,15 @@ export default class AppManager {
 
   setShinyMessage = msg => this.shinyMessage = msg;
 
+  setSeed = seed => {
+    console.log(seed);
+    if (seed === '') {
+      this.seed = null;
+    } else {
+      this.seed = seed;
+    }
+  };
+
   unbindShiny = els => {
     if (!IsNull(window.Shiny) && this.shinyReady) {
       window.Shiny.unbindAll();
@@ -394,7 +427,7 @@ export default class AppManager {
   save = () => {
     const js = serialize(this);
     const json = JSON.stringify(js, {}, 2);
-    console.log(json);
+    this.btnClicked('saveState', json);
   }
 };
 
@@ -568,18 +601,18 @@ createModelSchema(UIStateManager, {
 
 createModelSchema(AppManager, {
   id: identifier(),
-  shinyState: primitive(),
-  shinyMessage: raw(),
-  uiStateMgr: object(UIStateManager),
-  notificationsMgr: object(NotificationsManager),
-  attrMappingMgr: object(AttrMappingManager),
-  origGroupMgr: object(OriginGroupingsManager),
-  caseBasedDataMgr: object(CaseBasedDataManager),
-  aggrDataMgr: object(AggrDataManager),
-  summaryDataMgr: object(SummaryDataManager),
-  adjustMgr: object(AdjustmentsManager),
-  popMgr: object(PopulationsManager),
-  popCombMgr: object(PopCombinationsManager),
-  modelMgr: object(ModelsManager),
-  reportMgr: object(ReportManager)
+  // shinyState: primitive(),
+  // shinyMessage: raw(),
+  // uiStateMgr: object(UIStateManager),
+  // notificationsMgr: object(NotificationsManager),
+  // attrMappingMgr: object(AttrMappingManager),
+  // origGroupMgr: object(OriginGroupingsManager),
+  // caseBasedDataMgr: object(CaseBasedDataManager),
+  // aggrDataMgr: object(AggrDataManager),
+  // summaryDataMgr: object(SummaryDataManager),
+  // adjustMgr: object(AdjustmentsManager),
+  // popMgr: object(PopulationsManager),
+  // popCombMgr: object(PopCombinationsManager),
+  // modelMgr: object(ModelsManager),
+  // reportMgr: object(ReportManager)
 });

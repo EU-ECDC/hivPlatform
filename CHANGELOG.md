@@ -1,8 +1,11 @@
 ## 1.9.55
 
-###### _Apr 16 2021_
+###### _Apr 18 2021_
 
-- UNDER DEVELOPMENT
+- Support setting random seed
+- Implement collecting entire UI state in JSON
+- Implement manual documentation (placeholder used)
+- Implement opening another instance of the tool
 
 
 ## 1.9.54
