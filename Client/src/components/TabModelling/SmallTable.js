@@ -35,11 +35,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const SmallTable = props => {
-  const { tableData } = props;
+  const { tableData, maxHeight } = props;
 
   const classes = useStyles();
   return (
-    <TableContainer style={{ maxHeight: 300 }}>
+    <TableContainer style={{ maxHeight: maxHeight || 300 }}>
       <Table size='small' stickyHeader className={classes.table}>
         <TableHead>
           <TableRow>
@@ -53,7 +53,7 @@ const SmallTable = props => {
         <TableBody>
           {
             tableData.Data[0].map((el, i) => (
-              <TableRow key={i}>
+              <TableRow hover key={i}>
                 {
                   tableData.ColNames.map((colName, j) => (
                     <TableCell key={j}>{tableData.Data[j][i]}</TableCell>

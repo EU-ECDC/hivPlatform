@@ -6,12 +6,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TabPanel from '../TabPanel';
-import TabModellingTablesGOF from './TabModellingTablesGOF';
-import TabModellingCharts from './TabModellingCharts';
+import TabModellingOutputsGOF from './TabModellingOuputsGOF';
+import TabModellingOutputsTables from './TabModellingOutputsTables';
+import TabModellingOutputsGraphs from './TabModellingOutputsGraphs';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-const TabModellingTables = props => {
+const TabModellingOutputs = props => {
   const { appMgr } = props;
 
   const [tabId, setTabId] = React.useState(0);
@@ -48,11 +49,13 @@ const TabModellingTables = props => {
               indicatorColor='primary'
               textColor='primary'
             >
-              <Tab label='Goodness of fit'/>
-              <Tab label='Charts'/>
+              <Tab label='Goodness of fit' />
+              <Tab label='Tables' />
+              <Tab label='Graphs'/>
             </Tabs>
-            {tabId === 0 && <TabModellingTablesGOF appMgr={appMgr} />}
-            {tabId === 1 && <TabModellingCharts appMgr={appMgr} />}
+            {tabId === 0 && <TabModellingOutputsGOF appMgr={appMgr} />}
+            {tabId === 1 && <TabModellingOutputsTables appMgr={appMgr} />}
+            {tabId === 2 && <TabModellingOutputsGraphs appMgr={appMgr} />}
           </Paper>
         </Grid>
       </Grid>
@@ -60,4 +63,4 @@ const TabModellingTables = props => {
   );
 };
 
-export default observer(TabModellingTables);
+export default observer(TabModellingOutputs);

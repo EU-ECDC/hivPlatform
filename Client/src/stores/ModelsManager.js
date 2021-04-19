@@ -87,6 +87,7 @@ export default class ModelsManager {
       outputTable2Data: computed,
       outputTable3Data: computed,
       outputTable4Data: computed,
+      mainOutputTableData: computed
     });
 
     autorun(() => {
@@ -283,6 +284,22 @@ export default class ModelsManager {
 
   get outputTable4Data() {
     return (this.getTableData(['Year', 'N_Und_Alive_p', 'N_Und_Alive_p_LB', 'N_Und_Alive_p_UB']));
+  };
+
+  get mainOutputTableData() {
+    return (this.getTableData([
+      'Year',
+      'N_HIV_D', 'N_HIV_Obs_M',
+      'N_CD4_1_D', 'N_CD4_2_D', 'N_CD4_3_D', 'N_CD4_4_D',
+      'N_CD4_1_Obs_M', 'N_CD4_2_Obs_M', 'N_CD4_3_Obs_M', 'N_CD4_4_Obs_M',
+      'N_AIDS_D', 'N_AIDS_M',
+      'N_HIVAIDS_D', 'N_HIVAIDS_Obs_M',
+      'N_Inf_M',
+      't_diag', 't_diag_p25', 't_diag_p50', 't_diag_p75',
+      'N_Alive', 'N_Alive_Diag_M',
+      'N_Und', 'N_Und_Alive_p',
+      'N_Und_CD4_3_M', 'N_Und_CD4_4_M'
+    ]));
   };
 
   getTableData = colNames => {

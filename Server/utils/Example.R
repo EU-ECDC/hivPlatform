@@ -4,14 +4,14 @@ appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
 
@@ -69,13 +69,18 @@ aggrDataSelection <- data.table(
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
-appMgr$HIVModelMgr$SetAggrFilter(aggrDataSelection)
+appMgr$HIVModelMgr$SetAggrFilters(aggrDataSelection)
 
 test <- readRDS('D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/Parameters.RDS')
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
   parameters = test$params,
   popCombination = test$popCombination
+)
+
+appMgr$HIVModelMgr$RunMainFit(
+  settings = list(Verbose = FALSE),
+  popCombination = NULL
 )
 
 # 1. Detailed HIV Model main fit results (rds)
@@ -146,3 +151,11 @@ appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr$HIVModelMgr$MainFitResult
 appMgr$HIVModelMgr$MainFitTask$Status
 cat(appMgr$HIVModelMgr$MainFitTask$RunLog)
+
+wb <- openxlsx::loadWorkbook('D:/Charts.xlsm')
+openxlsx::writeData(
+  wb = wb,
+  sheet = 'DATA',
+  x = data.table(A = c(0, 1)),
+)
+openxlsx::saveWorkbook(wb, 'D:/Charts.xlsm', overwrite = TRUE)

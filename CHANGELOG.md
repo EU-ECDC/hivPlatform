@@ -1,3 +1,11 @@
+## 1.9.56
+
+###### _Apr 19 2021_
+
+- Show HIV Model output table
+- Draft export to Excel (dependencies are included)
+
+
 ## 1.9.55
 
 ###### _Apr 18 2021_

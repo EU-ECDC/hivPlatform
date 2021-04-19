@@ -6,7 +6,7 @@ import HIVChart from '../Charts/HIVChart';
 import IsNull from '../../utilities/IsNull';
 import SmallTable from './SmallTable';
 
-const TabModellingCharts = props => {
+const TabModellingOutputsGraphs = props => {
 
   const { appMgr } = props;
 
@@ -84,4 +84,4 @@ const TabModellingCharts = props => {
   );
 };
 
-export default observer(TabModellingCharts);
+export default observer(TabModellingOutputsGraphs);
