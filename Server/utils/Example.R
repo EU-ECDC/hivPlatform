@@ -11,7 +11,8 @@ appMgr <- AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
+# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
 
@@ -23,24 +24,31 @@ appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
     ApplyInAdjustments = TRUE,
-    MinYear =  2000,
-    MaxYear =  2014
+    MinYear =  1980,
+    MaxYear =  2019
   ),
   NotifQuarter <- list(
     ApplyInAdjustments = FALSE,
-    MinYear = 2000.125,
-    MaxYear = 2014.875
+    MinYear = 1995.375,
+    MaxYear = 2020.375
   )
 ))
 
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+# adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays'))
+adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
+adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
+adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 WriteDataFile(appMgr$CaseMgr$AdjustedData, 'D:/VirtualBox_Shared/BE_adjusted.rds')
+appMgr$CaseMgr$PreProcessedData
+appMgr$CaseMgr$Data
 adjData <- appMgr$CaseMgr$AdjustedData
 names(adjData)
+adjData[YearOfHIVDiagnosis == 2019, sum(Weight)]
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -71,7 +79,6 @@ aggrDataSelection <- data.table(
 )
 appMgr$HIVModelMgr$SetAggrFilters(aggrDataSelection)
 
-test <- readRDS('D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/Parameters.RDS')
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
   parameters = test$params,

@@ -3,6 +3,7 @@
 ###### _Apr 19 2021_
 
 - Show HIV Model output table
+- Apply reporting delays weights to counts of data when running HIV model
 - Draft export to Excel (dependencies are included)
 
 
