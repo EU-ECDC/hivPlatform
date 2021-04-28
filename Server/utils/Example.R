@@ -162,9 +162,14 @@ appMgr$HIVModelMgr$MainFitTask$Status
 cat(appMgr$HIVModelMgr$MainFitTask$RunLog)
 
 wb <- openxlsx::loadWorkbook('D:/Charts.xlsm')
+names(wb)
+data <- data.table(A = c(0, 1))
+wb <- openxlsx::createWorkbook()
+openxlsx::addWorksheet(wb, 'DATA')
 openxlsx::writeData(
   wb = wb,
   sheet = 'DATA',
-  x = data.table(A = c(0, 1)),
+  x = data
 )
-openxlsx::saveWorkbook(wb, 'D:/Charts.xlsm', overwrite = TRUE)
+openxlsx::saveWorkbook(wb, 'D:/Charts2.xlsm', overwrite = TRUE)
+openxlsx::getSheetNames(fileName)
