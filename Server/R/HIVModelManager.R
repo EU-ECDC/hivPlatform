@@ -224,6 +224,10 @@ HIVModelManager <- R6::R6Class(
 
             dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
+            if (is.null(dataSets)) {
+              stop('No input data specified')
+            }
+
             PrintH1('Performing main fit')
 
             impResult <- list()

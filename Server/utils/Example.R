@@ -11,8 +11,8 @@ appMgr <- AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
-# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
+appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
 
@@ -44,11 +44,6 @@ adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 WriteDataFile(appMgr$CaseMgr$AdjustedData, 'D:/VirtualBox_Shared/BE_adjusted.rds')
-appMgr$CaseMgr$PreProcessedData
-appMgr$CaseMgr$Data
-adjData <- appMgr$CaseMgr$AdjustedData
-names(adjData)
-adjData[YearOfHIVDiagnosis == 2019, sum(Weight)]
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -85,13 +80,20 @@ appMgr$HIVModelMgr$RunMainFit(
   popCombination = test$popCombination
 )
 
+
+popCombination <- list(
+  Case = NULL,
+  Aggr = appMgr$AggrMgr$PopulationNames
+)
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
-  popCombination = NULL
+  popCombination = popCombination
 )
 
+
+
 # 1. Detailed HIV Model main fit results (rds)
-names(appMgr$HIVModelMgr$MainFitResult)
+names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)
 
 # 2. Main outputs (txt, rds, stata)
 data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter) {
