@@ -16,12 +16,14 @@ const TabOutputs = (props) => {
 
   const downloadLinkIds = [
     'downAdjDataCSV', 'downAdjDataRDS', 'downAdjDataDTA',
+    'downRepDelDataCSV', 'downRepDelDataRDS', 'downRepDelDataDTA',
     'downMainFitDetailedRDS',
     'downMainFitCSV', 'downMainFitRDS', 'downMainFitDTA',
     'downBootFitDetailedRDS',
     'downBootFitCSV', 'downBootFitRDS', 'downBootFitDTA',
     'downBootStatDetailedRDS',
-    'downBootStatCSV', 'downBootStatRDS', 'downBootStatDTA'
+    'downBootStatCSV', 'downBootStatRDS', 'downBootStatDTA',
+    'downFitEXCEL', 'downFitEXCEL_NO_MACRO'
   ];
 
   React.useEffect(
@@ -65,6 +67,7 @@ const TabOutputs = (props) => {
 
   let hivModelFitDetailedLinks = null;
   let hivModelFitLinks = null;
+  let hivModelExcelLinks = null;
   if (appMgr.uiStateMgr.modellingOutputsEnabled) {
     hivModelFitDetailedLinks =
       <React.Fragment>
@@ -76,6 +79,11 @@ const TabOutputs = (props) => {
         <Link download href='#' id='downMainFitRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
         <Link download href='#' id='downMainFitDTA' className='shiny-download-link'>dta (Stata)</Link>
       </React.Fragment>;
+    hivModelExcelLinks =
+      <React.Fragment>
+      <Link download href='#' id='downFitXLSM' className='shiny-download-link'>xlsm (Excel with Macro - automatic refresh)</Link>&nbsp;|<br />
+      <Link download href='#' id='downFitXLSX' className='shiny-download-link'>xlsx (Excel without Macro - manual refresh)</Link>
+      </React.Fragment>;
   } else {
     hivModelFitDetailedLinks =
       <React.Fragment>
@@ -84,6 +92,11 @@ const TabOutputs = (props) => {
     hivModelFitLinks =
       < React.Fragment >
         csv (text)&nbsp;|&nbsp;rds (R)&nbsp;|&nbsp;dta (Stata)
+      </React.Fragment>;
+    hivModelExcelLinks =
+      < React.Fragment >
+        xlsm (Excel with Macro - automatic refresh)&nbsp;|<br />
+        xlsx (Excel without Macro - manual refresh)
       </React.Fragment>;
   }
 
@@ -148,7 +161,7 @@ const TabOutputs = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell width='300px'>Description</TableCell>
-                  <TableCell width='200px'>Format</TableCell>
+                  <TableCell width='320px'>Format</TableCell>
                   <TableCell>Description</TableCell>
                 </TableRow>
               </TableHead>
@@ -159,7 +172,7 @@ const TabOutputs = (props) => {
                   <TableCell>Flat table</TableCell>
                 </TableRow>
                 <TableRow hover>
-                  <TableCell>Reporting delays distributions</TableCell>
+                  <TableCell>Reporting delays distribution</TableCell>
                   <TableCell>{repDelLinks}</TableCell>
                   <TableCell>Flat table</TableCell>
                 </TableRow>
@@ -176,7 +189,7 @@ const TabOutputs = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell width='300px'>Description</TableCell>
-                  <TableCell width='200px'>Format</TableCell>
+                  <TableCell width='320px'>Format</TableCell>
                   <TableCell>Description</TableCell>
                 </TableRow>
               </TableHead>
@@ -184,7 +197,7 @@ const TabOutputs = (props) => {
                 <TableRow hover>
                   <TableCell>Detailed main fit model results</TableCell>
                   <TableCell>{hivModelFitDetailedLinks}</TableCell>
-                  <TableCell>R list object with the following items:</TableCell>
+                  <TableCell>R list object</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs of main fit model</TableCell>
@@ -194,7 +207,7 @@ const TabOutputs = (props) => {
                 <TableRow hover>
                   <TableCell>Detailed bootstrap fits model results</TableCell>
                   <TableCell>{hivModelBootDetailedLinks}</TableCell>
-                  <TableCell>R list object with the following items:</TableCell>
+                  <TableCell>R list object</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs of bootstrap fits</TableCell>
@@ -204,12 +217,17 @@ const TabOutputs = (props) => {
                 <TableRow hover>
                   <TableCell>Detailed bootstrap statistics results</TableCell>
                   <TableCell>{hivModelStatDetailedLinks}</TableCell>
-                  <TableCell>R list object with the following items:</TableCell>
+                  <TableCell>R list object</TableCell>
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Main outputs bootstrap statistics</TableCell>
                   <TableCell>{hivModelStatLinks}</TableCell>
                   <TableCell>Flat table</TableCell>
+                </TableRow>
+                <TableRow hover>
+                  <TableCell>Main outputs of main fit and bootstrap</TableCell>
+                  <TableCell>{hivModelExcelLinks}</TableCell>
+                  <TableCell>Excel file with tables and charts</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

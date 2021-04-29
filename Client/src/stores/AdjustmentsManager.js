@@ -1,4 +1,5 @@
 import { observable, action, makeObservable, computed, autorun } from 'mobx';
+import EnsureArray from '../utilities/EnsureArray';
 
 export default class AdjustmentsManager {
   rootMgr = null;
@@ -139,7 +140,7 @@ export default class AdjustmentsManager {
     return this.adjustmentsRunProgress !== null;
   };
 
-  setRunAdjustmentsTypes = types => this.runAdjustmentsTypes = types;
+  setRunAdjustmentsTypes = types => this.runAdjustmentsTypes = EnsureArray(types);
 
   setMIAdjustType = type => this.miAdjustType = type;
   setMIJomoNimp = nimp => this.miJomoSettings.nimp = nimp;

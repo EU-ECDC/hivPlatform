@@ -321,7 +321,8 @@ export default appMgr => {
     payload: {
       ActionStatus: 'SUCCESS',
       ActionMessage: 'Running adjustment task finished',
-      AdjustmentsReport: AdjustmentsReport
+      AdjustmentsReport: AdjustmentsReport,
+      RunAdjustmentsTypes: ['MULTIPLE_IMPUTATIONS', 'REPORTING_DELAYS']
     }
   });
 

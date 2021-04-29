@@ -1,3 +1,10 @@
+## 1.9.58
+
+###### _Apr 29 2021_
+
+- Add download of HIV model outputs as Excel (tables and charts)
+
+
 ## 1.9.57
 
 ###### _Apr 29 2021_
