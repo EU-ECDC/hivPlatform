@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
+import PeopleIcon from '@material-ui/icons/People';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -89,6 +90,9 @@ const CaseUpload = (props) => {
         />
       </Grid>
       <Grid item xs={10}>
+        {!appMgr.caseBasedDataMgr.actionValid &&
+          <PeopleIcon style={{ color: '#eee', fontSize: 600 }}/>
+        }
         {appMgr.caseBasedDataMgr.actionValid &&
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Uploaded file details</Typography>

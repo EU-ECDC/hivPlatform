@@ -81,6 +81,7 @@ export default class UIStateManager {
       caseBasedOrigGroupingEnabled: computed,
       bootstrapEnabled: computed,
       adjustmentsOutputsEnabled: computed,
+      repDelOutputsEnabled: computed,
       modellingOutputsEnabled: computed,
       bootstrapOutputsEnabled: computed,
       caseBasedDataUnloadEnabled: computed,
@@ -192,6 +193,13 @@ export default class UIStateManager {
 
   get adjustmentsOutputsEnabled() {
     return InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps);
+  };
+
+  get repDelOutputsEnabled() {
+    return (
+      InArray('CASE_BASED_ADJUSTMENTS', this.completedSteps) &&
+      InArray('REPORTING_DELAYS', this.rootMgr.adjustMgr.runAdjustmentsTypes)
+    )
   };
 
   get modellingOutputsEnabled() {

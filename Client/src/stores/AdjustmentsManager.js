@@ -52,6 +52,8 @@ export default class AdjustmentsManager {
 
   adjustmentsReport = null;
 
+  runAdjustmentsTypes = [];
+
   constructor(mgr) {
     this.rootMgr = mgr;
 
@@ -65,10 +67,12 @@ export default class AdjustmentsManager {
       adjustmentsRunProgress: observable,
       adjustmentsRunLog: observable,
       adjustmentsReport: observable,
+      runAdjustmentsTypes : observable,
       miParams: computed,
       rdParams: computed,
       adjustmentSelected: computed,
       adjustmentsRunInProgress: computed,
+      setRunAdjustmentsTypes: action,
       setMIAdjustType: action,
       setRDAdjustType: action,
       setMIJomoNimp: action,
@@ -134,6 +138,8 @@ export default class AdjustmentsManager {
   get adjustmentsRunInProgress() {
     return this.adjustmentsRunProgress !== null;
   };
+
+  setRunAdjustmentsTypes = types => this.runAdjustmentsTypes = types;
 
   setMIAdjustType = type => this.miAdjustType = type;
   setMIJomoNimp = nimp => this.miJomoSettings.nimp = nimp;

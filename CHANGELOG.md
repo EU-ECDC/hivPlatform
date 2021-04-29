@@ -1,8 +1,10 @@
 ## 1.9.57
 
-###### _Apr 28 2021_
+###### _Apr 29 2021_
 
-- UNDER DEVELOPMENT
+- Add downloads for reporting delays (weights)
+- Add background icons for case-based and aggregated data uploads
+- Fix priting start and end time in adjustments
 
 
 ###### _Apr 18 2021_

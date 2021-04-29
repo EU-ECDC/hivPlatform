@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import TableChartIcon from '@material-ui/icons/TableChart';
 import Button from '@material-ui/core/Button';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
@@ -91,6 +92,9 @@ const TabUploadAggregated = props => {
           />
         </Grid>
         <Grid item xs={10}>
+          {!appMgr.aggrDataMgr.actionValid &&
+            <TableChartIcon style={{ color: '#eee', fontSize: 600 }}/>
+          }
           {appMgr.aggrDataMgr.actionValid &&
             <Paper style={{ padding: 10 }}>
               <Typography variant='overline'>Uploaded file details</Typography>

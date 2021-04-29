@@ -48,6 +48,21 @@ const TabOutputs = (props) => {
       </React.Fragment>;
   }
 
+  let repDelLinks = null;
+  if (appMgr.uiStateMgr.repDelOutputsEnabled) {
+    repDelLinks =
+      <React.Fragment>
+        <Link download href='#' id='downRepDelDataCSV' className='shiny-download-link'>csv (text)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downRepDelDataRDS' className='shiny-download-link'>rds (R)</Link>&nbsp;|&nbsp;
+        <Link download href='#' id='downRepDelDataDTA' className='shiny-download-link'>dta (Stata)</Link>
+      </React.Fragment>;
+  } else {
+    repDelLinks =
+      <React.Fragment>
+        csv (text)&nbsp;|&nbsp;rds (R)&nbsp;|&nbsp;dta (Stata)
+      </React.Fragment>;
+  }
+
   let hivModelFitDetailedLinks = null;
   let hivModelFitLinks = null;
   if (appMgr.uiStateMgr.modellingOutputsEnabled) {
@@ -145,8 +160,8 @@ const TabOutputs = (props) => {
                 </TableRow>
                 <TableRow hover>
                   <TableCell>Reporting delays distributions</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>{repDelLinks}</TableCell>
+                  <TableCell>Flat table</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

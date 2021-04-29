@@ -158,6 +158,7 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
           this.adjustMgr.setAdjustmentsReport(e.payload.AdjustmentsReport);
+          this.adjustMgr.setRunAdjustmentsTypes(e.payload.RunAdjustmentsTypes);
           this.notificationsMgr.setMsg('Adjustment run finished');
         } else {
           this.notificationsMgr.setMsg('Adjustment run failed');

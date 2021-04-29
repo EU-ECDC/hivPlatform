@@ -264,7 +264,8 @@ HIVModelManager <- R6::R6Class(
 
             result <- list(
               MainFitResult = impResult,
-              PlotData = plotData
+              PlotData = plotData,
+              JSONPlotData = jsonlite::toJSON(plotData, dataframe = 'columns')
             )
 
             return(result)
@@ -290,7 +291,7 @@ HIVModelManager <- R6::R6Class(
               payload = list(
                 ActionStatus = 'SUCCESS',
                 ActionMessage = 'Running HIV Model main fit task finished',
-                PlotData = result$PlotData
+                PlotData = result$JSONPlotData
               )
             )
           },
