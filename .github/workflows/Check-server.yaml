@@ -93,7 +93,7 @@ jobs:
           _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
         run: |
           rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
-          testthat::test_package('hivEstimatesAccuracy2')
+          testthat::test_package('hivPlatform')
         shell: Rscript {0}
         working-directory: Server
 

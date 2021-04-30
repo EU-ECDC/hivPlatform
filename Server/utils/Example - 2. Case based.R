@@ -1,4 +1,4 @@
-library(hivEstimatesAccuracy2)
+library(hivPlatform)
 
 appMgr <- AppManager$new()
 

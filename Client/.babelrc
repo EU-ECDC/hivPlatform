@@ -5,18 +5,11 @@
         "targets": {
           "browsers": "> 5%"
         },
+        "loose": true,
         "modules": false,
         "bugfixes": true
       }
     ],
     "@babel/preset-react"
-  ],
-  "plugins": [
-    [
-      "@babel/plugin-proposal-class-properties",
-      {
-        "loose": true
-      }
-    ]
   ]
 }
