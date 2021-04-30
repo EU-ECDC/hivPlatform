@@ -34,7 +34,6 @@ appMgr$CaseMgr$SetFilters(filters = list(
   )
 ))
 
-
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays'))
