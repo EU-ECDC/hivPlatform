@@ -75,7 +75,7 @@ miniCRAN::addLocalPackage(pkgName, buildPath, repoPath, type = 'win.binary', Rve
 # 3. DEPLOYMENT ------------------------------------------------------------------------------------
 
 # Shiny server
-appSourcePath <- 'D:/_REPOSITORIES/hivPlatform/'
+serverDeployPath <- 'D:/_DEPLOYMENT/hivPlatform/deployment/ecdcServer/'
 
 # Copy files and folders
 sapply(
@@ -84,24 +84,24 @@ sapply(
     '../.gitattributes'
   ),
   fs::file_copy,
-  new_path = appSourcePath,
+  new_path = serverDeployPath,
   overwrite = TRUE
 )
 
-fs::dir_create(file.path(appSourcePath, 'renv'))
-fs::file_copy('renv/activate.R', file.path(appSourcePath, 'renv/'), overwrite = TRUE)
-fs::file_copy('renv/settings.dcf', file.path(appSourcePath, 'renv/'), overwrite = TRUE)
-fs::dir_copy('man/', file.path(appSourcePath, 'man/'), overwrite = TRUE)
-fs::dir_copy('inst/', file.path(appSourcePath, 'inst/'), overwrite = TRUE)
-fs::dir_copy('data/', file.path(appSourcePath, 'data/'), overwrite = TRUE)
-fs::dir_copy('R/', file.path(appSourcePath, 'R/'), overwrite = TRUE)
+fs::dir_create(file.path(serverDeployPath, 'renv'))
+fs::file_copy('renv/activate.R', file.path(serverDeployPath, 'renv/'), overwrite = TRUE)
+fs::file_copy('renv/settings.dcf', file.path(serverDeployPath, 'renv/'), overwrite = TRUE)
+fs::dir_copy('man/', file.path(serverDeployPath, 'man/'), overwrite = TRUE)
+fs::dir_copy('inst/', file.path(serverDeployPath, 'inst/'), overwrite = TRUE)
+fs::dir_copy('data/', file.path(serverDeployPath, 'data/'), overwrite = TRUE)
+fs::dir_copy('R/', file.path(serverDeployPath, 'R/'), overwrite = TRUE)
 
-rProfileFile <- file(file.path(appSourcePath, '.Rprofile'))
+rProfileFile <- file(file.path(serverDeployPath, '.Rprofile'))
 rProfileContent <- 'source("renv/activate.R")'
 writeLines(rProfileContent, rProfileFile)
 close(rProfileFile)
 
-renvSettingsFile <- file(file.path(appSourcePath, 'renv', 'settings.dcf'))
+renvSettingsFile <- file(file.path(serverDeployPath, 'renv', 'settings.dcf'))
 renvSettingsContent <- readLines(renvSettingsFile)
 extLibLine <- which(grepl('^external.libraries', renvSettingsContent))[1]
 renvSettingsContent[extLibLine] <- 'external.libraries:'
@@ -109,26 +109,18 @@ writeLines(renvSettingsContent, renvSettingsFile)
 close(renvSettingsFile)
 
 renv::restore(
-  project = appSourcePath,
-  library = file.path(appSourcePath, 'renv', 'library', 'R-4.0', 'x86_64-w64-mingw32'),
+  project = serverDeployPath,
+  library = file.path(serverDeployPath, 'renv', 'library', 'R-4.0', 'x86_64-w64-mingw32'),
   prompt = FALSE
 )
 
-file.copy(
-  'd:/_REPOSITORIES/hivPlatform/renv/library/R-4.0/x86_64-w64-mingw32',
-  'd:/_DEPLOYMENT/hivPlatform/deployment/hivPlatform/app/renv/library/R-4.0',
-  overwrite = TRUE,
-  recursive = TRUE
-)
-
 # Windows binary
-winDeployPath <- 'D:/_DEPLOYMENT/hivPlatform/deployment/hivPlatform/app'
+winDeployPath <- 'D:/_DEPLOYMENT/hivPlatform/deployment/windowsBinary/app/'
+dir.create(winDeployPath, showWarnings = FALSE, recursive = TRUE)
 
 # Copy files and folders
 sapply(
-  c(
-    'app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', '.Rprofile', 'renv.lock'
-  ),
+  c('appWindows.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', 'renv.lock'),
   fs::file_copy,
   new_path = winDeployPath,
   overwrite = TRUE
