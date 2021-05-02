@@ -146,6 +146,21 @@ renvSettingsContent[extLibLine] <- 'external.libraries:'
 writeLines(renvSettingsContent, renvSettingsFile)
 close(renvSettingsFile)
 
+appServerFile <- file(file.path(winDeployPath, 'R', 'AppServer.R'))
+appServerContent <- readLines(appServerFile)
+sessionEndFound <- any(grepl('session\\$onSessionEnded\\(stopApp\\)', appServerContent))
+if (!sessionEndFound) {
+  returnLine <- which(grepl('return\\(invisible\\(NULL\\)\\)', appServerContent))[1]
+
+  appServerContent <- c(
+    appServerContent[1:returnLine - 1],
+    '  session$onSessionEnded(stopApp)',
+    appServerContent[returnLine:length(appServerContent)]
+  )
+  writeLines(appServerContent, appServerFile)
+  close(appServerFile)
+}
+
 file.copy(
   'd:/_REPOSITORIES/hivPlatform/renv/library',
   file.path(winDeployPath, 'renv'),
