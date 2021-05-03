@@ -18,5 +18,3 @@ tryCatch({
 finally = {
   close(pb)
 })
-
-file.path(dirname(getwd()), 'dist/pandoc')

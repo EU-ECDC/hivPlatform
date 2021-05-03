@@ -161,9 +161,21 @@ if (!sessionEndFound) {
   close(appServerFile)
 }
 
+unlink(
+  file.path(winDeployPath, 'renv', 'library'),
+  recursive = TRUE
+)
 file.copy(
-  'd:/_REPOSITORIES/hivPlatform/renv/library',
+  'd:/_DEPLOYMENT/hivPlatform/deployment/ecdcServer/renv/library/',
   file.path(winDeployPath, 'renv'),
   overwrite = TRUE,
   recursive = TRUE
 )
+
+redundantFolders <- fs::dir_ls(
+  file.path(winDeployPath, 'renv', 'library'),
+  type = 'directory',
+  recurse = TRUE,
+  regexp = '(help|html|i386|tests)$'
+)
+sapply(redundantFolders, unlink, recursive = TRUE)

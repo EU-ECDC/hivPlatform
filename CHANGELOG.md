@@ -2,7 +2,7 @@
 
 ###### _May 03 2021_
 
-- UNDER DEVELOPMENT
+- Fix issues with all deployment processes
 
 
 ## 1.9.59
