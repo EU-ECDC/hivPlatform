@@ -1,5 +1,11 @@
 library(hivPlatform)
 
+# Local
+Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
+
+# Windows deploy
+# Sys.setenv(RSTUDIO_PANDOC = file.path(dirname(getwd()), 'dist/pandoc'))
+
 appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 

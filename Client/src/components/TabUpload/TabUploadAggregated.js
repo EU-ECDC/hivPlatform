@@ -106,9 +106,6 @@ const TabUploadAggregated = props => {
                         <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.fileName}</TableCell>
                       </TableRow>
                       <TableRow hover>
-                        <TableCell className={classes.header}>File path</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.filePath}</TableCell>
-                      </TableRow>
-                      <TableRow hover>
                         <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appMgr.aggrDataMgr.fileSize)}</TableCell>
                       </TableRow>
                       <TableRow hover>

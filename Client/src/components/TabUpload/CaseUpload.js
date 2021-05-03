@@ -105,10 +105,6 @@ const CaseUpload = (props) => {
                       <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.fileName}</TableCell>
                     </TableRow>
                     <TableRow hover>
-                      <TableCell className={classes.header}>File path</TableCell>
-                      <TableCell className={classes.content}>{appMgr.caseBasedDataMgr.filePath}</TableCell>
-                    </TableRow>
-                    <TableRow hover>
                       <TableCell className={classes.header}>File size</TableCell>
                       <TableCell className={classes.content}>{FormatBytes(appMgr.caseBasedDataMgr.fileSize)}</TableCell>
                     </TableRow>

@@ -1,8 +1,15 @@
+## 1.9.60
+
+###### _May 03 2021_
+
+- UNDER DEVELOPMENT
+
+
 ## 1.9.59
 
 ###### _Apr 30 2021_
 
-- UNDER DEVELOPMENT
+- Deployment process reimplemented
 
 
 ## 1.9.58

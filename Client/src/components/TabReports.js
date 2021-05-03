@@ -51,9 +51,9 @@ const TabReports = (props) => {
     }
   );
 
-  const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(6);
+  const handleNextpageBtnClick = () => appMgr.uiStateMgr.setActivePageId(6);
 
-  const handleCreateReportBtnClick = e => appMgr.reportMgr.createReport();
+  const handleCreateReportBtnClick = () => appMgr.reportMgr.createReport();
 
   const handleCancelCreateReportBtnClick = () => appMgr.reportMgr.cancelCreatingReport();
 
@@ -66,7 +66,7 @@ const TabReports = (props) => {
   const handleAdjustReportCD4ConfIntChange = (e, value) =>
     appMgr.reportMgr.setAdjustReportCD4ConfInt(value);
 
-  const handleRestoreDefaults = e => appMgr.reportMgr.restoreDefaults();
+  const handleRestoreDefaults = () => appMgr.reportMgr.restoreDefaults();
 
   return (
     <TabPanel>
@@ -162,27 +162,35 @@ const TabReports = (props) => {
           </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Link href='#'
+            <Link
+              download
+              href='#'
               id='reportHTML'
               className='shiny-download-link'
             >
               HTML
             </Link>
-            <Link href='#'
+            <Link
+              download
+              href='#'
               id='reportPDF'
               className='shiny-download-link'
               style={{ marginLeft: 10 }}
             >
               PDF
             </Link>
-            <Link href='#'
+            <Link
+              download
+              href='#'
               id='reportLATEX'
               className='shiny-download-link'
               style={{ marginLeft: 10 }}
             >
               Latex
             </Link>
-            <Link href='#'
+            <Link
+              download
+              href='#'
               id='reportWORD'
               className='shiny-download-link'
               style={{ marginLeft: 10 }}
