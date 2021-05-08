@@ -43,3 +43,5 @@ rsconnect/
 inst/app
 
 .Rprofile
+
+Server\.Rproj

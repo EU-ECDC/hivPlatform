@@ -1,6 +1,6 @@
 {
   "name": "hiv-platform",
-  "version": "1.9.60",
+  "version": "1.9.61",
   "description": "HIV Platform",
   "exports": "./index.js",
   "sideEffects": [
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/core": "7.14.0",
     "@babel/plugin-proposal-class-properties": "7.13.0",
-    "@babel/preset-env": "7.14.0",
+    "@babel/preset-env": "7.14.1",
     "@babel/preset-react": "7.13.13",
     "@types/webpack-merge": "5.0.0",
     "babel-loader": "8.2.2",
@@ -54,8 +54,8 @@
     "terser-webpack-plugin": "^5.1.1",
     "webpack": "^5.36.2",
     "webpack-bundle-analyzer": "^4.4.1",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^4.0.0-beta.2",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^4.0.0-beta.3",
     "webpack-merge": "5.7.3",
     "webpack-plugin-modern-npm": "^0.1.0"
   }

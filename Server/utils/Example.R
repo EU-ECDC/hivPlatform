@@ -1,23 +1,19 @@
 library(hivPlatform)
 
-# Local
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
-
-# Windows deploy
-# Sys.setenv(RSTUDIO_PANDOC = file.path(dirname(getwd()), 'dist/pandoc'))
 
 appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
@@ -47,8 +43,6 @@ adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
 adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
-
-WriteDataFile(appMgr$CaseMgr$AdjustedData, 'D:/VirtualBox_Shared/BE_adjusted.rds')
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -162,19 +156,31 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 
-appMgr$HIVModelMgr$MainFitResult
-appMgr$HIVModelMgr$MainFitTask$Status
-cat(appMgr$HIVModelMgr$MainFitTask$RunLog)
+dt <- appMgr$CaseMgr$Data
 
-wb <- openxlsx::loadWorkbook('D:/Charts.xlsm')
-names(wb)
-data <- data.table(A = c(0, 1))
-wb <- openxlsx::createWorkbook()
-openxlsx::addWorksheet(wb, 'DATA')
-openxlsx::writeData(
-  wb = wb,
-  sheet = 'DATA',
-  x = data
-)
-openxlsx::saveWorkbook(wb, 'D:/Charts2.xlsm', overwrite = TRUE)
-openxlsx::getSheetNames(fileName)
+# Total count or records with no missing FirstCD4Count
+dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count), .N]
+
+# Total count or records with no missing FirstCD4Count corrected for reporting delay
+dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count), sum(Weight)]
+
+# Total count or records with no missing FirstCD4Count contributing to CD4 files corrected for reporting delay
+dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count) & HIVToFirstCD4DaysCount <= 90 & HIVToAIDSDaysCount > 90, sum(Weight)]
+
+dt[YearOfHIVDiagnosis == 2019 & HIVToAIDSDaysCount > 90, sum(Weight)]
+dt[YearOfHIVDiagnosis == 2019 & HIVToAIDSDaysCount <= 90, sum(Weight)]
+dt[YearOfHIVDiagnosis == 2019, sum(Weight)]
+dt[YearOfHIVDiagnosis == 2019 & is.na(HIVToAIDSDaysCount), sum(Weight)]
+dt[YearOfHIVDiagnosis == 2019 & is.na(DateOfAIDSDiagnosis), sum(Weight)]
+dt[YearOfHIVDiagnosis == 2019 & is.na(DateOfHIVDiagnosis), sum(Weight)]
+
+
+dt[!is.na(YearOfHIVDiagnosis) & !is.na(HIVToAIDSDaysCount) & HIVToAIDSDaysCount <= 90, .N]
+
+a <- NA
+FALSE & a > 90
+TRUE & a > 90
+(!is.na(a) & a > 90) | is.na(a)
+!(!is.na(a) & a <= 90)
+(is.na(a) | a > 90)
+TRUE | NA

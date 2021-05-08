@@ -74,7 +74,7 @@ PrepareDataSetsForModel <- function(
 
     # HIVAIDS file
     hivAids <- dt[
-      !is.na(YearOfHIVDiagnosis) & HIVToAIDSDaysCount <= 90,
+      !is.na(YearOfHIVDiagnosis) & !is.na(HIVToAIDSDaysCount) & HIVToAIDSDaysCount <= 90,
       .(Count = sum(Weight)),
       keyby = c('YearOfHIVDiagnosis', strata)
     ]
@@ -89,7 +89,11 @@ PrepareDataSetsForModel <- function(
 
     # CD4 files
     cd4 <- split(
-      dt[!is.na(FirstCD4Count) & HIVToFirstCD4DaysCount <= 90 & HIVToAIDSDaysCount > 90],
+      dt[
+        !is.na(FirstCD4Count) &
+          HIVToFirstCD4DaysCount <= 90 &
+          (!is.na(HIVToAIDSDaysCount) & HIVToAIDSDaysCount > 90)
+      ],
       by = 'CD4Category',
       sorted = TRUE
     )
