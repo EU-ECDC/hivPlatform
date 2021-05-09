@@ -155,32 +155,3 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
-
-dt <- appMgr$CaseMgr$Data
-
-# Total count or records with no missing FirstCD4Count
-dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count), .N]
-
-# Total count or records with no missing FirstCD4Count corrected for reporting delay
-dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count), sum(Weight)]
-
-# Total count or records with no missing FirstCD4Count contributing to CD4 files corrected for reporting delay
-dt[YearOfHIVDiagnosis == 2019 & !is.na(FirstCD4Count) & HIVToFirstCD4DaysCount <= 90 & HIVToAIDSDaysCount > 90, sum(Weight)]
-
-dt[YearOfHIVDiagnosis == 2019 & HIVToAIDSDaysCount > 90, sum(Weight)]
-dt[YearOfHIVDiagnosis == 2019 & HIVToAIDSDaysCount <= 90, sum(Weight)]
-dt[YearOfHIVDiagnosis == 2019, sum(Weight)]
-dt[YearOfHIVDiagnosis == 2019 & is.na(HIVToAIDSDaysCount), sum(Weight)]
-dt[YearOfHIVDiagnosis == 2019 & is.na(DateOfAIDSDiagnosis), sum(Weight)]
-dt[YearOfHIVDiagnosis == 2019 & is.na(DateOfHIVDiagnosis), sum(Weight)]
-
-
-dt[!is.na(YearOfHIVDiagnosis) & !is.na(HIVToAIDSDaysCount) & HIVToAIDSDaysCount <= 90, .N]
-
-a <- NA
-FALSE & a > 90
-TRUE & a > 90
-(!is.na(a) & a > 90) | is.na(a)
-!(!is.na(a) & a <= 90)
-(is.na(a) | a > 90)
-TRUE | NA
