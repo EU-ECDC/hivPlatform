@@ -13,9 +13,9 @@ appMgr <- AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
 
 
@@ -38,7 +38,7 @@ appMgr$CaseMgr$SetFilters(filters = list(
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays'))
+adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
 adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
 adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
@@ -155,3 +155,8 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+
+
+data <- appMgr$CaseMgr$PreProcessedData
+cat(appMgr$CaseMgr$AdjustmentTask$RunLog)
+cat(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog)
