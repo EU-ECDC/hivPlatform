@@ -1,8 +1,11 @@
 ## 1.9.61
 
-###### _May 07 2021_
+###### _May 12 2021_
 
-- UNDER DEVELOPMENT
+- Fix preparation of HIV model input data (categorization of CD4)
+- Fix preparation of HIV model input data (allocation of cases with missing AIDS diagnosis date)
+- Fix running RD with trend when there is no reporting delay in the input data
+- Fix visiting output tables page second time (double bind)
 
 
 ## 1.9.60

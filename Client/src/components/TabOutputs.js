@@ -23,7 +23,7 @@ const TabOutputs = (props) => {
     'downBootFitCSV', 'downBootFitRDS', 'downBootFitDTA',
     'downBootStatDetailedRDS',
     'downBootStatCSV', 'downBootStatRDS', 'downBootStatDTA',
-    'downFitEXCEL', 'downFitEXCEL_NO_MACRO'
+    'downFitXLSM', 'downFitXLSX'
   ];
 
   React.useEffect(
