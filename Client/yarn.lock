@@ -2326,18 +2326,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"archiver@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "archiver@npm:5.2.0"
+"archiver@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "archiver@npm:5.3.0"
   dependencies:
     archiver-utils: ^2.1.0
     async: ^3.2.0
     buffer-crc32: ^0.2.1
     readable-stream: ^3.6.0
     readdir-glob: ^1.0.0
-    tar-stream: ^2.1.4
-    zip-stream: ^4.0.4
-  checksum: 4de8f6dd90dfbab163b4895f8d1e41b00c65d84eb618d3b0c3156ec5270fa044cd17ae9ad0713739a47f3e6663704541b9ccb689d70b368a8fe6b8ae65ef89ce
+    tar-stream: ^2.2.0
+    zip-stream: ^4.1.0
+  checksum: f5968876eef0591a59351ea1f1162c402945e60067be4d0a18a4a2ce418956313866be1f0ae9d9b1802effd0221cd84944e6fa09ae8380532b7077b03e8ccebb
   languageName: node
   linkType: hard
 
@@ -2466,13 +2466,6 @@ __metadata:
   version: 0.4.0
   resolution: "asynckit@npm:0.4.0"
   checksum: a024000b9ddd938e2f27b3cb8188f96a5e1fff58185e98b84862fc4e01de279a547874a800340c2b106bb9de9b0fc61c6c683bc6892abf65e6be29a96addafd3
-  languageName: node
-  linkType: hard
-
-"at-least-node@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "at-least-node@npm:1.0.0"
-  checksum: 8f33efc16287ed39766065c718a2d36a469f702c66c6eb41fa460c0c62bca395301a6a02946e315ae4a84c9cc7f44c94ec73a556bc2a1049350da98d0b013afe
   languageName: node
   linkType: hard
 
@@ -3048,15 +3041,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compress-commons@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "compress-commons@npm:4.0.2"
+"compress-commons@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "compress-commons@npm:4.1.0"
   dependencies:
     buffer-crc32: ^0.2.13
     crc32-stream: ^4.0.1
     normalize-path: ^3.0.0
     readable-stream: ^3.6.0
-  checksum: 3442c1c8d55166f7b3e33b2c2a233fdea8c907eb40c33b353c7251b93c352d74855e2a76e62236db032526e9329e6fb2fa4ea02efbb9d7ec4dbe1e6bdacad71e
+  checksum: 5f7ed51d563bda1db61e1978cd449b908f008fdccfc5cd8bcafe76e894406001459b444696637757a47e80a274058b94653c976648012b5dfb61799f95e38f79
   languageName: node
   linkType: hard
 
@@ -4097,19 +4090,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"filemanager-webpack-plugin@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "filemanager-webpack-plugin@npm:4.0.0"
+"filemanager-webpack-plugin@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "filemanager-webpack-plugin@npm:5.0.0"
   dependencies:
-    archiver: ^5.2.0
+    archiver: ^5.3.0
     cpy: ^8.1.2
     del: ^6.0.0
-    fs-extra: ^9.1.0
+    fs-extra: ^10.0.0
     is-glob: ^4.0.1
     schema-utils: ^3.0.0
   peerDependencies:
     webpack: ^5.0.0
-  checksum: 32a477e3025315703b0214eca6942d931dca9f125c7a15ad3acab95cd5d93c12ed183e925063ddbf123cdba62d13d45ff7e91594e816c82dd1cb8eee69eeaa33
+  checksum: c0dc5dc36e9ba1f351502b507f7d399d58e7f59630ebd4b3e2e5b42ea637359efc7e56ca6d17241c6acdd605ec99d18de9c7b0ce908b018e42f9377ee4e06c5a
   languageName: node
   linkType: hard
 
@@ -4232,15 +4225,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^9.1.0":
-  version: 9.1.0
-  resolution: "fs-extra@npm:9.1.0"
+"fs-extra@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "fs-extra@npm:10.0.0"
   dependencies:
-    at-least-node: ^1.0.0
     graceful-fs: ^4.2.0
     jsonfile: ^6.0.1
     universalify: ^2.0.0
-  checksum: e667d8df54113b527bf5830dd9db8f142618db488894b329fe07724c7020dfacf8a372b144a74e683ae44e66f56117adca9cac165950dda7d83537c46c10dc4b
+  checksum: 84632d143fe3125b8c3c2b1fedbbdfcfb84fc3e087522b4e138cc07edf574619925713a6609f6d5e53ede2e31ab319c7d528ea4a4a770ba6622a16bf4447cd8b
   languageName: node
   linkType: hard
 
@@ -4610,7 +4602,7 @@ fsevents@~2.3.1:
     echarts: ^5.1.1
     echarts-for-react: 3.0.1
     file-loader: 6.2.0
-    filemanager-webpack-plugin: ^4.0.0
+    filemanager-webpack-plugin: ^5.0.0
     html-webpack-plugin: ^5.3.1
     jquery: ^3.6.0
     lodash: ^4.17.21
@@ -4621,7 +4613,7 @@ fsevents@~2.3.1:
     serializr: ^2.0.5
     terser-webpack-plugin: ^5.1.1
     tslib: ^2.2.0
-    webpack: ^5.36.2
+    webpack: ^5.37.0
     webpack-bundle-analyzer: ^4.4.1
     webpack-cli: ^4.7.0
     webpack-dev-server: ^4.0.0-beta.3
@@ -7679,7 +7671,7 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"tar-stream@npm:^2.1.4":
+"tar-stream@npm:^2.2.0":
   version: 2.2.0
   resolution: "tar-stream@npm:2.2.0"
   dependencies:
@@ -8192,9 +8184,9 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.36.2":
-  version: 5.36.2
-  resolution: "webpack@npm:5.36.2"
+"webpack@npm:^5.37.0":
+  version: 5.37.0
+  resolution: "webpack@npm:5.37.0"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.47
@@ -8224,7 +8216,7 @@ resolve@^1.9.0:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 221f75148a40809ce4c8c2f51e3510d716a75ba086ddd18f4d8313f2f18f18efce74b55bfee58223b8ae2d8bcab035d07d2a8f5690c3f3f6a4ce59d015879179
+  checksum: 50c9ce5d9f8d274aa11a57581a2f21b2305f48a96eb7f380a6dab629392fea2b842764f94e7e91cbc28026d69facd5d1456c843b41ba7508f716ff8caacf4214
   languageName: node
   linkType: hard
 
@@ -8324,14 +8316,14 @@ resolve@^1.9.0:
   languageName: node
   linkType: hard
 
-"zip-stream@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "zip-stream@npm:4.0.4"
+"zip-stream@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "zip-stream@npm:4.1.0"
   dependencies:
     archiver-utils: ^2.1.0
-    compress-commons: ^4.0.2
+    compress-commons: ^4.1.0
     readable-stream: ^3.6.0
-  checksum: 7d607ffebce80a1ac2766530be1b7216e5a2752af5297e427dbcce0e8a8d7dd128e16086ed4c1b6a2cffa5b3dc9f0ca9f477721a09a98a1f4b7c12dca26e4e0b
+  checksum: a2338731e721d05f37989d2284d7850a3923072c5836cfc71bdedb168afa0ecd020b45b4ca09b48ae8bc489a20e5ca46cd9e0928235a8a6fda181d5ed2876919
   languageName: node
   linkType: hard
 
