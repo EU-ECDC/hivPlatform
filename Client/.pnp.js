@@ -51,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts", "npm:5.1.1"],
             ["echarts-for-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:3.0.1"],
             ["file-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:6.2.0"],
+            ["file-saver", "npm:2.0.5"],
             ["filemanager-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.0.0"],
             ["html-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.3.1"],
             ["jquery", "npm:3.6.0"],
@@ -5705,6 +5706,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["file-saver", [
+        ["npm:2.0.5", {
+          "packageLocation": "./.yarn/cache/file-saver-npm-2.0.5-2c3bc40d53-0f83523653.zip/node_modules/file-saver/",
+          "packageDependencies": [
+            ["file-saver", "npm:2.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["filemanager-webpack-plugin", [
         ["npm:5.0.0", {
           "packageLocation": "./.yarn/cache/filemanager-webpack-plugin-npm-5.0.0-4775423ecc-c0dc5dc36e.zip/node_modules/filemanager-webpack-plugin/",
@@ -6275,6 +6285,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts", "npm:5.1.1"],
             ["echarts-for-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:3.0.1"],
             ["file-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:6.2.0"],
+            ["file-saver", "npm:2.0.5"],
             ["filemanager-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.0.0"],
             ["html-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.3.1"],
             ["jquery", "npm:3.6.0"],

@@ -30,6 +30,7 @@
     "@material-ui/lab": "4.0.0-alpha.58",
     "echarts": "^5.1.1",
     "echarts-for-react": "3.0.1",
+    "file-saver": "2.0.5",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "mobx": "^6.3.0",

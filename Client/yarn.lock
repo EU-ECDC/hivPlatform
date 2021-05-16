@@ -4145,6 +4145,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-saver@npm:2.0.5":
+  version: 2.0.5
+  resolution: "file-saver@npm:2.0.5"
+  checksum: 0f835236534377c9b7591b995d94ae5061166452fb1f784548b706ff48984930e45a7947cfe393ce86b84ef2ec89064120c5d5ab5186146c508bb022c71ced3d
+  languageName: node
+  linkType: hard
+
 "filemanager-webpack-plugin@npm:^5.0.0":
   version: 5.0.0
   resolution: "filemanager-webpack-plugin@npm:5.0.0"
@@ -4657,6 +4664,7 @@ fsevents@~2.3.1:
     echarts: ^5.1.1
     echarts-for-react: 3.0.1
     file-loader: 6.2.0
+    file-saver: 2.0.5
     filemanager-webpack-plugin: ^5.0.0
     html-webpack-plugin: ^5.3.1
     jquery: ^3.6.0

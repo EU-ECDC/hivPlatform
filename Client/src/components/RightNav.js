@@ -12,20 +12,9 @@ const RightNav = (props) => {
 
   const [seed, setSeed] = React.useState(null);
 
-  // const downloadLinkIds = ['downState'];
+  const handleSaveStateBtnClick = () => appMgr.saveState();
 
-  // React.useEffect(
-  //   () => {
-  //     appMgr.unbindShiny(downloadLinkIds);
-  //     appMgr.bindShiny();
-
-  //     return () => appMgr.unbindShiny(downloadLinkIds);
-  //   }
-  // );
-
-  const handleSeedChange = e => {
-    setSeed(parseInt(e.target.value));
-  }
+  const handleSeedChange = e => setSeed(parseInt(e.target.value));
 
   const handleSeedApply = () => appMgr.btnClicked('seed', seed);
 
@@ -36,12 +25,11 @@ const RightNav = (props) => {
         <ul>
           <li>
             <Link
-              download
               href='#'
-              id='downState'
-              className='shiny-download-link'
+              id='saveState'
               variant='button'
-              style={{ pointerEvents: 'none'}}
+              onClick={handleSaveStateBtnClick}
+              // style={{ pointerEvents: 'none' }}
             >
               Save state [DISABLED]
             </Link>

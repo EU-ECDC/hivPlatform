@@ -15,6 +15,7 @@ import ReportManager from './ReportManager';
 import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
 import FloatToQuarter from '../utilities/FloatToQuarter';
+import SaveDataLocally from '../utilities/SaveDataLocally';
 
 configure({
   enforceActions: 'observed',
@@ -43,10 +44,6 @@ export default class AppManager {
   shinyMessage = {};
 
   seed = null;
-
-  onApiURL = e => {
-    console.log(e);
-  };
 
   // Shiny custom event handlers
   onShinyEvent = e => {
@@ -303,6 +300,12 @@ export default class AppManager {
           this.notificationsMgr.setMsg(e.payload.ActionMessage);
         }
         break;
+      case 'SAVE_STATE':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          SaveDataLocally(e.payload.Data, e.payload.FileName);
+          this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        }
+        break;
     };
   };
 
@@ -333,7 +336,7 @@ export default class AppManager {
       setShinyMessage: action,
       unbindShiny: action,
       bindShiny: action,
-      save: action,
+      saveState: action,
       setSeed: action
     });
   };
@@ -377,7 +380,6 @@ export default class AppManager {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {
       Shiny.addCustomMessageHandler('shinyHandler', this.onShinyEvent);
-      Shiny.addCustomMessageHandler('apiURL', this.onApiURL);
     }
   };
 
@@ -425,10 +427,10 @@ export default class AppManager {
     }
   };
 
-  save = () => {
+  saveState = () => {
     const js = serialize(this);
     const json = JSON.stringify(js, {}, 2);
-    this.btnClicked('saveState', json);
+    this.btnClicked('saveStateBtn', json);
   }
 };
 
@@ -550,7 +552,7 @@ createModelSchema(AggrDataManager, {
   filePath: primitive(),
   dataFiles: raw(),
   origDataFiles: raw(),
-  rangeYears: list(primitive()),
+  rangeYears: raw(),
   dataFileNameToIdxMap: map(),
   populationNames: list(primitive()),
   fileUploadProgress: primitive(),
@@ -602,18 +604,17 @@ createModelSchema(UIStateManager, {
 
 createModelSchema(AppManager, {
   id: identifier(),
-  // shinyState: primitive(),
-  // shinyMessage: raw(),
-  // uiStateMgr: object(UIStateManager),
-  // notificationsMgr: object(NotificationsManager),
-  // attrMappingMgr: object(AttrMappingManager),
-  // origGroupMgr: object(OriginGroupingsManager),
-  // caseBasedDataMgr: object(CaseBasedDataManager),
-  // aggrDataMgr: object(AggrDataManager),
-  // summaryDataMgr: object(SummaryDataManager),
-  // adjustMgr: object(AdjustmentsManager),
-  // popMgr: object(PopulationsManager),
-  // popCombMgr: object(PopCombinationsManager),
-  // modelMgr: object(ModelsManager),
-  // reportMgr: object(ReportManager)
+  shinyState: primitive(),
+  uiStateMgr: object(UIStateManager),
+  notificationsMgr: object(NotificationsManager),
+  attrMappingMgr: object(AttrMappingManager),
+  origGroupMgr: object(OriginGroupingsManager),
+  caseBasedDataMgr: object(CaseBasedDataManager),
+  aggrDataMgr: object(AggrDataManager),
+  summaryDataMgr: object(SummaryDataManager),
+  adjustMgr: object(AdjustmentsManager),
+  popMgr: object(PopulationsManager),
+  popCombMgr: object(PopCombinationsManager),
+  modelMgr: object(ModelsManager),
+  reportMgr: object(ReportManager)
 });

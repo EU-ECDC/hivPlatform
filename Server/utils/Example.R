@@ -160,3 +160,6 @@ appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 data <- appMgr$CaseMgr$PreProcessedData
 cat(appMgr$CaseMgr$AdjustmentTask$RunLog)
 cat(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog)
+
+test <- readRDS(file = 'D:/Downloads/HIVPlatformState_20210516_201741.rds')
+cat(test$UIState)
