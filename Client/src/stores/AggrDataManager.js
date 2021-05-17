@@ -1,4 +1,4 @@
-import { observable, action, computed, makeObservable, autorun } from 'mobx';
+import { observable, action, computed, makeObservable, autorun, toJS } from 'mobx';
 import ReactFileUploader from '../utilities/Uploader';
 import EnsureArray from '../utilities/EnsureArray';
 import IsNull from '../utilities/IsNull';
@@ -28,7 +28,7 @@ export default class AggrDataManager {
       filePath: observable,
       populationNames: observable,
       fileUploadProgress: observable,
-      dataFiles: observable,
+      dataFiles: observable.deep,
       origDataFiles: observable,
       rangeYears: observable,
       actionStatus: observable,
@@ -53,7 +53,7 @@ export default class AggrDataManager {
     });
 
     autorun(
-      () => this.rootMgr.inputValueSet('aggrFilters:AggrFilters', this.dataFiles),
+      () => this.rootMgr.inputValueSet('aggrFilters:AggrFilters', toJS(this.dataFiles)),
       { delay: 1000 }
     );
   };
@@ -67,7 +67,10 @@ export default class AggrDataManager {
     this.dataFiles = EnsureArray(dataFiles);
     this.dataFileNameToIdxMap = new Map(this.dataFiles.map((el, i) => [el.name, i]));
   };
-  setDataFileUse = (name, use) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].use = use;
+  setDataFileUse = (name, use) => {
+    this.dataFiles[this.dataFileNameToIdxMap.get(name)].use = use;
+  };
+
   setDataFileYears = (name, years) => this.dataFiles[this.dataFileNameToIdxMap.get(name)].years = years;
   setPopulationNames = populationNames => this.populationNames = EnsureArray(populationNames).sort();
   setFileUploadProgress = progress => this.fileUploadProgress = progress;

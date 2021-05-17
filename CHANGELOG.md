@@ -1,3 +1,11 @@
+## 1.9.62
+
+###### _May 17 2021_
+
+- Fix combining aggregated data with case-based data (overwrite instead of add)
+- Fix processing changes in aggregated data selection
+
+
 ## 1.9.61
 
 ###### _May 12 2021_

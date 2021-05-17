@@ -76,7 +76,8 @@ const TabUploadAggregated = props => {
             <Button
               style={{ marginBottom: 6, marginLeft: 20 }}
               color='primary'
-              disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
+              // disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
+              disabled={true}
             >
               Unload data
             </Button>

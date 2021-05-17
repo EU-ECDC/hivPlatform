@@ -74,7 +74,8 @@ const CaseUpload = (props) => {
           <Button
             style={{ marginBottom: 6, marginLeft: 20 }}
             color='primary'
-            disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
+            // disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
+            disabled={true}
           >
             Unload data
           </Button>
