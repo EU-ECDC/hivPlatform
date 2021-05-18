@@ -28,6 +28,7 @@ PrepareMigrantData <- function(
 
   # Gender
   currentLevels <- levels(adjDataMigr$Gender)
+  stopifnot(all(currentLevels %in% c('M', 'F')))
   newLevels <- c('Male', 'Female')
   levels(adjDataMigr$Gender) <- newLevels[match(currentLevels, c('M', 'F'))]
 
@@ -57,10 +58,10 @@ PrepareMigrantData <- function(
   # Create birth date
   adjDataMigr[, DateOfBirth := DateOfHIVDiagnosis - Age * 365.25]
 
-  # Calendar time since 1/1/1980
+  # Years since 1/1/1980
   adjDataMigr[, Calendar := as.numeric(DateOfHIVDiagnosis - as.Date('1980-1-1')) / 365.25]
 
-  # Indicator of a AcuteInfection
+  # Indicator of an acute infection
   adjDataMigr[, AcuTest := !is.na(AcuteInfection)]
 
   # Generate at risk date
@@ -75,4 +76,69 @@ PrepareMigrantData <- function(
       DateOfBirth + 10 * 365.25, as.Date('1980-1-1'), DateOfHIVDiagnosis - 0.5 * 365.25
     )
   ]
+
+  # Years from risk onset to HIV diagnosis
+  adjDataMigr[, U := as.numeric(DateOfHIVDiagnosis - AtRiskDate) / 365.25]
+  # There should not be any negative U's
+  adjDataMigr <- adjDataMigr[U > 0]
+
+  # Years from migration to HIV diagosis
+  adjDataMigr[, Mig := as.numeric(DateOfHIVDiagnosis - DateOfArrival) / 365.25]
+
+  adjDataMigr[, KnownPrePost := 'Unknown']
+  adjDataMigr[Mig < 0, KnownPrePost := 'Pre']
+  adjDataMigr[Mig > U, KnownPrePost := 'Post']
+
+  # Base dataset
+  base <- adjDataMigr[, .(
+    Patient = RecordId, Gender, Mode, AgeDiag = Age, GroupedRegion, Calendar, Art, DateOfArt,
+    DateOfHIVDiagnosis, DateOfAIDSDiagnosis, DateOfArrival, DateOfBirth, AtRiskDate, U, Mig,
+    KnownPrePost
+  )]
+
+  # CD4 dataset
+  cd4 <- adjDataMigr[, .(
+    Patient = RecordId,
+    Value_1 = FirstCD4Count,
+    Value_2 = LatestCD4Count,
+    DateOfExam_1 = pmax(DateOfHIVDiagnosis, DateOfFirstCD4Count, na.rm = TRUE),
+    DateOfExam_2 = DateOfLatestCD4Count,
+    Indi = 'CD4'
+  )]
+  cd4 <- melt(
+    cd4,
+    measure.vars = patterns('^DateOfExam', '^Value'),
+    value.name = c('DateOfExam', 'Value'),
+    variable.name = 'Time'
+  )
+  setorderv(cd4, c('Patient', 'Time'))
+  cd4[, Time := NULL]
+
+  # VL dataset
+  rna <- adjDataMigr[, .(
+    Patient = RecordId,
+    Value = LatestVLCount,
+    DateOfExam = DateOfLatestVLCount,
+    Indi = 'RNA'
+  )]
+  rna[!is.na(Value) & Value == 0, Value := 25]
+
+  # Combine both markers
+  cd4VL <- rbind(cd4, rna, use.names = TRUE)
+
+  # Merge markers with base
+  baseCD4VL <- merge(cd4VL, base, by = 'Patient')
+  setorderv(baseCD4VL, c('Patient', 'Indi', 'DateOfExam'))
+  # Keep observations prior to ART initiation and AIDS onset
+  baseCD4VL <- baseCD4VL[
+    !is.na(DateOfExam) &
+      DateOfExam <= na.replace(DateOfArt, as.Date('3000-01-01')) &
+      DateOfExam <= na.replace(DateOfAIDSDiagnosis, as.Date('3000-01-01'))
+  ]
+
+  # Exlude negative times
+  baseCD4VL[, Date := as.numeric(DateOfExam - DateOfHIVDiagnosis) / 365.25]
+  baseCD4VL <- baseCD4VL[Date >= -15 / 365.25]
+  baseCD4VL[Date < 0, Date := 0]
+
 }
