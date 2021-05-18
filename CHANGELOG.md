@@ -1,3 +1,10 @@
+## 1.9.63
+
+###### _May 18 2021_
+
+- Fix loading incomplete aggregated data
+
+
 ## 1.9.62
 
 ###### _May 17 2021_
