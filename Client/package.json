@@ -1,6 +1,6 @@
 {
   "name": "hiv-platform",
-  "version": "1.9.64",
+  "version": "2.0.0",
   "description": "HIV Platform",
   "exports": "./index.js",
   "sideEffects": [

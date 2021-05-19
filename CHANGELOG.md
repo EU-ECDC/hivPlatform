@@ -1,8 +1,8 @@
-## 1.9.64
+## 2.0.0
 
-###### _May 18 2021_
+###### _May 19 2021_
 
-- UNDER DEVELOPMENT
+- Release version 2.0.0
 
 
 ## 1.9.63

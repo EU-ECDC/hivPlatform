@@ -103,7 +103,7 @@ PrepareMigrantData <- function(
     Value_2 = LatestCD4Count,
     DateOfExam_1 = pmax(DateOfHIVDiagnosis, DateOfFirstCD4Count, na.rm = TRUE),
     DateOfExam_2 = DateOfLatestCD4Count,
-    Indi = 'CD4'
+    Indi = 'cd4'
   )]
   cd4 <- melt(
     cd4,
@@ -119,7 +119,7 @@ PrepareMigrantData <- function(
     Patient = RecordId,
     Value = LatestVLCount,
     DateOfExam = DateOfLatestVLCount,
-    Indi = 'RNA'
+    Indi = 'rna'
   )]
   rna[!is.na(Value) & Value == 0, Value := 25]
 
@@ -137,8 +137,42 @@ PrepareMigrantData <- function(
   ]
 
   # Exlude negative times
-  baseCD4VL[, Date := as.numeric(DateOfExam - DateOfHIVDiagnosis) / 365.25]
-  baseCD4VL <- baseCD4VL[Date >= -15 / 365.25]
-  baseCD4VL[Date < 0, Date := 0]
+  baseCD4VL[, DTime := as.numeric(DateOfExam - DateOfHIVDiagnosis) / 365.25]
+  baseCD4VL <- baseCD4VL[DTime >= -15 / 365.25]
+  baseCD4VL[DTime < 0, DTime := 0]
 
+  # Create a numeric id
+  baseCD4VL[, Id := .I, by = .(Patient)]
+
+  # Indicators of a CD4 or VL measurement
+  baseCD4VL[, ':='(
+    Consc = as.integer(Indi == 'cd4'),
+    Consr = as.integer(Indi == 'rna')
+  )]
+  setorderv(baseCD4VL, c('Id', 'Consc', 'DateOfExam'))
+
+  # Rename the measurement value
+  setnames(baseCD4VL, old = 'Value', new = 'YVar')
+
+  # Transform cd4 and vl
+  baseCD4VL[Consc == 1, YVar := sqrt(YVar)]
+  baseCD4VL[Consr == 1, YVar := log10(YVar)]
+
+  # Times of measurments
+  baseCD4VL[, ':='(
+    CobsTime = DTime * Consc,
+    RobsTime = DTime * (1 - Consc),
+    RLogObsTime2 = log(DTime + 0.013) * (1 - Consc)
+  )]
+
+  baseCD4VL[, ':='(SumConsc = sum(Consc), SumConsr = sum(Consr)), by = .(Id)]
+  baseCD4VL[SumConsc > 0 & SumConsr > 0, Only := 'Both']
+  baseCD4VL[SumConsc > 0 & SumConsr == 0, Only := 'CD4 only']
+  baseCD4VL[SumConsc == 0 & SumConsr > 0, Only := 'VL only']
+
+  # Cases with no pre-ART/AIDS markers (CD4,VL) at all
+  baseAIDS <- base[!(Patient %in% baseCD4VL$Patient)]
+  baseAIDS[, Id := .I, by = .(Patient)]
+  baseAIDS[, DTime := as.numeric(DateOfAIDSDiagnosis - DateOfHIVDiagnosis) / 365.25]
+  baseAIDS[DTime < 0, DTime := 0]
 }
