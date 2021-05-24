@@ -167,3 +167,16 @@ cat(test$UIState)
 
 caseData <- appMgr$CaseMgr$Data
 aggrData <- appMgr$AggrMgr$Data
+popCombination <- list(
+  Case = NULL,
+  Aggr = 'pop_0'
+)
+aggrDataSelection <- data.table(
+  Name = c(
+    'AIDS'
+  ),
+  Use = c(TRUE),
+  MinYear = c(1995),
+  MaxYear = c(2005)
+)
+CombineData(caseData, aggrData, popCombination, aggrDataSelection)

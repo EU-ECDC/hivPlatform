@@ -1,7 +1,7 @@
 library(miniCRAN)
 
 pkgName <- 'hivPlatform'
-rVersion <- '4.0'
+rVersion <- '4.1'
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 
 # 1. REPOSITORY ------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ close(renvSettingsFile)
 
 renv::restore(
   project = serverDeployPath,
-  library = file.path(serverDeployPath, 'renv', 'library', 'R-4.0', 'x86_64-w64-mingw32'),
+  library = file.path(serverDeployPath, 'renv', 'library', 'R-4.1', 'x86_64-w64-mingw32'),
   prompt = FALSE
 )
 
