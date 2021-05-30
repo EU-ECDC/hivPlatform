@@ -1,8 +1,9 @@
 ## 2.0.1
 
-###### _May 29 2021_
+###### _May 30 2021_
 
-- UNDER DEVELOPMENT
+- Support incomplete input data of HIV model
+
 
 ## 2.0.0
 
