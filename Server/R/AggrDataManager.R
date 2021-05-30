@@ -60,9 +60,10 @@ AggrDataManager <- R6::R6Class(
         dataFiles <- lapply(dataTypesGroupings, function(grouping) {
           names <- grep(grouping, dataNames, value = TRUE)
           years <- dataYears[names]
+          years <- Filter(\(x) length(x) > 0, years)
           if (length(years) > 0) {
-            minYear <- min(sapply(years, min))
-            maxYear <- max(sapply(years, max))
+            minYear <- min(sapply(years, min, na.rm = TRUE))
+            maxYear <- max(sapply(years, max, na.rm = TRUE))
             return(list(
               name = paste(names, collapse = ', '),
               use = TRUE,
