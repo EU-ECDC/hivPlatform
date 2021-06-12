@@ -186,10 +186,20 @@ aggrDataSelection <- data.table(
 CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # Migration
-data <- GetMigrantData()
+data <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')
+migrantData <- PrepareMigrantData(data)
 params <- GetMigrantParams()
-migrantAIDS <- PredictInfAIDS(baseAIDS = data$AIDS, params)
-migrantCD4VL <- PredictInfCD4VL(baseCD4VL = data$CD4VL, params)
+migrantAIDS <- PredictInfAIDS(
+  baseAIDS = migrantData$AIDS[, .(Imputation, RecordId, Gender, Age, U, Mig, DTime)],
+  params
+)
+migrantCD4VL <- PredictInfCD4VL(
+  baseCD4VL = migrantData$CD4VL[1:100, .(
+    Imputation, RecordId, Gender, GroupedRegion, Mode, Age, DTime, Calendar, Consc, Consr,
+    CobsTime, RobsTime, RLogObsTime2, YVar, U, Mig, KnownPrePost, Only
+  )],
+  params
+)
 
 # Reconciliations
 reconData <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/TESSY_sample.dta'))
@@ -197,9 +207,9 @@ reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_tes
 reconCD4VL <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseCD4VL.dta'))
 
 baseAIDS <- reconAIDS[, 1:18]
-isLabelled <- sapply(baseAIDS, is.labelled)
+isLabelled <- sapply(baseAIDS, haven::is.labelled)
 colNames <- names(isLabelled[isLabelled])
-baseAIDS[, (colNames) := lapply(.SD, as_factor), .SDcols = colNames]
+baseAIDS[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseAIDS,
   c(
@@ -223,9 +233,9 @@ compareAIDS[, Diff := ProbPre.Recon - ProbPre.Test]
 compareAIDS[abs(Diff) > 1e-7]
 
 baseCD4VL <- reconCD4VL[, 1:27]
-isLabelled <- sapply(baseCD4VL, is.labelled)
+isLabelled <- sapply(baseCD4VL, haven::is.labelled)
 colNames <- names(isLabelled[isLabelled])
-baseCD4VL[, (colNames) := lapply(.SD, as_factor), .SDcols = colNames]
+baseCD4VL[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseCD4VL,
   c(
@@ -236,7 +246,7 @@ setnames(
   )
 )
 
-testCD4VL <- PredictInfCD4VL(baseCD4VL, params)
+testCD4VL <- PredictInfCD4VL(baseCD4VL[1:100], params)
 
 compareCD4VL <- merge(
   reconCD4VL[1:100, .(PATIENT, ProbPre)],
