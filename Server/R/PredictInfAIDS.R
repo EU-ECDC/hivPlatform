@@ -1,24 +1,22 @@
 PredictInfAIDS <- function(
-  baseAIDS,
+  input,
   params
 ) {
-  baseAIDS <- copy(baseAIDS)
-
   xAIDS <- cbind(
     1,
-    as.integer(baseAIDS$Gender == 'Male'),
-    baseAIDS$AgeDiag
+    as.integer(input$Gender == 'M'),
+    input$Age
   )
 
-  # Posterior mean
-  baseAIDS[, ProbPre := NA_real_]
-  for (i in seq_len(nrow(baseAIDS))) {
+  output <- copy(input)
+  output[, ProbPre := NA_real_]
+  for (i in seq_len(nrow(output))) {
     fit1 <- try(integrate(
       VPostWAIDS,
-      lower = baseAIDS$Mig[i],
-      upper = baseAIDS$U[i],
+      lower = output$Mig[i],
+      upper = output$U[i],
       x = xAIDS[i, ],
-      dTime = baseAIDS$DTime[i],
+      dTime = output$DTime[i],
       betaAIDS = params$betaAIDS,
       kappa = params$kappa
     ), silent = TRUE)
@@ -26,9 +24,9 @@ PredictInfAIDS <- function(
     fit2 <- try(integrate(
       VPostWAIDS,
       lower = 0,
-      upper = baseAIDS$U[i],
+      upper = output$U[i],
       x = xAIDS[i, ],
-      dTime = baseAIDS$DTime[i],
+      dTime = output$DTime[i],
       betaAIDS = params$betaAIDS,
       kappa = params$kappa
     ), silent = TRUE)
@@ -36,9 +34,9 @@ PredictInfAIDS <- function(
     if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
       next
     } else {
-      baseAIDS[i, ProbPre := fit1$value / fit2$value]
+      output[i, ProbPre := fit1$value / fit2$value]
     }
   }
 
-  return(baseAIDS)
+  return(output)
 }

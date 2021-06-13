@@ -187,19 +187,10 @@ CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # Migration
 data <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')
-migrantData <- PrepareMigrantData(data)
+input <- PrepareMigrantData(data)
 params <- GetMigrantParams()
-migrantAIDS <- PredictInfAIDS(
-  baseAIDS = migrantData$AIDS[, .(Imputation, RecordId, Gender, Age, U, Mig, DTime)],
-  params
-)
-migrantCD4VL <- PredictInfCD4VL(
-  baseCD4VL = migrantData$CD4VL[1:100, .(
-    Imputation, RecordId, Gender, GroupedRegion, Mode, Age, DTime, Calendar, Consc, Consr,
-    CobsTime, RobsTime, RLogObsTime2, YVar, U, Mig, KnownPrePost, Only
-  )],
-  params
-)
+migrantAIDS <- PredictInfAIDS(input$AIDS, params)
+migrantCD4VL <- PredictInfCD4VL(input = input$CD4VL[1:10], params)
 
 # Reconciliations
 reconData <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/TESSY_sample.dta'))
@@ -213,19 +204,22 @@ baseAIDS[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseAIDS,
   c(
-    'Patient', 'Gender', 'Mode', 'AgeDiag', 'GroupedRegion', 'Calendar', 'Art', 'DateOfArt',
+    'RecordId', 'Gender', 'Mode', 'Age', 'GroupedRegion', 'Calendar', 'Art', 'DateOfArt',
     'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth', 'AtRiskDate',
-    'U', 'Mig', 'KnownPrePost', 'Id', 'DTime'
+    'U', 'Mig', 'KnownPrePost', 'UniqueId', 'DTime'
   )
 )
+currentLevels <- levels(baseAIDS$Gender)
+newLevels <- c('M', 'F')
+levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 
-testAIDS <- PredictInfAIDS(baseAIDS, params)
+testAIDS <- PredictInfAIDS(input = baseAIDS, params)
 
 compareAIDS <- merge(
-  reconAIDS[, .(PATIENT, ProbPre)],
-  testAIDS[, .(Patient, ProbPre)],
-  by.x = c('PATIENT'),
-  by.y = c('Patient'),
+  reconAIDS[, .(id, ProbPre)],
+  testAIDS[, .(UniqueId, ProbPre)],
+  by.x = c('id'),
+  by.y = c('UniqueId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )
@@ -239,20 +233,24 @@ baseCD4VL[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseCD4VL,
   c(
-    'Patient', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'AgeDiag', 'GroupedRegion',
+    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'Age', 'GroupedRegion',
     'Calendar', 'Art', 'DateOfArt', 'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival',
-    'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'DTime', 'Id', 'Consc', 'Consr',
+    'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'DTime', 'UniqueId', 'Consc', 'Consr',
     'CobsTime', 'RobsTime', 'RLogObsTime2', 'Only'
   )
 )
+currentLevels <- levels(baseCD4VL$Gender)
+newLevels <- c('M', 'F')
+levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
+baseCD4VL[, Ord := rowid(RecordId)]
 
-testCD4VL <- PredictInfCD4VL(baseCD4VL[1:100], params)
+testCD4VL <- PredictInfCD4VL(input = baseCD4VL[1:1000], params)
 
 compareCD4VL <- merge(
-  reconCD4VL[1:100, .(PATIENT, ProbPre)],
-  testCD4VL[, .(Patient, ProbPre)],
-  by.x = c('PATIENT'),
-  by.y = c('Patient'),
+  reconCD4VL[1:1000, .(id, ord, ProbPre)],
+  testCD4VL[, .(UniqueId, Ord, ProbPre)],
+  by.x = c('id'),
+  by.y = c('UniqueId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )

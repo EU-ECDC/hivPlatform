@@ -25,7 +25,7 @@ LogPostW <- function(
     I(DTime + w) * Gender +
       I(DTime + w) * GroupedRegion +
       I(DTime + w) * Mode +
-      I(DTime + w) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
   xCD4 <- model.matrix(fxCD4, data = cbind(y, x)[Consc == 1])
@@ -37,11 +37,11 @@ LogPostW <- function(
     I(DTime + w) * Gender +
       I(DTime + w) * GroupedRegion +
       I(DTime + w) * Mode +
-      I(DTime + w) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       I(log(DTime + w + 0.013)) * Gender +
       I(log(DTime + w + 0.013)) * GroupedRegion +
       I(log(DTime + w + 0.013)) * Mode +
-      I(log(DTime + w + 0.013)) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
   xVR <- model.matrix(fxVR, data = cbind(y, x)[Consr == 1])
@@ -93,7 +93,7 @@ LogPostWCD4 <- function(
       I(DTime + w) * Gender +
       I(DTime + w) * GroupedRegion +
       I(DTime + w) * Mode +
-      I(DTime + w) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
   x <- model.matrix(fxCD4, data = cbind(y, x))
@@ -134,11 +134,11 @@ LogPostWVL <- function(
     I(DTime + w) * Gender +
       I(DTime + w) * GroupedRegion +
       I(DTime + w) * Mode +
-      I(DTime + w) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       I(log(DTime + w + 0.013)) * Gender +
       I(log(DTime + w + 0.013)) * GroupedRegion +
-      I(log(DTime + w + 0.013)) * Mode +
-      I(log(DTime + w + 0.013)) * lspline::lspline(I(AgeDiag - w), knots = c(25, 35, 45)) +
+      I(log(DTime + w + 0.013)) * Transmission +
+      I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
 

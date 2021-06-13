@@ -1,55 +1,54 @@
 PredictInfCD4VL <- function(
-  baseCD4VL,
+  input,
   params
 ) {
-  baseCD4VL <- copy(baseCD4VL)
-
-  baseCD4VL[, ':='(
-    Ord = rowid(Id),
-    ProbPre = NA_real_
-  )]
+  output <- copy(input)
+  output[, ProbPre := NA_real_]
 
   pb <- progress::progress_bar$new(
     format = '[:bar] :current/:total (:percent, ETA: :eta)',
-    total = baseCD4VL[, uniqueN(Patient)]
+    total = output[, uniqueN(UniqueId)]
   )
-  for (patient in baseCD4VL[, unique(Patient)]) {
-    pb$tick(1)
+  for (uniqueId in output[, unique(UniqueId)]) {
+    pb$tick()
 
-    patientData <- baseCD4VL[Patient == patient]
+    dt <- output[UniqueId == uniqueId]
 
-    migTime <- patientData[Ord == 1, Mig]
-    upTime <- patientData[Ord == 1, U]
-    x <- patientData[, .(Gender, GroupedRegion, Mode, Age, DTime, Calendar, Consc, Consr)]
-    y <- patientData[, .(YVar)]
-    z <- patientData[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
-    xAIDS <- as.matrix(patientData[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
-    maxDTime <- patientData[, max(DTime)]
+    x <- dt[, .(Gender, GroupedRegion, Mode, Age, DTime, Calendar, Consc, Consr)]
+    y <- dt[, .(YVar)]
+    z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
+    migTime <- dt[Ord == 1, Mig]
+    upTime <- dt[Ord == 1, U]
+    xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
+    maxDTime <- dt[, max(DTime)]
 
-    if (patientData[1, KnownPrePost] != 'Unknown') {
+    if (dt[Ord == 1, KnownPrePost] != 'Unknown') {
       next
     }
 
-    switch(patientData[1, Only],
+    switch(dt[Ord == 1, Only],
       'Both' = {
         bFE <- params$bFE
         sigma2 <- params$sigma2
         varCovRE <- params$varCovRE
+        func <- VPostW
       },
       'CD4 only' = {
         bFE <- params$bFECD4
         sigma2 <- params$sigma2CD4
         varCovRE <- params$varCovRECD4
+        func <- VPostWCD4
       },
       'VL only' = {
         bFE <- params$bFEVL
         sigma2 <- params$sigma2VL
         varCovRE <- params$varCovREVL
+        func <- VPostWVL
       }
     )
 
     fit1 <- try(integrate(
-      VPostWCD4,
+      func,
       lower = migTime,
       upper = upTime,
       x = x,
@@ -64,7 +63,7 @@ PredictInfCD4VL <- function(
       varCovRE = varCovRE
     ), silent = TRUE)
     fit2 <- try(integrate(
-      VPostWCD4,
+      func,
       lower = 0,
       upper = upTime,
       x = x,
@@ -82,9 +81,9 @@ PredictInfCD4VL <- function(
     if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
       next
     } else {
-      baseCD4VL[Patient == patient, ProbPre := fit1$value / fit2$value]
+      output[UniqueId == uniqueId, ProbPre := fit1$value / fit2$value]
     }
   }
 
-  return(baseCD4VL)
+  return(output)
 }
