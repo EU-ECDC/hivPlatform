@@ -186,11 +186,11 @@ aggrDataSelection <- data.table(
 CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # Migration
-data <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')
-input <- PrepareMigrantData(data)
 params <- GetMigrantParams()
-migrantAIDS <- PredictInfAIDS(input$AIDS, params)
-migrantCD4VL <- PredictInfCD4VL(input = input$CD4VL[1:10], params)
+data <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')
+input <- PrepareMigrantData(data[sample(seq_len(nrow(data)), 1000)])
+output <- PredictInf(input, params)
+data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
 
 # Reconciliations
 reconData <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/TESSY_sample.dta'))
@@ -213,19 +213,6 @@ currentLevels <- levels(baseAIDS$Gender)
 newLevels <- c('M', 'F')
 levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 
-testAIDS <- PredictInfAIDS(input = baseAIDS, params)
-
-compareAIDS <- merge(
-  reconAIDS[, .(id, ProbPre)],
-  testAIDS[, .(UniqueId, ProbPre)],
-  by.x = c('id'),
-  by.y = c('UniqueId'),
-  suffix = c('.Recon', '.Test'),
-  all = TRUE
-)
-compareAIDS[, Diff := ProbPre.Recon - ProbPre.Test]
-compareAIDS[abs(Diff) > 1e-7]
-
 baseCD4VL <- reconCD4VL[, 1:27]
 isLabelled <- sapply(baseCD4VL, haven::is.labelled)
 colNames <- names(isLabelled[isLabelled])
@@ -244,15 +231,19 @@ newLevels <- c('M', 'F')
 levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 baseCD4VL[, Ord := rowid(RecordId)]
 
-testCD4VL <- PredictInfCD4VL(input = baseCD4VL[1:1000], params)
+test <- PredictInf(input = list(AIDS = baseAIDS, CD4VL = baseCD4VL), params)
+recon <- rbind(
+  reconAIDS[, .(id, ord, ProbPre)],
+  reconCD4VL[, .(id, ord, ProbPre)]
+)
 
-compareCD4VL <- merge(
-  reconCD4VL[1:1000, .(id, ord, ProbPre)],
-  testCD4VL[, .(UniqueId, Ord, ProbPre)],
+compare <- merge(
+  recon,
+  test,
   by.x = c('id'),
   by.y = c('UniqueId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )
-compareCD4VL[, Diff := ProbPre.Recon - ProbPre.Test]
-compareCD4VL[abs(Diff) > 1e-7]
+compare[, Diff := ProbPre.Recon - ProbPre.Test]
+compare[abs(Diff) > 1e-7]

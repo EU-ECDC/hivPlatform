@@ -132,7 +132,7 @@ PrepareMigrantData <- function(
   baseCD4VL[Consc == 1, YVar := sqrt(YVar)]
   baseCD4VL[Consr == 1, YVar := log10(YVar)]
 
-  # Times of measurments
+  # Times of measurements
   baseCD4VL[, ':='(
     CobsTime = DTime * Consc,
     RobsTime = DTime * (1 - Consc),
