@@ -212,6 +212,8 @@ setnames(
 currentLevels <- levels(baseAIDS$Gender)
 newLevels <- c('M', 'F')
 levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
+baseAIDS[, Ord := rowid(RecordId)]
+baseAIDS[, Imputation := 0L]
 
 baseCD4VL <- reconCD4VL[, 1:27]
 isLabelled <- sapply(baseCD4VL, haven::is.labelled)
@@ -230,18 +232,19 @@ currentLevels <- levels(baseCD4VL$Gender)
 newLevels <- c('M', 'F')
 levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 baseCD4VL[, Ord := rowid(RecordId)]
+baseCD4VL[, Imputation := 0L]
 
-test <- PredictInf(input = list(AIDS = baseAIDS, CD4VL = baseCD4VL), params)
+test <- PredictInf(input = list(AIDS = baseAIDS, CD4VL = baseCD4VL[1:10]), params)
 recon <- rbind(
-  reconAIDS[, .(id, ord, ProbPre)],
-  reconCD4VL[, .(id, ord, ProbPre)]
+  reconAIDS[, .(Imputation = 0, id, ProbPre)],
+  reconCD4VL[, .(Imputation = 0, id, ProbPre)]
 )
 
 compare <- merge(
   recon,
   test,
-  by.x = c('id'),
-  by.y = c('UniqueId'),
+  by.x = c('Imputation', 'id'),
+  by.y = c('Imputation', 'RecordId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )
