@@ -9,6 +9,27 @@ PredictInf <- function(
 
   outputAIDS <- copy(input$AIDS)
   outputCD4VL <- copy(input$CD4VL)
+
+  if (is.null(outputAIDS)) {
+    outputAIDS <- data.table(
+      Imputation = integer(),
+      RecordId = character(),
+      UniqueId = integer(),
+      Ord = integer(),
+      ProbPre = numeric()
+    )
+  }
+
+  if (is.null(outputCD4VL)) {
+    outputCD4VL <- data.table(
+      Imputation = integer(),
+      RecordId = character(),
+      UniqueId = integer(),
+      Ord = integer(),
+      ProbPre = numeric()
+    )
+  }
+
   pb <- progress::progress_bar$new(
     format = '[:bar] :current/:total (:percent, Elapsed: :elapsed, ETA: :eta)',
     total = outputAIDS[, .N] + outputCD4VL[, uniqueN(UniqueId)]
@@ -21,8 +42,10 @@ PredictInf <- function(
     outputAIDS$Age
   )
 
-  outputAIDS[, ProbPre := NA_real_]
-  for (i in seq_len(nrow(outputAIDS))) {
+  if (nrow(outputAIDS) > 0) {
+    outputAIDS[, ProbPre := NA_real_]
+  }
+  for (i in seq_len(outputAIDS[, .N])) {
     pb$tick()
     fit1 <- try(integrateMem(
       VPostWAIDS,
@@ -46,7 +69,9 @@ PredictInf <- function(
   }
 
   # CD4VL ------------------------------------------------------------------------------------------
-  outputCD4VL[, ProbPre := NA_real_]
+  if (nrow(outputCD4VL) > 0) {
+    outputCD4VL[, ProbPre := NA_real_]
+  }
   for (uniqueId in outputCD4VL[, unique(UniqueId)]) {
     pb$tick()
 

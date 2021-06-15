@@ -194,6 +194,7 @@ data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
 
 # Reconciliations
 reconData <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/TESSY_sample.dta'))
+
 reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
 reconCD4VL <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseCD4VL.dta'))
 
@@ -214,6 +215,7 @@ newLevels <- c('M', 'F')
 levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 baseAIDS[, Ord := rowid(RecordId)]
 baseAIDS[, Imputation := 0L]
+baseAIDS[, RecordId := as.character(RecordId)]
 
 baseCD4VL <- reconCD4VL[, 1:27]
 isLabelled <- sapply(baseCD4VL, haven::is.labelled)
@@ -233,20 +235,49 @@ newLevels <- c('M', 'F')
 levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
 baseCD4VL[, Ord := rowid(RecordId)]
 baseCD4VL[, Imputation := 0L]
+baseCD4VL[, RecordId := as.character(RecordId)]
 
-test <- PredictInf(input = list(AIDS = baseAIDS, CD4VL = baseCD4VL[1:10]), params)
+input <- list(
+  AIDS = baseAIDS,
+  CD4VL = baseCD4VL
+)
+
+input <- list(
+  AIDS = data.table(),
+  CD4VL = baseCD4VL[1]
+)
+
+input <- list(
+  AIDS = NULL,
+  CD4VL = baseCD4VL[1]
+)
+
+test <- PredictInf(input, params)
 recon <- rbind(
-  reconAIDS[, .(Imputation = 0, id, ProbPre)],
-  reconCD4VL[, .(Imputation = 0, id, ProbPre)]
+  unique(reconAIDS[, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
+  unique(reconCD4VL[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)])
 )
 
 compare <- merge(
   recon,
   test,
-  by.x = c('Imputation', 'id'),
-  by.y = c('Imputation', 'RecordId'),
+  by = c('Imputation', 'RecordId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-7]
+compare[is.null(Diff)]
+compare[is.null(ProbPre.Recon)]
+compare[is.null(ProbPre.Test)]
+
+recon[, .(Counter = .N), keyby = .(RecordId)][Counter > 1]
+test[, .(Counter = .N), keyby = .(RecordId)][Counter > 1]
+test[!RecordId %in% recon$RecordId]
+recon[!RecordId %in% test$RecordId]
+
+recon[RecordId == 3024]
+test[RecordId == 3024]
+reconCD4VL[PATIENT == 3024]
+reconAIDS[PATIENT == 3024]
+input$AIDS[RecordId == 3024]
