@@ -31,7 +31,7 @@ PredictInf <- function(
   }
 
   pb <- progress::progress_bar$new(
-    format = '[:bar] :current/:total (:percent, Elapsed: :elapsed, ETA: :eta)',
+    format = '[:bar] :current/:total (:percent), elapsed: :elapsed, eta: :eta',
     total = outputAIDS[, .N] + outputCD4VL[, uniqueN(UniqueId)]
   )
 
@@ -134,10 +134,22 @@ PredictInf <- function(
     }
   }
 
-  output <- rbind(
-    outputAIDS[Ord == 1 & !is.na(ProbPre), .(Imputation, RecordId, ProbPre)],
-    outputCD4VL[Ord == 1 & !is.na(ProbPre), .(Imputation, RecordId, ProbPre)]
-  )
+  output <- list()
+  if (nrow(outputAIDS) > 0) {
+    output[['AIDS']] <- outputAIDS
+  }
+  if (nrow(outputCD4VL) > 0) {
+    output[['CD4VL']] <- outputCD4VL
+  }
+  output <- rbindlist(output)[Ord == 1 & !is.na(ProbPre), .(Imputation, RecordId, ProbPre)]
+
+  if (nrow(output) == 0) {
+    output <- data.table(
+      Imputation = integer(),
+      RecordId = character(),
+      ProbPre = numeric()
+    )
+  }
 
   return(output)
 }

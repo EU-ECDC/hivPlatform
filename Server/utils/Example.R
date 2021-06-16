@@ -6,7 +6,7 @@ appMgr <- AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-# appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -66,8 +66,12 @@ fileName <- RenderReportToFile(
 )
 browseURL(fileName)
 
+# STEP 5 - Migration ----------------------------------------------------------------------------------------
+appMgr$CaseMgr$RunMigration()
+appMgr$CaseMgr$Data
+appMgr$CaseMgr$MigrationResult
 
-# STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
   Name = c(
     'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
@@ -109,7 +113,7 @@ data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter)
   setcolorder(dt, 'Imputation')
 }))
 
-# STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+# STEP 7 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
@@ -141,7 +145,7 @@ appMgr$HIVModelMgr$BootstrapFitStats
 bootstrap <- rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
 
-# STEP 6 - Explore bootstrap results ---------------------------------------------------------------
+# STEP 8 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
 hist(appMgr$HIVModelMgr$BootstrapFitStats$RunTime)
 table(appMgr$HIVModelMgr$BootstrapFitStats$Converged)
