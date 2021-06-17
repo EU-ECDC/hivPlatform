@@ -2,11 +2,6 @@ PredictInf <- function(
   input,
   params
 ) {
-  integrateMem <- memoise::memoise(integrate)
-  on.exit({
-    memoise::forget(integrateMem)
-  })
-
   outputAIDS <- copy(input$AIDS)
   outputCD4VL <- copy(input$CD4VL)
 
@@ -30,11 +25,6 @@ PredictInf <- function(
     )
   }
 
-  pb <- progress::progress_bar$new(
-    format = '[:bar] :current/:total (:percent), elapsed: :elapsed, eta: :eta',
-    total = outputAIDS[, .N] + outputCD4VL[, uniqueN(UniqueId)]
-  )
-
   # AIDS -------------------------------------------------------------------------------------------
   xAIDS <- cbind(
     1,
@@ -42,19 +32,41 @@ PredictInf <- function(
     outputAIDS$Age
   )
 
-  if (nrow(outputAIDS) > 0) {
+  countAIDS <- outputAIDS[, .N]
+  countAIDSNChar <- nchar(as.character(countAIDS))
+  if (countAIDS > 0) {
     outputAIDS[, ProbPre := NA_real_]
   }
-  for (i in seq_len(outputAIDS[, .N])) {
-    pb$tick()
-    fit1 <- try(integrateMem(
+  startTime <- Sys.time()
+  lastTime <- startTime
+  PrintH1('Processing AIDS data')
+  PrintAlert('Start time: {format(startTime)}')
+  for (i in seq_len(countAIDS)) {
+    if (i %% 500 == 0) {
+      currentTime <- Sys.time()
+      percComplete <- stringi::stri_pad_left(
+        sprintf('%0.2f%%', i / countAIDS * 100),
+        width = 8
+      )
+      iterComplete <- stringi::stri_pad_left(
+        sprintf('%d/%d', i, countAIDS),
+        width = countAIDSNChar * 2 + 1
+      )
+      PrintAlert(
+        '{percComplete} ({iterComplete}) - {.timestamp {prettyunits::pretty_dt(currentTime - startTime)}}', #nolint
+        type = 'success'
+      )
+      lastTime <- currentTime
+    }
+
+    fit1 <- try(integrate(
       VPostWAIDS,
       lower = outputAIDS$Mig[i], upper = outputAIDS$U[i],
       x = xAIDS[i, ], dTime = outputAIDS$DTime[i],
       betaAIDS = params$betaAIDS, kappa = params$kappa
     ), silent = TRUE)
 
-    fit2 <- try(integrateMem(
+    fit2 <- try(integrate(
       VPostWAIDS,
       lower = 0, upper = outputAIDS$U[i],
       x = xAIDS[i, ], dTime = outputAIDS$DTime[i],
@@ -67,13 +79,54 @@ PredictInf <- function(
       outputAIDS[i, ProbPre := fit1$value / fit2$value]
     }
   }
+  endTime <- Sys.time()
+  if (countAIDS > 0) {
+    percComplete <- stringi::stri_pad_left(
+      sprintf('%0.2f%%', i / countAIDS * 100),
+      width = 8
+    )
+    iterComplete <- stringi::stri_pad_left(
+      sprintf('%d/%d', i, countAIDS),
+      width = countAIDSNChar * 2 + 1
+    )
+    PrintAlert(
+      '{percComplete} ({iterComplete}) - {.timestamp {prettyunits::pretty_dt(endTime - startTime)}}',
+      type = 'success'
+    )
+  } else {
+    PrintAlert('No AIDS data to be processed')
+  }
+  PrintAlert('End time: {format(endTime)}')
 
   # CD4VL ------------------------------------------------------------------------------------------
-  if (nrow(outputCD4VL) > 0) {
+  countCD4VL <- outputCD4VL[, uniqueN(UniqueId)]
+  countCD4VLNChar <- nchar(as.character(countCD4VL))
+  if (countCD4VL > 0) {
     outputCD4VL[, ProbPre := NA_real_]
   }
+  i <- 0
+  startTime <- Sys.time()
+  lastTime <- startTime
+  PrintH1('Processing CD4VL data')
+  PrintAlert('Start time: {format(startTime)}')
   for (uniqueId in outputCD4VL[, unique(UniqueId)]) {
-    pb$tick()
+    i <- i + 1
+    if (i %% 500 == 0) {
+      currentTime <- Sys.time()
+      percComplete <- stringi::stri_pad_left(
+        sprintf('%0.2f%%', i / countCD4VL * 100),
+        width = 8
+      )
+      iterComplete <- stringi::stri_pad_left(
+        sprintf('%d/%d', i, countCD4VL),
+        width = countCD4VLNChar * 2 + 1
+      )
+      PrintAlert(
+        '{percComplete} ({iterComplete}) - {.timestamp {prettyunits::pretty_dt(currentTime - startTime)}}', # nolint
+        type = 'success'
+      )
+      lastTime <- currentTime
+    }
 
     dt <- outputCD4VL[UniqueId == uniqueId]
 
@@ -110,7 +163,7 @@ PredictInf <- function(
       }
     )
 
-    fit1 <- try(integrateMem(
+    fit1 <- try(integrate(
       func,
       lower = migTime, upper = upTime,
       x = x, y = y, z = z,
@@ -118,7 +171,7 @@ PredictInf <- function(
       betaAIDS = params$betaAIDS, kappa = params$kappa,
       bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE
     ), silent = TRUE)
-    fit2 <- try(integrateMem(
+    fit2 <- try(integrate(
       func,
       lower = 0, upper = upTime,
       x = x, y = y, z = z,
@@ -133,15 +186,33 @@ PredictInf <- function(
       outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / fit2$value]
     }
   }
+  endTime <- Sys.time()
+  if (countCD4VL > 0) {
+      percComplete <- stringi::stri_pad_left(
+        sprintf('%0.2f%%', i / countCD4VL * 100),
+        width = 8
+      )
+      iterComplete <- stringi::stri_pad_left(
+        sprintf('%d/%d', i, countCD4VL),
+        width = countCD4VLNChar * 2 + 1
+      )
+      PrintAlert(
+        '{percComplete} ({iterComplete}) - {.timestamp {prettyunits::pretty_dt(endTime - startTime)}}', # nolint
+        type = 'success'
+      )
+  } else {
+    PrintAlert('No CD4VL data to be processed')
+  }
+  PrintAlert('End time: {format(endTime)}')
 
   output <- list()
   if (nrow(outputAIDS) > 0) {
-    output[['AIDS']] <- outputAIDS
+    output[['AIDS']] <- outputAIDS[Ord == 1, .(Imputation, RecordId, ProbPre)]
   }
   if (nrow(outputCD4VL) > 0) {
-    output[['CD4VL']] <- outputCD4VL
+    output[['CD4VL']] <- outputCD4VL[Ord == 1, .(Imputation, RecordId, ProbPre)]
   }
-  output <- rbindlist(output)[Ord == 1 & !is.na(ProbPre), .(Imputation, RecordId, ProbPre)]
+  output <- rbindlist(output)
 
   if (nrow(output) == 0) {
     output <- data.table(

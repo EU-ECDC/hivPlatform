@@ -12,6 +12,7 @@ import PopulationsManager from './PopulationsManager';
 import PopCombinationsManager from './PopCombinationsManager';
 import ModelsManager from './ModelsManager';
 import ReportManager from './ReportManager';
+import MigrationManager from './MigrationManager';
 import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
 import FloatToQuarter from '../utilities/FloatToQuarter';
@@ -38,6 +39,7 @@ export default class AppManager {
   popCombMgr = null;
   modelMgr = null;
   reportMgr = null;
+  migrMgr = null;
 
   shinyState = 'DISCONNECTED';
 
@@ -165,6 +167,31 @@ export default class AppManager {
         this.adjustMgr.setAdjustmentsRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.notificationsMgr.setMsg('Adjustment run cancelled');
+        }
+        break;
+      case 'MIGRATION_RUN_STARTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.migrMgr.setRunProgress(1);
+        }
+        break;
+      case 'MIGRATION_RUN_LOG_SET':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.migrMgr.setRunLog(e.payload.RunLog);
+        }
+        break;
+      case 'MIGRATION_RUN_FINISHED':
+        this.migrMgr.setRunProgress(null);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.uiStateMgr.setLastEventType(e.type);
+          this.notificationsMgr.setMsg('Migration run finished');
+        } else {
+          this.notificationsMgr.setMsg('Migration run failed');
+        }
+        break;
+      case 'MIGRATION_RUN_CANCELLED':
+        this.migrMgr.setRunProgress(null);
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.notificationsMgr.setMsg('Migration run cancelled');
         }
         break;
       case 'CREATING_REPORT_STARTED':
@@ -322,6 +349,7 @@ export default class AppManager {
     this.popCombMgr = new PopCombinationsManager(this);
     this.modelMgr = new ModelsManager(this);
     this.reportMgr = new ReportManager(this);
+    this.migrMgr = new MigrationManager(this);
 
     makeObservable(this, {
       shinyState: observable,

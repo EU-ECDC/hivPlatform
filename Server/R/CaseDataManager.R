@@ -457,7 +457,12 @@ CaseDataManager <- R6::R6Class(
               .Random.seed <- randomSeed # nolint
 
               input <- hivPlatform::PrepareMigrantData(data)
-              result <- hivPlatform::PredictInf(input, params)
+              output <- hivPlatform::PredictInf(input, params)
+
+              result <- list(
+                Input = input,
+                Output = output
+              )
 
               return(result)
             },
@@ -469,7 +474,9 @@ CaseDataManager <- R6::R6Class(
             session = private$Session,
             successCallback = function(result) {
               private$Catalogs$MigrationResult <- result
-              self$Data[result, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+              try({
+                self$Data[result$Output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+              }, silent = TRUE)
               private$InvalidateAfterStep('CASE_BASED_MIGRATION')
               PrintAlert('Migration task finished')
               private$SendMessage(

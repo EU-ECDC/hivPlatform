@@ -66,10 +66,21 @@ fileName <- RenderReportToFile(
 )
 browseURL(fileName)
 
-# STEP 5 - Migration ----------------------------------------------------------------------------------------
+# STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
 appMgr$CaseMgr$Data
 appMgr$CaseMgr$MigrationResult
+
+params <- GetMigrantParams()
+inputData <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')[sample(40000, 100)]
+migrantData <- PrepareMigrantData(inputData)
+result <- PredictInf(migrantData, params)
+
+
+stringi::stri_pad_left(sprintf('%0.2f %%', 0), width = 9)
+stringi::stri_pad_left(sprintf('%0.2f %%', 0), width = 8)
+stringi::stri_pad_left(sprintf('%0.2f %%', 10), width = 8)
+stringi::stri_pad_left(sprintf('%0.2f %%', 100), width = 8)
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
@@ -191,14 +202,8 @@ CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # Migration
 params <- GetMigrantParams()
-data <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')
-input <- PrepareMigrantData(data[sample(seq_len(nrow(data)), 1000)])
-output <- PredictInf(input, params)
-data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
 
 # Reconciliations
-reconData <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/TESSY_sample.dta'))
-
 reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
 reconCD4VL <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseCD4VL.dta'))
 
@@ -246,16 +251,6 @@ input <- list(
   CD4VL = baseCD4VL
 )
 
-input <- list(
-  AIDS = data.table(),
-  CD4VL = baseCD4VL[1]
-)
-
-input <- list(
-  AIDS = NULL,
-  CD4VL = baseCD4VL[1]
-)
-
 test <- PredictInf(input, params)
 recon <- rbind(
   unique(reconAIDS[, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
@@ -271,17 +266,3 @@ compare <- merge(
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-7]
-compare[is.null(Diff)]
-compare[is.null(ProbPre.Recon)]
-compare[is.null(ProbPre.Test)]
-
-recon[, .(Counter = .N), keyby = .(RecordId)][Counter > 1]
-test[, .(Counter = .N), keyby = .(RecordId)][Counter > 1]
-test[!RecordId %in% recon$RecordId]
-recon[!RecordId %in% test$RecordId]
-
-recon[RecordId == 3024]
-test[RecordId == 3024]
-reconCD4VL[PATIENT == 3024]
-reconAIDS[PATIENT == 3024]
-input$AIDS[RecordId == 3024]
