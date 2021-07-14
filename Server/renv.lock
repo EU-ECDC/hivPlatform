@@ -53,10 +53,10 @@
     },
     "Rcpp": {
       "Package": "Rcpp",
-      "Version": "1.0.6",
+      "Version": "1.0.7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "dbb5e436998a7eba5a9d682060533338"
+      "Hash": "dab19adae4440ae55aa8a9d238b246bb"
     },
     "RcppArmadillo": {
       "Package": "RcppArmadillo",
@@ -312,15 +312,15 @@
     },
     "hivModelling": {
       "Package": "hivModelling",
-      "Version": "0.9.24",
+      "Version": "0.9.25",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "HEAD",
-      "RemoteSha": "ec65585e8386858fc18345706bd13c968952cf3f",
+      "RemoteSha": "27e289d39b91c32d10545dedb9e12d8f1f073189",
       "RemoteHost": "api.github.com",
-      "Hash": "7493cef0dcf3071bf2b9b5230ea4dff1"
+      "Hash": "666b3332dc6a7f9beeb921bb5ccb00a7"
     },
     "hms": {
       "Package": "hms",
@@ -345,10 +345,10 @@
     },
     "isoband": {
       "Package": "isoband",
-      "Version": "0.2.4",
+      "Version": "0.2.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b2008df40fb297e3fef135c7e8eeec1a"
+      "Hash": "7ab57a6de7f48a8dc84910d1eca42883"
     },
     "jomo": {
       "Package": "jomo",

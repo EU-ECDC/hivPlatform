@@ -1,6 +1,6 @@
 ## 2.0.2
 
-###### _July 05 2021_
+###### _July 14 2021_
 
 - Update dependencies
 
