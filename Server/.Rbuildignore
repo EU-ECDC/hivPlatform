@@ -10,3 +10,4 @@
 ^appWindows\.R$
 ^rsconnect$
 ^utils$
+^data-raw$

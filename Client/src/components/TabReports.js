@@ -116,7 +116,7 @@ const TabReports = (props) => {
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
-            <Typography variant='overline'>Report on adjusted data parameters</Typography>
+            <Typography variant='overline'>Parameters for report on adjusted data</Typography>
             <FormGroup>
               <FormControlLabel
                 control={
