@@ -8,9 +8,6 @@ repoCRAN <- 'https://cran.r-project.org/'
 args <- c('--preclean')
 
 # 1. REPOSITORY ------------------------------------------------------------------------------------
-
-
-
 depPkgVersions <- strsplit(gsub('\n', '', pkgDescr$Imports), ',')[[1]]
 depPkgs <- unname(sapply(
   depPkgVersions, function(v) {

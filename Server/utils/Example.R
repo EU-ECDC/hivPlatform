@@ -80,7 +80,6 @@ appMgr$HIVModelMgr$RunMainFit(
   popCombination = test$popCombination
 )
 
-
 popCombination <- list(
   Case = NULL,
   Aggr = appMgr$AggrMgr$PopulationNames
@@ -89,8 +88,6 @@ appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
   popCombination = popCombination
 )
-
-
 
 # 1. Detailed HIV Model main fit results (rds)
 names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)
@@ -180,3 +177,8 @@ aggrDataSelection <- data.table(
   MaxYear = c(2005)
 )
 CombineData(caseData, aggrData, popCombination, aggrDataSelection)
+
+a <- data.table::data.table(B = c(1, 2))
+a$B
+
+a
