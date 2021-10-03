@@ -3,10 +3,6 @@ on:
 
 name: R-CMD-check
 
-defaults:
-  run:
-    working-directory: Server
-
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -38,12 +34,28 @@ jobs:
       - name: Install R development packages
         run: |
           install.packages('rcmdcheck')
+          install.packages('renv')
+          install.packages('testthat')
         shell: Rscript {0}
         working-directory: Server
 
-      - uses: r-lib/actions/setup-renv@master
+      - name: Install R production packages
+        run: |
+          renv::restore()
+        shell: Rscript {0}
+        working-directory: Server
 
-      - uses: r-lib/actions/check-r-package@master
+      - name: Check
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          _R_CHECK_FORCE_SUGGESTS_: false
+          _R_CHECK_LICENSE_: false
+          _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
+        run: |
+          rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
+          testthat::test_package('hivPlatform')
+        shell: Rscript {0}
+        working-directory: Server
 
       - name: Upload check results
         if: failure()
