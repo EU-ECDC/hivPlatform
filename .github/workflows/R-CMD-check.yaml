@@ -3,6 +3,10 @@ on:
 
 name: R-CMD-check
 
+defaults:
+  run:
+    working-directory: Server
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -35,6 +39,7 @@ jobs:
         run: |
           install.packages('rcmdcheck')
         shell: Rscript {0}
+        working-directory: Server
 
       - uses: r-lib/actions/setup-renv@master
 
