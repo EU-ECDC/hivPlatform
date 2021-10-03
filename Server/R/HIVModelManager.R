@@ -386,7 +386,7 @@ HIVModelManager <- R6::R6Class(
             aggrDataSelection,
             randomSeed
           ) {
-            if (!requireNamespace('hivPlatform', quietly = TRUE)) {
+            if (!require('hivPlatform', quietly = TRUE)) {
               suppressMessages(pkgload::load_all())
             }
 
