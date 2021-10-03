@@ -18,17 +18,17 @@ depPkgs <- setdiff(
   depPkgs,
   c('R', 'hivModelling', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
 )
-depPkgList <- pkgDep(depPkgs, repos = repoCRAN, type = 'source', suggests = FALSE)
+depPkgList <- miniCRAN::pkgDep(depPkgs, repos = repoCRAN, type = 'source', suggests = FALSE)
 
 if (dir.exists(repoPath)) {
   unlink(repoPath, recursive = TRUE)
 }
 dir.create(repoPath, showWarnings = FALSE, recursive = TRUE)
 
-makeRepo(depPkgList, path = repoPath, repos = repoCRAN, type = c('source', 'win.binary'))
-oldPackages(path = repoPath)
-updatePackages(path = repoPath, repos = repoCRAN, type = 'win.binary', ask = FALSE)
-updatePackages(path = repoPath, repos = repoCRAN, type = 'source', ask = FALSE)
+miniCRAN::makeRepo(depPkgList, path = repoPath, repos = repoCRAN, type = c('source', 'win.binary'))
+miniCRAN::oldPackages(path = repoPath)
+miniCRAN::updatePackages(path = repoPath, repos = repoCRAN, type = 'win.binary', ask = FALSE)
+miniCRAN::updatePackages(path = repoPath, repos = repoCRAN, type = 'source', ask = FALSE)
 
 # 2. BULID -----------------------------------------------------------------------------------------
 
