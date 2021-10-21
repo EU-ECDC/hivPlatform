@@ -1,4 +1,5 @@
-conn <- url('https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv')
+conn <-
+  url('https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv')
 countryData <- read.csv(conn, stringsAsFactors = FALSE, na.strings = '', encoding = 'UTF-8')
 data.table::setDT(countryData)
 
