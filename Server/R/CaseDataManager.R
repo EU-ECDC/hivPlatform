@@ -340,7 +340,9 @@ CaseDataManager <- R6::R6Class(
         if (nrow(data) > 0) {
           private$Catalogs$AdjustmentTask <- Task$new(
             function(data, adjustmentSpecs, randomSeed) {
-              suppressMessages(pkgload::load_all())
+              if (!requireNamespace('hivPlatform', quietly = TRUE)) {
+                suppressMessages(pkgload::load_all())
+              }
               options(width = 120)
               .Random.seed <- randomSeed # nolint
 

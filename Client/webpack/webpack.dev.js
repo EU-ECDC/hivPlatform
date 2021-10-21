@@ -15,8 +15,5 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[name].js',
   },
-  devtool: 'inline-source-map',
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
+  devtool: 'inline-source-map'
 };

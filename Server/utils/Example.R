@@ -1,12 +1,10 @@
-library(hivPlatform)
-
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
 
-appMgr <- AppManager$new()
+appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -40,7 +38,7 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
 adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
 adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
@@ -99,7 +97,6 @@ appMgr$HIVModelMgr$RunMainFit(
   popCombination = test$popCombination
 )
 
-
 popCombination <- list(
   Case = NULL,
   Aggr = appMgr$AggrMgr$PopulationNames
@@ -108,8 +105,6 @@ appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
   popCombination = popCombination
 )
-
-
 
 # 1. Detailed HIV Model main fit results (rds)
 names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)

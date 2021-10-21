@@ -1,3 +1,17 @@
+## 2.0.3
+
+###### _October 20 2021_
+
+- Update dependencies, including hivModelling where a fix to performing main fit is implemented
+
+
+## 2.0.2
+
+###### _September 30 2021_
+
+- Update dependencies
+
+
 ## 2.0.1
 
 ###### _May 30 2021_
