@@ -7,15 +7,15 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { StepContent } from '@mui/material';
+import StepContent from '@mui/material/StepContent';
 import IsNull from '../utilities/IsNull';
 
 const LeftNav = (props) => {
   const { pages, activePageId, onPageChange } = props;
 
   return (
-    <div style={{ minWidth: 250, maxWidth: 250, backgroundColor: 'white' }}>
-      <Stepper nonLinear activeStep={activePageId} orientation='vertical'>
+    <div style={{ minWidth: 250, maxWidth: 250, backgroundColor: 'white', padding: 12 }}>
+      <Stepper nonLinear activeStep={activePageId} orientation='vertical' >
         {pages.map((page, i) => {
 
           const buttonProps = {};
@@ -29,7 +29,7 @@ const LeftNav = (props) => {
               <StepButton onClick={() => onPageChange(i)} {...buttonProps}>
                 {page.title}
               </StepButton>
-              {page.subPages && <StepContent>
+              {page.subPages.length > 0 && <StepContent>
                 <List>
                   {
                     page.subPages.map((subPage, j) => (

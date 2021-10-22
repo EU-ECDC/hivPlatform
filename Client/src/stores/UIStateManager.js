@@ -54,7 +54,7 @@ export default class UIStateManager {
       activeSubPageId: 0
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
-    { title: 'Outputs', completed: false, disabled: true, subPages: [] },
+    { title: 'Outputs', completed: false, disabled: true, subPages: []},
   ];
 
   activePageId = 0;

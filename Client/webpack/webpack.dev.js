@@ -8,7 +8,10 @@ module.exports = {
     port: 8080,
     compress: false,
     hot: true,
-    open: true
+    open: true,
+    static: {
+      directory: commonPaths.root,
+    }
   },
   output: {
     path: commonPaths.outputPath,

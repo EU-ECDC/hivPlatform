@@ -15,45 +15,39 @@ const theme = createTheme({
       main: '#bedfe1',
     },
   },
-  overrides: {
+  components: {
     MuiStepLabel: {
-      label: {
-        color: 'black',
-        '&$active': {
-          fontWeight: 'bold'
-        },
-        '&$completed': {
-          fontWeight: 'bold'
-        },
-      },
-      root: {
-        '&$disabled': {
-          '& .MuiStepLabel-label': {
-            color: 'rgba(0, 0, 0, 0.5)',
+      styleOverrides: {
+        label: {
+          '&.Mui-active': {
+            fontWeight: 'bold'
+          },
+          '&.Mui-completed': {
+            fontWeight: 'bold'
           }
         },
-      },
-    },
-    MuiStepIcon: {
-      root: {
-        '& text': {
-          fill: 'white'
+        iconContainer: {
+          '& text': {
+            fill: 'white'
+          }
         }
       }
     },
     MuiStepConnector: {
-      vertical: {
-        marginLeft: 10
+      styleOverrides: {
+        vertical: {
+          marginLeft: 10
+        }
       }
     },
-    MuiStepContent: {
-      root: {
-        marginLeft: 10,
-        '& .MuiTreeItem-label': {
-          padding: 6,
-        },
-      }
-    },
+    // MuiStepContent: {
+    //   root: {
+    //     marginLeft: 10,
+    //     '& .MuiTreeItem-label': {
+    //       padding: 6,
+    //     },
+    //   }
+    // },
   //   MuiTreeItem: {
   //     label: {
   //       fontSize: '0.75rem'

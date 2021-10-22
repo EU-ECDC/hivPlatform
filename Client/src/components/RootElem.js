@@ -1,5 +1,4 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { observer, inject } from 'mobx-react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,23 +17,6 @@ import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';
 import MessageBar from './MessageBar';
 import { NAME, VERSION, DEBUG } from '../settings';
-
-const userStyles = makeStyles({
-  appBar: {
-    padding: 3,
-  },
-  appName: {
-    color: 'white',
-    marginLeft: 10,
-  },
-  appVersion: {
-    color: 'white',
-    marginRight: 10,
-  },
-  rightNavBtn: {
-    color: 'white'
-  }
-});
 
 const Page = props => {
   const { pageId, activePageId, children, ...other } = props;
@@ -56,7 +38,6 @@ const Page = props => {
 
 const RootElem = props => {
   const { appMgr } = props;
-  const classes = userStyles();
   const [rightNavState, setRightNavState] = React.useState(false);
 
   if (!DEBUG) {
@@ -74,22 +55,28 @@ const RootElem = props => {
   const bgColor = appMgr.shinyReady ? '#69b023' : '#f44336';
 
   const appBar = (
-    <AppBar position='static' className={classes.appBar} style={{ backgroundColor: `${bgColor}`}}>
+    <AppBar
+      position='sticky'
+      sx={{
+        backgroundColor: `${bgColor}`
+      }}
+    >
       <Toolbar variant='dense' disableGutters>
-        <Typography variant='h6' className={classes.appName}>
+        <Typography variant='h6' sx={{ color: 'white', ml: '10px'}}>
           {NAME}
         </Typography>
-        <Typography variant='subtitle1' className={classes.appVersion}>
+        <Typography variant='subtitle1' sx={{ color: 'white' }}>
           &nbsp;| version {VERSION}
         </Typography>
         <Box flexGrow={1}/>
-        <Typography variant='subtitle1' className={classes.appVersion}>
+        <Typography variant='subtitle1' sx={{ color: 'white' }}>
           Engine state: {appMgr.shinyStateHuman}
         </Typography>
         <IconButton
           onClick={() => setRightNavState(!rightNavState)}
-          className={classes.rightNavBtn}
-          size="large">
+          size='large'
+          sx={{ color: 'white' }}
+        >
           <MenuIcon />
         </IconButton>
       </Toolbar>
