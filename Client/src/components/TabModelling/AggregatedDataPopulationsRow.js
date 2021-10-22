@@ -1,10 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Switch from '@material-ui/core/Switch';
-import Slider from '@material-ui/core/Slider';
+import makeStyles from '@mui/styles/makeStyles';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 
 const useStyles = makeStyles(() => ({
   valueLabel: {

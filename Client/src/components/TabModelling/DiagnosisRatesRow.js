@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import Input from '@mui/material/Input';
 
 const DiagnosisRatesRow = (props) => {
   const { i, isSelected, onSelectClick, interval: el, collection } = props;

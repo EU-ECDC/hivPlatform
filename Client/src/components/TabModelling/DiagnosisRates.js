@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import Checkbox from '@material-ui/core/Checkbox';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import Checkbox from '@mui/material/Checkbox';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 import DiagnosisRatesRow from './DiagnosisRatesRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 

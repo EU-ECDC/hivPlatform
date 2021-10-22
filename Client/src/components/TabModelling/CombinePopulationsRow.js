@@ -1,12 +1,12 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
+import makeStyles from '@mui/styles/makeStyles';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
 import ValidationTextField from '../ValidationTextField';
 
 const useStyles = makeStyles(() => ({
@@ -80,7 +80,6 @@ const CombinePopulationsRow = (props) => {
       disabled={appMgr.popMgr.definedPopulations.length === 0}
       onChange={handleCasePopulationsChange}
       style={{ width: '100%', fontSize: '0.75rem' }}
-      disableUnderline
     >
       {
         appMgr.popMgr.definedPopulations.map((el2, j) => (
@@ -100,7 +99,6 @@ const CombinePopulationsRow = (props) => {
       value={el.aggrPopulations}
       onChange={handleAggrPopulationsChange}
       style={{ width: '100%', fontSize: '0.75rem' }}
-      disableUnderline
     >
       {
         appMgr.aggrDataMgr.populationNames.map((el2, j) => (

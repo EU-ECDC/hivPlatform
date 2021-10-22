@@ -1,6 +1,6 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 import RootElem from './components/RootElem';
 
 const theme = createTheme({
@@ -54,49 +54,51 @@ const theme = createTheme({
         },
       }
     },
-    MuiTreeItem: {
-      label: {
-        fontSize: '0.75rem'
-      }
-    },
-    MuiTableRow: {
-      root: {
-        "&:last-child td": {
-          borderBottom: 0,
-        },
-      }
-    },
-    MuiTableCell: {
-      head: {
-        fontWeight: 'bold !important'
-      }
-    },
-    MuiSlider: {
-      marked: {
-        marginBottom: 0
-      }
-    },
-    MuiSelect: {
-      root: {
-        paddingLeft: 16,
-        paddingBottom: 5
-      }
-    },
-    // MuiChip: {
-    //   label: {
-    //     color: 'white'
-    //   }
-    // }
+  //   MuiTreeItem: {
+  //     label: {
+  //       fontSize: '0.75rem'
+  //     }
+  //   },
+  //   MuiTableRow: {
+  //     root: {
+  //       "&:last-child td": {
+  //         borderBottom: 0,
+  //       },
+  //     }
+  //   },
+  //   MuiTableCell: {
+  //     head: {
+  //       fontWeight: 'bold !important'
+  //     }
+  //   },
+  //   MuiSlider: {
+  //     marked: {
+  //       marginBottom: 0
+  //     }
+  //   },
+  //   MuiSelect: {
+  //     root: {
+  //       paddingLeft: 16,
+  //       paddingBottom: 5
+  //     }
+  //   },
+  //   // MuiChip: {
+  //   //   label: {
+  //   //     color: 'white'
+  //   //   }
+  //   // }
   }
 });
 
 const App = () => (
-  <ThemeProvider theme={theme}>
-    <React.Fragment>
-      <CssBaseline />
-      <RootElem />
-    </React.Fragment>
-  </ThemeProvider>
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={theme}>
+      <React.Fragment>
+        <CssBaseline />
+        <RootElem />
+      </React.Fragment>
+    </ThemeProvider>
+  </StyledEngineProvider>
 );
 
 export default App;

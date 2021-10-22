@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { observer, inject } from 'mobx-react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import LeftNav from './LeftNav';
 import RightNav from './RightNav';
 import TabWelcome from './TabWelcome';
@@ -87,8 +87,9 @@ const RootElem = props => {
           Engine state: {appMgr.shinyStateHuman}
         </Typography>
         <IconButton
-          onClick={() => setRightNavState(!rightNavState)} className={classes.rightNavBtn}
-        >
+          onClick={() => setRightNavState(!rightNavState)}
+          className={classes.rightNavBtn}
+          size="large">
           <MenuIcon />
         </IconButton>
       </Toolbar>

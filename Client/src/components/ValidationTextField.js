@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 const ValidationTextField = (props) => {
   const { onChange, validationFunc, helperText: propsHelperText, ...restProps } = props;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
-import GroupIcon from '@material-ui/icons/Group';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import GroupIcon from '@mui/icons-material/Group';
+import Typography from '@mui/material/Typography';
 import Btn from '../Btn';
 import OriginGroupingsWidget from './OriginGroupingsWidget';
 import MessageAlert from '../MessageAlert';

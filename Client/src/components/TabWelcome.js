@@ -1,14 +1,14 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
-import Collapse from '@material-ui/core/Collapse';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
+import Typography from '@mui/material/Typography';
+import Collapse from '@mui/material/Collapse';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const WelcomeCard = props => {
   const { title, description, moreText, image, onClick } = props;
@@ -118,7 +118,7 @@ const TabWelcome = props => {
   </React.Fragment>
 
   return (
-    <Grid container direction='row' justify='space-evenly' alignItems='baseline'>
+    <Grid container direction='row' justifyContent='space-evenly' alignItems='baseline'>
       <Grid item xs={12}>
         <Box width='50%' m='auto' p={5}>
           <p>

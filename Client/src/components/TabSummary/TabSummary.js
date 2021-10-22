@@ -1,10 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import TabPanel from '../TabPanel';
 import TabSummaryDiagYear from './TabSummaryDiagYear';
 import TabSummaryNotifQuarter from './TabSummaryNotifQuarter';

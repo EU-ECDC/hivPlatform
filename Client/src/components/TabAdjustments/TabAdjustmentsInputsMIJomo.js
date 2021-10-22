@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import Grid from '@material-ui/core/Grid';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Slider from '@mui/material/Slider';
+import Grid from '@mui/material/Grid';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 
 const TabAdjustmentsInputsMIJomo = (props) => {
   const { appMgr } = props;

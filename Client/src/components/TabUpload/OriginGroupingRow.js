@@ -1,12 +1,12 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import Input from '@mui/material/Input';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
 
 const OriginGroupingRow = (props) => {
   const { i, isSelected, onSelectClick,  grouping:el, appMgr } = props;
@@ -52,7 +52,6 @@ const OriginGroupingRow = (props) => {
           value={el.origin}
           style={{ width: '100%', fontSize: '0.75rem' }}
           onChange={handleOriginsChange}
-          disableUnderline
         >
           {
             menuItems.map((el2, j) => (
