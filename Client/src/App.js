@@ -1,9 +1,9 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import RootElem from './components/RootElem';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontSize: 12,
   },
@@ -91,12 +91,12 @@ const theme = createMuiTheme({
 });
 
 const App = () => (
-  <MuiThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <React.Fragment>
       <CssBaseline />
       <RootElem />
     </React.Fragment>
-  </MuiThemeProvider>
+  </ThemeProvider>
 );
 
 export default App;
