@@ -1,6 +1,31 @@
 PrepareMigrantData <- function(
   data
 ) {
+
+  colNames <- c(
+    'Imputation', 'RecordId', 'Gender', 'Transmission', 'Age', 'DateOfArrival',
+    'FullRegionOfOrigin', 'DateOfHIVDiagnosis', 'AcuteInfection', 'FirstCD4Count', 'LatestCD4Count',
+    'DateOfFirstCD4Count', 'DateOfLatestCD4Count', 'LatestVLCount', 'DateOfLatestVLCount',
+    'DateOfArt', 'DateOfAIDSDiagnosis'
+  )
+  data <- data[, ..colNames]
+
+  PrintH2('Checking data structure validity')
+  columnSpecs <- GetListObject(
+    GetSystemFile('referenceData/requiredColumns.R'),
+    includeFileName = FALSE
+  )
+  columnSpecs[['Imputation']] <- list(
+    type = 'integer',
+    defaultValue = NA_integer_
+  )
+  dataStructValidity <- GetInputDataValidityStatus(data, columnSpecs[colNames])
+  if (dataStructValidity$Valid) {
+    PrintAlert('Data valid', type = 'success')
+  } else {
+    PrintAlert('Data invalid', type = 'danger')
+  }
+
   # Reference data
   regionMapping <- data.table(
     FullRegionOfOrigin = c(
@@ -21,26 +46,41 @@ PrepareMigrantData <- function(
   )
 
   # Filter
-  base <- data[
-    Transmission %in% c('MSM', 'IDU', 'HETERO') &
-    !is.na(Age) & Age > 10 &
-    !is.na(DateOfArrival) &
-    !is.na(FullRegionOfOrigin),
-    .(
-      Imputation, RecordId, Gender, Transmission, Age, DateOfArrival, FullRegionOfOrigin,
-      DateOfHIVDiagnosis, AcuteInfection, FirstCD4Count, LatestCD4Count, DateOfFirstCD4Count,
-      DateOfLatestCD4Count, LatestVLCount, DateOfLatestVLCount, DateOfArt, DateOfAIDSDiagnosis
-    )
+  data[, Excluded := '']
+  # data[FullRegionOfOrigin != ReportingCountry]
+  data[
+    !(Transmission %in% c('MSM', 'IDU', 'HETERO')),
+    Excluded := 'Transmission is not of type "MSM", "IDU", or "HETERO"'
   ]
+  data[Excluded == '' & is.na(Age), Excluded := 'Missing age']
+  data[Excluded == '' & Age <= 15, Excluded := 'Age is below 16']
+  data[Excluded == '' & is.na(DateOfArrival), Excluded := 'Missing date of arrival']
+  data[Excluded == '' & is.na(FullRegionOfOrigin), Excluded := 'Missing full region of origin']
 
   # Generate at risk date
-  base[, AtRiskDate := pmax(DateOfHIVDiagnosis - Age * 365.25 + 10 * 365.25, as.Date('1980-1-1'))]
-  base[!is.na(AcuteInfection), AtRiskDate := pmax(AtRiskDate, DateOfHIVDiagnosis - 0.5 * 365.25)]
+  data[, AtRiskDate := pmax(DateOfHIVDiagnosis - Age * 365.25 + 10 * 365.25, as.Date('1980-1-1'))]
+  data[!is.na(AcuteInfection), AtRiskDate := pmax(AtRiskDate, DateOfHIVDiagnosis - 0.5 * 365.25)]
 
   # Years from risk onset to HIV diagnosis
-  base[, U := as.numeric(DateOfHIVDiagnosis - AtRiskDate) / 365.25]
+  data[, U := as.numeric(DateOfHIVDiagnosis - AtRiskDate) / 365.25]
   # There should not be any negative U's
-  base <- base[U > 0]
+  data[Excluded == '' & U <= 0, Excluded := 'Date of HIV diagnosis before risk onset']
+
+  missStat <- rbind(
+    data[Excluded != '', .(Count = .N), by = .(Excluded)],
+    data[Excluded != '', .(Excluded = 'Total excluded', Count = .N)],
+    data[Excluded == '', .(Excluded = 'Total used in estimation', Count = .N)]
+  )
+
+  PrintH1('Checking missingness of required details')
+  print(knitr::kable(
+    missStat,
+    format = 'simple',
+    caption = 'Statistics of exclusions due to missing data',
+    escape = FALSE
+  ))
+
+  base <- data[Excluded == '']
 
   # Generate unique identifier
   base[, ':='(
@@ -145,7 +185,12 @@ PrepareMigrantData <- function(
   baseAIDS[DTime < 0, DTime := 0]
 
   return(list(
-    CD4VL = baseCD4VL,
-    AIDS = baseAIDS
+    Data = list(
+      CD4VL = baseCD4VL,
+      AIDS = baseAIDS
+    ),
+    Stats = list(
+      Missingness = missStat
+    )
   ))
 }

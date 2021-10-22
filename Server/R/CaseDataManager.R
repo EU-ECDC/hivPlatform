@@ -454,16 +454,23 @@ CaseDataManager <- R6::R6Class(
         if (nrow(data) > 0) {
           private$Catalogs$MigrationTask <- Task$new(
             function(data, params, randomSeed) {
-              suppressMessages(pkgload::load_all())
+              if (!requireNamespace('hivPlatform', quietly = TRUE)) {
+                suppressMessages(pkgload::load_all())
+              }
               options(width = 120)
               .Random.seed <- randomSeed # nolint
 
               input <- hivPlatform::PrepareMigrantData(data)
-              output <- hivPlatform::PredictInf(input, params)
+              output <- hivPlatform::PredictInf(input$Data, params)
+              report <- hivPlatform::RenderReportToHTML(
+                reportFilePath = hivPlatform::GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'), # nolint
+                params = input$Stats
+              )
 
               result <- list(
                 Input = input,
-                Output = output
+                Output = output,
+                Report = report
               )
 
               return(result)
@@ -485,7 +492,8 @@ CaseDataManager <- R6::R6Class(
                 'MIGRATION_RUN_FINISHED',
                 payload = list(
                   ActionStatus = 'SUCCESS',
-                  ActionMessage = 'Migration task finished'
+                  ActionMessage = 'Migration task finished',
+                  Report = result$Report
                 )
               )
             },

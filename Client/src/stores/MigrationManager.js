@@ -7,6 +7,8 @@ export default class MigrationManager {
 
   runLog = null;
 
+  report = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
@@ -15,6 +17,7 @@ export default class MigrationManager {
       runInProgress: computed,
       setRunProgress: action,
       setRunLog: action,
+      setReport: action,
       run: action,
       cancel: action
     });
@@ -27,6 +30,8 @@ export default class MigrationManager {
   setRunProgress = progress => this.runProgress = progress;
 
   setRunLog = runLog => this.runLog = runLog;
+
+  setReport = report => this.report = report;
 
   run = () => {
     this.rootMgr.btnClicked('runMigrantBtn');

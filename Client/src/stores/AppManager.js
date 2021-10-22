@@ -172,6 +172,7 @@ export default class AppManager {
       case 'MIGRATION_RUN_STARTED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.migrMgr.setRunProgress(1);
+          this.migrMgr.setReport(null);
         }
         break;
       case 'MIGRATION_RUN_LOG_SET':
@@ -183,6 +184,7 @@ export default class AppManager {
         this.migrMgr.setRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
+          this.migrMgr.setReport(e.payload.Report);
           this.notificationsMgr.setMsg('Migration run finished');
         } else {
           this.notificationsMgr.setMsg('Migration run failed');

@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -16,7 +16,7 @@ appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # nolint end
 
 
@@ -38,14 +38,15 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
+adjustmentSpecs <-
+  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
 adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
 adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-# saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds')
+# saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -67,18 +68,16 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
 appMgr$CaseMgr$Data
-appMgr$CaseMgr$MigrationResult
+appMgr$CaseMgr$MigrationResult$Report
 
-params <- GetMigrantParams()
-inputData <- ReadDataFile('D:/VirtualBox_Shared/BE_adjusted.rds')[sample(40000, 100)]
-migrantData <- PrepareMigrantData(inputData)
-result <- PredictInf(migrantData, params)
-
-
-stringi::stri_pad_left(sprintf('%0.2f %%', 0), width = 9)
-stringi::stri_pad_left(sprintf('%0.2f %%', 0), width = 8)
-stringi::stri_pad_left(sprintf('%0.2f %%', 10), width = 8)
-stringi::stri_pad_left(sprintf('%0.2f %%', 100), width = 8)
+params <- hivPlatform::GetMigrantParams()
+migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
+result <- hivPlatform::PredictInf(migrantData$Data, params)
+# result <- hivPlatform::PredictInf(list(AIDS = NULL, CD4VL = NULL), params)
+report <- RenderReportToHTML(
+  reportFilePath = GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'),
+  params = migrantData$Stats
+)
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
