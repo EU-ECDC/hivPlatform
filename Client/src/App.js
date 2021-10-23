@@ -36,33 +36,65 @@ const theme = createTheme({
     MuiStepConnector: {
       styleOverrides: {
         vertical: {
-          marginLeft: 10
+          marginLeft: '10px'
         }
       }
     },
-    // MuiStepContent: {
-    //   root: {
-    //     marginLeft: 10,
-    //     '& .MuiTreeItem-label': {
-    //       padding: 6,
-    //     },
-    //   }
-    // },
+    MuiStepContent: {
+      styleOverrides: {
+        root: {
+          marginLeft: '10px',
+          '& .MuiList-root': {
+            paddingBottom: '0px'
+          },
+          '& .MuiButtonBase-root': {
+            padding: '6px',
+            fontSize: '0.75rem'
+          }
+        }
+      }
+    },
+    MuiTableRow: {
+      defaultProps: {
+        hover: true
+      },
+      styleOverrides: {
+        root: {
+          '&:last-child td': {
+            borderBottom: '0px'
+          },
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid rgba(240, 240, 240, 1)',
+        },
+        head: {
+          fontWeight: 'bold',
+        }
+      }
+    },
+    MuiSelect: {
+      defaultProps: {
+        variant: 'standard'
+      },
+      styleOverrides: {
+        select: {
+          paddingLeft: '5px',
+          paddingBottom: '5px'
+        }
+      }
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'standard'
+      }
+    }
   //   MuiTreeItem: {
   //     label: {
   //       fontSize: '0.75rem'
-  //     }
-  //   },
-  //   MuiTableRow: {
-  //     root: {
-  //       "&:last-child td": {
-  //         borderBottom: 0,
-  //       },
-  //     }
-  //   },
-  //   MuiTableCell: {
-  //     head: {
-  //       fontWeight: 'bold !important'
   //     }
   //   },
   //   MuiSlider: {
@@ -70,17 +102,6 @@ const theme = createTheme({
   //       marginBottom: 0
   //     }
   //   },
-  //   MuiSelect: {
-  //     root: {
-  //       paddingLeft: 16,
-  //       paddingBottom: 5
-  //     }
-  //   },
-  //   // MuiChip: {
-  //   //   label: {
-  //   //     color: 'white'
-  //   //   }
-  //   // }
   }
 });
 

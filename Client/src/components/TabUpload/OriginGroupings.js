@@ -20,7 +20,7 @@ const OriginGroupings = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={2}>
-        <Btn style={{ marginBottom: 6 }} onClick={onApplyClick}>
+        <Btn sx={{ marginBottom: '6px' }} onClick={onApplyClick}>
           <GroupIcon />&nbsp;Apply regrouping
         </Btn>
         <Typography variant='body2' color='textSecondary'>

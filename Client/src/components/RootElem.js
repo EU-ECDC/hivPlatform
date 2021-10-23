@@ -88,10 +88,16 @@ const RootElem = props => {
   };
 
   return (
-    <Box display='flex' flexGrow={1} flexDirection='column' style={{overflow: 'hidden'}} p={0}>
+    <Box display='flex' flexGrow={1} flexDirection='column' sx={{overflow: 'hidden'}} p={0}>
       <RightNav {...props} open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
-      <Box display='flex' flexGrow={1} flexDirection='row' style={{overflow: 'hidden'}} p={0}>
+      <Box
+        display='flex'
+        flexGrow={1}
+        flexDirection='row'
+        sx={{ overflow: 'hidden', backgroundColor: '#fafafa' }}
+        p={0}
+      >
         <LeftNav
           pages={appMgr.uiStateMgr.pages}
           activePageId={appMgr.uiStateMgr.activePageId}

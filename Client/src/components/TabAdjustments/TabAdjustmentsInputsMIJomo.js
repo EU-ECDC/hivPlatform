@@ -47,7 +47,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
                   min: 2, max: 50
                 }
               }}
-              style={{ marginBottom: 20 }}
+              sx={{ marginBottom: '20px' }}
             />
           </Grid>
           <Grid item xs={4}>
@@ -64,7 +64,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
                   min: 100, max: 10000
                 }
               }}
-              style={{ marginBottom: 20 }}
+              sx={{ marginBottom: '20px' }}
             />
           </Grid>
           <Grid item xs={4}>
@@ -80,7 +80,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
                   min: 100, max: 10000
                 }
               }}
-              style={{ marginBottom: 20 }}
+              sx={{ marginBottom: '20px' }}
             />
           </Grid>
           <Grid item xs={4}>

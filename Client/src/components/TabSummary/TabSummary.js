@@ -46,11 +46,11 @@ const TabSummary = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Divider light style={{ margin: '30px 0' }} />
+          <Divider light sx={{ margin: '30px 0px' }} />
         </Grid>
         <TabSummaryMissingness {...props} />
         <Grid item xs={12}>
-          <Divider light style={{ margin: '30px 0' }} />
+          <Divider light sx={{ margin: '30px 0px' }} />
         </Grid>
         <TabSummaryReportingDelays {...props} />
       </Grid>

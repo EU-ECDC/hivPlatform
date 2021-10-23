@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -19,22 +18,20 @@ import UploadProgressBar from '../UploadProgressBar';
 import FormatBytes from '../../utilities/FormatBytes';
 import MessageAlert from '../MessageAlert';
 
-const userStyles = makeStyles({
-  header: {
-    width: 142,
-    fontWeight: 'bold'
-  },
-  content: {
-    maxWidth: 0,
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
-  }
-});
+const HeaderCell = (props) => <TableCell sx={{ width: 142, fontWeight: 'bold'}} {...props} />;
+const ContentCell = (props) =>
+  <TableCell
+    sx={{
+      maxWidth: 0,
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
+    }}
+    {...props}
+  />;
 
 const TabUploadAggregated = props => {
   const { appMgr } = props;
-  const classes = userStyles();
 
   const handleUploadBtnClick = e => appMgr.aggrDataMgr.uploadData(e.target);
   const handleNextPageBtnClick = () => appMgr.uiStateMgr.setActivePageId(4);
@@ -69,12 +66,12 @@ const TabUploadAggregated = props => {
           />
           <Tooltip title='Select aggregated data file'>
             <label htmlFor='aggrUploadBtn'>
-              <Btn style={{ marginBottom: 6 }}><CloudUploadIcon />&nbsp;Upload data</Btn>
+              <Btn sx={{ marginBottom: '6px' }}><CloudUploadIcon />&nbsp;Upload data</Btn>
             </label>
           </Tooltip>
           <Tooltip title='Remove aggregated data from analysis'>
             <Button
-              style={{ marginBottom: 6, marginLeft: 20 }}
+              sx={{ marginBottom: '6px', marginLeft: '20px' }}
               color='primary'
               // disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
               disabled={true}
@@ -94,23 +91,26 @@ const TabUploadAggregated = props => {
         </Grid>
         <Grid item xs={10}>
           {!appMgr.aggrDataMgr.actionValid &&
-            <TableChartIcon style={{ color: '#eee', fontSize: 600 }}/>
+            <TableChartIcon sx={{ color: '#eee', fontSize: '600px' }}/>
           }
           {appMgr.aggrDataMgr.actionValid &&
-            <Paper style={{ padding: 10 }}>
+            <Paper sx={{ padding: '10px' }}>
               <Typography variant='overline'>Uploaded file details</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Table>
                     <TableBody>
-                      <TableRow hover>
-                        <TableCell className={classes.header}>File name</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.fileName}</TableCell>
+                      <TableRow>
+                        <HeaderCell>File name</HeaderCell>
+                        <ContentCell>{appMgr.aggrDataMgr.fileName}</ContentCell>
                       </TableRow>
-                      <TableRow hover>
-                        <TableCell className={classes.header}>File size</TableCell><TableCell className={classes.content}>{FormatBytes(appMgr.aggrDataMgr.fileSize)}</TableCell>
+                      <TableRow>
+                        <HeaderCell>File size</HeaderCell>
+                        <ContentCell>{FormatBytes(appMgr.aggrDataMgr.fileSize)}</ContentCell>
                       </TableRow>
-                      <TableRow hover>
-                        <TableCell className={classes.header}>File type</TableCell><TableCell className={classes.content}>{appMgr.aggrDataMgr.fileType}</TableCell>
+                      <TableRow>
+                        <HeaderCell>File type</HeaderCell>
+                        <ContentCell>{appMgr.aggrDataMgr.fileType}</ContentCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -118,19 +118,22 @@ const TabUploadAggregated = props => {
                 <Grid item xs={6}>
                   <Table>
                     <TableBody>
-                      <TableRow hover><TableCell className={classes.header}>Data names</TableCell></TableRow>
-                      <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
-                        <div style={{ overflow: 'auto', maxHeight: 164 }}>
-                          {appMgr.aggrDataMgr.dataNamesString}
-                        </div>
-                      </TableCell></TableRow>
-                      <TableRow hover><TableCell className={classes.header}>Population names</TableCell></TableRow>
-                      <TableRow hover><TableCell style={{ whiteSpace: 'normal' }} className={classes.content}>
-                        <div style={{ overflow: 'auto', maxHeight: 164 }}>
-                          {appMgr.aggrDataMgr.populationNamesString}
-                        </div>
-                      </TableCell></TableRow>
-
+                      <TableRow hover={false}><HeaderCell>Data names</HeaderCell></TableRow>
+                      <TableRow>
+                        <ContentCell sx={{ whiteSpace: 'normal' }}>
+                          <div style={{ overflow: 'auto', maxHeight: 164 }}>
+                            {appMgr.aggrDataMgr.dataNamesString}
+                          </div>
+                        </ContentCell>
+                      </TableRow>
+                      <TableRow hover={false}><HeaderCell>Population names</HeaderCell></TableRow>
+                      <TableRow>
+                        <ContentCell sx={{ whiteSpace: 'normal' }}>
+                          <div style={{ overflow: 'auto', maxHeight: 164 }}>
+                            {appMgr.aggrDataMgr.populationNamesString}
+                          </div>
+                        </ContentCell>
+                      </TableRow>
                     </TableBody>
                   </Table>
                 </Grid>

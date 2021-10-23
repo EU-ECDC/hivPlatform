@@ -34,12 +34,12 @@ const OriginGroupingRow = (props) => {
       </TableCell>
       <TableCell id={`labelId${i}`} scope='row' padding='none'>
         <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{ width: '100%', fontSize: '0.75rem' }}
           value={el.name}
           onChange={handleGroupedNameChange}
         />
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px', maxWidth: '300px' }}>
         <Select
           multiple
           renderValue={selected => (
@@ -50,7 +50,13 @@ const OriginGroupingRow = (props) => {
             </div>
           )}
           value={el.origin}
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{
+            width: '100%',
+            fontSize: '0.75rem',
+            '&:before': {
+              borderBottom: '0px solid black'
+            },
+          }}
           onChange={handleOriginsChange}
         >
           {

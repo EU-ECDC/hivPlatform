@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import Slider from '@mui/material/Slider';
 import Paper from '@mui/material/Paper';
@@ -10,17 +9,8 @@ import Switch from '@mui/material/Switch';
 import QuarterToString from '../../utilities/QuarterToString';
 import HistChart from '../Charts/HistChart';
 
-const userStyles = makeStyles({
-  valueLabel: {
-    '& *': {
-      fontSize: 8
-    }
-  }
-});
-
 const TabSummaryNotifQuarter = (props) => {
   const { appMgr } = props;
-  const classes = userStyles();
 
   const handleNotifQuarterFilterSwitchChange = e =>
     appMgr.summaryDataMgr.setNotifQuarterFilterApply(e.target.checked);
@@ -62,11 +52,13 @@ const TabSummaryNotifQuarter = (props) => {
               onChange={handleNotifQuarterFilterYearChange}
               valueLabelDisplay='on'
               valueLabelFormat={value => QuarterToString(value)}
-              classes={{
-                valueLabel: classes.valueLabel
-              }}
               aria-labelledby='range-slider'
               color='secondary'
+              sx={{
+                '& *': {
+                  fontSize: '9px'
+                }
+              }}
             />
           </div>
           <HistChart

@@ -12,6 +12,7 @@ import {
   MarkLineComponent
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
+import FormatNumber from '../../utilities/FormatNumber';
 
 echarts.use([
   GridComponent,
@@ -57,6 +58,7 @@ const RepDelChart = (props) => {
         areaStyle: {
           opacity: 0.4,
         },
+        color: '#69b023',
         markLine: {
           data: [[
             {
@@ -70,7 +72,7 @@ const RepDelChart = (props) => {
             }
           ]],
           lineStyle: {
-            color: '#69b023'
+            color: '#bedfe1'
           },
           label: {
             position: 'start',
@@ -78,8 +80,8 @@ const RepDelChart = (props) => {
             formatter: '{a|{b}}',
             rich: {
               a: {
-                color: '#fff',
-                backgroundColor: '#69b023',
+                color: '#000',
+                backgroundColor: '#bedfe1',
                 padding: 5,
                 borderRadius: 5
               }
@@ -90,13 +92,9 @@ const RepDelChart = (props) => {
     ],
     tooltip: {
       trigger: 'axis',
-      // formatter: (params) => {
-      //   return `
-      //     Year: ${params[0].axisValue}<br/ >
-      //     ${params[0].seriesName}: ${params[0].value}<br />
-      //     ${params[1].seriesName}: ${params[1].value} (${params[2].value}, ${params[2].value + params[3].value})<br />
-      //   `
-      // }
+      formatter: params => `
+        ${params[0].marker} Quarter ${params[0].axisValueLabel}: ${FormatNumber(params[0].value[1], 6)}
+      `
     },
     toolbox: {
       show: true,

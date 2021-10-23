@@ -43,7 +43,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
                   min: 2, max: 50
                 }
               }}
-              style={{ marginBottom: 20 }}
+              sx={{ marginBottom: '20px' }}
             />
           </Grid>
           <Grid item xs={4}>
@@ -60,7 +60,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
                   min: 2, max: 50
                 }
               }}
-              style={{ marginBottom: 20 }}
+              sx={{ marginBottom: '20px' }}
             />
           </Grid>
           <Grid item xs={4}></Grid>

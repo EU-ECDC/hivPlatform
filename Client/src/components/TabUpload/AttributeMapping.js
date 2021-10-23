@@ -36,12 +36,15 @@ const AttributeMapping = (props) => {
   }
 
   const attrMappingTableRows = appMgr.attrMappingMgr.mapping.map((entry, idx) => (
-    <TableRow hover key={idx}>
+    <TableRow key={idx}>
       <TableCell>{`${idx+1}.`}</TableCell>
       <TableCell>{entry.attribute}</TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
         <Select
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{
+            width: '100%',
+            fontSize: '0.75rem'
+          }}
           value={entry.origColName || ''}
           onChange={onOrigColSelect(entry.attribute)}
         >
@@ -49,13 +52,14 @@ const AttributeMapping = (props) => {
           {attrMappingSelectOptions}
         </Select>
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
         <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{ width: '100%', fontSize: '0.75rem' }}
           onChange={onDefValChange(entry.attribute)}
           disabled={!!entry.origColName}
         />
       </TableCell>
+      <TableCell>Integer</TableCell>
     </TableRow>
   ));
 
@@ -84,23 +88,22 @@ const AttributeMapping = (props) => {
         />
       </Grid>
       <Grid item xs={10}>
-        <Paper style={{ padding: 10 }}>
+        <Paper sx={{ padding: '10px' }}>
           <Typography variant='overline'>Attribute mapping</Typography>
-          <Grid container spacing={2}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell width='5%'>Idx</TableCell>
-                  <TableCell width='25%'>Attribute</TableCell>
-                  <TableCell width='40%'>Uploaded data column</TableCell>
-                  <TableCell width='30%'>Override value</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {attrMappingTableRows}
-              </TableBody>
-            </Table>
-          </Grid>
+          <Table>
+            <TableHead>
+              <TableRow hover={false}>
+                <TableCell width='8%'>Idx</TableCell>
+                <TableCell width='23%'>Attribute</TableCell>
+                <TableCell width='23%'>Uploaded data column</TableCell>
+                <TableCell width='23%'>Override value</TableCell>
+                <TableCell width='23%'>Type</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {attrMappingTableRows}
+            </TableBody>
+          </Table>
         </Paper>
       </Grid>
     </Grid>

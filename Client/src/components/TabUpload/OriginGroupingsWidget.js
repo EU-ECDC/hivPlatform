@@ -7,7 +7,6 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
@@ -73,13 +72,13 @@ const OriginGroupingsWidget = (props) => {
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
-    <Paper style={{ padding: 10 }}>
+    <Paper sx={{ padding: '10px' }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
-          <Table size='small' style={{ backgroundColor: 'rgba(0, 0, 0, 0.02)'}}>
+          <Table size='small' >
             <TableHead>
-              <TableRow>
+              <TableRow hover={false}>
                 <TableCell>FullRegionOfOrigin</TableCell><TableCell align='right'>Count</TableCell>
               </TableRow>
             </TableHead>
@@ -97,7 +96,7 @@ const OriginGroupingsWidget = (props) => {
         </Grid>
         <Grid item xs={9}>
           <Typography variant='overline'>Migrant variable regrouping</Typography>
-          <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
+          <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
             <InputLabel>
               Preset
              </InputLabel>
@@ -111,7 +110,7 @@ const OriginGroupingsWidget = (props) => {
           </FormControl>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow hover={false}>
                 <TableCell padding='checkbox'>
                   <Checkbox
                     inputProps={{ 'aria-label': 'select all' }}

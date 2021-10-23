@@ -25,9 +25,9 @@ echarts.use([
 
 const AreaChart = (props) => {
 
-  const { yLabelName, xCategories, data } = props;
+  const { yLabelName, xCategories, data, options } = props;
 
-  const options = {
+  const defaultOptions = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
@@ -75,13 +75,11 @@ const AreaChart = (props) => {
     ],
     tooltip: {
       trigger: 'axis',
-      // formatter: (params) => {
-      //   return `
-      //     Year: ${params[0].axisValue}<br/ >
-      //     ${params[0].seriesName}: ${params[0].value}<br />
-      //     ${params[1].seriesName}: ${params[1].value} (${params[2].value}, ${params[2].value + params[3].value})<br />
-      //   `
-      // }
+      formatter: (params) =>
+        `
+          Year: ${params[0].axisValue}<br/ >
+          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value, 2)}`).join('<br />')}
+        `
     },
     toolbox: {
       show: true,
@@ -96,16 +94,15 @@ const AreaChart = (props) => {
       },
     },
     legend: {
-      // orient: 'vertical',
-      // right: 0,
-      // top: 'middle'
     }
   };
+
+  const finalOptions = Object.assign({}, defaultOptions, options);
 
   return (
     <ReactEchartsCore
       echarts={echarts}
-      option={options}
+      option={finalOptions}
       notMerge={true}
       lazyUpdate={true}
       opts={{}}
