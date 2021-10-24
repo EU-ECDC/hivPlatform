@@ -18,7 +18,7 @@ const CreatePopulationRow = (props) => {
 
   return (
     <TableRow hover role='checkbox'>
-      <TableCell padding='checkbox'>
+      <TableCell padding='checkbox' sx={{ verticalAlign: 'top' }}>
         <Checkbox
           inputProps={{ 'aria-labelledby': `labelId${i}` }}
           color='primary'
@@ -26,13 +26,13 @@ const CreatePopulationRow = (props) => {
           onClick={onSelectClick}
         />
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px', maxWidth: '300px', verticalAlign: 'top' }}>
         <Select
           multiple
           renderValue={selected => (
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {selected.map(value => (
-                <Chip key={value} label={value} style={{ margin: 2 }} />
+                <Chip key={value} label={value} sx={{ margin: '2px' }} color='secondary' />
               ))}
             </div>
           )}

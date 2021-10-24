@@ -6,19 +6,21 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import AggregatedDataPopulationsRow from './AggregatedDataPopulationsRow';
 
 const AggregatedDataPopulations = (props) => {
   const { appMgr } = props;
 
   return (
-    <Paper>
+    <Paper sx={{ padding: '10px' }}>
+      <Typography variant='overline'>Aggregated data selection</Typography>
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell width='20%'>Data type</TableCell>
-            <TableCell width='20%'>Use</TableCell>
-            <TableCell width='60%'>Years</TableCell>
+          <TableRow hover={false}>
+            <TableCell width='320px'>Data type</TableCell>
+            <TableCell width='100px'>Use</TableCell>
+            <TableCell>Years</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

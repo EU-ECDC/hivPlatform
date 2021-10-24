@@ -1,23 +1,11 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
 
-const useStyles = makeStyles(() => ({
-  valueLabel: {
-    top: -15,
-    '& *': {
-      background: 'transparent',
-      fontSize: 11
-    },
-  },
-}));
-
 const AggregatedDataPopulationsRow = (props) => {
-  const classes = useStyles();
 
   const { i, rowCount, dataFile, appMgr } = props;
 
@@ -32,14 +20,17 @@ const AggregatedDataPopulationsRow = (props) => {
   let lastColumn = null;
   if (rowCount === 1 || (rowCount > 1 && i === 0)) {
     lastColumn =
-      <TableCell rowSpan={rowCount}>
+      <TableCell rowSpan={rowCount} sx={{pt: 5, pr: 3, pb: 1}}>
         <Slider
           min={appMgr.aggrDataMgr.rangeYears[0]}
           max={appMgr.aggrDataMgr.rangeYears[1]}
+          marks={true}
           value={dataFile.years}
           onChange={handleYearsChange}
-          classes={{
-            valueLabel: classes.valueLabel
+          sx={{
+            '& *': {
+              fontSize: '9px'
+            }
           }}
           valueLabelDisplay='on'
           valueLabelFormat={value => value.toFixed()}

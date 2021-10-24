@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import CreatePopulationRow from './CreatePopulationRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
@@ -59,10 +60,11 @@ const CreatePopulations = (props) => {
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
-    <Paper>
+    <Paper sx={{ padding: '10px' }}>
+      <Typography variant='overline'>Case-base data populations</Typography>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow hover={false}>
             <TableCell padding='checkbox'>
               <Checkbox
                 inputProps={{ 'aria-label': 'select all' }}

@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import CombinePopulationsRow from './CombinePopulationsRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 import RemoveValuesFromArray from '../../utilities/RemoveValuesFromArray';
@@ -55,10 +56,11 @@ const CombinePopulations = (props) => {
   const isSelected = id => selected.indexOf(id) !== -1;
 
   return (
-    <Paper>
+    <Paper sx={{ padding: '10px' }}>
+      <Typography variant='overline'>Populations combinations</Typography>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow hover={false}>
             <TableCell padding='checkbox'>
               <Checkbox
                 inputProps={{ 'aria-label': 'select all' }}

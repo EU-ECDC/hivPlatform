@@ -24,7 +24,7 @@ const OriginGroupingRow = (props) => {
 
   return (
     <TableRow hover role='checkbox'>
-      <TableCell padding='checkbox'>
+      <TableCell padding='checkbox' sx={{ verticalAlign: 'top' }}>
         <Checkbox
           inputProps={{ 'aria-labelledby': `labelId${i}` }}
           color='primary'
@@ -32,7 +32,7 @@ const OriginGroupingRow = (props) => {
           onClick={onSelectClick}
         />
       </TableCell>
-      <TableCell id={`labelId${i}`} scope='row' padding='none'>
+      <TableCell id={`labelId${i}`} scope='row' padding='none' sx={{ verticalAlign: 'top' }}>
         <Input
           sx={{ width: '100%', fontSize: '0.75rem' }}
           value={el.name}
@@ -45,7 +45,7 @@ const OriginGroupingRow = (props) => {
           renderValue={selected => (
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {selected.map(value => (
-                <Chip key={value} label={value} style={{ margin: 2 }} />
+                <Chip key={value} label={value} sx={{ margin: '2px' }} color='secondary'/>
               ))}
             </div>
           )}
