@@ -36,10 +36,10 @@ const DiagnosisRatesRow = (props) => {
         />
       </TableCell>
       <TableCell id='labelId1' scope='row' padding='none'>{startYearWidget}</TableCell>
-      <TableCell>{el.endYear}</TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.jump} onChange={handleJumpChange} /></TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.diffByCD4} onChange={handleDiffByCD4Change} /></TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.changeInInterval} onChange={handleChangeInIntervalChange} /></TableCell>
+      <TableCell sx={{textAlign: 'center'}}>{el.endYear}</TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.jump} onChange={handleJumpChange} /></TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.diffByCD4} onChange={handleDiffByCD4Change} /></TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.changeInInterval} onChange={handleChangeInIntervalChange} /></TableCell>
     </TableRow>
   )
 };

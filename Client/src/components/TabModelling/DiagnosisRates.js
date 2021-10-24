@@ -67,7 +67,7 @@ const DiagnosisRates = (props) => {
       <Typography variant='overline'>Collection: {collection.name}</Typography>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow hover={false}>
             <TableCell padding='checkbox'>
               <Checkbox
                 inputProps={{ 'aria-label': 'select all' }}
@@ -75,11 +75,11 @@ const DiagnosisRates = (props) => {
                 onClick={handleSelectAllClick}
                 checked={rowCount > 0 && selectedCount === rowCount}
               />            </TableCell>
-            <TableCell width='15%' padding='none' >Start year</TableCell>
-            <TableCell width='15%' >End year</TableCell>
-            <TableCell>Jump</TableCell>
-            <TableCell>Change by CD4 count</TableCell>
-            <TableCell>Change in interval</TableCell>
+            <TableCell width='20%' padding='none'>Start year</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>End year</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Jump</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Change by CD4 count</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Change in interval</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

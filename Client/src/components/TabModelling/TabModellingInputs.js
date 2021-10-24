@@ -68,7 +68,7 @@ const TabModellingInputs = props => {
               <Grid item xs={12}>
                 <Table>
                   <TableBody>
-                    <TableRow hover>
+                    <TableRow>
                       <TableCell width={100}>File name</TableCell>
                       <TableCell>{appMgr.modelMgr.modelsParamFileName}</TableCell>
                     </TableRow>
