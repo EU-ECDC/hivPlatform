@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import Paper from '@mui/material/Paper';
 import Slider from '@mui/material/Slider';
 import Input from '@mui/material/Input';
@@ -9,35 +8,27 @@ import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
-const useStyles = makeStyles(() => ({
-  valueLabel: {
-    top: -15,
-    '& *': {
-      background: 'transparent',
-      fontSize: 11
-    },
-  },
-}));
-
 const YearsSlider = (props) => {
   const { minYear, maxYear, value, onChange } = props;
-
-  const classes = useStyles();
 
   return (
     <Slider
       min={minYear}
       max={maxYear}
       value={value}
+      marks={true}
       onChange={onChange}
-      classes={{
-        valueLabel: classes.valueLabel
+      sx={{
+        '& *': {
+          fontSize: '9px'
+        }
       }}
       valueLabelDisplay='on'
       valueLabelFormat={value => value.toFixed()}
@@ -95,10 +86,11 @@ const AdvancedParameters = (props) => {
   const maxYear = appMgr.modelMgr.optimalYears.All[1];
 
   return (
-    <Paper>
+    <Paper sx={{ padding: '10px' }}>
+      <Typography variant='overline'>Advanced parameters</Typography>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow hover={false}>
             <TableCell width='50px'>Idx</TableCell>
             <TableCell width='330px'>Parameter</TableCell>
             <TableCell>Value</TableCell>
@@ -108,7 +100,7 @@ const AdvancedParameters = (props) => {
           <TableRow>
             <TableCell>1.</TableCell>
             <TableCell>Range of calculations</TableCell>
-            <TableCell>
+            <TableCell sx={{pt: 5, pr: 3, pb: 1}}>
               <YearsSlider
                 minYear={minYear}
                 maxYear={maxYear}
@@ -120,7 +112,7 @@ const AdvancedParameters = (props) => {
           <TableRow>
             <TableCell>2.</TableCell>
             <TableCell>HIV diagnoses, total</TableCell>
-            <TableCell>
+            <TableCell sx={{pt: 5, pr: 3, pb: 1}}>
               <YearsSlider
                 minYear={minYear}
                 maxYear={maxYear}
@@ -132,7 +124,7 @@ const AdvancedParameters = (props) => {
           <TableRow>
             <TableCell>3.</TableCell>
             <TableCell>HIV diagnoses, by CD4 count</TableCell>
-            <TableCell>
+            <TableCell sx={{pt: 5, pr: 3, pb: 1}}>
               <YearsSlider
                 minYear={minYear}
                 maxYear={maxYear}
@@ -144,7 +136,7 @@ const AdvancedParameters = (props) => {
           <TableRow>
             <TableCell>4.</TableCell>
             <TableCell>AIDS diagnoses, total</TableCell>
-            <TableCell>
+            <TableCell sx={{pt: 5, pr: 3, pb: 1}}>
               <YearsSlider
                 minYear={minYear}
                 maxYear={maxYear}
@@ -156,7 +148,7 @@ const AdvancedParameters = (props) => {
           <TableRow>
             <TableCell>5.</TableCell>
             <TableCell>HIV/AIDS diagnoses, total</TableCell>
-            <TableCell>
+            <TableCell sx={{pt: 5, pr: 3, pb: 1}}>
               <YearsSlider
                 minYear={minYear}
                 maxYear={maxYear}

@@ -82,7 +82,6 @@ const theme = createTheme({
       },
       styleOverrides: {
         select: {
-          paddingLeft: '5px',
           paddingBottom: '5px'
         }
       }
@@ -92,16 +91,6 @@ const theme = createTheme({
         variant: 'standard'
       }
     }
-  //   MuiTreeItem: {
-  //     label: {
-  //       fontSize: '0.75rem'
-  //     }
-  //   },
-  //   MuiSlider: {
-  //     marked: {
-  //       marginBottom: 0
-  //     }
-  //   },
   }
 });
 
