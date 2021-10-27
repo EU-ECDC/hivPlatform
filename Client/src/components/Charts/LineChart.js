@@ -23,7 +23,7 @@ echarts.use([
   SVGRenderer
 ]);
 
-const AreaChart = (props) => {
+const AreaChart = props => {
 
   const { yLabelName, xCategories, data, options } = props;
 
@@ -48,7 +48,7 @@ const AreaChart = (props) => {
       nameLocation: 'center',
       nameGap: 45,
       axisLabel: {
-        formatter: (val) => FormatPercentage(val, 0)
+        formatter: val => FormatPercentage(val, 0)
       }
     },
     series: [
@@ -75,7 +75,7 @@ const AreaChart = (props) => {
     ],
     tooltip: {
       trigger: 'axis',
-      formatter: (params) =>
+      formatter: params =>
         `
           Year: ${params[0].axisValue}<br/ >
           ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value, 2)}`).join('<br />')}

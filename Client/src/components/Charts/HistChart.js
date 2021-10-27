@@ -72,9 +72,7 @@ const HistChart = (props) => {
       },
     ],
     animationEasing: 'elasticOut',
-    animationDelayUpdate: function (idx) {
-      return idx * 5;
-    },
+    animationDelayUpdate: idx => idx * 5,
     tooltip: {
       trigger: 'axis',
     },
@@ -84,16 +82,6 @@ const HistChart = (props) => {
       top: 'middle'
     }
   };
-
-  // React.useEffect(
-  //   () => {
-  //     let echartInstance = echart.current.getEchartsInstance();
-  //     setTimeout(() => {
-  //       echartInstance.clear();
-  //       echartInstance.setOption(options);
-  //     }, 1000);
-  //   }
-  // );
 
   return (
     <ReactEchartsCore
