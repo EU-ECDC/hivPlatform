@@ -72,7 +72,7 @@ const AttributeMapping = (props) => {
       </Grid>
       <Grid item xs={2}>
         <Btn
-          style={{ marginBottom: 6 }}
+          sx={{ marginBottom: '6px', color: 'white' }}
           onClick={onApplyBtnClick}
           disabled={!appMgr.attrMappingMgr.actionValid}
         >

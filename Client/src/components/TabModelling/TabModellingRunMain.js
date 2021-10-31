@@ -1,11 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -13,24 +11,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
-import IsNull from '../../utilities/IsNull';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const ModelRunProgressBar = (props) => {
-  const { progress } = props;
-  if (IsNull(progress)) return null;
-
-  const classes = useStyles();
-
-  return <LinearProgress color='secondary' className={classes.root} />
-};
+import ProgressBar from '../ProgressBar';
 
 const TabModellingRunMain = props => {
   const { appMgr } = props;
@@ -114,7 +95,7 @@ const TabModellingRunMain = props => {
           >
             Cancel
           </Button>
-          <ModelRunProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
+          <ProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>

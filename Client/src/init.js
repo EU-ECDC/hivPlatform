@@ -595,5 +595,5 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(5, 0);
+  appMgr.uiStateMgr.setActivePageId(4, 4);
 };

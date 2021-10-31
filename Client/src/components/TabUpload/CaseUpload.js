@@ -64,7 +64,7 @@ const CaseUpload = (props) => {
         />
         <Tooltip title='Select case-based data file'>
           <label htmlFor='caseUploadBtn'>
-            <Btn sx={{ marginBottom: '6px' }} ><CloudUploadIcon />&nbsp;Upload data</Btn>
+            <Btn sx={{ marginBottom: '6px', color: 'white' }} ><CloudUploadIcon />&nbsp;Upload data</Btn>
           </label>
         </Tooltip>
         <Tooltip title='Remove case-based data from analysis'>

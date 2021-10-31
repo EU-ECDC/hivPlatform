@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -10,7 +9,6 @@ import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
-import LinearProgress from '@mui/material/LinearProgress';
 import Checkbox from '@mui/material/Checkbox';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -18,23 +16,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Typography from '@mui/material/Typography';
 import TabPanel from './TabPanel';
 import Btn from './Btn';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const ReportsProgressBar = (props) => {
-  const { progress } = props;
-  if (!progress) return null;
-
-  const classes = useStyles();
-
-  return <LinearProgress color='secondary' className={classes.root} />
-};
+import ProgressBar from './ProgressBar';
 
 const TabReports = (props) => {
 
@@ -112,7 +94,7 @@ const TabReports = (props) => {
           >
             Cancel
           </Button>
-          <ReportsProgressBar progress={appMgr.reportMgr.creatingReportInProgress} />
+          <ProgressBar progress={appMgr.reportMgr.creatingReportInProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>

@@ -66,7 +66,7 @@ const TabUploadAggregated = props => {
           />
           <Tooltip title='Select aggregated data file'>
             <label htmlFor='aggrUploadBtn'>
-              <Btn sx={{ marginBottom: '6px' }}><CloudUploadIcon />&nbsp;Upload data</Btn>
+              <Btn sx={{ marginBottom: '6px', color: 'white' }}><CloudUploadIcon />&nbsp;Upload data</Btn>
             </label>
           </Tooltip>
           <Tooltip title='Remove aggregated data from analysis'>
