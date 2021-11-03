@@ -10,12 +10,11 @@ const ProgressBar = (props) => {
   return <LinearProgress
     color='secondary'
     sx={{
-      root: {
       marginTop: '10px',
       marginBottom: '10px',
-      height: '10px',
-    }
-  }}/>
+      height: '5px',
+    }}
+  />
 };
 
 export default observer(ProgressBar);

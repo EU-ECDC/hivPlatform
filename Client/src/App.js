@@ -19,12 +19,16 @@ const theme = createTheme({
     MuiStepLabel: {
       styleOverrides: {
         label: {
+          color: 'black',
           '&.Mui-active': {
             fontWeight: 'bold'
           },
           '&.Mui-completed': {
             fontWeight: 'bold'
-          }
+          },
+          '&.Mui-disabled': {
+             color: 'rgba(0, 0, 0, 0.5)',
+          },
         },
         iconContainer: {
           '& text': {

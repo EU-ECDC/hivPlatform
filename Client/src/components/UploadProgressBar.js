@@ -11,11 +11,9 @@ const UploadProgressBar = (props) => {
     value={progress * 100}
     color='secondary'
     sx={{
-      root: {
-        marginTop: '10px',
-        marginBottom: '10px',
-        height: '10px',
-      }
+      marginTop: '10px',
+      marginBottom: '10px',
+      height: '5px',
     }}
   />
 };

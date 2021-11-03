@@ -595,5 +595,11 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 4);
+  appMgr.uiStateMgr.setActivePageId(0, 0);
+  appMgr.caseBasedDataMgr.setUploadProgress(0.6);
+  appMgr.aggrDataMgr.setFileUploadProgress(0.6);
+  appMgr.adjustMgr.setAdjustmentsRunProgress(true);
+  appMgr.modelMgr.setModelsRunProgress(true);
+  appMgr.modelMgr.setBootstrapRunProgress(true);
+  appMgr.reportMgr.setCreatingReportInProgress(true);
 };

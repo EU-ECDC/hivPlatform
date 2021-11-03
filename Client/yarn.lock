@@ -3761,13 +3761,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "echarts@npm:5.2.1"
+"echarts@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "echarts@npm:5.2.2"
   dependencies:
     tslib: 2.3.0
     zrender: 5.2.1
-  checksum: 61265a409bc9bb1b644f087cbf2fd64bf07102d83403e77c0395f271d61bb83b876894a163afd0a68ccd4b7139e827c89d9e59e4624b24ca32f17b22401995f5
+  checksum: ab08a52895ce8e49acccb81673f78400aa5c5a4ae7c0b0bdaeae22036e6e34f94da9d43166718e3b1e1fb1e29e02f419702e21b8b84371747201e7ab01744fca
   languageName: node
   linkType: hard
 
@@ -4650,7 +4650,7 @@ fsevents@~2.3.2:
     babel-loader: 8.2.3
     clean-webpack-plugin: 4.0.0
     cross-env: 7.0.3
-    echarts: ^5.2.1
+    echarts: ^5.2.2
     echarts-for-react: ^3.0.2
     file-loader: 6.2.0
     file-saver: ^2.0.5
@@ -4658,7 +4658,7 @@ fsevents@~2.3.2:
     html-webpack-plugin: ^5.5.0
     jquery: ^3.6.0
     lodash: ^4.17.21
-    mobx: ^6.3.5
+    mobx: ^6.3.6
     mobx-react: ^7.2.1
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -5927,10 +5927,10 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.3.5":
-  version: 6.3.5
-  resolution: "mobx@npm:6.3.5"
-  checksum: 9d5578ca55a3fd07610ed7416ca933b367005f483817d9fa653c8ec60fe9f2be65dc22dd0a93995ddabc18bcffd14feffb4365eddfc5e6b80c36eb9b05a98540
+"mobx@npm:^6.3.6":
+  version: 6.3.6
+  resolution: "mobx@npm:6.3.6"
+  checksum: 49e14a10e8567a67c8d049f535a68f6388007dcd5e0fae1712be34e21f348937139e08772a29b7e5bb1835bca9f9222db5ccfbe9de28c71f690bf000fbf1c9e1
   languageName: node
   linkType: hard
 

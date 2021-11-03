@@ -49,7 +49,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:8.2.3"],
             ["clean-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:4.0.0"],
             ["cross-env", "npm:7.0.3"],
-            ["echarts", "npm:5.2.1"],
+            ["echarts", "npm:5.2.2"],
             ["echarts-for-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:3.0.2"],
             ["file-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:6.2.0"],
             ["file-saver", "npm:2.0.5"],
@@ -57,7 +57,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.5.0"],
             ["jquery", "npm:3.6.0"],
             ["lodash", "npm:4.17.21"],
-            ["mobx", "npm:6.3.5"],
+            ["mobx", "npm:6.3.6"],
             ["mobx-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:7.2.1"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:17.0.2"],
@@ -5416,10 +5416,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["echarts", [
-        ["npm:5.2.1", {
-          "packageLocation": "./.yarn/cache/echarts-npm-5.2.1-9ab060fe24-61265a409b.zip/node_modules/echarts/",
+        ["npm:5.2.2", {
+          "packageLocation": "./.yarn/cache/echarts-npm-5.2.2-75a8b8ed98-ab08a52895.zip/node_modules/echarts/",
           "packageDependencies": [
-            ["echarts", "npm:5.2.1"],
+            ["echarts", "npm:5.2.2"],
             ["tslib", "npm:2.3.0"],
             ["zrender", "npm:5.2.1"]
           ],
@@ -5440,7 +5440,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts-for-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:3.0.2"],
             ["@types/echarts", null],
             ["@types/react", null],
-            ["echarts", "npm:5.2.1"],
+            ["echarts", "npm:5.2.2"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["react", "npm:17.0.2"],
             ["size-sensor", "npm:1.0.1"]
@@ -6466,7 +6466,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:8.2.3"],
             ["clean-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:4.0.0"],
             ["cross-env", "npm:7.0.3"],
-            ["echarts", "npm:5.2.1"],
+            ["echarts", "npm:5.2.2"],
             ["echarts-for-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:3.0.2"],
             ["file-loader", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:6.2.0"],
             ["file-saver", "npm:2.0.5"],
@@ -6474,7 +6474,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["html-webpack-plugin", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:5.5.0"],
             ["jquery", "npm:3.6.0"],
             ["lodash", "npm:4.17.21"],
-            ["mobx", "npm:6.3.5"],
+            ["mobx", "npm:6.3.6"],
             ["mobx-react", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:7.2.1"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:17.0.2"],
@@ -7849,10 +7849,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mobx", [
-        ["npm:6.3.5", {
-          "packageLocation": "./.yarn/cache/mobx-npm-6.3.5-e92a83069d-9d5578ca55.zip/node_modules/mobx/",
+        ["npm:6.3.6", {
+          "packageLocation": "./.yarn/cache/mobx-npm-6.3.6-8b2d9b4fa6-49e14a10e8.zip/node_modules/mobx/",
           "packageDependencies": [
-            ["mobx", "npm:6.3.5"]
+            ["mobx", "npm:6.3.6"]
           ],
           "linkType": "HARD",
         }]
@@ -7873,7 +7873,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", null],
             ["@types/react-dom", null],
             ["@types/react-native", null],
-            ["mobx", "npm:6.3.5"],
+            ["mobx", "npm:6.3.6"],
             ["mobx-react-lite", "virtual:545385bd2ca1f6cfdcc310220ee8fd79d1003623ca79d480f89a6268ccdade60655c0aac126a9d0b231699b3015067e92053796e838ac894712de1f33e415cef#npm:3.2.1"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:17.0.2"],
@@ -7908,7 +7908,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", null],
             ["@types/react-dom", null],
             ["@types/react-native", null],
-            ["mobx", "npm:6.3.5"],
+            ["mobx", "npm:6.3.6"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:6a34d1d517ba6b4809e5b1cfd09ffbd375bf5042d7b04f8426eae4ea9a7f2331254f51e8e1ab3c220a3da348cd0acb852cf741deed29891d1e3beed5d68f191c#npm:17.0.2"],
             ["react-native", null]
