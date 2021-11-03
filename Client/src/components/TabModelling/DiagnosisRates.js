@@ -1,13 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import Checkbox from '@material-ui/core/Checkbox';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import Checkbox from '@mui/material/Checkbox';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 import DiagnosisRatesRow from './DiagnosisRatesRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
@@ -67,7 +67,7 @@ const DiagnosisRates = (props) => {
       <Typography variant='overline'>Collection: {collection.name}</Typography>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow hover={false}>
             <TableCell padding='checkbox'>
               <Checkbox
                 inputProps={{ 'aria-label': 'select all' }}
@@ -75,11 +75,11 @@ const DiagnosisRates = (props) => {
                 onClick={handleSelectAllClick}
                 checked={rowCount > 0 && selectedCount === rowCount}
               />            </TableCell>
-            <TableCell width='15%' padding='none' >Start year</TableCell>
-            <TableCell width='15%' >End year</TableCell>
-            <TableCell>Jump</TableCell>
-            <TableCell>Change by CD4 count</TableCell>
-            <TableCell>Change in interval</TableCell>
+            <TableCell width='20%' padding='none'>Start year</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>End year</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Jump</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Change by CD4 count</TableCell>
+            <TableCell width='20%' sx={{textAlign: 'center'}}>Change in interval</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

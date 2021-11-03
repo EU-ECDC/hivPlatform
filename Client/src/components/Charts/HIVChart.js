@@ -159,7 +159,7 @@ const HIVChart = (props) => {
     },
     series: series,
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis'
     },
     toolbox: {
       show: true,

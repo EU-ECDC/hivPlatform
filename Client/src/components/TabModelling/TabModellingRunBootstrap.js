@@ -1,53 +1,22 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Input from '@mui/material/Input';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
-import IsNull from '../../utilities/IsNull';
-
-const userStyles = makeStyles({
-  btRoot: {
-    marginTop: 20,
-    marginBottom: 20,
-    width: '100%'
-  },
-  btOption: {
-    '& span': {
-      fontSize: '0.75rem'
-    }
-  }
-});
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const ModelRunProgressBar = (props) => {
-  const { progress } = props;
-  if (IsNull(progress)) return null;
-  const classes = useStyles();
-  return <LinearProgress color='secondary' className={classes.root}/>
-};
+import ProgressBar from '../ProgressBar';
 
 const TabModellingRunBootstrap = props => {
   const { appMgr } = props;
-  const classes = userStyles();
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 5);
   const handleRunBootstrapBtnClick = () => appMgr.modelMgr.runBootstrap();
@@ -85,7 +54,13 @@ const TabModellingRunBootstrap = props => {
             />
             <FormHelperText>Set the number of iterations</FormHelperText>
           </FormControl>
-          <FormControl className={classes.btRoot}>
+          <FormControl
+            sx={{
+              marginTop: '20px',
+              marginBottom: '20px',
+              width: '100%'
+            }}
+          >
             <RadioGroup
               row
               value={appMgr.modelMgr.bootstrapType}
@@ -95,14 +70,22 @@ const TabModellingRunBootstrap = props => {
                 value='PARAMETRIC'
                 control={<Radio color="primary" />}
                 label='Parametric'
-                className={classes.btOption}
+                sx={{
+                  '& span': {
+                    fontSize: '0.75rem'
+                  }
+                }}
               />
               <FormControlLabel
                 value='NON-PARAMETRIC'
                 control={<Radio color="primary" />}
                 label='Non-parametric'
                 disabled={!appMgr.uiStateMgr.nonParametricBootstrapEnabled}
-                className={classes.btOption}
+                sx={{
+                  '& span': {
+                    fontSize: '0.75rem'
+                  }
+                }}
               />
             </RadioGroup>
             <FormHelperText>Set the bootstrap type</FormHelperText>
@@ -121,7 +104,7 @@ const TabModellingRunBootstrap = props => {
           >
             Cancel
           </Button>
-          <ModelRunProgressBar progress={appMgr.modelMgr.bootstrapRunProgress} />
+          <ProgressBar progress={appMgr.modelMgr.bootstrapRunProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>

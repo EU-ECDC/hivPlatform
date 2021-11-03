@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Divider from '@material-ui/core/Divider';
+import Divider from '@mui/material/Divider';
 import TabPanel from '../TabPanel';
 import CaseUpload from './CaseUpload';
 import OriginGroupings from './OriginGroupings';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const DiagnosisRatesSelect = props => {
   const { timeIntCollMgr } = props;

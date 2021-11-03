@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import IsNull from '../../utilities/IsNull';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import SmallTable from './SmallTable';
 
 const TabModellingOutputsTables = props => {

@@ -1,16 +1,16 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import DiagnosisRates from './DiagnosisRates';
@@ -68,7 +68,7 @@ const TabModellingInputs = props => {
               <Grid item xs={12}>
                 <Table>
                   <TableBody>
-                    <TableRow hover>
+                    <TableRow>
                       <TableCell width={100}>File name</TableCell>
                       <TableCell>{appMgr.modelMgr.modelsParamFileName}</TableCell>
                     </TableRow>

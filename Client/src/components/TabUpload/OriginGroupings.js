@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
-import GroupIcon from '@material-ui/icons/Group';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import GroupIcon from '@mui/icons-material/Group';
+import Typography from '@mui/material/Typography';
 import Btn from '../Btn';
 import OriginGroupingsWidget from './OriginGroupingsWidget';
 import MessageAlert from '../MessageAlert';
@@ -20,7 +20,7 @@ const OriginGroupings = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={2}>
-        <Btn style={{ marginBottom: 6 }} onClick={onApplyClick}>
+        <Btn sx={{ marginBottom: '6px', color: 'white' }} onClick={onApplyClick}>
           <GroupIcon />&nbsp;Apply regrouping
         </Btn>
         <Typography variant='body2' color='textSecondary'>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import Input from '@mui/material/Input';
 
 const DiagnosisRatesRow = (props) => {
   const { i, isSelected, onSelectClick, interval: el, collection } = props;
@@ -36,10 +36,10 @@ const DiagnosisRatesRow = (props) => {
         />
       </TableCell>
       <TableCell id='labelId1' scope='row' padding='none'>{startYearWidget}</TableCell>
-      <TableCell>{el.endYear}</TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.jump} onChange={handleJumpChange} /></TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.diffByCD4} onChange={handleDiffByCD4Change} /></TableCell>
-      <TableCell padding='checkbox'><Checkbox color='primary' checked={el.changeInInterval} onChange={handleChangeInIntervalChange} /></TableCell>
+      <TableCell sx={{textAlign: 'center'}}>{el.endYear}</TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.jump} onChange={handleJumpChange} /></TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.diffByCD4} onChange={handleDiffByCD4Change} /></TableCell>
+      <TableCell padding='checkbox' sx={{textAlign: 'center'}}><Checkbox color='primary' checked={el.changeInInterval} onChange={handleChangeInIntervalChange} /></TableCell>
     </TableRow>
   )
 };

@@ -1,25 +1,15 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Slider from '@material-ui/core/Slider';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import Grid from '@mui/material/Grid';
+import Slider from '@mui/material/Slider';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import HistChart from '../Charts/HistChart';
-
-const userStyles = makeStyles({
-  valueLabel: {
-    '& *': {
-      fontSize: 9
-    }
-  }
-});
 
 const TabSummaryDiagYear = (props) => {
   const { appMgr } = props;
-  const classes = userStyles();
 
   const handleDiagYearFilterSwitchChange = e =>
     appMgr.summaryDataMgr.setDiagYearFilterApply(e.target.checked);
@@ -59,13 +49,15 @@ const TabSummaryDiagYear = (props) => {
               onChange={handleDiagYearFilterYearChange}
               valueLabelDisplay='on'
               valueLabelFormat={value => value.toFixed()}
-              classes={{
-                valueLabel: classes.valueLabel
-              }}
               aria-labelledby='range-slider'
               getAriaLabel={index => index.toFixed()}
               getAriaValueText={value => value.toFixed()}
               color='secondary'
+              sx={{
+                '& *': {
+                  fontSize: '9px'
+                }
+              }}
             />
           </div>
           <HistChart

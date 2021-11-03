@@ -1,21 +1,26 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepButton from '@material-ui/core/StepButton';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import { StepContent } from '@material-ui/core';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepButton from '@mui/material/StepButton';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import StepContent from '@mui/material/StepContent';
 import IsNull from '../utilities/IsNull';
 
 const LeftNav = (props) => {
   const { pages, activePageId, onPageChange } = props;
 
   return (
-    <div style={{ minWidth: 250, maxWidth: 250, backgroundColor: 'white' }}>
-      <Stepper nonLinear activeStep={activePageId} orientation='vertical'>
+    <div style={{
+      minWidth: '220px',
+      maxWidth: '220px',
+      backgroundColor: 'white',
+      padding: '12px 8px 12px 12px'
+    }}>
+      <Stepper nonLinear activeStep={activePageId} orientation='vertical' >
         {pages.map((page, i) => {
 
           const buttonProps = {};
@@ -29,7 +34,7 @@ const LeftNav = (props) => {
               <StepButton onClick={() => onPageChange(i)} {...buttonProps}>
                 {page.title}
               </StepButton>
-              {page.subPages && <StepContent>
+              {page.subPages.length > 0 && <StepContent>
                 <List>
                   {
                     page.subPages.map((subPage, j) => (

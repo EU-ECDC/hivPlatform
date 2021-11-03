@@ -1,20 +1,19 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
 import OriginGroupingRow from './OriginGroupingRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 
@@ -73,13 +72,13 @@ const OriginGroupingsWidget = (props) => {
   const isSelected = i => selected.indexOf(i) !== -1;
 
   return (
-    <Paper style={{ padding: 10 }}>
+    <Paper sx={{ padding: '10px' }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
-          <Table size='small' style={{ backgroundColor: 'rgba(0, 0, 0, 0.02)'}}>
+          <Table size='small' >
             <TableHead>
-              <TableRow>
+              <TableRow hover={false}>
                 <TableCell>FullRegionOfOrigin</TableCell><TableCell align='right'>Count</TableCell>
               </TableRow>
             </TableHead>
@@ -97,7 +96,7 @@ const OriginGroupingsWidget = (props) => {
         </Grid>
         <Grid item xs={9}>
           <Typography variant='overline'>Migrant variable regrouping</Typography>
-          <FormControl style={{ width: '100%', fontSize: '0.75rem' }}>
+          <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
             <InputLabel>
               Preset
              </InputLabel>
@@ -111,7 +110,7 @@ const OriginGroupingsWidget = (props) => {
           </FormControl>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow hover={false}>
                 <TableCell padding='checkbox'>
                   <Checkbox
                     inputProps={{ 'aria-label': 'select all' }}

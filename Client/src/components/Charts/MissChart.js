@@ -29,16 +29,40 @@ echarts.use([
 
 const MissChart = (props) => {
 
-  const { xCategories, data1, data2, data3 } = props;
+  const { xCategories, data1, data2, data3, options } = props;
 
-  const options = {
+  const defaultOptions = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
     grid: [
-      { left: 5, width: '30%', height: '347px', containLabel: true },
-      { left: 'center', width: '30%', height: '347px', containLabel: true },
-      { right: 15, width: '30%', height: '300px', containLabel: true }
+      {
+        left: 5,
+        width: '30%',
+        height: '347px',
+        containLabel: true,
+        tooltip: {
+          formatter: params => `${params.marker} ${params.name}: ${FormatPercentage(params.value, 2)}`
+        }
+      },
+      {
+        left: 'center',
+        width: '30%',
+        height: '347px',
+        containLabel: true,
+        tooltip: {
+          formatter: params => `${params.marker} ${params.name}: ${params.value[2] ? 'Present' : 'Missing'}`
+        }
+      },
+      {
+        right: 15,
+        width: '30%',
+        height: '300px',
+        containLabel: true,
+        tooltip: {
+          formatter: params => `${params.marker} Combination ${params.name}: ${FormatPercentage(params.value, 2)}`
+        }
+      }
     ],
     xAxis: [
       {
@@ -151,8 +175,8 @@ const MissChart = (props) => {
       min: 0,
       max: 1,
       pieces: [
-        { min: 0, max: 0.9999999, color: '#ddd' },
-        { min: 0.9999999, color: '#69b023' }
+        { min: 0, max: 0.9999999, color: '#ddd', label: 'Missing' },
+        { min: 0.9999999, color: '#69b023', label: 'Present' }
       ],
       show: false
     },
@@ -204,7 +228,7 @@ const MissChart = (props) => {
       }
     ],
     tooltip: {
-      trigger: 'item',
+      trigger: 'item'
     },
     toolbox: {
       show: true,
@@ -222,10 +246,12 @@ const MissChart = (props) => {
     legend: { }
   };
 
+  const finalOptions = Object.assign({}, defaultOptions, options);
+
   return (
     <ReactEchartsCore
       echarts={echarts}
-      option={options}
+      option={finalOptions}
       style={{ height: '410px', width: '100%' }}
       notMerge={true}
       lazyUpdate={true}

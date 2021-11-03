@@ -1,17 +1,17 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import Grid from '@mui/material/Grid';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
+import Input from '@mui/material/Input';
+import MenuItem from '@mui/material/MenuItem';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import Btn from '../Btn';
 import MessageAlert from '../MessageAlert';
 
@@ -36,27 +36,30 @@ const AttributeMapping = (props) => {
   }
 
   const attrMappingTableRows = appMgr.attrMappingMgr.mapping.map((entry, idx) => (
-    <TableRow hover key={idx}>
+    <TableRow key={idx}>
       <TableCell>{`${idx+1}.`}</TableCell>
       <TableCell>{entry.attribute}</TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
         <Select
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{
+            width: '100%',
+            fontSize: '0.75rem'
+          }}
           value={entry.origColName || ''}
           onChange={onOrigColSelect(entry.attribute)}
-          disableUnderline
         >
           <MenuItem value='' dense>&nbsp;</MenuItem>
           {attrMappingSelectOptions}
         </Select>
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px' }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
         <Input
-          style={{ width: '100%', fontSize: '0.75rem' }}
+          sx={{ width: '100%', fontSize: '0.75rem' }}
           onChange={onDefValChange(entry.attribute)}
           disabled={!!entry.origColName}
         />
       </TableCell>
+      <TableCell>Integer</TableCell>
     </TableRow>
   ));
 
@@ -69,7 +72,7 @@ const AttributeMapping = (props) => {
       </Grid>
       <Grid item xs={2}>
         <Btn
-          style={{ marginBottom: 6 }}
+          sx={{ marginBottom: '6px', color: 'white' }}
           onClick={onApplyBtnClick}
           disabled={!appMgr.attrMappingMgr.actionValid}
         >
@@ -85,23 +88,22 @@ const AttributeMapping = (props) => {
         />
       </Grid>
       <Grid item xs={10}>
-        <Paper style={{ padding: 10 }}>
+        <Paper sx={{ padding: '10px' }}>
           <Typography variant='overline'>Attribute mapping</Typography>
-          <Grid container spacing={2}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell width='5%'>Idx</TableCell>
-                  <TableCell width='25%'>Attribute</TableCell>
-                  <TableCell width='40%'>Uploaded data column</TableCell>
-                  <TableCell width='30%'>Override value</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {attrMappingTableRows}
-              </TableBody>
-            </Table>
-          </Grid>
+          <Table>
+            <TableHead>
+              <TableRow hover={false}>
+                <TableCell width='8%'>Idx</TableCell>
+                <TableCell width='23%'>Attribute</TableCell>
+                <TableCell width='23%'>Uploaded data column</TableCell>
+                <TableCell width='23%'>Override value</TableCell>
+                <TableCell width='23%'>Type</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {attrMappingTableRows}
+            </TableBody>
+          </Table>
         </Paper>
       </Grid>
     </Grid>

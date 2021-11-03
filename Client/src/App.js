@@ -1,9 +1,9 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 import RootElem from './components/RootElem';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontSize: 12,
   },
@@ -15,88 +15,98 @@ const theme = createMuiTheme({
       main: '#bedfe1',
     },
   },
-  overrides: {
+  components: {
     MuiStepLabel: {
-      label: {
-        color: 'black',
-        '&$active': {
-          fontWeight: 'bold'
+      styleOverrides: {
+        label: {
+          color: 'black',
+          '&.Mui-active': {
+            fontWeight: 'bold'
+          },
+          '&.Mui-completed': {
+            fontWeight: 'bold'
+          },
+          '&.Mui-disabled': {
+             color: 'rgba(0, 0, 0, 0.5)',
+          },
         },
-        '&$completed': {
-          fontWeight: 'bold'
-        },
-      },
-      root: {
-        '&$disabled': {
-          '& .MuiStepLabel-label': {
-            color: 'rgba(0, 0, 0, 0.5)',
+        iconContainer: {
+          '& text': {
+            fill: 'white'
           }
-        },
-      },
-    },
-    MuiStepIcon: {
-      root: {
-        '& text': {
-          fill: 'white'
         }
       }
     },
     MuiStepConnector: {
-      vertical: {
-        marginLeft: 10
+      styleOverrides: {
+        vertical: {
+          marginLeft: '10px'
+        }
       }
     },
     MuiStepContent: {
-      root: {
-        marginLeft: 10,
-        '& .MuiTreeItem-label': {
-          padding: 6,
-        },
-      }
-    },
-    MuiTreeItem: {
-      label: {
-        fontSize: '0.75rem'
+      styleOverrides: {
+        root: {
+          marginLeft: '10px',
+          '& .MuiList-root': {
+            paddingBottom: '0px'
+          },
+          '& .MuiButtonBase-root': {
+            padding: '6px',
+            fontSize: '0.75rem'
+          }
+        }
       }
     },
     MuiTableRow: {
-      root: {
-        "&:last-child td": {
-          borderBottom: 0,
-        },
+      defaultProps: {
+        hover: true
+      },
+      styleOverrides: {
+        root: {
+          '&:last-child td': {
+            borderBottom: '0px'
+          },
+        }
       }
     },
     MuiTableCell: {
-      head: {
-        fontWeight: 'bold !important'
-      }
-    },
-    MuiSlider: {
-      marked: {
-        marginBottom: 0
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid rgba(240, 240, 240, 1)',
+        },
+        head: {
+          fontWeight: 'bold',
+        }
       }
     },
     MuiSelect: {
-      root: {
-        paddingLeft: 16,
-        paddingBottom: 5
+      defaultProps: {
+        variant: 'standard'
+      },
+      styleOverrides: {
+        select: {
+          paddingBottom: '5px'
+        }
       }
     },
-    // MuiChip: {
-    //   label: {
-    //     color: 'white'
-    //   }
-    // }
+    MuiTextField: {
+      defaultProps: {
+        variant: 'standard'
+      }
+    }
   }
 });
 
 const App = () => (
-  <MuiThemeProvider theme={theme}>
-    <React.Fragment>
-      <CssBaseline />
-      <RootElem />
-    </React.Fragment>
-  </MuiThemeProvider>
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={theme}>
+      <React.Fragment>
+        <CssBaseline />
+        <RootElem />
+      </React.Fragment>
+    </ThemeProvider>
+  </StyledEngineProvider>
 );
 
 export default App;

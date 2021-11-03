@@ -1,36 +1,17 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
-import IsNull from '../../utilities/IsNull';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const ModelRunProgressBar = (props) => {
-  const { progress } = props;
-  if (IsNull(progress)) return null;
-
-  const classes = useStyles();
-
-  return <LinearProgress color='secondary' className={classes.root} />
-};
+import ProgressBar from '../ProgressBar';
 
 const TabModellingRunMain = props => {
   const { appMgr } = props;
@@ -114,7 +95,7 @@ const TabModellingRunMain = props => {
           >
             Cancel
           </Button>
-          <ModelRunProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
+          <ProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
