@@ -4,7 +4,7 @@ pkgVersion <- pkgDescr$Version
 rVersion <- '4.1'
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s', pkgVersion))
-repoCRAN <- 'https://packagemanager.rstudio.com/all/latest'
+repoCRAN <- 'https://cloud.r-project.org'
 args <- c('--preclean')
 
 # 1. REPOSITORY ------------------------------------------------------------------------------------

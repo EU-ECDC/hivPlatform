@@ -59,7 +59,7 @@ const AttributeMapping = (props) => {
           disabled={!!entry.origColName}
         />
       </TableCell>
-      <TableCell>Integer</TableCell>
+      <TableCell><Typography variant='overline'>{ entry.type }</Typography></TableCell>
     </TableRow>
   ));
 
