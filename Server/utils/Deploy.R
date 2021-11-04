@@ -42,8 +42,8 @@ pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
 # HIV Platform
-pkgbuild::build(path = buildPath, binary = FALSE)
-pkgbuild::build(path = buildPath, binary = TRUE, args = args)
+pkgbuild::build(dest_path = buildPath, binary = FALSE)
+pkgbuild::build(dest_path = buildPath, binary = TRUE, args = args)
 
 # Add to repository
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'source')
