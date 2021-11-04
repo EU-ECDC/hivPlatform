@@ -1,46 +1,28 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import TabPanel from './TabPanel';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import Btn from './Btn';
 import HIVChart from './Charts/HIVChart';
 import IsNull from '../utilities/IsNull';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const MigrantRunProgressBar = (props) => {
-  const { progress } = props;
-  if (IsNull(progress)) return null;
-
-  const classes = useStyles();
-
-  return <LinearProgress color='secondary' className={classes.root}/>
-};
+import ProgressBar from './ProgressBar';
 
 const TabMigrant = props => {
 
@@ -91,7 +73,7 @@ const TabMigrant = props => {
           >
             Cancel
           </Button>
-          <MigrantRunProgressBar progress={appMgr.migrMgr.runProgress} />
+          <ProgressBar progress={appMgr.migrMgr.runProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
