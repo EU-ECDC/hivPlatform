@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -16,7 +16,7 @@ appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # nolint end
 
 
@@ -38,12 +38,15 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
+adjustmentSpecs <-
+  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
 adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
 adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+
+# saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
@@ -62,8 +65,21 @@ fileName <- RenderReportToFile(
 )
 browseURL(fileName)
 
+# STEP 5 - Migration -------------------------------------------------------------------------------
+appMgr$CaseMgr$RunMigration()
+appMgr$CaseMgr$Data
+appMgr$CaseMgr$MigrationResult$Report
 
-# STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+params <- hivPlatform::GetMigrantParams()
+migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
+result <- hivPlatform::PredictInf(migrantData$Data, params)
+# result <- hivPlatform::PredictInf(list(AIDS = NULL, CD4VL = NULL), params)
+report <- RenderReportToHTML(
+  reportFilePath = GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'),
+  params = migrantData$Stats
+)
+
+# STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
   Name = c(
     'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
@@ -102,7 +118,7 @@ data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter)
   setcolorder(dt, 'Imputation')
 }))
 
-# STEP 5 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+# STEP 7 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
@@ -134,7 +150,7 @@ appMgr$HIVModelMgr$BootstrapFitStats
 bootstrap <- rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
 
-# STEP 6 - Explore bootstrap results ---------------------------------------------------------------
+# STEP 8 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
 hist(appMgr$HIVModelMgr$BootstrapFitStats$RunTime)
 table(appMgr$HIVModelMgr$BootstrapFitStats$Converged)
@@ -178,7 +194,69 @@ aggrDataSelection <- data.table(
 )
 CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
-a <- data.table::data.table(B = c(1, 2))
-a$B
+# Migration
+params <- GetMigrantParams()
 
-a
+# Reconciliations
+reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
+reconCD4VL <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseCD4VL.dta'))
+
+baseAIDS <- reconAIDS[, 1:18]
+isLabelled <- sapply(baseAIDS, haven::is.labelled)
+colNames <- names(isLabelled[isLabelled])
+baseAIDS[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
+setnames(
+  baseAIDS,
+  c(
+    'RecordId', 'Gender', 'Mode', 'Age', 'GroupedRegion', 'Calendar', 'Art', 'DateOfArt',
+    'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth', 'AtRiskDate',
+    'U', 'Mig', 'KnownPrePost', 'UniqueId', 'DTime'
+  )
+)
+currentLevels <- levels(baseAIDS$Gender)
+newLevels <- c('M', 'F')
+levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
+baseAIDS[, Ord := rowid(RecordId)]
+baseAIDS[, Imputation := 0L]
+baseAIDS[, RecordId := as.character(RecordId)]
+
+baseCD4VL <- reconCD4VL[, 1:27]
+isLabelled <- sapply(baseCD4VL, haven::is.labelled)
+colNames <- names(isLabelled[isLabelled])
+baseCD4VL[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
+setnames(
+  baseCD4VL,
+  c(
+    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'Age', 'GroupedRegion',
+    'Calendar', 'Art', 'DateOfArt', 'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival',
+    'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'DTime', 'UniqueId', 'Consc', 'Consr',
+    'CobsTime', 'RobsTime', 'RLogObsTime2', 'Only'
+  )
+)
+currentLevels <- levels(baseCD4VL$Gender)
+newLevels <- c('M', 'F')
+levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
+baseCD4VL[, Ord := rowid(RecordId)]
+baseCD4VL[, Imputation := 0L]
+baseCD4VL[, RecordId := as.character(RecordId)]
+
+input <- list(
+  AIDS = baseAIDS,
+  CD4VL = baseCD4VL
+)
+
+test <- PredictInf(input, params)
+recon <- rbind(
+  unique(reconAIDS[, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
+  unique(reconCD4VL[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)])
+)
+
+compare <- merge(
+  recon,
+  test,
+  by = c('Imputation', 'RecordId'),
+  suffix = c('.Recon', '.Test'),
+  all = TRUE
+)
+compare[, Diff := ProbPre.Recon - ProbPre.Test]
+compare[abs(Diff) > 1e-7]

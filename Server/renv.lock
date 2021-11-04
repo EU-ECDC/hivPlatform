@@ -9,6 +9,13 @@
     ]
   },
   "Packages": {
+    "BH": {
+      "Package": "BH",
+      "Version": "1.75.0-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e4c04affc2cac20c8fec18385cd14691"
+    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.1.1",
@@ -427,6 +434,13 @@
       "Repository": "CRAN",
       "Hash": "c995b0405ce0894d6fe52b3e08ea9085"
     },
+    "lspline": {
+      "Package": "lspline",
+      "Version": "1.0-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6c3f3807370e4fe6a586537e439aa679"
+    },
     "magrittr": {
       "Package": "magrittr",
       "Version": "2.0.1",
@@ -482,6 +496,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "6dfe8bf774944bd5595785e3229d8771"
+    },
+    "mvnfast": {
+      "Package": "mvnfast",
+      "Version": "0.2.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4dd186dbe1c5ae3bc3ef326527b6a1e9"
     },
     "nlme": {
       "Package": "nlme",

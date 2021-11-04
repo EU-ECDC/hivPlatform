@@ -30,7 +30,7 @@ const TabAdjustmentsRun = props => {
     <TabPanel>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Box display="flex" justifyContent="flex-end">
+          <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
               color='primary'

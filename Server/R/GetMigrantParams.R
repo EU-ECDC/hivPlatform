@@ -1,6 +1,4 @@
-GetMigrantEstimates <- function(
-
-) {
+GetMigrantParams <- function() {
   # Estimates of the fixed effects parameters from the bivariate LMM applied to CASCADE data
   fixedEffectsBivCASCADE <- read.csv(GetSystemFile('extdata/fixedEffectsBivCASCADE.csv'))
   bFE <- fixedEffectsBivCASCADE[, 1]
@@ -20,9 +18,21 @@ GetMigrantEstimates <- function(
   sigma2CD4 <- sigma2[1]
   sigma2VL <- sigma2[2]
 
-  fitAids <- readRDS(GetSystemFile('extdata/fitAids.rds'))
-  betaAids <- -coef(fitAids) / fitAids$scale
-  kappa <- 1 / fitAids$scale
+  fitAIDS <- readRDS(GetSystemFile('extdata/fitAids.rds'))
+  betaAIDS <- -coef(fitAIDS) / fitAIDS$scale
+  kappa <- 1 / fitAIDS$scale
 
-  return(NULL)
+  return(list(
+    bFE = bFE,
+    bFECD4 = bFECD4,
+    bFEVL = bFEVL,
+    varCovRE = varCovRE,
+    varCovRECD4 = varCovRECD4,
+    varCovREVL = varCovREVL,
+    sigma2 = sigma2,
+    sigma2CD4 = sigma2CD4,
+    sigma2VL = sigma2VL,
+    betaAIDS = betaAIDS,
+    kappa = kappa
+  ))
 }
