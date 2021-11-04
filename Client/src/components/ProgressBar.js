@@ -1,14 +1,13 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import LinearProgress from '@mui/material/LinearProgress';
 import IsNull from '../utilities/IsNull';
 
-const UploadProgressBar = (props) => {
+const ProgressBar = (props) => {
   const { progress } = props;
-  if (IsNull(progress)) return null;
+  if (IsNull(progress) | !progress) return null;
 
   return <LinearProgress
-    variant='determinate'
-    value={progress * 100}
     color='secondary'
     sx={{
       marginTop: '10px',
@@ -18,4 +17,4 @@ const UploadProgressBar = (props) => {
   />
 };
 
-export default UploadProgressBar;
+export default observer(ProgressBar);

@@ -1,3 +1,10 @@
+## 2.0.4
+
+###### _November 03 2021_
+
+- Adjust user interface to use MUI5 (https://mui.com/) library
+
+
 ## 2.0.3
 
 ###### _October 20 2021_

@@ -4,7 +4,7 @@ pkgVersion <- pkgDescr$Version
 rVersion <- '4.1'
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s', pkgVersion))
-repoCRAN <- 'https://packagemanager.rstudio.com/all/latest'
+repoCRAN <- 'https://cloud.r-project.org'
 args <- c('--preclean')
 
 # 1. REPOSITORY ------------------------------------------------------------------------------------
@@ -42,8 +42,8 @@ pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
 # HIV Platform
-pkgbuild::build(path = buildPath, binary = FALSE)
-pkgbuild::build(path = buildPath, binary = TRUE, args = args)
+pkgbuild::build(dest_path = buildPath, binary = FALSE)
+pkgbuild::build(dest_path = buildPath, binary = TRUE, args = args)
 
 # Add to repository
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'source')

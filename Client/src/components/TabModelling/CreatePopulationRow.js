@@ -1,11 +1,11 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import Chip from '@mui/material/Chip';
 import FormatPercentage from '../../utilities/FormatPercentage';
 import PercentageToShade from '../../utilities/PercentageToShade';
 
@@ -18,7 +18,7 @@ const CreatePopulationRow = (props) => {
 
   return (
     <TableRow hover role='checkbox'>
-      <TableCell padding='checkbox'>
+      <TableCell padding='checkbox' sx={{ verticalAlign: 'top' }}>
         <Checkbox
           inputProps={{ 'aria-labelledby': `labelId${i}` }}
           color='primary'
@@ -26,20 +26,19 @@ const CreatePopulationRow = (props) => {
           onClick={onSelectClick}
         />
       </TableCell>
-      <TableCell style={{ padding: '4px 16px 0px 16px', maxWidth: 300 }}>
+      <TableCell sx={{ padding: '4px 16px 0px 16px', maxWidth: '300px', verticalAlign: 'top' }}>
         <Select
           multiple
           renderValue={selected => (
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               {selected.map(value => (
-                <Chip key={value} label={value} style={{ margin: 2 }} />
+                <Chip key={value} label={value} sx={{ margin: '2px' }} color='secondary' />
               ))}
             </div>
           )}
           value={el.variables}
           style={{ width: '100%', fontSize: '0.75rem' }}
           onChange={handleStrataChange}
-          disableUnderline
         >
           {
             appMgr.popMgr.availableVariables.map((el2, j) => (

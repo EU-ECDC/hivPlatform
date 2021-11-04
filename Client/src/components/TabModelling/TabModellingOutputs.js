@@ -1,16 +1,16 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import TabPanel from '../TabPanel';
 import TabModellingOutputsGOF from './TabModellingOuputsGOF';
 import TabModellingOutputsTables from './TabModellingOutputsTables';
 import TabModellingOutputsGraphs from './TabModellingOutputsGraphs';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const TabModellingOutputs = props => {
   const { appMgr } = props;

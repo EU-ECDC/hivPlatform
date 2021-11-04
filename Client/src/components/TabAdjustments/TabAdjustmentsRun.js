@@ -1,35 +1,17 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import Box from '@material-ui/core/Box';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import IsNull from '../../utilities/IsNull';
-
-const useStyles = makeStyles(() => ({
-  root: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 10,
-  }
-}));
-
-const AdjustmentsRunProgressBar = (props) => {
-  const { progress } = props;
-  if (IsNull(progress)) return null;
-
-  const classes = useStyles();
-
-  return <LinearProgress color='secondary' className={classes.root}/>
-};
+import ProgressBar from '../ProgressBar';
 
 const TabAdjustmentsRun = props => {
   const { appMgr } = props;
@@ -82,7 +64,7 @@ const TabAdjustmentsRun = props => {
           >
             Cancel
           </Button>
-          <AdjustmentsRunProgressBar progress={appMgr.adjustMgr.adjustmentsRunProgress} />
+          <ProgressBar progress={appMgr.adjustMgr.adjustmentsRunProgress} />
         </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
