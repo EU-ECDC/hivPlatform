@@ -250,6 +250,22 @@ Events <- function(
     appMgr$CaseMgr$ApplyOriginGrouping(input$originGrouping)
   })
 
+  observeEvent(input$checkOriginGrouping, {
+    migrantCompatible <- CheckOriginGroupingForMigrant(input$checkOriginGrouping)
+
+    appMgr$SendMessage(
+      type = 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED',
+      payload = list(
+        ActionStatus = migrantCompatible,
+        ActionMessage = ifelse(
+          migrantCompatible,
+          'Preset is compatible with the migration module',
+          'Preset is not compatible with the migration module'
+        )
+      )
+    )
+  })
+
   observeEvent(input$summaryFilters, {
     filters <- input$summaryFilters
     if (!(all(sapply(filters$DiagYear, is.null)) || all(sapply(filters$NotifQuarter, is.null)))) {

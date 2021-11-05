@@ -1,6 +1,7 @@
-import { observable, computed, action, toJS, makeObservable} from 'mobx';
+import { observable, computed, action, toJS, makeObservable, autorun} from 'mobx';
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 import IsNull from '../utilities/IsNull';
+import EnsureArray from '../utilities/EnsureArray';
 
 export default class OriginGroupingsManager {
   rootMgr = null;
@@ -13,6 +14,8 @@ export default class OriginGroupingsManager {
       type: observable,
       actionStatus: observable,
       actionMessage: observable,
+      migrantCompatibleStatus: observable,
+      migrantCompatibleMessage: observable,
       distributionArray: computed,
       origins: computed,
       usedOrigins: computed,
@@ -30,6 +33,10 @@ export default class OriginGroupingsManager {
       setActionMessage: action,
       actionValid: computed
     });
+
+    autorun(() => {
+      this.rootMgr.inputValueSet('checkOriginGrouping:OriginGroupingArray', this.groupingsJS);
+    })
   }
 
   distribution = {
@@ -43,6 +50,8 @@ export default class OriginGroupingsManager {
 
   actionStatus = null;
   actionMessage = null;
+  migrantCompatibleStatus = null;
+  migrantCompatibleMessage = null;
 
   get distributionArray() {
     const origins = this.distribution.origin;
@@ -75,16 +84,13 @@ export default class OriginGroupingsManager {
 
   setGroupings = groupings => {
     // Make sure that FullRegionsOfOrigin are arrays
-    const temp = groupings.map(el => {
-      const arr =
-        Array.isArray(el.origin) ? el.origin : [el.origin];
-      return ({
+    this.groupings = groupings.map(el =>
+      ({
         name: el.name,
-        origin: arr,
+        origin: EnsureArray(el.origin),
         groupCount: 0,
       })
-    })
-    this.groupings = temp;
+    );
     this.computeGroupCounts();
   };
 
@@ -93,6 +99,10 @@ export default class OriginGroupingsManager {
   setActionStatus = status => this.actionStatus = status;
 
   setActionMessage = message => this.actionMessage = message;
+
+  setMigrantCompatibleStatus = status => this.migrantCompatibleStatus = status;
+
+  setMigrantCompatibleMessage = message => this.migrantCompatibleMessage = message;
 
   setGroupName = (i, name) => {
     this.groupings[i].name = name;

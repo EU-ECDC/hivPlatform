@@ -48,12 +48,15 @@ test_that('combining full data is correct', {
   expect_equal(length(dataAggrOnly), 1)
   expect_equal(names(dataAggrOnly), '0')
 
+  aggrYears <- aggrDataSelection[Name == 'HIV_CD4_4', c(MinYear:MaxYear)]
   expect_equal(
     sum(dataAll$`0`$HIV_CD4_4$Count),
-    sum(dataCaseOnly$`0`$HIV_CD4_4$Count) + sum(dataAggrOnly$`0`$HIV_CD4_4$Count)
+    sum(dataCaseOnly$`0`$HIV_CD4_4[!(Year %in% aggrYears)]$Count) +
+      sum(dataAggrOnly$`0`$HIV_CD4_4[Year %in% aggrYears]$Count)
   )
+
   expect_equal(
-    sum(aggrData$HIV_CD4_4[Year %between% c(1992, 2013), pop_0]),
+    sum(aggrData$HIV_CD4_4[Year %in% aggrYears, pop_0]),
     sum(dataAggrOnly$`0`$HIV_CD4_4$Count)
   )
 })
@@ -67,17 +70,17 @@ test_that('combining full data is correct', {
     Aggr = NULL
   )
   dataCaseExplicit <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
-  expect_equal(sum(dataCaseExplicit$`0`$HIV_CD4_4$Count), 10)
+  expect_equal(sum(dataCaseExplicit$`0`$HIV_CD4_4$Count), 688)
 
   data <- CombineData(caseData, aggrData, NULL, aggrDataSelection)
-  expect_equal(sum(data$`0`$HIV_CD4_4$Count), 10)
+  expect_equal(sum(data$`0`$HIV_CD4_4$Count), 688)
 
   popCombination <- list(
     Case = NULL,
     Aggr = NULL
   )
   dataCaseImplicit <- CombineData(caseData, aggrData, NULL, NULL)
-  expect_equal(sum(dataCaseImplicit$`0`$HIV_CD4_4$Count), 10)
+  expect_equal(sum(dataCaseImplicit$`0`$HIV_CD4_4$Count), 688)
 
   expect_identical(dataCaseExplicit, dataCaseImplicit)
 })

@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
@@ -13,14 +14,14 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
 import OriginGroupingRow from './OriginGroupingRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
+import MessageAlert from '../MessageAlert';
 
 const OriginGroupingsWidget = (props) => {
   const { appMgr } = props;
   const [selected, setSelected] = React.useState([]);
-
   const distribution = appMgr.origGroupMgr.distributionArray;
   const groupings = appMgr.origGroupMgr.groupingsJS;
 
@@ -97,14 +98,29 @@ const OriginGroupingsWidget = (props) => {
         <Grid item xs={9}>
           <Typography variant='overline'>Migrant variable regrouping</Typography>
           <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
-            <InputLabel>
-              Preset
-             </InputLabel>
-            <Select value={appMgr.origGroupMgr.type} onChange={handleGroupingPresetChange}>
+            <Select
+              value={appMgr.origGroupMgr.type}
+              onChange={handleGroupingPresetChange}
+              sx={{
+                width: '100%',
+                fontSize: '0.75rem'
+              }}
+            >
+              <ListSubheader><Typography variant='overline'>General presets</Typography></ListSubheader>
               <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
               <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
               <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
               <MenuItem value='Custom' dense>Custom</MenuItem>
+              <ListSubheader><Divider /></ListSubheader>
+              <ListSubheader><Typography variant='overline'>Migrant module compatible presets</Typography></ListSubheader>
+              <MenuItem value='EUROPE + AFRICA + ASIA + UNK + OTHER' dense>EUROPE + AFRICA + ASIA + UNK + OTHER</MenuItem>
+              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + UNK + OTHER</MenuItem>
+              <MenuItem value='EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER' dense>EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER</MenuItem>
+              <MenuItem value='EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
+              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER</MenuItem>
+              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
+              <MenuItem value='EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
+              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
             </Select>
             <FormHelperText>Select regrouping preset</FormHelperText>
           </FormControl>
@@ -143,6 +159,10 @@ const OriginGroupingsWidget = (props) => {
             selectedCount={selectedCount}
             onAddClick={handleAddClick}
             onDeleteClick={handleDeleteClick}
+          />
+          <MessageAlert
+            valid={appMgr.origGroupMgr.migrantCompatibleStatus}
+            msg={appMgr.origGroupMgr.migrantCompatibleMessage}
           />
         </Grid>
       </Grid>

@@ -38,11 +38,11 @@ export default appMgr => {
       ColumnNames: ['recordid', 'reportingcountry', 'age', 'gender'],
       RecordCount: 400,
       AttrMapping: [
-        { attribute: 'RecordId', origColName: 'recordid', defaultValue: null },
-        { attribute: 'ReportingCountry', origColName: 'reportingcountry', defaultValue: null },
-        { attribute: 'Age', origColName: 'age', defaultValue: null },
-        { attribute: 'Gender', origColName: 'gender', defaultValue: null },
-        { attribute: 'DateOfArt', origColName: null, defaultValue: null }
+        { attribute: 'RecordId', origColName: 'recordid', defaultValue: null, type: 'character' },
+        { attribute: 'ReportingCountry', origColName: 'reportingcountry', defaultValue: null, type: 'character' },
+        { attribute: 'Age', origColName: 'age', defaultValue: null, type: 'numeric' },
+        { attribute: 'Gender', origColName: 'gender', defaultValue: null, type: 'character' },
+        { attribute: 'DateOfArt', origColName: null, defaultValue: null, type: 'date' }
       ]
     }
   });
@@ -149,6 +149,14 @@ export default appMgr => {
     payload: {
       ActionStatus: 'SUCCESS',
       CompletedSteps: ['SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING']
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED',
+    payload: {
+      ActionStatus: true,
+      ActionMessage: 'Preset is compatible with the migration module'
     }
   });
 
@@ -595,7 +603,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(0, 0);
+  appMgr.uiStateMgr.setActivePageId(1, 0);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);

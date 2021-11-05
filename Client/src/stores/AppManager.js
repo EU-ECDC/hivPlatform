@@ -107,6 +107,10 @@ export default class AppManager {
           this.notificationsMgr.setMsg('There was a problem with setting this origin grouping');
         }
         break;
+      case 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED':
+        this.origGroupMgr.setMigrantCompatibleStatus(e.payload.ActionStatus);
+        this.origGroupMgr.setMigrantCompatibleMessage(e.payload.ActionMessage);
+        break;
       case 'CASE_BASED_DATA_ORIGIN_GROUPING_APPLIED':
         this.origGroupMgr.setActionStatus(e.payload.ActionStatus);
         this.origGroupMgr.setActionMessage(e.payload.ActionMessage);
