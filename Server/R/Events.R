@@ -251,7 +251,10 @@ Events <- function(
   })
 
   observeEvent(input$checkOriginGrouping, {
-    migrantCompatible <- CheckOriginGroupingForMigrant(input$checkOriginGrouping)
+    migrantCompatible <- CheckOriginGroupingForMigrant(
+      input$checkOriginGrouping,
+      distr
+    )
 
     appMgr$SendMessage(
       type = 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED',

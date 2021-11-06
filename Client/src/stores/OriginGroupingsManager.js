@@ -124,7 +124,7 @@ export default class OriginGroupingsManager {
   addEmptyGrouping = () => {
     this.groupings.push({
       name: 'New',
-      groupeCount: 0,
+      groupCount: 0,
       origin: []
     });
     this.computeGroupCounts();

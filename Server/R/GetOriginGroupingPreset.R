@@ -45,7 +45,8 @@ GetOriginGroupingPreset <- function(
       map[map %chin% c('SUBAFR')] <- 'SUB-SAHARAN AFRICA'
       map[map %chin% c('NORTHAFRMIDEAST')] <- 'AFRICA-OTHER'
       map[map %chin% c('CAR', 'LATAM')] <- 'CARIBBEAN-LATIN AMERICA'
-      map[!(map %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'CARIBBEAN-LATIN AMERICA', 'UNK'))] <- 'OTHER' # nolint
+      map[map %chin% c('SOUTHASIA', 'EASTASIAPAC')] <- 'ASIA'
+      map[!(map %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',  'ASIA', 'CARIBBEAN-LATIN AMERICA', 'UNK'))] <- 'OTHER' # nolint
     },
     'REPCOUNTRY + UNK + OTHER' = ,
     'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' = {
