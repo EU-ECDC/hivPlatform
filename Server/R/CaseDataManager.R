@@ -462,15 +462,15 @@ CaseDataManager <- R6::R6Class(
 
               input <- hivPlatform::PrepareMigrantData(data)
               output <- hivPlatform::PredictInf(input$Data, params)
-              report <- hivPlatform::RenderReportToHTML(
-                reportFilePath = hivPlatform::GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'), # nolint
-                params = input$Stats
-              )
+              # report <- hivPlatform::RenderReportToHTML(
+              #   reportFilePath = hivPlatform::GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'), # nolint
+              #   params = input$Stats
+              # )
 
               result <- list(
                 Input = input,
                 Output = output,
-                Report = report
+                Report = ''
               )
 
               return(result)

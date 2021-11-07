@@ -23,21 +23,15 @@ PreProcessInputDataBeforeSummary <- function(
     return(NULL)
   }
 
-  # Merge RegionOfBirth and RegionOfNationality
-  inputData[
-    unique(countryData[, .(CountryOfBirth = Code, RegionOfBirth = TESSyCode)]),
-    RegionOfBirth := RegionOfBirth,
-    on = .(CountryOfBirth)
-  ]
-  inputData[
-    unique(countryData[, .(CountryOfNationality = Code, RegionOfNationality = TESSyCode)]),
-    RegionOfNationality := RegionOfNationality,
-    on = .(CountryOfNationality)
-  ]
+  # Merge RegionOfBirth
+  inputData[countryData, RegionOfBirth := i.TESSyCode, on = .(CountryOfBirth = Code)]
   inputData[
     !is.na(CountryOfBirth) & CountryOfBirth %chin% ReportingCountry,
     RegionOfBirth := 'REPCOUNTRY'
   ]
+
+  # Merge RegionOfNationality
+  inputData[countryData, RegionOfNationality := i.TESSyCode, on = .(CountryOfNationality = Code)]
   inputData[
     !is.na(CountryOfNationality) & CountryOfNationality %chin% ReportingCountry,
     RegionOfNationality := 'REPCOUNTRY'
