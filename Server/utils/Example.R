@@ -22,8 +22,9 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
-appMgr$CaseMgr$ApplyOriginGrouping(originGroupingType = 'EUROPE + AFRICA + ASIA + UNK + OTHER')
-
+appMgr$CaseMgr$ApplyOriginGrouping(
+  originGroupingType = 'EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER'
+)
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
@@ -70,12 +71,13 @@ browseURL(fileName)
 appMgr$CaseMgr$RunMigration()
 params <- hivPlatform::GetMigrantParams()
 migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
-result <- hivPlatform::PredictInf(migrantData$Data, params)
+result <- hivPlatform::PredictInf(input = migrantData$Data, params)
 # result <- hivPlatform::PredictInf(list(AIDS = NULL, CD4VL = NULL), params)
 report <- RenderReportToHTML(
   reportFilePath = GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'),
-  params = migrantData$Stats
+  params = migrantData$Stats['Missingness']
 )
+
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
@@ -192,7 +194,7 @@ aggrDataSelection <- data.table(
 )
 CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
-# Migration
+# Migration ----------------------------------------------------------------------------------------
 params <- GetMigrantParams()
 
 # Reconciliations
@@ -206,7 +208,7 @@ baseAIDS[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseAIDS,
   c(
-    'RecordId', 'Gender', 'Mode', 'Age', 'GroupedRegion', 'Calendar', 'Art', 'DateOfArt',
+    'RecordId', 'Gender', 'Mode', 'Age', 'GroupedRegionOfOrigin', 'Calendar', 'Art', 'DateOfArt',
     'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth', 'AtRiskDate',
     'U', 'Mig', 'KnownPrePost', 'UniqueId', 'DTime'
   )
@@ -225,7 +227,7 @@ baseCD4VL[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseCD4VL,
   c(
-    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'Age', 'GroupedRegion',
+    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'Age', 'GroupedRegionOfOrigin',
     'Calendar', 'Art', 'DateOfArt', 'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival',
     'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'DTime', 'UniqueId', 'Consc', 'Consr',
     'CobsTime', 'RobsTime', 'RLogObsTime2', 'Only'
@@ -239,13 +241,13 @@ baseCD4VL[, Imputation := 0L]
 baseCD4VL[, RecordId := as.character(RecordId)]
 
 input <- list(
-  AIDS = baseAIDS,
-  CD4VL = baseCD4VL
+  AIDS = baseAIDS[1:10],
+  CD4VL = baseCD4VL[1:10]
 )
 
 test <- PredictInf(input, params)
 recon <- rbind(
-  unique(reconAIDS[, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
+  unique(reconAIDS[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
   unique(reconCD4VL[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)])
 )
 

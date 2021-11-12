@@ -16,6 +16,24 @@ PrepareMigrantData <- function(
   )
   data <- data[, ..colNames]
 
+  # Remap low level grouped region of origin to the high level set
+  groupingMap <- data.table(
+    LowLevel = c(
+      'EASTERN EUROPE', 'EUROPE-OTHER', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
+      'CARIBBEAN-LATIN AMERICA'
+    ),
+    HighLevel = c('EUROPE', 'EUROPE', 'AFRICA', 'AFRICA', 'OTHER')
+  )
+  data[, GroupedRegionOfOriginLowLevel := GroupedRegionOfOrigin]
+  data[
+    groupingMap,
+    GroupedRegionOfOrigin := i.HighLevel,
+    on = .(GroupedRegionOfOriginLowLevel = LowLevel)
+  ]
+  data[is.na(GroupedRegionOfOrigin), GroupedRegionOfOrigin := 'UNKNOWN']
+  data[, GroupedRegionOfOrigin :=
+    factor(stringi::stri_trans_totitle(as.character(GroupedRegionOfOrigin)))]
+
   PrintH2('Checking data structure validity')
   columnSpecs <- GetListObject(
     GetSystemFile('referenceData/requiredColumns.R'),
@@ -52,7 +70,7 @@ PrepareMigrantData <- function(
   data[, Excluded := '']
   data[Excluded == '' & is.na(FullRegionOfOrigin), Excluded := 'Full region of origin is missing']
   data[
-    Excluded == '' & FullRegionOfOrigin == ReportingOrigin,
+    Excluded == '' & !is.na(FullRegionOfOrigin) & FullRegionOfOrigin == 'REPCOUNTRY',
     Excluded := 'Regions of origin and reporting are the same'
   ]
   data[
@@ -227,8 +245,8 @@ PrepareMigrantData <- function(
   # Keep observations prior to ART initiation and AIDS onset
   baseCD4VL <- baseCD4VL[
     !is.na(DateOfExam) &
-      DateOfExam <= na.replace(DateOfArt, as.Date('3000-01-01')) &
-      DateOfExam <= na.replace(DateOfAIDSDiagnosis, as.Date('3000-01-01'))
+      DateOfExam <= na.replace(DateOfArt, maxDate) &
+      DateOfExam <= na.replace(DateOfAIDSDiagnosis, maxDate)
   ]
 
   # Exlude negative times

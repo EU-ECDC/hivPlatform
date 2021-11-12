@@ -37,7 +37,7 @@ The estimation is performed for adults only.
 Cases excluded due to missing values:
 
 ```{r, eval = TRUE}
-kableExtra::kbl(
+knitr::kable(
   params$Missingness,
   align = rep('r', ncol(params$Missingness)),
   col.names = c('Missing variable', 'Number of excluded cases')

@@ -251,6 +251,7 @@ Events <- function(
   })
 
   observeEvent(input$checkOriginGrouping, {
+    distr <- appMgr$CaseMgr$OriginDistribution
     migrantCompatible <- CheckOriginGroupingForMigrant(
       input$checkOriginGrouping,
       distr
