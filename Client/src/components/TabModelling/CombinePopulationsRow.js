@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip';
 import ValidationTextField from '../ValidationTextField';
 
 const CombinePopulationsRow = (props) => {
-  const { isSelected, onSelectClick, combination: el, appMgr } = props;
+  const { isSelected, onSelectClick, el, appMgr } = props;
 
   const handleCombinationNameChange = (value, valid) => {
     if (valid) {

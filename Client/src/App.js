@@ -58,6 +58,13 @@ const theme = createTheme({
         }
       }
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        option: {
+          fontSize: '0.75rem'
+        }
+      }
+    },
     MuiTableRow: {
       defaultProps: {
         hover: true

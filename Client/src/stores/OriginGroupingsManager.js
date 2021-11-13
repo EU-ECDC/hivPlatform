@@ -48,6 +48,8 @@ export default class OriginGroupingsManager {
 
   type = 'REPCOUNTRY + UNK + OTHER';
 
+  repCountryGroupingIdx = null;
+
   actionStatus = null;
   actionMessage = null;
   migrantCompatibleStatus = null;

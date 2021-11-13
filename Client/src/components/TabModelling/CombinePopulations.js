@@ -49,7 +49,7 @@ const CombinePopulations = (props) => {
   const handleDeleteClick = () => {
     appMgr.popCombMgr.removeCombinations(selected);
     setSelected([]);
-  }
+  };
 
   const rowCount = combinations.length - 1;
   const selectedCount = selected.length;
@@ -79,7 +79,7 @@ const CombinePopulations = (props) => {
             combinations.map((el, i) => (
               <CombinePopulationsRow
                 key={i}
-                combination={el}
+                el={el}
                 appMgr={appMgr}
                 isSelected={isSelected(el.id)}
                 onSelectClick={handleSelectClick(el.id)}

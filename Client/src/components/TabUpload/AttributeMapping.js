@@ -8,9 +8,9 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Input from '@mui/material/Input';
-import MenuItem from '@mui/material/MenuItem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Btn from '../Btn';
 import MessageAlert from '../MessageAlert';
@@ -20,15 +20,13 @@ const AttributeMapping = (props) => {
 
   let attrMappingSelectOptions = [];
   if (appMgr.caseBasedDataMgr.columnNames !== null) {
-    attrMappingSelectOptions = appMgr.caseBasedDataMgr.columnNames.slice().sort().map(colName => (
-      <MenuItem key={colName} value={colName} dense>{colName}</MenuItem>
-    ));
+    attrMappingSelectOptions = appMgr.caseBasedDataMgr.columnNames.slice().sort().concat('');
   }
 
   const onApplyBtnClick = () => appMgr.attrMappingMgr.applyMapping();
 
-  const onOrigColSelect = attribute => e => {
-    appMgr.attrMappingMgr.setOrigCol(attribute, e.target.value);
+  const onOrigColSelect = attribute => (e, origColName) => {
+    appMgr.attrMappingMgr.setOrigCol(attribute, origColName);
   }
 
   const onDefValChange = attribute => e => {
@@ -40,17 +38,25 @@ const AttributeMapping = (props) => {
       <TableCell>{`${idx+1}.`}</TableCell>
       <TableCell>{entry.attribute}</TableCell>
       <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
-        <Select
-          sx={{
-            width: '100%',
-            fontSize: '0.75rem'
-          }}
+        <Autocomplete
           value={entry.origColName || ''}
           onChange={onOrigColSelect(entry.attribute)}
-        >
-          <MenuItem value='' dense>&nbsp;</MenuItem>
-          {attrMappingSelectOptions}
-        </Select>
+          options={attrMappingSelectOptions}
+          renderInput={(params) => <TextField {...params} />}
+          sx={{
+            input: {
+              fontSize: '0.75rem'
+            }
+          }}
+          autoComplete={true}
+          autoHighlight={true}
+          autoSelect={true}
+          selectOnFocus={true}
+          clearOnBlur={true}
+          handleHomeEndKeys={true}
+          blurOnSelect={true}
+          clearOnEscape={true}
+        />
       </TableCell>
       <TableCell sx={{ padding: '4px 16px 0px 16px' }}>
         <Input

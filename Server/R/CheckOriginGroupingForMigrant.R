@@ -14,6 +14,7 @@ CheckOriginGroupingForMigrant <- function(
     distrDt[is.na(GroupedRegionOfOrigin), GroupedRegionOfOrigin := origin]
 
     allowedNames <- c(
+      'REPCOUNTRY',
       'EUROPE', 'EASTERN EUROPE', 'EUROPE-OTHER',
       'AFRICA', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
       'ASIA',

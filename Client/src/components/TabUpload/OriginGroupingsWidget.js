@@ -18,6 +18,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import OriginGroupingRow from './OriginGroupingRow';
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 import MessageAlert from '../MessageAlert';
+import RemoveValuesFromArray from '../../utilities/RemoveValuesFromArray';
 
 const OriginGroupingsWidget = (props) => {
   const { appMgr } = props;
@@ -41,32 +42,24 @@ const OriginGroupingsWidget = (props) => {
 
   const handleSelectClick = i => e => {
     const selectedIndex = selected.indexOf(i);
-    let newSelected = [];
 
+    let newSelected = [];
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, i);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+    } else {
+      newSelected = RemoveValuesFromArray(selected, i);
     }
-
     setSelected(newSelected);
+  };
+
+  const handleAddClick = () => {
+    appMgr.origGroupMgr.addEmptyGrouping();
   };
 
   const handleDeleteClick = () => {
     appMgr.origGroupMgr.removeGroupings(selected);
     setSelected([]);
-  }
-
-  const handleAddClick = () => {
-    appMgr.origGroupMgr.addEmptyGrouping();
-  }
+  };
 
   const rowCount = groupings.length;
   const selectedCount = selected.length;
@@ -108,19 +101,19 @@ const OriginGroupingsWidget = (props) => {
             >
               <ListSubheader><Typography variant='overline'>General presets</Typography></ListSubheader>
               <MenuItem value='REPCOUNTRY + UNK + OTHER' dense>REPCOUNTRY + UNK + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + SUBAFR + OTHER' dense>REPCOUNTRY + UNK + SUBAFR + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + SUB-SAHARAN AFRICA + OTHER' dense>REPCOUNTRY + UNK + SUB-SAHARAN AFRICA + OTHER</MenuItem>
               <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
               <MenuItem value='Custom' dense>Custom</MenuItem>
               <ListSubheader><Divider /></ListSubheader>
               <ListSubheader><Typography variant='overline'>Migrant module compatible presets</Typography></ListSubheader>
-              <MenuItem value='EUROPE + AFRICA + ASIA + UNK + OTHER' dense>EUROPE + AFRICA + ASIA + UNK + OTHER</MenuItem>
-              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + UNK + OTHER</MenuItem>
-              <MenuItem value='EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER' dense>EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER</MenuItem>
-              <MenuItem value='EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
-              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + UNK + OTHER</MenuItem>
-              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
-              <MenuItem value='EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
-              <MenuItem value='EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER' dense>EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
             </Select>
             <FormHelperText>Select regrouping preset</FormHelperText>
           </FormControl>
@@ -146,7 +139,7 @@ const OriginGroupingsWidget = (props) => {
                   <OriginGroupingRow
                     key={i}
                     i={i}
-                    grouping={el}
+                    el={el}
                     appMgr={appMgr}
                     isSelected={isSelected(i)}
                     onSelectClick={handleSelectClick(i)}

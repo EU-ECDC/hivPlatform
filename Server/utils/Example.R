@@ -23,8 +23,9 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingType = 'EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER'
+  originGroupingType = 'REPCOUNTRY + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER'
 )
+
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
@@ -69,6 +70,17 @@ browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
+distr <- appMgr$CaseMgr$OriginDistribution
+originGrouping <- GetOriginGroupingPreset(
+  type = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER',
+  distr
+)
+originGrouping <- GetOriginGroupingPreset(
+  type = 'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER',
+  distr
+)
+
+CheckOriginGroupingForMigrant(originGrouping, distr)
 params <- hivPlatform::GetMigrantParams()
 migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
