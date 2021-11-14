@@ -46,7 +46,7 @@ const OriginGroupingRow = (props) => {
       renderValue={selected => (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {selected.map(value => (
-            <Chip key={value} label={value} sx={{ margin: '2px' }} color='secondary'/>
+            <Chip key={value} label={value} sx={{ margin: '2px' }} color='info' size='small'/>
           ))}
         </div>
       )}
@@ -72,8 +72,16 @@ const OriginGroupingRow = (props) => {
       <TableCell padding='checkbox' sx={{ verticalAlign: 'top' }}>
         { checkBox }
       </TableCell>
-      <TableCell id={`labelId${i}`} scope='row' sx={{ padding: '4px 4px 6px 0px', verticalAlign: 'top' }}>
+      <TableCell id={`labelId${i}`} scope='row' sx={{ padding: '4px 20px 6px 0px', verticalAlign: 'top' }}>
         { groupedRegion }
+      </TableCell>
+      <TableCell scope='row' sx={{ padding: '4px 4px 6px 0px', verticalAlign: 'top' }}>
+        <Select sx={{width: '100%', fontSize: '0.75rem'}} defaultValue='EUROPE'>
+          <MenuItem value='EUROPE' dense>EUROPE</MenuItem>
+          <MenuItem value='AFRICA' dense>AFRICA</MenuItem>
+          <MenuItem value='ASIA' dense>ASIA</MenuItem>
+          <MenuItem value='OTHER' dense>OTHER</MenuItem>
+        </Select>
       </TableCell>
       <TableCell sx={{ padding: '4px 4px 0px 16px', verticalAlign: 'top', maxWidth: '300px' }}>
         { fullRegion }

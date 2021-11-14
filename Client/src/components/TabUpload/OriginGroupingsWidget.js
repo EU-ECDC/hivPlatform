@@ -128,7 +128,8 @@ const OriginGroupingsWidget = (props) => {
                     checked={rowCount > 0 && selectedCount === rowCount}
                   />
                 </TableCell>
-                <TableCell padding='none'>GroupedRegionOfOrigin</TableCell>
+                <TableCell sx={{padding: '0px 20px 0px 0px'}}>GroupedRegionOfOrigin</TableCell>
+                <TableCell padding='none'>MigrantRegionOfOrigin</TableCell>
                 <TableCell width='60%'>FullRegionOfOrigin</TableCell>
                 <TableCell align='right' width='10%'>Count</TableCell>
               </TableRow>
