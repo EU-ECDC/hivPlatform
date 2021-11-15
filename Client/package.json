@@ -25,8 +25,8 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.1.0",
     "@mui/lab": "5.0.0-alpha.54",
     "@mui/material": "^5.1.0",
@@ -56,10 +56,10 @@
     "filemanager-webpack-plugin": "^6.1.7",
     "html-webpack-plugin": "^5.5.0",
     "terser-webpack-plugin": "^5.2.5",
-    "webpack": "^5.64.0",
+    "webpack": "^5.64.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0",
+    "webpack-dev-server": "^4.5.0",
     "webpack-merge": "5.8.0",
     "webpack-plugin-modern-npm": "^0.1.0"
   },

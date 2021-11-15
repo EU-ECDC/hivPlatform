@@ -1609,6 +1609,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/cache@npm:^11.6.0":
+  version: 11.6.0
+  resolution: "@emotion/cache@npm:11.6.0"
+  dependencies:
+    "@emotion/memoize": ^0.7.4
+    "@emotion/sheet": ^1.1.0
+    "@emotion/utils": ^1.0.0
+    "@emotion/weak-memoize": ^0.2.5
+    stylis: ^4.0.10
+  checksum: 3c72c50bfe06fd7ec2728988181173664183d2320305a01bb757caa6a9d485de25fccde1b173d810423d2ff88a178d5a72cc21db76b9e458311a8ce3044dd2a1
+  languageName: node
+  linkType: hard
+
 "@emotion/hash@npm:^0.8.0":
   version: 0.8.0
   resolution: "@emotion/hash@npm:0.8.0"
@@ -1625,6 +1638,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/is-prop-valid@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@emotion/is-prop-valid@npm:1.1.1"
+  dependencies:
+    "@emotion/memoize": ^0.7.4
+  checksum: 5816696dae6ac79537a31fe95256e0c1f55651507204676dd9903542b102f727c16a68924e6634a89b0972f0d15b0803bb9d4e14bd0fb8a49da8a2e3956e6639
+  languageName: node
+  linkType: hard
+
 "@emotion/memoize@npm:^0.7.4, @emotion/memoize@npm:^0.7.5":
   version: 0.7.5
   resolution: "@emotion/memoize@npm:0.7.5"
@@ -1632,14 +1654,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.5.0":
-  version: 11.5.0
-  resolution: "@emotion/react@npm:11.5.0"
+"@emotion/react@npm:^11.6.0":
+  version: 11.6.0
+  resolution: "@emotion/react@npm:11.6.0"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@emotion/cache": ^11.5.0
+    "@emotion/cache": ^11.6.0
     "@emotion/serialize": ^1.0.2
-    "@emotion/sheet": ^1.0.3
+    "@emotion/sheet": ^1.1.0
     "@emotion/utils": ^1.0.0
     "@emotion/weak-memoize": ^0.2.5
     hoist-non-react-statics: ^3.3.1
@@ -1651,7 +1673,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 4188b664cc5b7142cf58323d78911cfdeef106d7b26987f8e4aceb51074e99a48a16cf6c3d1aa124462d2135a7b0d2b5d1bc2bbb6ac6167010f69607d822d51a
+  checksum: 4fb2d108dc32716d1f162026ac5fdbd0662e3b435a34fb324629d72bb6bff61b18ac8975b51457c16ffa41543bade5d07558566ab76420b3926fbb9159441232
   languageName: node
   linkType: hard
 
@@ -1675,13 +1697,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.3.0":
-  version: 11.3.0
-  resolution: "@emotion/styled@npm:11.3.0"
+"@emotion/sheet@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@emotion/sheet@npm:1.1.0"
+  checksum: a4b74e16a8fea1157413efe4904f5f679d724323cb605d66d20a0b98744422f5d411fca927ceb52e4de454a0a819c5273ca9496db9f011b4ecd17b9f1b212007
+  languageName: node
+  linkType: hard
+
+"@emotion/styled@npm:^11.6.0":
+  version: 11.6.0
+  resolution: "@emotion/styled@npm:11.6.0"
   dependencies:
     "@babel/runtime": ^7.13.10
     "@emotion/babel-plugin": ^11.3.0
-    "@emotion/is-prop-valid": ^1.1.0
+    "@emotion/is-prop-valid": ^1.1.1
     "@emotion/serialize": ^1.0.2
     "@emotion/utils": ^1.0.0
   peerDependencies:
@@ -1693,7 +1722,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 5e5c1e89d2022696e44d2a44e352aba56ab0961d9c4a78eff5d1bfa3deae08487fb17641610446595471d74e956b791e619d3a9006c18e145ed849ef7062e1b5
+  checksum: 612bbf114a4ca49e5b3ec4554bea1cd5aad9eeb2371babc3e6b79eab5020bd0300b9904108b621837fe715e221ba09dd131dc29918c1fd966e082d8e74fca833
   languageName: node
   linkType: hard
 
@@ -4649,8 +4678,8 @@ fsevents@~2.3.2:
     "@babel/plugin-proposal-class-properties": 7.16.0
     "@babel/preset-env": 7.16.0
     "@babel/preset-react": 7.16.0
-    "@emotion/react": ^11.5.0
-    "@emotion/styled": ^11.3.0
+    "@emotion/react": ^11.6.0
+    "@emotion/styled": ^11.6.0
     "@mui/icons-material": ^5.1.0
     "@mui/lab": 5.0.0-alpha.54
     "@mui/material": ^5.1.0
@@ -4674,10 +4703,10 @@ fsevents@~2.3.2:
     serializr: ^2.0.5
     terser-webpack-plugin: ^5.2.5
     tslib: ^2.3.1
-    webpack: ^5.64.0
+    webpack: ^5.64.1
     webpack-bundle-analyzer: ^4.5.0
     webpack-cli: ^4.9.1
-    webpack-dev-server: ^4.4.0
+    webpack-dev-server: ^4.5.0
     webpack-merge: 5.8.0
     webpack-plugin-modern-npm: ^0.1.0
   languageName: unknown
@@ -8029,9 +8058,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "webpack-dev-server@npm:4.4.0"
+"webpack-dev-server@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "webpack-dev-server@npm:4.5.0"
   dependencies:
     ansi-html-community: ^0.0.8
     bonjour: ^3.5.0
@@ -8065,7 +8094,7 @@ fsevents@~2.3.2:
       optional: true
   bin:
     webpack-dev-server: bin/webpack-dev-server.js
-  checksum: c317b5029b6f8caad47a257edb68b2dad5cd7087f4481ebda3359701c981037ce387486bdf992fb6e23213685d8e25e306b25a62541a42d0154562b1999563a5
+  checksum: 9167420dd0d3e836058154d58ec78c7c53f26652f51785d91a01e4fde24290dab86533a39e069b4087dc8460b1cb0ba8128239ebf21de4f100f08ee238ac58a3
   languageName: node
   linkType: hard
 
@@ -8086,16 +8115,16 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^3.2.0":
-  version: 3.2.1
-  resolution: "webpack-sources@npm:3.2.1"
-  checksum: 438ee4759f70ee2d5ae17a2fc5e66a1f71f0ba8ad9de77edfaf4180c82925f6504790c5a1ddfa2a6d409212cd9e7332a6822d6acabb0f39303bc3b14354872e6
+"webpack-sources@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "webpack-sources@npm:3.2.2"
+  checksum: cc81f1f1bfd1c25c7a565598850294b515bcccf7974d0249b4a0c8c607307866ce3f9e8cdef1c74d5facfb0d993944c499cfd4b7c8f52d01359b6671cc5823d4
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.64.0":
-  version: 5.64.0
-  resolution: "webpack@npm:5.64.0"
+"webpack@npm:^5.64.1":
+  version: 5.64.1
+  resolution: "webpack@npm:5.64.1"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.50
@@ -8120,13 +8149,13 @@ fsevents@~2.3.2:
     tapable: ^2.1.1
     terser-webpack-plugin: ^5.1.3
     watchpack: ^2.2.0
-    webpack-sources: ^3.2.0
+    webpack-sources: ^3.2.2
   peerDependenciesMeta:
     webpack-cli:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 9d32a61d988b0cd34f7c2b9006ac2eec81c36a72acf3b7f01c6c567c2ebc95bb75d422a53a5bea69c36dbfc50c11ac953ec07742da43c55beb512d0f2d4bb400
+  checksum: d2a1baddaed03f2ce70c13501b89935d4bb4af30b4accb0d2dfbd00ec6f491eaf46272346cedcf013b477e131c8cc202ee0b2d2c51ece1cfb713fd2d98b80a52
   languageName: node
   linkType: hard
 

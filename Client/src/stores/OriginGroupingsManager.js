@@ -21,11 +21,13 @@ export default class OriginGroupingsManager {
       usedOrigins: computed,
       unusedOrigins: computed,
       groupingsJS: computed,
+      usedNames: computed,
       setDistribution: action,
       setGroupings: action,
       setType: action,
       setGroupName: action,
       setGroupOrigin: action,
+      setMigrantOrigin: action,
       removeGroupings: action,
       addEmptyGrouping: action,
       applyGroupings: action,
@@ -82,6 +84,10 @@ export default class OriginGroupingsManager {
     return toJS(this.groupings);
   };
 
+  get usedNames() {
+    return this.groupings.map(el => el.name);
+  };
+
   setDistribution = distr => this.distribution = distr;
 
   setGroupings = groupings => {
@@ -90,6 +96,7 @@ export default class OriginGroupingsManager {
       ({
         name: el.name,
         origin: EnsureArray(el.origin),
+        migrant: el.migrant,
         groupCount: 0,
       })
     );
@@ -117,6 +124,12 @@ export default class OriginGroupingsManager {
     this.type = 'Custom';
   };
 
+   setMigrantOrigin = (i, origin) => {
+    this.groupings[i].migrant = origin;
+    this.computeGroupCounts();
+    this.type = 'Custom';
+  };
+
   removeGroupings = selectedIds => {
     this.groupings = RemoveElementsFromArray(this.groupings, selectedIds);
     this.computeGroupCounts();
@@ -127,7 +140,8 @@ export default class OriginGroupingsManager {
     this.groupings.push({
       name: 'New',
       groupCount: 0,
-      origin: []
+      origin: [],
+      migrant: 'UNK'
     });
     this.computeGroupCounts();
     this.type = 'Custom';

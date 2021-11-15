@@ -114,7 +114,15 @@ GetOriginGroupingPreset <- function(
     map[origin %chin% sepRegions, name := origin]
   }
 
-  map <- ConvertOriginGroupingDtToList(map)
+  # Add migrant mapping
+  map[, migrant := 'OTHER']
+  map[name %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'EUROPE'), migrant := 'EUROPE']
+  map[name %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'AFRICA'), migrant := 'AFRICA']
+  map[name %chin% c('ASIA'), migrant := 'ASIA']
+  map[name %chin% c('REPCOUNTRY'), migrant := 'REPCOUNTRY']
+  map[name %chin% c('UNK'), migrant := 'UNK']
 
-  return(map)
+  mapList <- ConvertOriginGroupingDtToList(map)
+
+  return(mapList)
 }

@@ -76,6 +76,10 @@ originGrouping <- GetOriginGroupingPreset(
   distr
 )
 originGrouping <- GetOriginGroupingPreset(
+  type = 'REPCOUNTRY + UNK + OTHER',
+  distr
+)
+originGrouping <- GetOriginGroupingPreset(
   type = 'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER',
   distr
 )

@@ -127,18 +127,21 @@ export default appMgr => {
       OriginGrouping: [
         {
           name: 'UNK',
-          origin: 'UNK'
+          origin: 'UNK',
+          migrant: 'UNK'
         },
         {
           name: 'OTHER',
           origin: [
             'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM',
             'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
-          ]
+          ],
+          migrant: 'OTHER'
         },
         {
           name: 'REPCOUNTRY',
-          origin: 'REPCOUNTRY'
+          origin: 'REPCOUNTRY',
+          migrant: 'REPCOUNTRY'
         }
       ]
     }
