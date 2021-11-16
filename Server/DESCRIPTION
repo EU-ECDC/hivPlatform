@@ -38,6 +38,7 @@ Imports:
     shiny (>= 1.4.0),
     scales (>= 1.1.1),
     SparseM (>= 1.78),
+    stringi (>= 1.7.5),
     yaml (>= 2.2.1),
     xml2 (>= 1.3.2)
 Encoding: UTF-8

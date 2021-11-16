@@ -247,7 +247,6 @@ Events <- function(
   })
 
   observeEvent(input$originGrouping, {
-    print(input$originGrouping)
     appMgr$CaseMgr$ApplyOriginGrouping(input$originGrouping)
   })
 

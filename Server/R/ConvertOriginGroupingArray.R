@@ -4,11 +4,15 @@ ConvertOriginGroupingArray <- function(
   inputname
 ) {
   originGrouping <- lapply(x, function(el) {
-    origin <- ifelse1(length(el$origin) == 0, NA_character_, simplify2array(el$origin))
+    fullRegionOfOrigin <- ifelse1(
+      length(el$FullRegionOfOrigin) == 0,
+      NA_character_,
+      simplify2array(el$FullRegionOfOrigin)
+    )
     list(
-      name = el$name,
-      origin = origin,
-      migrant = el$migrant
+      GroupedRegionOfOrigin = el$GroupedRegionOfOrigin,
+      FullRegionOfOrigin = fullRegionOfOrigin,
+      MigrantRegionOfOrigin = el$MigrantRegionOfOrigin
     )
   })
   return(originGrouping)

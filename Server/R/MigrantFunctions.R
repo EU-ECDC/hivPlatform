@@ -49,8 +49,8 @@ LogPostW <- function(
 
   # Combine into one design matrix
   x <- rbind(
-    cbind(matrix(0, nr = dimVR[1], nc = dimCD4[2]), xVR),
-    cbind(xCD4, matrix(0, nr = dimCD4[1], nc = dimVR[2]))
+    cbind(matrix(0, nrow = dimVR[1], ncol = dimCD4[2]), xVR),
+    cbind(xCD4, matrix(0, nrow = dimCD4[1], ncol = dimVR[2]))
   )
 
   # Formula for the design matrices of the random effects

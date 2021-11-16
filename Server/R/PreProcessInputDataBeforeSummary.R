@@ -13,7 +13,7 @@
 #' }
 #'
 #' @export
-PreProcessInputDataBeforeSummary <- function(
+PreProcessInputDataBeforeSummary <- function( # nolint
   inputData,
   seed = NULL
 ) {
@@ -56,33 +56,33 @@ PreProcessInputDataBeforeSummary <- function(
     FullRegionOfOrigin := RegionOfNationality
   ]
 
-  # Cache country codes for countries of Sub-Saharan Africa
-  ssaCountryCodes <- countryData[SubRegionName == 'Sub-Saharan Africa', unique(Code)]
-  # Create GroupOfOrigin variable 1, 2, 3...
-  inputData[, GroupOfOrigin := factor(NA, levels = c('Reporting Country', 'Other Country', 'SSA'))]
-  # ...based on RegionOfOrigin if not NA
-  inputData[
-    !is.na(RegionOfOrigin),
-    GroupOfOrigin := ifelse(
-      RegionOfOrigin == 'REPCOUNTRY', 1L, ifelse(!RegionOfOrigin %chin% 'SUBAFR', 2L, 3L)
-    )
-  ]
-  # ...based on CountryOfBirth if not NA
-  inputData[
-    is.na(GroupOfOrigin) & !is.na(CountryOfBirth),
-    GroupOfOrigin := ifelse(
-      CountryOfBirth == ReportingCountry, 1L, ifelse(!CountryOfBirth %chin% ssaCountryCodes, 2L, 3L)
-    )
-  ]
-  # ...based on CountryOfNationality if not NA
-  inputData[
-    is.na(GroupOfOrigin) & !is.na(CountryOfNationality),
-    GroupOfOrigin := ifelse(
-      CountryOfNationality == ReportingCountry,
-      1L,
-      ifelse(!CountryOfNationality %chin% ssaCountryCodes, 2L, 3L)
-    )
-  ]
+  # # Cache country codes for countries of Sub-Saharan Africa
+  # ssaCountryCodes <- countryData[SubRegionName == 'Sub-Saharan Africa', unique(Code)]
+  # # Create GroupOfOrigin variable 1, 2, 3...
+  # inputData[, GroupOfOrigin := factor(NA, levels = c('Reporting Country', 'Other Country', 'SSA'))]
+  # # ...based on RegionOfOrigin if not NA
+  # inputData[
+  #   !is.na(RegionOfOrigin),
+  #   GroupOfOrigin := ifelse(
+  #     RegionOfOrigin == 'REPCOUNTRY', 1L, ifelse(!RegionOfOrigin %chin% 'SUBAFR', 2L, 3L)
+  #   )
+  # ]
+  # # ...based on CountryOfBirth if not NA
+  # inputData[
+  #   is.na(GroupOfOrigin) & !is.na(CountryOfBirth),
+  #   GroupOfOrigin := ifelse(
+  #     CountryOfBirth == ReportingCountry, 1L, ifelse(!CountryOfBirth %chin% ssaCountryCodes, 2L, 3L)
+  #   )
+  # ]
+  # # ...based on CountryOfNationality if not NA
+  # inputData[
+  #   is.na(GroupOfOrigin) & !is.na(CountryOfNationality),
+  #   GroupOfOrigin := ifelse(
+  #     CountryOfNationality == ReportingCountry,
+  #     1L,
+  #     ifelse(!CountryOfNationality %chin% ssaCountryCodes, 2L, 3L)
+  #   )
+  # ]
 
   # Transform CD4
   inputData[, SqCD4 := sqrt(FirstCD4Count)]

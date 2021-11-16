@@ -16,8 +16,8 @@ Get mapping from RegionOfOrigin to GroupOfOrigin
 }
 \examples{
 distr <- data.table::data.table(
-  origin = c('REPCOUNTRY', 'SUBAFR'),
-  count = c(1536, 2237)
+  FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR'),
+  Count = c(1536, 2237)
 )
 GetOriginGroupingPreset(
   type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',

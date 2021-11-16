@@ -9,8 +9,8 @@
 #'
 #' @examples
 #' distr <- data.table::data.table(
-#'   origin = c('REPCOUNTRY', 'SUBAFR'),
-#'   count = c(1536, 2237)
+#'   FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR'),
+#'   Count = c(1536, 2237)
 #' )
 #' GetOriginGroupingPreset(
 #'   type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
@@ -104,23 +104,23 @@ GetOriginGroupingPreset <- function(
   )
 
   map <- as.data.table(map, keep.rownames = TRUE)
-  setnames(map, c('origin', 'name'))
+  setnames(map, c('FullRegionOfOrigin', 'GroupedRegionOfOrigin'))
 
   if (type == 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER') {
     sepRegions <- head(
-      distr[!origin %chin% c('REPCOUNTRY', 'UNK'), origin],
+      distr[!FullRegionOfOrigin %chin% c('REPCOUNTRY', 'UNK'), FullRegionOfOrigin],
       3
     )
-    map[origin %chin% sepRegions, name := origin]
+    map[FullRegionOfOrigin %chin% sepRegions, GroupedRegionOfOrigin := FullRegionOfOrigin]
   }
 
   # Add migrant mapping
-  map[, migrant := 'OTHER']
-  map[name %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'EUROPE'), migrant := 'EUROPE']
-  map[name %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'AFRICA'), migrant := 'AFRICA']
-  map[name %chin% c('ASIA'), migrant := 'ASIA']
-  map[name %chin% c('REPCOUNTRY'), migrant := 'REPCOUNTRY']
-  map[name %chin% c('UNK'), migrant := 'UNK']
+  map[, MigrantRegionOfOrigin := 'OTHER']
+  map[GroupedRegionOfOrigin %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'EUROPE'), MigrantRegionOfOrigin := 'EUROPE'] # nolint
+  map[GroupedRegionOfOrigin %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'AFRICA'), MigrantRegionOfOrigin := 'AFRICA'] # nolint
+  map[GroupedRegionOfOrigin %chin% c('ASIA'), MigrantRegionOfOrigin := 'ASIA']
+  map[GroupedRegionOfOrigin %chin% c('REPCOUNTRY'), MigrantRegionOfOrigin := 'REPCOUNTRY']
+  map[GroupedRegionOfOrigin %chin% c('UNK'), MigrantRegionOfOrigin := 'UNK']
 
   mapList <- ConvertOriginGroupingDtToList(map)
 

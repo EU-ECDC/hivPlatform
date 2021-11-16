@@ -233,7 +233,7 @@ export default class SummaryDataManager {
         scaleMaxYear: null,
         valueMinYear: null,
         valueMaxYear: null,
-        applyInAdjustments: false
+        applyInAdjustments: null
       },
       chartCategories: [],
       chartData: [],
@@ -245,7 +245,7 @@ export default class SummaryDataManager {
         scaleMaxYear: null,
         valueMinYear: null,
         valueMaxYear: null,
-        applyInAdjustments: false
+        applyInAdjustments: null
       },
       chartCategories: [],
       chartData: []
@@ -296,5 +296,6 @@ export default class SummaryDataManager {
     };
 
     this.repDelPlotSelection = 'all';
+    this.rootMgr.inputValueSet('summaryFilters', this.filters);
   };
 }

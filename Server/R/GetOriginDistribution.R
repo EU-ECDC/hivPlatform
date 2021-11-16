@@ -7,20 +7,22 @@
 #' @return data.table
 #'
 #' @examples
-#' inputData <- data.table::data.table(FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR', 'SUBAFR', 'UNK'))
+#' inputData <-
+#'   data.table::data.table(FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR', 'SUBAFR', 'UNK'))
 #' GetOriginDistribution(inputData)
 #'
 #' @export
-GetOriginDistribution <- function(inputData)
-{
-  distr <- inputData[, .(count = .N), by = .(origin = FullRegionOfOrigin)]
-  distr[is.na(origin), origin := 'UNK']
-  distr <- distr[order(-count)]
+GetOriginDistribution <- function(
+  inputData
+) {
+  distr <- inputData[, .(Count = .N), by = .(FullRegionOfOrigin)]
+  distr[is.na(FullRegionOfOrigin), FullRegionOfOrigin := 'UNK']
+  distr <- distr[, .(Count = sum(Count)), by = .(FullRegionOfOrigin)][order(-Count)]
   distr <- rbind(
-    distr[origin == 'REPCOUNTRY'],
-    distr[!origin %chin% c('REPCOUNTRY', 'UNK', 'OTHER')],
-    distr[origin == 'UNK'],
-    distr[origin == 'OTHER']
+    distr[FullRegionOfOrigin == 'REPCOUNTRY'],
+    distr[!FullRegionOfOrigin %chin% c('REPCOUNTRY', 'UNK', 'OTHER')],
+    distr[FullRegionOfOrigin == 'UNK'],
+    distr[FullRegionOfOrigin == 'OTHER']
   )
   return(distr)
 }

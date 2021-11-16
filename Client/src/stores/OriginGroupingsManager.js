@@ -2,6 +2,7 @@ import { observable, computed, action, toJS, makeObservable, autorun} from 'mobx
 import RemoveElementsFromArray from '../utilities/RemoveElementsFromArray';
 import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
+import GetNextId from '../utilities/GetNextId';
 
 export default class OriginGroupingsManager {
   rootMgr = null;
@@ -42,8 +43,8 @@ export default class OriginGroupingsManager {
   }
 
   distribution = {
-    origin: [],
-    count: []
+    FullRegionOfOrigin: [],
+    Count: []
   };
 
   groupings = [];
@@ -58,8 +59,8 @@ export default class OriginGroupingsManager {
   migrantCompatibleMessage = null;
 
   get distributionArray() {
-    const origins = this.distribution.origin;
-    const counts = this.distribution.count;
+    const origins = this.distribution.FullRegionOfOrigin;
+    const counts = this.distribution.Count;
     const map = origins.map((el, i) => ({
       origin: origins[i],
       count: counts[i]
@@ -69,11 +70,11 @@ export default class OriginGroupingsManager {
   };
 
   get origins() {
-    return this.distribution.origin.slice().sort();
+    return this.distribution.FullRegionOfOrigin.slice().sort();
   };
 
   get usedOrigins() {
-    return [].concat.apply([], this.groupings.map(el => el.origin));
+    return [].concat.apply([], this.groupings.map(el => el.FullRegionOfOrigin));
   };
 
   get unusedOrigins() {
@@ -85,7 +86,7 @@ export default class OriginGroupingsManager {
   };
 
   get usedNames() {
-    return this.groupings.map(el => el.name);
+    return this.groupings.map(el => el.GroupedRegionOfOrigin);
   };
 
   setDistribution = distr => this.distribution = distr;
@@ -94,9 +95,9 @@ export default class OriginGroupingsManager {
     // Make sure that FullRegionsOfOrigin are arrays
     this.groupings = groupings.map(el =>
       ({
-        name: el.name,
-        origin: EnsureArray(el.origin),
-        migrant: el.migrant,
+        GroupedRegionOfOrigin: el.GroupedRegionOfOrigin,
+        FullRegionOfOrigin: EnsureArray(el.FullRegionOfOrigin),
+        MigrantRegionOfOrigin: el.MigrantRegionOfOrigin,
         groupCount: 0,
       })
     );
@@ -114,18 +115,18 @@ export default class OriginGroupingsManager {
   setMigrantCompatibleMessage = message => this.migrantCompatibleMessage = message;
 
   setGroupName = (i, name) => {
-    this.groupings[i].name = name;
+    this.groupings[i].GroupedRegionOfOrigin = name;
     this.type = 'Custom';
   };
 
   setGroupOrigin = (i, origin) => {
-    this.groupings[i].origin = origin;
+    this.groupings[i].FullRegionOfOrigin = origin;
     this.computeGroupCounts();
     this.type = 'Custom';
   };
 
    setMigrantOrigin = (i, origin) => {
-    this.groupings[i].migrant = origin;
+    this.groupings[i].MigrantRegionOfOrigin = origin;
     this.computeGroupCounts();
     this.type = 'Custom';
   };
@@ -138,10 +139,10 @@ export default class OriginGroupingsManager {
 
   addEmptyGrouping = () => {
     this.groupings.push({
-      name: 'New',
-      groupCount: 0,
-      origin: [],
-      migrant: 'UNK'
+      GroupedRegionOfOrigin: `Group ${GetNextId('Group ', this.usedNames)}`,
+      FullRegionOfOrigin: [],
+      MigrantRegionOfOrigin: 'UNK',
+      groupCount: 0
     });
     this.computeGroupCounts();
     this.type = 'Custom';
@@ -154,12 +155,11 @@ export default class OriginGroupingsManager {
   computeGroupCounts = () => {
     this.groupings.forEach(
       group => {
-        const groupCount = group.origin.reduce((acc, origin) => {
+        group.groupCount = group.FullRegionOfOrigin.reduce((acc, origin) => {
           const idx = this.distributionArray.findIndex(el => el.origin == origin);
           const val = idx !== -1 ? acc + this.distributionArray[idx].count : acc;
           return val;
         }, 0);
-        group.groupCount = groupCount;
       }
     );
   };

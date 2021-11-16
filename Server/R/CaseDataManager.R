@@ -208,7 +208,13 @@ CaseDataManager <- R6::R6Class(
           originGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
         }
         preProcessedData <- copy(private$Catalogs$PreProcessedData)
-        ApplyOriginGrouping(preProcessedData, originGrouping)
+        preProcessedData <- ApplyGrouping(
+          preProcessedData,
+          originGrouping,
+          from = 'FullRegionOfOrigin',
+          to = 'GroupedRegionOfOrigin'
+        )
+        print(preProcessedData)
         summaryFilterPlots <- GetCaseDataSummaryFilterPlots(preProcessedData)
       },
       error = function(e) {
@@ -587,6 +593,9 @@ CaseDataManager <- R6::R6Class(
       if (
         step %in% c('CASE_BASED_ATTR_MAPPING')
       ) {
+        if ('GroupedRegionOfOrigin' %in% colnames(private$Catalogs$PreProcessedData)) {
+          private$Catalogs$PreProcessedData[, GroupedRegionOfOrigin := NULL]
+        }
         private$Catalogs$OriginGrouping <- list()
         private$Catalogs$AdjustedData <- NULL
         private$Catalogs$AdjustmentTask <- NULL

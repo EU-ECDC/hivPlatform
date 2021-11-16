@@ -105,7 +105,7 @@ const OriginGroupingsWidget = (props) => {
               <MenuItem value='REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' dense>REPCOUNTRY + UNK + 3 most prevalent regions + OTHER</MenuItem>
               <MenuItem value='Custom' dense>Custom</MenuItem>
               <ListSubheader><Divider /></ListSubheader>
-              <ListSubheader><Typography variant='overline'>Migrant module compatible presets</Typography></ListSubheader>
+              <ListSubheader><Typography variant='overline'>Migrant-module specific presets</Typography></ListSubheader>
               <MenuItem value='REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER</MenuItem>
               <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER</MenuItem>
               <MenuItem value='REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>

@@ -117,31 +117,31 @@ export default appMgr => {
       ActionStatus: 'SUCCESS',
       ActionMessage: 'Attributes applied correctly',
       OriginDistribution: {
-        origin: [
+        FullRegionOfOrigin: [
           'REPCOUNTRY', 'SUBAFR', 'WESTEUR', 'SOUTHASIA', 'CENTEUR', 'CAR', 'LATAM', 'EASTEUR',
           'NORTHAM', 'NORTHAFRMIDEAST', 'EASTASIAPAC', 'AUSTNZ', 'UNK'
         ],
-        count: [1562, 2237, 1119, 164, 144, 123, 107, 58, 49, 43, 36, 33, 1944]
+        Count: [1562, 2237, 1119, 164, 144, 123, 107, 58, 49, 43, 36, 33, 1944]
       },
       OriginGroupingType: 'REPCOUNTRY + UNK + OTHER',
       OriginGrouping: [
         {
-          name: 'UNK',
-          origin: 'UNK',
-          migrant: 'UNK'
+          GroupedRegionOfOrigin: 'UNK',
+          FullRegionOfOrigin: 'UNK',
+          MigrantRegionOfOrigin: 'UNK'
         },
         {
-          name: 'OTHER',
-          origin: [
+          GroupedRegionOfOrigin: 'OTHER',
+          FullRegionOfOrigin: [
             'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM',
             'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
           ],
-          migrant: 'OTHER'
+          MigrantRegionOfOrigin: 'OTHER'
         },
         {
-          name: 'REPCOUNTRY',
-          origin: 'REPCOUNTRY',
-          migrant: 'REPCOUNTRY'
+          GroupedRegionOfOrigin: 'REPCOUNTRY',
+          FullRegionOfOrigin: 'REPCOUNTRY',
+          MigrantRegionOfOrigin: 'REPCOUNTRY'
         }
       ]
     }

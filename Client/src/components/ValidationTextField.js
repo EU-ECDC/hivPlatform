@@ -30,6 +30,12 @@ const ValidationTextField = (props) => {
       error={error}
       helperText={helperText}
       onChange={handleValueChange}
+      inputProps={{
+        autoComplete: 'new-password',
+        form: {
+          autoComplete: 'off',
+        },
+      }}
     />
   );
 }

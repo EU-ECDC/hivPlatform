@@ -23,9 +23,13 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingType = 'REPCOUNTRY + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + UNK + OTHER'
+  originGroupingType = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER'
 )
 
+appMgr$CaseMgr$ApplyOriginGrouping(originGrouping)
+appMgr$CaseMgr$PreProcessedData[, unique(FullRegionOfOrigin)]
+appMgr$CaseMgr$PreProcessedData[, unique(GroupedRegionOfOrigin)]
+inputData <- copy(appMgr$CaseMgr$PreProcessedData)
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
@@ -70,8 +74,9 @@ browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
+inputData <- copy(appMgr$CaseMgr$PreProcessedData)
 distr <- appMgr$CaseMgr$OriginDistribution
-originGrouping <- GetOriginGroupingPreset(
+grouping <- GetOriginGroupingPreset(
   type = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER',
   distr
 )
@@ -83,6 +88,13 @@ originGrouping <- GetOriginGroupingPreset(
   type = 'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER',
   distr
 )
+inputData <- ApplyGrouping(inputData, list(), from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
+inputData <- ApplyGrouping(inputData, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
+inputData <- ApplyGrouping(inputData, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
+unique(inputData[, .(FullRegionOfOrigin)])
+unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin)])
+unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin, MigrantRegionOfOrigin)])
+ConvertListToDt(grouping)
 
 CheckOriginGroupingForMigrant(originGrouping, distr)
 params <- hivPlatform::GetMigrantParams()

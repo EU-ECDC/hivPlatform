@@ -14,12 +14,18 @@ const OriginGroupingRow = (props) => {
   const { i, isSelected, onSelectClick, el, appMgr } = props;
 
   const [name, setName] = React.useState('');
-  const [usedNames, setUsedName] = React.useState([]);
-  React.useEffect(() => setName(el.name), [el.name]);
-  React.useEffect(() => setUsedName(appMgr.origGroupMgr.usedNames), [appMgr.origGroupMgr.usedNames]);
+  const [usedNames, setUsedNames] = React.useState([]);
+
+  React.useEffect(() => {
+    setName(el.GroupedRegionOfOrigin);
+  }, [el.GroupedRegionOfOrigin]);
+
+  React.useEffect(() => {
+    setUsedNames(appMgr.origGroupMgr.usedNames);
+   }, [appMgr.origGroupMgr.usedNames]);
 
   const unusedOrigins = appMgr.origGroupMgr.unusedOrigins;
-  const menuItems = el.origin.concat(unusedOrigins);
+  const menuItems = el.FullRegionOfOrigin.concat(unusedOrigins);
 
   const handleGroupedNameChange = (value, valid) => {
     setName(value);
@@ -29,11 +35,12 @@ const OriginGroupingRow = (props) => {
   };
 
   const validateName = name => {
+    name = name.trim();
     let result = '';
     if (name === '') {
-      result = 'Please, specify a non-empty name';
+      result = 'Name is empty';
     } else if (InArray(name, RemoveElementsFromArray(usedNames, i))) {
-      result = 'Please, specify a name that is not used';
+      result = 'Name is used';
     }
     return result;
   };
@@ -65,7 +72,7 @@ const OriginGroupingRow = (props) => {
   const migrantRegion =
     <Select
       sx={{ width: '100%', fontSize: '0.75rem' }}
-      value={el.migrant}
+      value={el.MigrantRegionOfOrigin}
       onChange={handleMigrantChange}
     >
       <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
@@ -85,7 +92,7 @@ const OriginGroupingRow = (props) => {
           ))}
         </div>
       )}
-      value={el.origin}
+      value={el.FullRegionOfOrigin}
       sx={{
         width: '100%',
         fontSize: '0.75rem',
@@ -113,7 +120,7 @@ const OriginGroupingRow = (props) => {
       <TableCell scope='row' sx={{ padding: '4px 4px 6px 0px', verticalAlign: 'top' }}>
         {migrantRegion }
       </TableCell>
-      <TableCell sx={{ padding: '4px 4px 0px 16px', verticalAlign: 'top', maxWidth: '300px' }}>
+      <TableCell sx={{ padding: '0px 4px 0px 16px', verticalAlign: 'top', maxWidth: '300px' }}>
         { fullRegion }
       </TableCell>
       <TableCell align='right' sx={{ padding: '4px 16px 0px 16px', verticalAlign: 'top' }}>{el.groupCount}</TableCell>

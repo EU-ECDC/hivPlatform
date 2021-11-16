@@ -1,32 +1,31 @@
 CheckOriginGroupingForMigrant <- function(
-  grouping,
+  originGrouping,
   distr
 ) {
-  if (length(grouping) > 0) {
-    distrDt <- copy(distr)
-    groupingDt <- ConvertListToDt(grouping)
+  allowedNames <- c(
+    'REPCOUNTRY',
+    'EUROPE', 'EASTERN EUROPE', 'EUROPE-OTHER',
+    'AFRICA', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
+    'ASIA',
+    'CARIBBEAN-LATIN AMERICA',
+    'OTHER',
+    NA_character_
+  )
 
-    distrDt[
-      groupingDt,
-      GroupedRegionOfOrigin := i.name,
-      on = .(origin)
-    ]
-    distrDt[is.na(GroupedRegionOfOrigin), GroupedRegionOfOrigin := origin]
+  distr <- ApplyGrouping(
+    distr,
+    originGrouping,
+    from = 'FullRegionOfOrigin',
+    to = 'GroupedRegionOfOrigin'
+  )
+  distr <- ApplyGrouping(
+    distr,
+    originGrouping,
+    from = 'GroupedRegionOfOrigin',
+    to = 'MigrantRegionOfOrigin'
+  )
 
-    allowedNames <- c(
-      'REPCOUNTRY',
-      'EUROPE', 'EASTERN EUROPE', 'EUROPE-OTHER',
-      'AFRICA', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
-      'ASIA',
-      'CARIBBEAN-LATIN AMERICA',
-      'OTHER',
-      'UNK'
-    )
-
-    result <- all(toupper(distrDt$GroupedRegionOfOrigin) %chin% toupper(allowedNames))
-  } else {
-    result <- FALSE
-  }
+  result <- all(toupper(distr$MigrantRegionOfOrigin) %chin% toupper(allowedNames))
 
   return(result)
 }
