@@ -26,6 +26,9 @@ const OriginGroupingRow = (props) => {
 
   const unusedOrigins = appMgr.origGroupMgr.unusedOrigins;
   const menuItems = el.FullRegionOfOrigin.concat(unusedOrigins);
+  const toInputUppercase = e => {
+    e.target.value = ("" + e.target.value).toUpperCase();
+  };
 
   const handleGroupedNameChange = (value, valid) => {
     setName(value);
@@ -68,6 +71,7 @@ const OriginGroupingRow = (props) => {
       value={name}
       validationFunc={validateName}
       onChange={handleGroupedNameChange}
+      onInput={toInputUppercase}
     />;
   const migrantRegion =
     <Select

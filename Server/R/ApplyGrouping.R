@@ -2,7 +2,7 @@
 #'
 #' Applies grouping map to the input data
 #'
-#' @param inputData Input data. Required.
+#' @param data Data. Required.
 #' @param originGrouping List object with mapping. Required.
 #' @param from Column name for mapping from
 #' @param to Column name for mapping to
@@ -21,31 +21,31 @@
 #'
 #' @export
 ApplyGrouping <- function(
-  inputData,
+  data,
   originGrouping,
   from = 'FullRegionOfOrigin',
   to = 'GroupedRegionOfOrigin'
 ) {
-  inputData[is.na(get(from)), (from) := 'UNK']
-  if (to %in% colnames(inputData)) {
-    inputData[, (to) := NULL]
+  data[is.na(get(from)), (from) := 'UNK']
+  if (to %in% colnames(data)) {
+    data[, (to) := NULL]
   }
 
   if (length(originGrouping) > 0) {
     cols <- c(from, to)
     dtMap <- unique(ConvertListToDt(originGrouping)[, ..cols])
-    inputData <- merge(
-      inputData,
+    data[
       dtMap,
-      by = from,
-      all.x = TRUE
-    )
-    inputData[is.na(get(to)), (to) := get(from)]
+      (to) := get(to),
+      on = from
+    ]
+    data[is.na(get(to)), (to) := get(from)]
   } else {
-    inputData[, (to) := get(from)]
+    data[, (to) := get(from)]
   }
 
-  inputData[get(to) == 'UNK', (to) := NA_character_]
-  inputData[get(from) == 'UNK', (from) := NA_character_]
-  return(inputData)
+  data[get(to) == 'UNK', (to) := NA_character_]
+  data[get(from) == 'UNK', (from) := NA_character_]
+
+  return(invisible(data))
 }

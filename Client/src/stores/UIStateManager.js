@@ -75,6 +75,7 @@ export default class UIStateManager {
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,
+      migrantPageEnabled: computed,
       modellingPageEnabled: computed,
       reportsPageEnabled: computed,
       outputsPageEnabled: computed,
@@ -131,7 +132,7 @@ export default class UIStateManager {
     this.pages[1].disabled = !this.uploadPageEnabled;
     this.pages[2].disabled = !this.summaryPageEnabled;
     this.pages[3].disabled = !this.adjustmentsPageEnabled;
-    this.pages[4].disabled = false;
+    this.pages[4].disabled = !this.migrantPageEnabled;
     this.pages[5].disabled = !this.modellingPageEnabled;
     this.pages[6].disabled = !this.reportsPageEnabled;
     this.pages[7].disabled = !this.outputsPageEnabled;
@@ -150,6 +151,13 @@ export default class UIStateManager {
 
   get adjustmentsPageEnabled() {
     return InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps);
+  };
+
+  get migrantPageEnabled() {
+    return (
+      InArray('CASE_BASED_ORIGIN_GROUPING', this.completedSteps) &&
+      this.rootMgr.migrMgr.dataCompatibleFlag
+    );
   };
 
   get modellingPageEnabled() {

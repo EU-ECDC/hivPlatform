@@ -25,11 +25,9 @@ appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingType = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER'
 )
+appMgr$CaseMgr$PreProcessedData$GroupedRegionOfOrigin
+appMgr$CaseMgr$PreProcessedData$MigrantRegionOfOrigin
 
-appMgr$CaseMgr$ApplyOriginGrouping(originGrouping)
-appMgr$CaseMgr$PreProcessedData[, unique(FullRegionOfOrigin)]
-appMgr$CaseMgr$PreProcessedData[, unique(GroupedRegionOfOrigin)]
-inputData <- copy(appMgr$CaseMgr$PreProcessedData)
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
@@ -73,28 +71,36 @@ fileName <- RenderReportToFile(
 browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
-appMgr$CaseMgr$RunMigration()
+# appMgr$CaseMgr$RunMigration()
 inputData <- copy(appMgr$CaseMgr$PreProcessedData)
+originGrouping <- appMgr$CaseMgr$OriginGrouping
 distr <- appMgr$CaseMgr$OriginDistribution
-grouping <- GetOriginGroupingPreset(
-  type = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER',
-  distr
+result <- CheckOriginGroupingForMigrant(originGrouping[-9], data = copy(distr))
+test <- sprintf(
+  'Grouping is not compatible with the migration module. The following unsupported grouped regions appear in the migrant origin: %s',
+  paste(result$WrongNames, collapse = ', ')
 )
-originGrouping <- GetOriginGroupingPreset(
-  type = 'REPCOUNTRY + UNK + OTHER',
-  distr
-)
-originGrouping <- GetOriginGroupingPreset(
-  type = 'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER',
-  distr
-)
-inputData <- ApplyGrouping(inputData, list(), from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
+print(test)
+CheckOriginGroupingForMigrant(originGrouping[-9], inputData)
+
+data <- copy(appMgr$CaseMgr$PreProcessedData)
 inputData <- ApplyGrouping(inputData, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
 inputData <- ApplyGrouping(inputData, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
 unique(inputData[, .(FullRegionOfOrigin)])
 unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin)])
 unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin, MigrantRegionOfOrigin)])
 ConvertListToDt(grouping)
+
+originGrouping <- originGrouping[-9]
+data[, GroupedRegionOfOrigin := NULL]
+data[
+  dtMap,
+  (to) := get(to),
+  on = from
+]
+data[, unique(GroupedRegionOfOrigin)]
+
+
 
 CheckOriginGroupingForMigrant(originGrouping, distr)
 params <- hivPlatform::GetMigrantParams()

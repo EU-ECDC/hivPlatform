@@ -1,6 +1,6 @@
 CheckOriginGroupingForMigrant <- function(
   originGrouping,
-  distr
+  data
 ) {
   allowedNames <- c(
     'REPCOUNTRY',
@@ -12,20 +12,36 @@ CheckOriginGroupingForMigrant <- function(
     NA_character_
   )
 
-  distr <- ApplyGrouping(
-    distr,
+  data <- ApplyGrouping(
+    copy(data),
     originGrouping,
     from = 'FullRegionOfOrigin',
     to = 'GroupedRegionOfOrigin'
   )
-  distr <- ApplyGrouping(
-    distr,
+  ApplyGrouping(
+    data,
     originGrouping,
     from = 'GroupedRegionOfOrigin',
     to = 'MigrantRegionOfOrigin'
   )
 
-  result <- all(toupper(distr$MigrantRegionOfOrigin) %chin% toupper(allowedNames))
+  migrantOrigins <- unique(data$MigrantRegionOfOrigin)
+  wrongNames <- migrantOrigins[!(migrantOrigins %chin% allowedNames)]
+  valid <- length(wrongNames) == 0
+  message <- ifelse(
+    valid,
+    'Grouping is compatible with the migration module',
+    sprintf(
+      'Grouping is not compatible with the migration module. The following unsupported grouped regions appear in the migrant origin: %s', # nolint
+      paste(wrongNames, collapse = ', ')
+    )
+  )
+
+  result <- list(
+    Valid = valid,
+    WrongNames = wrongNames,
+    Message = message
+  )
 
   return(result)
 }

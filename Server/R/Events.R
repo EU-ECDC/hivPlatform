@@ -251,21 +251,16 @@ Events <- function(
   })
 
   observeEvent(input$checkOriginGrouping, {
-    distr <- appMgr$CaseMgr$OriginDistribution
     migrantCompatible <- CheckOriginGroupingForMigrant(
       input$checkOriginGrouping,
-      distr
+      appMgr$CaseMgr$OriginDistribution
     )
 
     appMgr$SendMessage(
       type = 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED',
       payload = list(
-        ActionStatus = migrantCompatible,
-        ActionMessage = ifelse(
-          migrantCompatible,
-          'Preset is compatible with the migration module',
-          'Preset is not compatible with the migration module'
-        )
+        ActionStatus = migrantCompatible$Valid,
+        ActionMessage = migrantCompatible$Message
       )
     )
   })

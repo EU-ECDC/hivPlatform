@@ -207,14 +207,21 @@ CaseDataManager <- R6::R6Class(
           originDistribution <- private$Catalogs$OriginDistribution
           originGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
         }
-        preProcessedData <- copy(private$Catalogs$PreProcessedData)
         preProcessedData <- ApplyGrouping(
-          preProcessedData,
+          copy(private$Catalogs$PreProcessedData),
           originGrouping,
           from = 'FullRegionOfOrigin',
           to = 'GroupedRegionOfOrigin'
         )
-        print(preProcessedData)
+        ApplyGrouping(
+          preProcessedData,
+          originGrouping,
+          from = 'GroupedRegionOfOrigin',
+          to = 'MigrantRegionOfOrigin'
+        )
+
+        migrantCompatibility <- CheckOriginGroupingForMigrant(originGrouping, preProcessedData)
+
         summaryFilterPlots <- GetCaseDataSummaryFilterPlots(preProcessedData)
       },
       error = function(e) {
@@ -230,7 +237,8 @@ CaseDataManager <- R6::R6Class(
         payload <- list(
           ActionStatus = status,
           ActionMessage = msg,
-          Summary = summaryFilterPlots
+          Summary = summaryFilterPlots,
+          MigrantCompatibility = migrantCompatibility
         )
         if (is.function(private$AppMgr$HIVModelMgr$DetermineYearRanges)) {
           private$AppMgr$HIVModelMgr$DetermineYearRanges()

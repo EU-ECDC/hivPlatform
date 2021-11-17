@@ -129,6 +129,7 @@ export default class AppManager {
             endYear: Math.round(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear),
             endQrt: FloatToQuarter(e.payload.Summary.NotifQuarterPlotData.filter.scaleMaxYear)
           })
+          this.migrMgr.setDataCompatibleFlag(e.payload.MigrantCompatibility.Valid);
           this.uiStateMgr.setLastEventType(e.type);
         } else {
           this.uiStateMgr.setLastEventType('CASE_BASED_ATTRIBUTE_MAPPING_APPLY_END');

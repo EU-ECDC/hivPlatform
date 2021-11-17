@@ -9,15 +9,19 @@ export default class MigrationManager {
 
   report = null;
 
+  dataCompatibleFlag = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
       runProgress: observable,
       runLog: observable,
+      dataCompatibleFlag: observable,
       runInProgress: computed,
       setRunProgress: action,
       setRunLog: action,
       setReport: action,
+      setDataCompatibleFlag: action,
       run: action,
       cancel: action
     });
@@ -33,9 +37,9 @@ export default class MigrationManager {
 
   setReport = report => this.report = report;
 
-  run = () => {
-    this.rootMgr.btnClicked('runMigrantBtn');
-  };
+  setDataCompatibleFlag = dataCompatibleFlag => this.dataCompatibleFlag = dataCompatibleFlag;
+
+  run = () => this.rootMgr.btnClicked('runMigrantBtn');
 
   cancel = () => this.rootMgr.btnClicked('cancelMigrantBtn');
 }
