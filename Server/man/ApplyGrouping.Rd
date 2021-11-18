@@ -5,14 +5,14 @@
 \title{ApplyGrouping}
 \usage{
 ApplyGrouping(
-  inputData,
+  data,
   originGrouping,
   from = "FullRegionOfOrigin",
   to = "GroupedRegionOfOrigin"
 )
 }
 \arguments{
-\item{inputData}{Input data. Required.}
+\item{data}{Data. Required.}
 
 \item{originGrouping}{List object with mapping. Required.}
 
