@@ -1,30 +1,36 @@
 on:
-  workflow_dispatch:
-  release:
-    types:
-      - created
+  push:
+    branches:
+      - master
+      - migrant
 
-name: Deploy application
+name: Deploy to ShinyApps
 
 jobs:
-  deploy:
+  Deploy:
     runs-on: ubuntu-20.04
 
-    name: Deploy application
+    name: Deploy to ShinyApps
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      RENV_PATHS_ROOT: ~/.local/share/renv
+      SHINYAPPS_APP_NAME: hivPlatform-${{ env.GITHUB_HEAD_REF }}
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Node 14
+      - name: Set up Node 16
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
           architecture: 'x64'
+          cache: 'yarn'
 
       - name: Install yarn2
         run: |
           npm install -g yarn
-          yarn set version berry
+          yarn set version latest
         working-directory: Client
 
       - name: Build UI
@@ -46,10 +52,10 @@ jobs:
         shell: Rscript {0}
         working-directory: Server
 
-      - name: Setup Linux R cache
+      - name: Cache production R packages
         uses: actions/cache@v2
         with:
-          path: ~/.local/share/renv
+          path: ${{ env.RENV_PATHS_ROOT }}
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
@@ -65,6 +71,18 @@ jobs:
           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-        run: |
-          Rscript utils/ShinyAppsDeployScript.R
+        run: >
+          rsconnect::setAccountInfo(
+            name   = Sys.getenv('SHINYAPPS_ACCOUNT'),
+            token  = Sys.getenv('SHINYAPPS_TOKEN'),
+            secret = Sys.getenv('SHINYAPPS_SECRET')
+          );
+          rsconnect::deployApp(
+            account = Sys.getenv('SHINYAPPS_ACCOUNT'),
+            appName = Sys.getenv('SHINYAPPS_APP_NAME'),
+            appFiles = c('app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'R/', 'man/', 'inst/', 'data/'),
+            contentCategory = 'application',
+            forceUpdate = TRUE
+          )
+        shell: Rscript {0}
         working-directory: Server

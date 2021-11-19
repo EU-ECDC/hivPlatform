@@ -23,8 +23,8 @@ LogPostW <- function(
   fxCD4 <- formula(
     YVar ~
     I(DTime + w) * Gender +
-      I(DTime + w) * GroupedRegionOfOrigin +
-      I(DTime + w) * Mode +
+      I(DTime + w) * MigrantRegionOfOrigin +
+      I(DTime + w) * Transmission +
       I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
@@ -35,12 +35,12 @@ LogPostW <- function(
   fxVR <- formula(
     YVar ~
     I(DTime + w) * Gender +
-      I(DTime + w) * GroupedRegionOfOrigin +
-      I(DTime + w) * Mode +
+      I(DTime + w) * MigrantRegionOfOrigin +
+      I(DTime + w) * Transmission +
       I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       I(log(DTime + w + 0.013)) * Gender +
-      I(log(DTime + w + 0.013)) * GroupedRegionOfOrigin +
-      I(log(DTime + w + 0.013)) * Mode +
+      I(log(DTime + w + 0.013)) * MigrantRegionOfOrigin +
+      I(log(DTime + w + 0.013)) * Transmission +
       I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
@@ -91,8 +91,8 @@ LogPostWCD4 <- function(
   fxCD4 <- formula(
     YVar ~
       I(DTime + w) * Gender +
-      I(DTime + w) * GroupedRegionOfOrigin +
-      I(DTime + w) * Mode +
+      I(DTime + w) * MigrantRegionOfOrigin +
+      I(DTime + w) * Transmission +
       I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )
@@ -132,12 +132,12 @@ LogPostWVL <- function(
   fxVR <- formula(
     YVar ~
     I(DTime + w) * Gender +
-      I(DTime + w) * GroupedRegionOfOrigin +
-      I(DTime + w) * Mode +
+      I(DTime + w) * MigrantRegionOfOrigin +
+      I(DTime + w) * Transmission +
       I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       I(log(DTime + w + 0.013)) * Gender +
-      I(log(DTime + w + 0.013)) * GroupedRegionOfOrigin +
-      I(log(DTime + w + 0.013)) * Mode +
+      I(log(DTime + w + 0.013)) * MigrantRegionOfOrigin +
+      I(log(DTime + w + 0.013)) * Transmission +
       I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
       lspline::lspline(I(Calendar - w), knots = c(16, 22))
   )

@@ -9,30 +9,11 @@ PrepareMigrantData <- function(
   # Pre-process data -------------------------------------------------------------------------------
   colNames <- c(
     'Imputation', 'RecordId', 'Gender', 'Transmission', 'Age', 'DateOfArrival',
-    'ReportingCountry', 'FullRegionOfOrigin', 'GroupedRegionOfOrigin',
-    'DateOfHIVDiagnosis', 'AcuteInfection', 'FirstCD4Count', 'LatestCD4Count',
-    'DateOfFirstCD4Count', 'DateOfLatestCD4Count', 'LatestVLCount', 'DateOfLatestVLCount',
-    'DateOfArt', 'DateOfAIDSDiagnosis', 'YearOfHIVDiagnosis'
+    'MigrantRegionOfOrigin', 'DateOfHIVDiagnosis', 'AcuteInfection', 'FirstCD4Count',
+    'LatestCD4Count', 'DateOfFirstCD4Count', 'DateOfLatestCD4Count', 'LatestVLCount',
+    'DateOfLatestVLCount', 'DateOfArt', 'DateOfAIDSDiagnosis', 'YearOfHIVDiagnosis'
   )
   data <- data[, ..colNames]
-
-  # Remap low level grouped region of origin to the high level set
-  groupingMap <- data.table(
-    LowLevel = c(
-      'EASTERN EUROPE', 'EUROPE-OTHER', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
-      'CARIBBEAN-LATIN AMERICA'
-    ),
-    HighLevel = c('EUROPE', 'EUROPE', 'AFRICA', 'AFRICA', 'OTHER')
-  )
-  data[, GroupedRegionOfOriginLowLevel := GroupedRegionOfOrigin]
-  data[
-    groupingMap,
-    GroupedRegionOfOrigin := i.HighLevel,
-    on = .(GroupedRegionOfOriginLowLevel = LowLevel)
-  ]
-  data[is.na(GroupedRegionOfOrigin), GroupedRegionOfOrigin := 'UNKNOWN']
-  data[, GroupedRegionOfOrigin :=
-    factor(stringi::stri_trans_totitle(as.character(GroupedRegionOfOrigin)))]
 
   PrintH2('Checking data structure validity')
   columnSpecs <- GetListObject(
@@ -43,6 +24,10 @@ PrepareMigrantData <- function(
     type = 'integer',
     defaultValue = NA_integer_
   )
+  columnSpecs[['MigrantRegionOfOrigin']] <- list(
+    type = 'character',
+    defaultValue = NA_character_
+  )
   dataStructValidity <- GetInputDataValidityStatus(data, columnSpecs[colNames])
   if (dataStructValidity$Valid) {
     PrintAlert('Data valid', type = 'success')
@@ -50,8 +35,13 @@ PrepareMigrantData <- function(
     PrintAlert('Data invalid', type = 'danger')
   }
 
-  # Merge ReportingOrigin
-  data[countryData, ReportingOrigin := i.TESSyCode, on = .(ReportingCountry = Code)]
+  # Replace NA with 'UNK'
+  data[is.na(AcuteInfection), AcuteInfection := 'UNK']
+  data[is.na(MigrantRegionOfOrigin), MigrantRegionOfOrigin := 'UNK']
+  data[, Transmission := as.character(Transmission)]
+  data[is.na(Transmission), Transmission := 'UNK']
+  data[, Gender := as.character(Gender)]
+  data[is.na(Gender), Gender := 'UNK']
 
   # Add DateOfBirth
   data[, DateOfBirth := DateOfHIVDiagnosis - Age * yearDays]
@@ -59,8 +49,8 @@ PrepareMigrantData <- function(
   # Generate at risk date
   data[, AtRiskDate := pmax(DateOfBirth + 10 * yearDays, minDate)]
   data[
-    !(AcuteInfection %in% c('UNK', 'NA', NA_character_)),
-    AtRiskDate := pmax(AtRiskDate, DateOfHIVDiagnosis - 0.5 * yearDays)
+    AcuteInfection != 'UNK',
+    AtRiskDate := pmax(AtRiskDate, DateOfHIVDiagnosis - 0.25 * yearDays)
   ]
 
   # Years from risk onset to HIV diagnosis
@@ -68,22 +58,48 @@ PrepareMigrantData <- function(
 
   # Initialize filters -----------------------------------------------------------------------------
   data[, Excluded := '']
-  data[Excluded == '' & is.na(FullRegionOfOrigin), Excluded := 'Full region of origin is missing']
+  # nolint start
+  # data[
+  #   Excluded == '' & MigrantRegionOfOrigin == 'UNK',
+  #   Excluded := 'Migrant region of origin is missing'
+  # ]
+  # nolint end
   data[
-    Excluded == '' & !is.na(FullRegionOfOrigin) & FullRegionOfOrigin == 'REPCOUNTRY',
-    Excluded := 'Regions of origin and reporting are the same'
+    Excluded == '' & MigrantRegionOfOrigin == 'REPCOUNTRY',
+    Excluded := 'This person is not considered a migrant, because region of origin is the reporting country' # nolint
   ]
   data[
-    Excluded == '' & !(Transmission %in% c('MSM', 'IDU', 'HETERO')),
-    Excluded := 'Transmission is not of mode "MSM", "IDU", or "HETERO"'
+    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE', 'ASIA', 'CARLAM')),
+    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE", "ASIA", "CARLAM"'
+  ]
+  data[
+    Excluded == '' & !(Gender %chin% c('F', 'M')),
+    Excluded := 'Gender is not either "F" or "M"'
+  ]
+  data[
+    Excluded == '' & !(Transmission %chin% c('MSM', 'IDU', 'HETERO', 'TRANSFU')),
+    Excluded := 'Transmission is not of mode "MSM", "IDU", "HETERO" or "TRANSFU"'
   ]
   data[
     Excluded == '' & DateOfArrival < DateOfBirth,
     Excluded := 'Date of arrival is before date of birth'
   ]
-  data[Excluded == '' & is.na(Age), Excluded := 'Age is missing']
-  data[Excluded == '' & Age <= 15, Excluded := 'Age is below 16']
-  data[Excluded == '' & U <= 0, Excluded := 'Date of HIV diagnosis is before risk onset']
+  data[
+    Excluded == '' & is.na(Age),
+    Excluded := 'Age is missing'
+  ]
+  data[
+    Excluded == '' & !is.na(Age) & Age <= 15,
+    Excluded := 'Age is below 16'
+  ]
+  data[
+    Excluded == '' & is.na(U),
+    Excluded := 'Number of years from risk onset to HIV diagnosis is missing'
+  ]
+  data[
+    Excluded == '' & !is.na(U) & U <= 0,
+    Excluded := 'Date of HIV diagnosis is before risk onset'
+  ]
 
   # Impute date of arrival -------------------------------------------------------------------------
   data[, YearsToArrival := as.numeric(DateOfArrival - DateOfBirth) / yearDays]
@@ -92,25 +108,48 @@ PrepareMigrantData <- function(
     Excluded == '' &
       (is.na(PropBeforeArrival) | between(PropBeforeArrival, 0, 1)) &
       (
-        !is.na(Gender) & !is.na(Transmission) & !is.na(Age) & !is.na(FirstCD4Count) &
-          !is.na(GroupedRegionOfOrigin) & !is.na(YearOfHIVDiagnosis)
+        Gender != 'UNK' &
+        # Transmission != 'UNK' & MigrantRegionOfOrigin != 'UNK' & # nolint
+        !is.na(Age) & !is.na(FirstCD4Count) & !is.na(YearOfHIVDiagnosis)
       )
   ]
+
+  # Recreate factors with required levels
+  data[, ':='(
+    Imputation = factor(Imputation),
+    Gender = factor(
+      Gender,
+      levels = c('F', 'M'),
+      labels = c('Female', 'Male')
+    ),
+    MigrantRegionOfOrigin = factor(
+      MigrantRegionOfOrigin,
+      levels = c('AFRICA', 'EUROPE', 'ASIA', 'CARLAM'),
+      labels = c('Africa', 'Europe', 'Asia', 'Carribean/Latin America')
+    ),
+    Transmission = factor(
+      Transmission,
+      levels = c('MSM', 'IDU', 'HETERO', 'TRANSFU'),
+      labels = c('MSM', 'IDU', 'MSW', 'Other/Unknown')
+    ),
+    YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis)
+  )]
 
   # Get data to be imputed and a sample of full data for the imputation
   imputeData <- data[
     ImputeData == TRUE,
     .(
-      Imputation = factor(Imputation),
+      Imputation,
       Gender,
+      MigrantRegionOfOrigin,
       Transmission,
+      YearOfHIVDiagnosis,
       Age,
       FirstCD4Count,
-      GroupedRegionOfOrigin,
-      YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis),
       PropBeforeArrival
     )
   ]
+
   selNotNA <- imputeData[, !is.na(PropBeforeArrival)]
   # Prepare logit transformation
   imputeData[selNotNA & between(PropBeforeArrival, 0, 0.00001), PropBeforeArrival := 0.00001]
@@ -120,11 +159,11 @@ PrepareMigrantData <- function(
   imputeWhere <- data.table(
     Imputation = FALSE,
     Gender = FALSE,
+    MigrantRegionOfOrigin = FALSE,
     Transmission = FALSE,
+    YearOfHIVDiagnosis = FALSE,
     Age = FALSE,
     FirstCD4Count = FALSE,
-    GroupedRegionOfOrigin = FALSE,
-    YearOfHIVDiagnosis = FALSE,
     PropBeforeArrivalLogit = !selNotNA
   )
 
@@ -167,7 +206,6 @@ PrepareMigrantData <- function(
   )]
 
   # ------------------------------------------------------------------------------------------------
-
   data[Excluded == '' & is.na(DateOfArrival), Excluded := 'Date of arrival is missing']
 
   missStat <- rbind(
@@ -191,17 +229,6 @@ PrepareMigrantData <- function(
     UniqueId = rleid(Imputation, RecordId),
     Ord = rowid(Imputation, RecordId)
   )]
-
-  # Add mode of infection
-  modeMapping <- data.table(
-    Transmission = c('MSM', 'IDU', 'HETERO'),
-    Mode = factor(c('MSM', 'IDU', 'MSW'), levels = c('MSM', 'IDU', 'MSW', 'OTHER/UNK'))
-  )
-  base[
-    modeMapping,
-    Mode := i.Mode,
-    on = .(Transmission)
-  ]
 
   # Years since 1/1/1980
   base[, Calendar := as.numeric(DateOfHIVDiagnosis - minDate) / 365.25]

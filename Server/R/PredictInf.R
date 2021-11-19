@@ -130,7 +130,7 @@ PredictInf <- function( # nolint
 
     dt <- outputCD4VL[UniqueId == uniqueId]
 
-    x <- dt[, .(Gender, GroupedRegionOfOrigin, Mode, Age, DTime, Calendar, Consc, Consr)]
+    x <- dt[, .(Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)]
     y <- dt[, .(YVar)]
     z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
     migTime <- dt[Ord == 1, Mig]

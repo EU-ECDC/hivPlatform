@@ -40,7 +40,7 @@ jobs:
         shell: Rscript {0}
         working-directory: Server
 
-      - name: Cache production packages
+      - name: Cache production R packages
         uses: actions/cache@v2
         with:
           path: ${{ env.RENV_PATHS_ROOT }}

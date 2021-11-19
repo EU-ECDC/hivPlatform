@@ -23,11 +23,8 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingType = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER'
+  originGroupingType = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
-appMgr$CaseMgr$PreProcessedData$GroupedRegionOfOrigin
-appMgr$CaseMgr$PreProcessedData$MigrantRegionOfOrigin
-
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
@@ -71,46 +68,17 @@ fileName <- RenderReportToFile(
 browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
-# appMgr$CaseMgr$RunMigration()
-inputData <- copy(appMgr$CaseMgr$PreProcessedData)
+appMgr$CaseMgr$RunMigration()
+
 originGrouping <- appMgr$CaseMgr$OriginGrouping
 distr <- appMgr$CaseMgr$OriginDistribution
-result <- CheckOriginGroupingForMigrant(originGrouping[-9], data = copy(distr))
-test <- sprintf(
-  'Grouping is not compatible with the migration module. The following unsupported grouped regions appear in the migrant origin: %s',
-  paste(result$WrongNames, collapse = ', ')
-)
-print(test)
-CheckOriginGroupingForMigrant(originGrouping[-9], inputData)
-
-data <- copy(appMgr$CaseMgr$PreProcessedData)
-inputData <- ApplyGrouping(inputData, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
-inputData <- ApplyGrouping(inputData, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
-unique(inputData[, .(FullRegionOfOrigin)])
-unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin)])
-unique(inputData[, .(FullRegionOfOrigin, GroupedRegionOfOrigin, MigrantRegionOfOrigin)])
-ConvertListToDt(grouping)
-
-originGrouping <- originGrouping[-9]
-data[, GroupedRegionOfOrigin := NULL]
-data[
-  dtMap,
-  (to) := get(to),
-  on = from
-]
-data[, unique(GroupedRegionOfOrigin)]
-
-
-
 CheckOriginGroupingForMigrant(originGrouping, distr)
+
+inputData <- copy(appMgr$CaseMgr$Data)
+
 params <- hivPlatform::GetMigrantParams()
 migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
-# result <- hivPlatform::PredictInf(list(AIDS = NULL, CD4VL = NULL), params)
-report <- RenderReportToHTML(
-  reportFilePath = GetSystemFile('reports', 'intermediate', '3.Migrant.Rmd'),
-  params = migrantData$Stats['Missingness']
-)
 
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
@@ -274,6 +242,9 @@ baseCD4VL[, Ord := rowid(RecordId)]
 baseCD4VL[, Imputation := 0L]
 baseCD4VL[, RecordId := as.character(RecordId)]
 
+baseCD4VL$Gender
+baseCD4VL$Mode
+baseCD4VL$GroupedRegionOfOrigin
 input <- list(
   AIDS = baseAIDS[1:10],
   CD4VL = baseCD4VL[1:10]
@@ -294,3 +265,10 @@ compare <- merge(
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-7]
+
+unique(data$AcuteInfection)
+class(data$AcuteInfection)
+data[Transmission %in% c('MSM', 'IDU', 'HETERO', NA_character_), unique(Transmission)]
+data[, unique(Transmission)]
+
+unique(appMgr$CaseMgr$Data$Transmission)
