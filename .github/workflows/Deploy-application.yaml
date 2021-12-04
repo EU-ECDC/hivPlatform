@@ -26,6 +26,7 @@ jobs:
           node-version: '16'
           architecture: 'x64'
           cache: 'yarn'
+          working-directory: Client
 
       - name: Install yarn2
         run: |
