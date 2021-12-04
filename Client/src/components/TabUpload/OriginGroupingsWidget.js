@@ -27,8 +27,9 @@ const OriginGroupingsWidget = (props) => {
   const groupings = appMgr.origGroupMgr.groupingsJS;
 
   const handleGroupingPresetChange = e => {
-    appMgr.inputValueSet('groupingPresetSelect', e.target.value);
-    appMgr.origGroupMgr.setType(e.target.value);
+    const preset = e.target.value;
+    appMgr.inputValueSet('groupingPresetSelect', preset);
+    appMgr.origGroupMgr.setPreset(preset);
   };
 
   const handleSelectAllClick = e => {
@@ -92,7 +93,7 @@ const OriginGroupingsWidget = (props) => {
           <Typography variant='overline'>Migrant variable regrouping</Typography>
           <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
             <Select
-              value={appMgr.origGroupMgr.type}
+              value={appMgr.origGroupMgr.preset}
               onChange={handleGroupingPresetChange}
               sx={{
                 width: '100%',
@@ -128,9 +129,9 @@ const OriginGroupingsWidget = (props) => {
                     checked={rowCount > 0 && selectedCount === rowCount}
                   />
                 </TableCell>
-                <TableCell sx={{padding: '0px 20px 0px 0px'}}>GroupedRegionOfOrigin</TableCell>
-                <TableCell padding='none'>MigrantRegionOfOrigin</TableCell>
-                <TableCell width='60%'>FullRegionOfOrigin</TableCell>
+                <TableCell width={200} sx={{padding: '0px 20px 0px 0px'}}>Grouped Region Of Origin</TableCell>
+                <TableCell width={200} padding='none'>Region For Migration Module Parameter</TableCell>
+                <TableCell>FullRegionOfOrigin</TableCell>
                 <TableCell align='right' width='10%'>Count</TableCell>
               </TableRow>
             </TableHead>

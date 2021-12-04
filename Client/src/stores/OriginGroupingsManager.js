@@ -12,7 +12,7 @@ export default class OriginGroupingsManager {
     makeObservable(this, {
       distribution: observable,
       groupings: observable,
-      type: observable,
+      preset: observable,
       actionStatus: observable,
       actionMessage: observable,
       migrantCompatibleStatus: observable,
@@ -25,7 +25,7 @@ export default class OriginGroupingsManager {
       usedNames: computed,
       setDistribution: action,
       setGroupings: action,
-      setType: action,
+      setPreset: action,
       setGroupName: action,
       setGroupOrigin: action,
       setMigrantOrigin: action,
@@ -49,7 +49,7 @@ export default class OriginGroupingsManager {
 
   groupings = [];
 
-  type = 'REPCOUNTRY + UNK + OTHER';
+  preset = 'REPCOUNTRY + UNK + OTHER';
 
   repCountryGroupingIdx = null;
 
@@ -104,7 +104,7 @@ export default class OriginGroupingsManager {
     this.computeGroupCounts();
   };
 
-  setType = type => this.type = type;
+  setPreset = preset => this.preset = preset;
 
   setActionStatus = status => this.actionStatus = status;
 
@@ -116,25 +116,25 @@ export default class OriginGroupingsManager {
 
   setGroupName = (i, name) => {
     this.groupings[i].GroupedRegionOfOrigin = name;
-    this.type = 'Custom';
+    this.preset = 'Custom';
   };
 
   setGroupOrigin = (i, origin) => {
     this.groupings[i].FullRegionOfOrigin = origin;
     this.computeGroupCounts();
-    this.type = 'Custom';
+    this.preset = 'Custom';
   };
 
    setMigrantOrigin = (i, origin) => {
     this.groupings[i].MigrantRegionOfOrigin = origin;
     this.computeGroupCounts();
-    this.type = 'Custom';
+    this.preset = 'Custom';
   };
 
   removeGroupings = selectedIds => {
     this.groupings = RemoveElementsFromArray(this.groupings, selectedIds);
     this.computeGroupCounts();
-    this.type = 'Custom';
+    this.preset = 'Custom';
   };
 
   addEmptyGrouping = () => {
@@ -145,7 +145,7 @@ export default class OriginGroupingsManager {
       groupCount: 0
     });
     this.computeGroupCounts();
-    this.type = 'Custom';
+    this.preset = 'Custom';
   };
 
   applyGroupings = () => {

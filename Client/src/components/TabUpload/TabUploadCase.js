@@ -20,7 +20,7 @@ const TabUploadCase = (props) => {
           <AttributeMapping {...props} />
         </React.Fragment>
       }
-      { appMgr.uiStateMgr.caseBasedOrigGroupingEnabled &&
+      { appMgr.uiStateMgr.caseBasedOrigGroupingProvisioned &&
         <React.Fragment>
           {divider}
           <OriginGroupings {...props} />

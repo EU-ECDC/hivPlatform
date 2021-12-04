@@ -1,40 +1,15 @@
 CheckOriginGroupingForMigrant <- function(
-  originGrouping,
-  data
+  originGrouping
 ) {
-  allowedNames <- c(
-    'REPCOUNTRY',
-    'EUROPE', 'EASTERN EUROPE', 'EUROPE-OTHER',
-    'AFRICA', 'SUB-SAHARAN AFRICA', 'AFRICA-OTHER',
-    'ASIA',
-    'CARIBBEAN-LATIN AMERICA',
-    'OTHER',
-    NA_character_
-  )
+  allowedNames <- c('EUROPE', 'AFRICA', 'ASIA', 'CARIBBEAN-LATIN AMERICA', 'REPCOUNTRY', 'UNK')
 
-  data <- ApplyGrouping(
-    copy(data),
-    originGrouping,
-    from = 'FullRegionOfOrigin',
-    to = 'GroupedRegionOfOrigin'
-  )
-  ApplyGrouping(
-    data,
-    originGrouping,
-    from = 'GroupedRegionOfOrigin',
-    to = 'MigrantRegionOfOrigin'
-  )
-
-  migrantOrigins <- unique(data$MigrantRegionOfOrigin)
+  migrantOrigins <- unique(sapply(originGrouping, '[[', 'MigrantRegionOfOrigin'))
   wrongNames <- migrantOrigins[!(migrantOrigins %chin% allowedNames)]
   valid <- length(wrongNames) == 0
   message <- ifelse(
     valid,
     'Grouping is compatible with the migration module',
-    sprintf(
-      'Grouping is not compatible with the migration module. The following unsupported grouped regions appear in the migrant origin: %s', # nolint
-      paste(wrongNames, collapse = ', ')
-    )
+    'Grouping is not compatible until all regions for migration module parameters are given'
   )
 
   result <- list(

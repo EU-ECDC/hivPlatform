@@ -6,8 +6,8 @@ ConvertOriginGroupingDtToList <- function(
     dtMapGroup <- dtMap[GroupedRegionOfOrigin == groupName]
     list(
       GroupedRegionOfOrigin = groupName,
-      FullRegionOfOrigin = dtMapGroup[, sort(unique(FullRegionOfOrigin))],
-      MigrantRegionOfOrigin = dtMapGroup[, sort(unique(MigrantRegionOfOrigin))]
+      FullRegionOfOrigin = dtMapGroup[, sort(unique(FullRegionOfOrigin), na.last = TRUE)],
+      MigrantRegionOfOrigin = dtMapGroup[, sort(unique(MigrantRegionOfOrigin), na.last = TRUE)]
     )
   })
   return(listMap)

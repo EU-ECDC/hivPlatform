@@ -80,6 +80,7 @@ export default class UIStateManager {
       reportsPageEnabled: computed,
       outputsPageEnabled: computed,
       caseBasedAttrMappingEnabled: computed,
+      caseBasedOrigGroupingProvisioned: computed,
       caseBasedOrigGroupingEnabled: computed,
       bootstrapEnabled: computed,
       adjustmentsOutputsEnabled: computed,
@@ -190,8 +191,15 @@ export default class UIStateManager {
     return InArray('AGGR_READ', this.completedSteps);
   };
 
-  get caseBasedOrigGroupingEnabled() {
+  get caseBasedOrigGroupingProvisioned() {
     return InArray('CASE_BASED_ATTR_MAPPING', this.completedSteps);
+  };
+
+  get caseBasedOrigGroupingEnabled() {
+    return (
+      this.caseBasedOrigGroupingProvisioned &&
+      this.rootMgr.origGroupMgr.unusedOrigins.length === 0
+    );
   };
 
   get bootstrapEnabled() {

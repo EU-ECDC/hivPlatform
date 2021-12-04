@@ -9,10 +9,15 @@ ConvertOriginGroupingArray <- function(
       NA_character_,
       simplify2array(el$FullRegionOfOrigin)
     )
+    migrantRegionOfOrigin <- ifelse(
+      length(el$MigrantRegionOfOrigin) == 0,
+      NA_character_,
+      el$MigrantRegionOfOrigin
+    )
     list(
       GroupedRegionOfOrigin = el$GroupedRegionOfOrigin,
       FullRegionOfOrigin = fullRegionOfOrigin,
-      MigrantRegionOfOrigin = el$MigrantRegionOfOrigin
+      MigrantRegionOfOrigin = migrantRegionOfOrigin
     )
   })
   return(originGrouping)

@@ -231,17 +231,17 @@ Events <- function(
   })
 
   observeEvent(input$groupingPresetSelect, {
-    type <- input$groupingPresetSelect
+    preset <- input$groupingPresetSelect
     distr <- appMgr$CaseMgr$OriginDistribution
-    groups <- GetOriginGroupingPreset(type, distr)
+    originGrouping <- GetOriginGroupingPreset(preset, distr)
 
     appMgr$SendMessage(
       type = 'CASE_BASED_DATA_ORIGIN_GROUPING_PREPARED',
       payload = list(
         ActionStatus = 'SUCCESS',
         ActionMessage = 'Origin grouping has been prepared',
-        OriginGroupingType = type,
-        OriginGrouping = groups
+        OriginGroupingPreset = preset,
+        OriginGrouping = originGrouping
       )
     )
   })
@@ -251,10 +251,7 @@ Events <- function(
   })
 
   observeEvent(input$checkOriginGrouping, {
-    migrantCompatible <- CheckOriginGroupingForMigrant(
-      input$checkOriginGrouping,
-      appMgr$CaseMgr$OriginDistribution
-    )
+    migrantCompatible <- CheckOriginGroupingForMigrant(input$checkOriginGrouping)
 
     appMgr$SendMessage(
       type = 'CASE_BASED_DATA_ORIGIN_GROUPING_MIGRANT_CHECKED',

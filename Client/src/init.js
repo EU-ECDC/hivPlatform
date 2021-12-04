@@ -123,12 +123,12 @@ export default appMgr => {
         ],
         Count: [1562, 2237, 1119, 164, 144, 123, 107, 58, 49, 43, 36, 33, 1944]
       },
-      OriginGroupingType: 'REPCOUNTRY + UNK + OTHER',
+      OriginGroupingPreset: 'REPCOUNTRY + UNK + OTHER',
       OriginGrouping: [
         {
           GroupedRegionOfOrigin: 'UNK',
           FullRegionOfOrigin: 'UNK',
-          MigrantRegionOfOrigin: 'UNK'
+          MigrantRegionOfOrigin: null
         },
         {
           GroupedRegionOfOrigin: 'OTHER',
@@ -136,12 +136,12 @@ export default appMgr => {
             'ABROAD', 'AUSTNZ', 'CAR', 'CENTEUR', 'EASTASIAPAC', 'EASTEUR', 'EUROPE', 'LATAM',
             'NORTHAFRMIDEAST', 'NORTHAM', 'SOUTHASIA', 'SUBAFR', 'WESTEUR'
           ],
-          MigrantRegionOfOrigin: 'OTHER'
+          MigrantRegionOfOrigin: null
         },
         {
           GroupedRegionOfOrigin: 'REPCOUNTRY',
           FullRegionOfOrigin: 'REPCOUNTRY',
-          MigrantRegionOfOrigin: 'REPCOUNTRY'
+          MigrantRegionOfOrigin: null
         }
       ]
     }

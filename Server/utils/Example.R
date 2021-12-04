@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -16,14 +16,36 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # nolint end
 
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingType = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+)
+appMgr$CaseMgr$ApplyOriginGrouping(
+  originGroupingPreset = 'REPCOUNTRY + UNK + OTHER'
+)
+
+distr <- GetOriginDistribution(appMgr$CaseMgr$Data)
+originGrouping <- GetOriginGroupingPreset(
+  preset = 'REPCOUNTRY + UNK + OTHER',
+  distr
+)
+originGrouping <- GetOriginGroupingPreset(
+  preset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER', # nolint
+  distr
+)
+
+data <- copy(appMgr$CaseMgr$Data)
+CheckOriginGroupingForMigrant(originGrouping)
+ApplyGrouping(
+  data,
+  originGrouping,
+  from = 'FullRegionOfOrigin',
+  to = 'GroupedRegionOfOrigin'
 )
 
 appMgr$CaseMgr$SetFilters(filters = list(

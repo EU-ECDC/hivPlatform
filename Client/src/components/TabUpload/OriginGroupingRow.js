@@ -50,7 +50,10 @@ const OriginGroupingRow = (props) => {
 
   const handleOriginsChange = e => appMgr.origGroupMgr.setGroupOrigin(i, e.target.value);
 
-  const handleMigrantChange = e => appMgr.origGroupMgr.setMigrantOrigin(i, e.target.value);
+  const handleMigrantChange = e => {
+    const newValue = e.target.value == '' ? null : e.target.value;
+    appMgr.origGroupMgr.setMigrantOrigin(i, newValue);
+  }
 
   const checkBox =
     <Checkbox
@@ -76,15 +79,16 @@ const OriginGroupingRow = (props) => {
   const migrantRegion =
     <Select
       sx={{ width: '100%', fontSize: '0.75rem' }}
-      value={el.MigrantRegionOfOrigin}
+      value={el.MigrantRegionOfOrigin || ''}
       onChange={handleMigrantChange}
     >
-      <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
-      <MenuItem value='UNK' dense>UNK</MenuItem>
+      <MenuItem value='' dense></MenuItem>
       <MenuItem value='EUROPE' dense>EUROPE</MenuItem>
       <MenuItem value='AFRICA' dense>AFRICA</MenuItem>
       <MenuItem value='ASIA' dense>ASIA</MenuItem>
-      <MenuItem value='OTHER' dense>OTHER</MenuItem>
+      <MenuItem value='CARIBBEAN-LATIN AMERICA' dense>CARIBBEAN-LATIN AMERICA</MenuItem>
+      <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
+      <MenuItem value='UNK' dense>UNK</MenuItem>
     </Select>;
   const fullRegion =
     <Select

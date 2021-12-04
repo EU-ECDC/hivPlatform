@@ -89,7 +89,7 @@ export default class AppManager {
         this.attrMappingMgr.setActionMessage(e.payload.ActionMessage);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.origGroupMgr.setDistribution(e.payload.OriginDistribution);
-          this.origGroupMgr.setType(e.payload.OriginGroupingType);
+          this.origGroupMgr.setPreset(e.payload.OriginGroupingPreset);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
           this.notificationsMgr.setMsg('Attribute mapping has been applied');
           this.summaryDataMgr.reset();
@@ -101,7 +101,7 @@ export default class AppManager {
         break;
       case 'CASE_BASED_DATA_ORIGIN_GROUPING_PREPARED':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.origGroupMgr.setType(e.payload.OriginGroupingType);
+          this.origGroupMgr.setPreset(e.payload.OriginGroupingPreset);
           this.origGroupMgr.setGroupings(e.payload.OriginGrouping);
         } else {
           this.notificationsMgr.setMsg('There was a problem with setting this origin grouping');

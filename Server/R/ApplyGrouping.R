@@ -26,11 +26,11 @@ ApplyGrouping <- function(
   from = 'FullRegionOfOrigin',
   to = 'GroupedRegionOfOrigin'
 ) {
-  data[is.na(get(from)), (from) := 'UNK']
   if (to %in% colnames(data)) {
     data[, (to) := NULL]
   }
 
+  data[is.na(get(from)), (from) := 'UNK']
   if (length(originGrouping) > 0) {
     cols <- c(from, to)
     dtMap <- unique(ConvertListToDt(originGrouping)[, ..cols])
@@ -39,11 +39,9 @@ ApplyGrouping <- function(
       (to) := get(to),
       on = from
     ]
-    data[is.na(get(to)), (to) := get(from)]
   } else {
-    data[, (to) := get(from)]
+    data[, (to) := NA_character_]
   }
-
   data[get(to) == 'UNK', (to) := NA_character_]
   data[get(from) == 'UNK', (from) := NA_character_]
 

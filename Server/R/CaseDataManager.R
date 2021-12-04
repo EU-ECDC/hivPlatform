@@ -140,8 +140,8 @@ CaseDataManager <- R6::R6Class(
           dataStatus <- GetInputDataValidityStatus(data)
           if (dataStatus$Valid) {
             originDistribution <- GetOriginDistribution(data)
-            originGroupingType <- 'REPCOUNTRY + UNK + OTHER'
-            origingGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
+            originGroupingPreset <- 'REPCOUNTRY + UNK + OTHER'
+            origingGrouping <- GetOriginGroupingPreset(originGroupingPreset, originDistribution)
           } else {
             msg <- 'Data pre-processing did not succeed'
             status <- 'FAIL'
@@ -169,7 +169,7 @@ CaseDataManager <- R6::R6Class(
           ActionStatus = status,
           ActionMessage = msg,
           OriginDistribution = originDistribution,
-          OriginGroupingType = originGroupingType,
+          OriginGroupingPreset = originGroupingPreset,
           OriginGrouping = origingGrouping
         )
       } else {
@@ -187,7 +187,7 @@ CaseDataManager <- R6::R6Class(
     # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(
       originGrouping,
-      originGroupingType = 'CUSTOM'
+      originGroupingPreset = 'CUSTOM'
     ) {
       if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ATTR_MAPPING'],
@@ -205,7 +205,7 @@ CaseDataManager <- R6::R6Class(
       tryCatch({
         if (missing(originGrouping)) {
           originDistribution <- private$Catalogs$OriginDistribution
-          originGrouping <- GetOriginGroupingPreset(originGroupingType, originDistribution)
+          originGrouping <- GetOriginGroupingPreset(originGroupingPreset, originDistribution)
         }
         preProcessedData <- ApplyGrouping(
           copy(private$Catalogs$PreProcessedData),
@@ -220,7 +220,7 @@ CaseDataManager <- R6::R6Class(
           to = 'MigrantRegionOfOrigin'
         )
 
-        migrantCompatibility <- CheckOriginGroupingForMigrant(originGrouping, preProcessedData)
+        migrantCompatibility <- CheckOriginGroupingForMigrant(originGrouping)
 
         summaryFilterPlots <- GetCaseDataSummaryFilterPlots(preProcessedData)
       },
@@ -233,7 +233,7 @@ CaseDataManager <- R6::R6Class(
         private$Catalogs$OriginGrouping <- originGrouping
         private$Catalogs$PreProcessedData <- preProcessedData
         private$InvalidateAfterStep('CASE_BASED_ORIGIN_GROUPING')
-        PrintAlert('Origin grouping {.val {originGroupingType}} has been applied')
+        PrintAlert('Origin grouping preset {.val {originGroupingPreset}} has been applied')
         payload <- list(
           ActionStatus = status,
           ActionMessage = msg,

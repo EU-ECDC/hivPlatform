@@ -96,7 +96,7 @@ const CreatePopulations = (props) => {
         selectedCount={selectedCount}
         onAddClick={handleAddClick}
         onDeleteClick={handleDeleteClick}
-        addDisabled={!appMgr.uiStateMgr.caseBasedOrigGroupingEnabled}
+        addDisabled={!appMgr.uiStateMgr.caseBasedOrigGroupingProvisioned}
       />
     </Paper>
   )

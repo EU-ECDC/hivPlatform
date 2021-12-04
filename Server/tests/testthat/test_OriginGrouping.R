@@ -23,10 +23,12 @@ test_that('default grouping presets is correct', {
 })
 
 test_that('migrant-related grouping presets are correct', {
-  groupingDetailed <- GetOriginGroupingPreset(type = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER') # nolint
+  groupingDetailed <- GetOriginGroupingPreset('REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER') # nolint
   grouping <- GetOriginGroupingPreset('REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER') # nolint
 
-  expect_true(CheckOriginGroupingForMigrant(groupingDetailed, distr))
+  checkResult <- CheckOriginGroupingForMigrant(groupingDetailed)
+  expect_type(checkResult, 'list')
+  expect_true(checkResult$Valid)
   expect_length(groupingDetailed, 9)
   expect_setequal(
     sapply(groupingDetailed, '[[', 'GroupedRegionOfOrigin'),
@@ -37,7 +39,7 @@ test_that('migrant-related grouping presets are correct', {
   )
   expect_setequal(
     sapply(groupingDetailed, '[[', 'MigrantRegionOfOrigin'),
-    c('REPCOUNTRY', 'UNK', 'OTHER', 'EUROPE', 'AFRICA', 'ASIA')
+    c('REPCOUNTRY', 'UNK', 'EUROPE', 'AFRICA', 'ASIA', 'CARIBBEAN-LATIN AMERICA')
   )
 
   expect_length(grouping, 6)
@@ -47,8 +49,6 @@ test_that('migrant-related grouping presets are correct', {
   )
   expect_setequal(
     sapply(grouping, '[[', 'MigrantRegionOfOrigin'),
-    c('REPCOUNTRY', 'UNK', 'OTHER', 'EUROPE', 'AFRICA', 'ASIA')
+    c('REPCOUNTRY', 'UNK', 'EUROPE', 'AFRICA', 'ASIA')
   )
-
-  expect_false(CheckOriginGroupingForMigrant(groupingDetailed[1], distr))
 })

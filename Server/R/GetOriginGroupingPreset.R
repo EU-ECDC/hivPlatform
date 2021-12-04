@@ -2,8 +2,8 @@
 #'
 #' Get mapping from RegionOfOrigin to GroupOfOrigin
 #'
-#' @param type Grouping type. Default = 'REPCOUNTRY + UNK + OTHER'
-#' @param distr Distribution of RegionOfOrigin
+#' @param preset Grouping preset type. Default = 'REPCOUNTRY + UNK + OTHER'
+#' @param distr Distribution of RegionOfOrigin. Default = NULL
 #'
 #' @return NULL
 #'
@@ -12,16 +12,31 @@
 #'   FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR'),
 #'   Count = c(1536, 2237)
 #' )
-#' GetOriginGroupingPreset(
-#'   type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
-#'   distr = distr
-#' )
+#' GetOriginGroupingPreset('REPCOUNTRY + UNK + 3 most prevalent regions + OTHER', distr)
 #'
 #' @export
 GetOriginGroupingPreset <- function(
-  type = 'REPCOUNTRY + UNK + OTHER',
-  distr
+  preset = 'REPCOUNTRY + UNK + OTHER',
+  distr = NULL
 ) {
+  generalPresets <- c(
+    'REPCOUNTRY + UNK + OTHER',
+    'REPCOUNTRY + UNK + SUB-SAHARAN AFRICA + OTHER',
+    'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
+    'Custom'
+  )
+
+  migrantPresets <- c(
+    'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER',
+    'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER',
+    'REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER',
+    'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER',
+    'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER', # nolint
+    'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER', # nolint
+    'REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER', # nolint
+    'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  )
+
   # Initialize mapping
   map <- c(
     'REPCOUNTRY', 'UNK', 'EASTEUR', 'CENTEUR', 'WESTEUR', 'NORTHAM', 'EUROPE', 'SUBAFR',
@@ -29,9 +44,8 @@ GetOriginGroupingPreset <- function(
   )
   names(map) <- map
 
-  # Adjust according to type
-  switch(
-    type,
+  # Adjust according to preset
+  switch(preset,
     'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER' = ,
     'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER' = ,
     'REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' = ,
@@ -74,7 +88,7 @@ GetOriginGroupingPreset <- function(
   )
 
   # Second pass for migrant-compatible presets
-  switch(type,
+  switch(preset,
     'REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER' = {
       map[map %chin% c('EASTERN EUROPE', 'EUROPE-OTHER')] <- 'EUROPE'
       map[map %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER')] <- 'AFRICA'
@@ -104,9 +118,9 @@ GetOriginGroupingPreset <- function(
   )
 
   map <- as.data.table(map, keep.rownames = TRUE)
-  setnames(map, c('FullRegionOfOrigin', 'GroupedRegionOfOrigin'))
+  setnames(map, new = c('FullRegionOfOrigin', 'GroupedRegionOfOrigin'))
 
-  if (type == 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER') {
+  if (preset == 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER' && !is.null(distr)) {
     sepRegions <- head(
       distr[!FullRegionOfOrigin %chin% c('REPCOUNTRY', 'UNK'), FullRegionOfOrigin],
       3
@@ -115,12 +129,16 @@ GetOriginGroupingPreset <- function(
   }
 
   # Add migrant mapping
-  map[, MigrantRegionOfOrigin := 'OTHER']
-  map[GroupedRegionOfOrigin %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'EUROPE'), MigrantRegionOfOrigin := 'EUROPE'] # nolint
-  map[GroupedRegionOfOrigin %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'AFRICA'), MigrantRegionOfOrigin := 'AFRICA'] # nolint
-  map[GroupedRegionOfOrigin %chin% c('ASIA'), MigrantRegionOfOrigin := 'ASIA']
-  map[GroupedRegionOfOrigin %chin% c('REPCOUNTRY'), MigrantRegionOfOrigin := 'REPCOUNTRY']
-  map[GroupedRegionOfOrigin %chin% c('UNK'), MigrantRegionOfOrigin := 'UNK']
+  if (preset %in% migrantPresets) {
+    map[, MigrantRegionOfOrigin := 'UNK']
+    map[GroupedRegionOfOrigin %chin% c('EASTERN EUROPE', 'EUROPE-OTHER', 'EUROPE'), MigrantRegionOfOrigin := 'EUROPE'] # nolint
+    map[GroupedRegionOfOrigin %chin% c('SUB-SAHARAN AFRICA', 'AFRICA-OTHER', 'AFRICA'), MigrantRegionOfOrigin := 'AFRICA'] # nolint
+    map[GroupedRegionOfOrigin %chin% c('ASIA'), MigrantRegionOfOrigin := 'ASIA']
+    map[GroupedRegionOfOrigin %chin% c('CARIBBEAN-LATIN AMERICA'), MigrantRegionOfOrigin := 'CARIBBEAN-LATIN AMERICA'] # nolint
+    map[GroupedRegionOfOrigin %chin% c('REPCOUNTRY'), MigrantRegionOfOrigin := 'REPCOUNTRY']
+  } else {
+    map[, MigrantRegionOfOrigin := NA_character_]
+  }
 
   mapList <- ConvertOriginGroupingDtToList(map)
 
