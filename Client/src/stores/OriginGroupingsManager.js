@@ -141,7 +141,7 @@ export default class OriginGroupingsManager {
     this.groupings.push({
       GroupedRegionOfOrigin: `Group ${GetNextId('Group ', this.usedNames)}`,
       FullRegionOfOrigin: [],
-      MigrantRegionOfOrigin: 'UNK',
+      MigrantRegionOfOrigin: '',
       groupCount: 0
     });
     this.computeGroupCounts();

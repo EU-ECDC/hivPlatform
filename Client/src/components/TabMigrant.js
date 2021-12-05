@@ -24,19 +24,35 @@ import HIVChart from './Charts/HIVChart';
 import IsNull from '../utilities/IsNull';
 import ProgressBar from './ProgressBar';
 
+const StyledTableCell = (props) => {
+
+  const { isTotal, value, ...rest } = props;
+  const style = isTotal ? {
+    fontWeight: 'bold',
+    backgroundColor: '#eee'
+  } : null;
+
+  return (
+    <TableCell {...rest} sx={style}>{value}</TableCell>
+  )
+}
+
 const TabMigrant = props => {
 
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
+  const [tabId, setTabId] = React.useState(1);
 
-  const [tabId, setTabId] = React.useState(2);
+  const missingness = appMgr.migrMgr.missingnessArray;
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
   const handleRunBtnClick = () => appMgr.migrMgr.run();
 
   const handleCancelBtnClick = () => appMgr.migrMgr.cancel();
+
+  const style = { fontWeight: 'bold' };
 
   return (
     <TabPanel>
@@ -89,10 +105,6 @@ const TabMigrant = props => {
               />
               <Tab
                 label='Diagnostics'
-                disabled={IsNull(appMgr.migrMgr.report) }
-              />
-              <Tab
-                label='Diagnostics (NEW)'
               />
             </Tabs>
             {tabId === 0 && <React.Fragment>
@@ -101,13 +113,7 @@ const TabMigrant = props => {
                 style={{ overflowX: 'auto', fontSize: '0.75rem' }}
               />
             </React.Fragment>}
-            {tabId === 1 && <React.Fragment>
-              <div
-                dangerouslySetInnerHTML={{ __html: appMgr.migrMgr.report }}
-                style={{ overflowX: 'auto' }}
-              />
-            </React.Fragment>}
-            {tabId === 2 && <div style={{maxWidth: 800}}>
+            {tabId === 1 && <div style={{maxWidth: 800}}>
               <h3>1. Overview</h3>
 
               <p>CAUTION:</p>
@@ -128,34 +134,29 @@ const TabMigrant = props => {
               <p>The estimation is performed for adults only.</p>
 
               <p>Cases excluded due to missing values:</p>
-              <Table>
+              <Table size='small'>
                 <TableHead>
-                  <TableRow>
-                    <TableCell width='400px'>Missing variable</TableCell>
-                    <TableCell>Number of excluded cases</TableCell>
+                  <TableRow hover={false}>
+                    <TableCell width='500px'>Missing variable</TableCell>
+                    <TableCell align='right'>Number of excluded cases</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow hover>
-                    <TableCell>Missing date of arrival</TableCell>
-                    <TableCell>3526</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>Transmission is not of type "MSM", "ICU", or "HETERO"</TableCell>
-                    <TableCell>3526</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>Missing full region of origin</TableCell>
-                    <TableCell>10</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell style={{fontWeight: 'bold'}}>Total excluded</TableCell>
-                    <TableCell style={{fontWeight: 'bold'}}>6476</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell style={{fontWeight: 'bold'}}>Total used in estimation</TableCell>
-                    <TableCell style={{fontWeight: 'bold'}}>942</TableCell>
-                  </TableRow>
+                  {
+                    missingness.map((el, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell
+                          value={el.excluded}
+                          isTotal={el.isTotal}
+                        />
+                        <StyledTableCell
+                          value={el.count}
+                          isTotal={el.isTotal}
+                          align='right'
+                        />
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
 

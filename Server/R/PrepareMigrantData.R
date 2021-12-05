@@ -58,19 +58,17 @@ PrepareMigrantData <- function(
 
   # Initialize filters -----------------------------------------------------------------------------
   data[, Excluded := '']
-  # nolint start
-  # data[
-  #   Excluded == '' & MigrantRegionOfOrigin == 'UNK',
-  #   Excluded := 'Migrant region of origin is missing'
-  # ]
-  # nolint end
   data[
-    Excluded == '' & MigrantRegionOfOrigin == 'REPCOUNTRY',
-    Excluded := 'This person is not considered a migrant, because region of origin is the reporting country' # nolint
+    Excluded == '' & MigrantRegionOfOrigin == 'UNK',
+    Excluded := 'Migrant region of origin is missing'
   ]
   data[
-    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE', 'ASIA', 'CARLAM')),
-    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE", "ASIA", "CARLAM"'
+    Excluded == '' & MigrantRegionOfOrigin == 'REPCOUNTRY',
+    Excluded := 'Not considered a migrant, because region of origin is the reporting country' # nolint
+  ]
+  data[
+    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE', 'ASIA', 'CARIBBEAN-LATIN AMERICA')), # nolint
+    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE", "ASIA", "CARIBBEAN-LATIN AMERICA"' # nolint
   ]
   data[
     Excluded == '' & !(Gender %chin% c('F', 'M')),
@@ -107,11 +105,7 @@ PrepareMigrantData <- function(
   data[, ImputeData :=
     Excluded == '' &
       (is.na(PropBeforeArrival) | between(PropBeforeArrival, 0, 1)) &
-      (
-        Gender != 'UNK' &
-        # Transmission != 'UNK' & MigrantRegionOfOrigin != 'UNK' & # nolint
-        !is.na(Age) & !is.na(FirstCD4Count) & !is.na(YearOfHIVDiagnosis)
-      )
+      (Gender != 'UNK' & !is.na(Age) & !is.na(FirstCD4Count) & !is.na(YearOfHIVDiagnosis))
   ]
 
   # Recreate factors with required levels
@@ -124,7 +118,7 @@ PrepareMigrantData <- function(
     ),
     MigrantRegionOfOrigin = factor(
       MigrantRegionOfOrigin,
-      levels = c('AFRICA', 'EUROPE', 'ASIA', 'CARLAM'),
+      levels = c('AFRICA', 'EUROPE', 'ASIA', 'CARIBBEAN-LATIN AMERICA'),
       labels = c('Africa', 'Europe', 'Asia', 'Carribean/Latin America')
     ),
     Transmission = factor(
@@ -210,8 +204,8 @@ PrepareMigrantData <- function(
 
   missStat <- rbind(
     data[Excluded != '', .(Count = .N), by = .(Excluded)][order(-Count)],
-    data[Excluded != '', .(Excluded = 'Total excluded', Count = .N)],
-    data[Excluded == '', .(Excluded = 'Total used in estimation', Count = .N)]
+    data[, .(Excluded = 'Total excluded', Count = sum(Excluded != ''))],
+    data[, .(Excluded = 'Total used in estimation', Count = sum(Excluded == ''))]
   )
 
   PrintH1('Statistics of exclusions')
@@ -239,14 +233,25 @@ PrepareMigrantData <- function(
   base[, KnownPrePost := fcase(Mig < 0, 'Pre', Mig > U, 'Post', default = 'Unknown')]
 
   # CD4 dataset
-  cd4 <- base[, .(
-    UniqueId,
-    YVar_1 = FirstCD4Count,
-    YVar_2 = LatestCD4Count,
-    DateOfExam_1 = pmax(DateOfHIVDiagnosis, DateOfFirstCD4Count, na.rm = TRUE),
-    DateOfExam_2 = DateOfLatestCD4Count,
-    Indi = 'CD4'
-  )]
+  if (nrow(base) > 0) {
+    cd4 <- base[, .(
+      UniqueId,
+      YVar_1 = FirstCD4Count,
+      YVar_2 = LatestCD4Count,
+      DateOfExam_1 = pmax(DateOfHIVDiagnosis, DateOfFirstCD4Count, na.rm = TRUE),
+      DateOfExam_2 = DateOfLatestCD4Count,
+      Indi = 'CD4'
+    )]
+  } else {
+    cd4 <- data.table(
+      UniqueId = integer(),
+      YVar_1 = numeric(),
+      YVar_2 = numeric(),
+      DateOfExam_1 = as.Date(integer()),
+      DateOfExam_2 = as.Date(integer()),
+      Indi = character()
+    )
+  }
   cd4 <- melt(
     cd4,
     measure.vars = patterns('^DateOfExam', '^YVar'),
@@ -256,12 +261,21 @@ PrepareMigrantData <- function(
   cd4[, Time := NULL]
 
   # VL dataset
-  rna <- base[, .(
-    UniqueId,
-    YVar = LatestVLCount,
-    DateOfExam = DateOfLatestVLCount,
-    Indi = 'RNA'
-  )]
+  if (nrow(base) > 0) {
+    rna <- base[, .(
+      UniqueId,
+      YVar = LatestVLCount,
+      DateOfExam = DateOfLatestVLCount,
+      Indi = 'RNA'
+    )]
+  } else {
+    rna <- data.table(
+      UniqueId = integer(),
+      YVar = numeric(),
+      DateOfExam = as.Date(integer()),
+      Indi = character()
+    )
+  }
   rna[!is.na(YVar) & YVar == 0, YVar := 25]
 
   # Combine both markers

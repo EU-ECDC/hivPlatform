@@ -7,7 +7,7 @@ export default class MigrationManager {
 
   runLog = null;
 
-  report = null;
+  stats = null;
 
   dataCompatibleFlag = null;
 
@@ -18,9 +18,10 @@ export default class MigrationManager {
       runLog: observable,
       dataCompatibleFlag: observable,
       runInProgress: computed,
+      missingnessArray: computed,
       setRunProgress: action,
       setRunLog: action,
-      setReport: action,
+      setStats: action,
       setDataCompatibleFlag: action,
       run: action,
       cancel: action
@@ -31,11 +32,23 @@ export default class MigrationManager {
     return this.runProgress !== null;
   };
 
+  get missingnessArray() {
+    const excluded = this.stats.Missingness.Excluded;
+    const counts = this.stats.Missingness.Count;
+    const arr = excluded.map((el, i) => ({
+      excluded: excluded[i],
+      count: counts[i],
+      isTotal: /Total/.test(excluded[i])
+    }));
+
+    return arr;
+  };
+
   setRunProgress = progress => this.runProgress = progress;
 
   setRunLog = runLog => this.runLog = runLog;
 
-  setReport = report => this.report = report;
+  setStats = stats => this.stats = stats;
 
   setDataCompatibleFlag = dataCompatibleFlag => this.dataCompatibleFlag = dataCompatibleFlag;
 

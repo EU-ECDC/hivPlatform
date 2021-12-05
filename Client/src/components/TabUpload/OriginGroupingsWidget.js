@@ -71,10 +71,11 @@ const OriginGroupingsWidget = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
-          <Table size='small' >
+          <Table size='small'>
             <TableHead>
               <TableRow hover={false}>
-                <TableCell>FullRegionOfOrigin</TableCell><TableCell align='right'>Count</TableCell>
+                <TableCell>FullRegionOfOrigin</TableCell>
+                <TableCell align='right'>Count</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -322,6 +322,38 @@ export default appMgr => {
   });
 
   appMgr.onShinyEvent({
+    type: 'MIGRATION_RUN_FINISHED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Migration task finished',
+      Stats: {
+        Missingness: {
+          Excluded: [
+            'Not considered a migrant, because region of origin is the reporting country',
+            'Migrant region of origin is missing',
+            'Transmission is not of mode "MSM", "IDU", "HETERO" or "TRANSFU"',
+            'Date of arrival is missing',
+            'Date of arrival is before date of birth',
+            'Age is below 16',
+            'Total excluded',
+            'Total used in estimation'
+          ],
+          Count: [2818, 1644, 1128, 1003, 5, 4, 6602, 816]
+        },
+        Imputation: {
+          Imputation: '0',
+          CountBeforeImputation: 551,
+          CountAfterImputation: 816,
+          CountImputed: 265,
+          CountTotal: 7418
+        }
+      }
+    }
+  });
+
+
+
+  appMgr.onShinyEvent({
     type: 'ADJUSTMENTS_RUN_LOG_SET',
     payload: {
       ActionStatus: 'SUCCESS',
@@ -609,7 +641,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(1, 0);
+  appMgr.uiStateMgr.setActivePageId(4, 0);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);

@@ -16,7 +16,7 @@ appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # nolint end
 
 
@@ -24,28 +24,6 @@ appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
-)
-appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingPreset = 'REPCOUNTRY + UNK + OTHER'
-)
-
-distr <- GetOriginDistribution(appMgr$CaseMgr$Data)
-originGrouping <- GetOriginGroupingPreset(
-  preset = 'REPCOUNTRY + UNK + OTHER',
-  distr
-)
-originGrouping <- GetOriginGroupingPreset(
-  preset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER', # nolint
-  distr
-)
-
-data <- copy(appMgr$CaseMgr$Data)
-CheckOriginGroupingForMigrant(originGrouping)
-ApplyGrouping(
-  data,
-  originGrouping,
-  from = 'FullRegionOfOrigin',
-  to = 'GroupedRegionOfOrigin'
 )
 
 appMgr$CaseMgr$SetFilters(filters = list(
@@ -92,16 +70,30 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
 
-originGrouping <- appMgr$CaseMgr$OriginGrouping
-distr <- appMgr$CaseMgr$OriginDistribution
-CheckOriginGroupingForMigrant(originGrouping, distr)
-
-inputData <- copy(appMgr$CaseMgr$Data)
+CheckOriginGroupingForMigrant(appMgr$CaseMgr$OriginGrouping)
 
 params <- hivPlatform::GetMigrantParams()
 migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
+
+countDistrData <- rbind(
+  migrantData$Data$CD4VL[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
+  migrantData$Data$AIDS[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
+)
+if (nrow(countDistrData) > 0) {
+  countDistr <- countDistrData[,
+    .(Count = .N),
+    keyby = .(
+      YearOfArrival = year(DateOfArrival),
+      YearOfDiagnosis = year(DateOfHIVDiagnosis),
+      MigrantRegionOfOrigin
+    )
+  ]
+  dcast(countDistr, YearOfArrival ~ MigrantRegionOfOrigin, value.var = 'Count', fill = 0)
+}
+
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
 
+shiny:::toJSON(migrantData$Stats$Imputation)
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(

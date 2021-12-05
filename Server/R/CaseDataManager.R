@@ -479,8 +479,7 @@ CaseDataManager <- R6::R6Class(
 
               result <- list(
                 Input = input,
-                Output = output,
-                Report = ''
+                Output = output
               )
 
               return(result)
@@ -503,7 +502,7 @@ CaseDataManager <- R6::R6Class(
                 payload = list(
                   ActionStatus = 'SUCCESS',
                   ActionMessage = 'Migration task finished',
-                  Report = result$Report
+                  Stats = result$Input$Stats
                 )
               )
             },
