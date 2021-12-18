@@ -23,8 +23,12 @@ test_that('default grouping presets is correct', {
 })
 
 test_that('migrant-related grouping presets are correct', {
-  groupingDetailed <- GetOriginGroupingPreset('REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER') # nolint
-  grouping <- GetOriginGroupingPreset('REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER') # nolint
+  groupingDetailed <- GetOriginGroupingPreset(
+    'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  )
+  grouping <- GetOriginGroupingPreset(
+    'REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + OTHER'
+  )
 
   checkResult <- CheckOriginGroupingForMigrant(groupingDetailed)
   expect_type(checkResult, 'list')
@@ -33,22 +37,22 @@ test_that('migrant-related grouping presets are correct', {
   expect_setequal(
     sapply(groupingDetailed, '[[', 'GroupedRegionOfOrigin'),
     c(
-      'REPCOUNTRY', 'UNK', 'OTHER', 'CARIBBEAN-LATIN AMERICA', 'EUROPE-OTHER', 'EASTERN EUROPE',
-      'AFRICA-OTHER', 'SUB-SAHARAN AFRICA', 'ASIA'
+      'REPCOUNTRY', 'UNK', 'OTHER', 'CARIBBEAN-LATIN AMERICA', 'EUROPE-OTHER-NORTH AMERICA',
+      'EASTERN EUROPE', 'AFRICA-OTHER', 'SUB-SAHARAN AFRICA', 'ASIA'
     )
   )
   expect_setequal(
-    sapply(groupingDetailed, '[[', 'MigrantRegionOfOrigin'),
-    c('REPCOUNTRY', 'UNK', 'EUROPE', 'AFRICA', 'ASIA', 'CARIBBEAN-LATIN AMERICA')
+    unique(sapply(groupingDetailed, '[[', 'MigrantRegionOfOrigin')),
+    c('REPCOUNTRY', 'UNK', 'EUROPE-NORTH AMERICA', 'AFRICA', 'ASIA', 'CARIBBEAN-LATIN AMERICA', 'OTHER') # nolint
   )
 
   expect_length(grouping, 6)
   expect_setequal(
     sapply(grouping, '[[', 'GroupedRegionOfOrigin'),
-    c('REPCOUNTRY', 'UNK', 'OTHER', 'EUROPE', 'AFRICA', 'ASIA')
+    c('REPCOUNTRY', 'UNK', 'OTHER', 'EUROPE-NORTH AMERICA', 'AFRICA', 'ASIA')
   )
   expect_setequal(
     sapply(grouping, '[[', 'MigrantRegionOfOrigin'),
-    c('REPCOUNTRY', 'UNK', 'EUROPE', 'AFRICA', 'ASIA')
+    c('REPCOUNTRY', 'UNK', 'EUROPE-NORTH AMERICA', 'AFRICA', 'ASIA', 'OTHER')
   )
 })

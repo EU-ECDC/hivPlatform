@@ -187,7 +187,7 @@ CaseDataManager <- R6::R6Class(
     # 3. Apply origin grouping ---------------------------------------------------------------------
     ApplyOriginGrouping = function(
       originGrouping,
-      originGroupingPreset = 'CUSTOM'
+      originGroupingPreset = 'Custom'
     ) {
       if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ATTR_MAPPING'],

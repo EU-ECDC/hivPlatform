@@ -18,7 +18,11 @@ jobs:
       SHINYAPPS_APP_NAME: hivPlatform-${GITHUB_REF_NAME}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - run: echo 'Print all environment variables'
+      - run: env
 
       - name: Set up Node 16
         uses: actions/setup-node@v2
