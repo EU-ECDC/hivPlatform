@@ -15,10 +15,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RENV_PATHS_ROOT: ~/.local/share/renv
-      SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
-      SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-      SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-      SHINYAPPS_APP_NAME: hivPlatform-${{ env.GITHUB_REF_NAME }}
 
     steps:
       - name: Check out the repository
@@ -76,6 +72,11 @@ jobs:
         working-directory: Server
 
       - name: Deploy
+        env:
+          SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+          SHINYAPPS_APP_NAME: hivPlatform-${{ env.GITHUB_REF_NAME }}
         run: >
           rsconnect::setAccountInfo(
             name   = Sys.getenv('SHINYAPPS_ACCOUNT'),
