@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -23,7 +23,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
 appMgr$CaseMgr$SetFilters(filters = list(
@@ -70,36 +70,31 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
 
-CheckOriginGroupingForMigrant(appMgr$CaseMgr$OriginGrouping)
-
-params <- hivPlatform::GetMigrantParams()
-migrantData <- hivPlatform::PrepareMigrantData(data = appMgr$CaseMgr$Data)
-
-countDistrData <- rbind(
-  migrantData$Data$CD4VL[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
-  migrantData$Data$AIDS[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
+distr <- appMgr$CaseMgr$OriginDistribution
+originGrouping <- GetOriginGroupingPreset(
+  'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER'
 )
-if (nrow(countDistrData) > 0) {
-  countDistr <- countDistrData[,
-    .(Count = .N),
-    keyby = .(
-      YearOfArrival = year(DateOfArrival),
-      YearOfDiagnosis = year(DateOfHIVDiagnosis),
-      MigrantRegionOfOrigin
-    )
-  ]
-  dcast(countDistr, YearOfArrival ~ MigrantRegionOfOrigin, value.var = 'Count', fill = 0)
-}
+CheckOriginGroupingForMigrant(originGrouping)
+
+data <- copy(appMgr$CaseMgr$Data)
+params <- hivPlatform::GetMigrantParams()
+ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
+ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
+data[, unique(GroupedRegionOfOrigin)]
+data[, unique(MigrantRegionOfOrigin)]
+migrantData <- hivPlatform::PrepareMigrantData(data)
 
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
 
+shiny:::toJSON(migrantData$Stats$Missingness)
 shiny:::toJSON(migrantData$Stats$Imputation)
+shiny:::toJSON(migrantData$Stats$RegionDistr)
+ConvertObjToJSON(as.matrix(migrantData$Stats$RegionDistr))
+ConvertObjToJSON(migrantData$Stats$YODDistr)
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
-  Name = c(
-    'Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'
-  ),
+  Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)

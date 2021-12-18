@@ -15,7 +15,6 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -23,14 +22,28 @@ import Btn from './Btn';
 import HIVChart from './Charts/HIVChart';
 import IsNull from '../utilities/IsNull';
 import ProgressBar from './ProgressBar';
+import PercentageToShade from '../utilities/PercentageToShade';
 
 const StyledTableCell = (props) => {
-
   const { isTotal, value, ...rest } = props;
   const style = isTotal ? {
     fontWeight: 'bold',
-    backgroundColor: '#eee'
+    backgroundColor: '#f9f9f9'
   } : null;
+
+  return (
+    <TableCell {...rest} sx={style}>{value}</TableCell>
+  )
+}
+
+const StyledTableCell2 = (props) => {
+  const { isTotal, value, maxValue, ...rest } = props;
+  const style = isTotal ? {
+    fontWeight: 'bold',
+    backgroundColor: '#f9f9f9'
+  } : {
+    backgroundColor: `${PercentageToShade(value / maxValue, 214)}`
+  };
 
   return (
     <TableCell {...rest} sx={style}>{value}</TableCell>
@@ -43,16 +56,18 @@ const TabMigrant = props => {
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
   const [tabId, setTabId] = React.useState(1);
+  const [migrRegion, setMigrRegion] = React.useState('Europe');
+  const handleMigrRegionChange = e => setMigrRegion(e.target.value);
 
   const missingness = appMgr.migrMgr.missingnessArray;
+  const regionDistr = appMgr.migrMgr.regionDistrArray;
+  const yodDistr = appMgr.migrMgr.yodDistr;
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
   const handleRunBtnClick = () => appMgr.migrMgr.run();
 
   const handleCancelBtnClick = () => appMgr.migrMgr.cancel();
-
-  const style = { fontWeight: 'bold' };
 
   return (
     <TabPanel>
@@ -136,7 +151,7 @@ const TabMigrant = props => {
               <p>Cases excluded due to missing values:</p>
               <Table size='small'>
                 <TableHead>
-                  <TableRow hover={false}>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
                     <TableCell width='500px'>Missing variable</TableCell>
                     <TableCell align='right'>Number of excluded cases</TableCell>
                   </TableRow>
@@ -147,6 +162,7 @@ const TabMigrant = props => {
                       <TableRow key={i}>
                         <StyledTableCell
                           value={el.excluded}
+
                           isTotal={el.isTotal}
                         />
                         <StyledTableCell
@@ -162,105 +178,79 @@ const TabMigrant = props => {
 
               <h3>2. Description of data used in estimation</h3>
 
-              <p>Table 1. Number of cases by Region of Origin and Year of Arrival</p>
-              <Table>
+              <p>Table 1. Number of cases by Year of Arrival and Region For Migration Module</p>
+              <Table size='small'>
                 <TableHead>
-                  <TableRow>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
                     <TableCell rowSpan={2}>Year of arrival</TableCell>
-                    <TableCell colSpan={3}>
-                      Region of origin
-                    </TableCell>
+                    <TableCell colSpan={4}>Region For Migration Module Parameter</TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell>Europe</TableCell>
-                    <TableCell>Africa</TableCell>
-                    <TableCell>Asia</TableCell>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
+                    <TableCell align='right'>Europe</TableCell>
+                    <TableCell align='right'>Africa</TableCell>
+                    <TableCell align='right'>Asia</TableCell>
+                    <TableCell align='right'>Carribean/Latin America</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow hover>
-                    <TableCell>2000</TableCell>
-                    <TableCell>10</TableCell>
-                    <TableCell>15</TableCell>
-                    <TableCell>15</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2001</TableCell>
-                    <TableCell>87</TableCell>
-                    <TableCell>23</TableCell>
-                    <TableCell>54</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2002</TableCell>
-                    <TableCell>0</TableCell>
-                    <TableCell>65</TableCell>
-                    <TableCell>5</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2003</TableCell>
-                    <TableCell>5</TableCell>
-                    <TableCell>23</TableCell>
-                    <TableCell>76</TableCell>
-                  </TableRow>
+                  {
+                    regionDistr.map((el, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell value={el.yearOfArrival} isTotal={el.isTotal} />
+                        <StyledTableCell2 value={el.europe} maxValue={100} isTotal={el.isTotal} align='right'/>
+                        <StyledTableCell2 value={el.africa} maxValue={100} isTotal={el.isTotal} align='right'/>
+                        <StyledTableCell2 value={el.asia} maxValue={100} isTotal={el.isTotal} align='right'/>
+                        <StyledTableCell2 value={el.carlam} maxValue={100} isTotal={el.isTotal} align='right'/>
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
 
               <p>Table 2. Number of cases by the Year of Arrival and Year of Diagnosis</p>
               <FormControl>
-                <InputLabel id="demo-simple-select-label">Region of origin</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  value='Europe'
+                  value={migrRegion}
+                  onChange={handleMigrRegionChange}
                 >
                   <MenuItem value='Europe' dense>Europe</MenuItem>
                   <MenuItem value='Africa' dense>Africa</MenuItem>
                   <MenuItem value='Asia' dense>Asia</MenuItem>
+                  <MenuItem value='Carribean/Latin America' dense>Carribean/Latin America</MenuItem>
                 </Select>
-                <FormHelperText>Select region of origin</FormHelperText>
+                <FormHelperText>Select region for migration</FormHelperText>
               </FormControl>
-
-              <Table>
+              <Table size='small'>
                 <TableHead>
-                  <TableRow>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
                     <TableCell rowSpan={2}>Year of arrival</TableCell>
-                    <TableCell colSpan={3}>
+                    <TableCell colSpan={4}>
                       Year of diagnosis
                     </TableCell>
                   </TableRow>
-                  <TableRow>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
                     <TableCell>2000</TableCell>
                     <TableCell>2001</TableCell>
                     <TableCell>2002</TableCell>
+                    <TableCell>2003</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow hover>
-                    <TableCell>2000</TableCell>
-                    <TableCell>10</TableCell>
-                    <TableCell>15</TableCell>
-                    <TableCell>15</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2001</TableCell>
-                    <TableCell style={{backgroundColor: 'red', color: 'white'}}>87</TableCell>
-                    <TableCell>23</TableCell>
-                    <TableCell>54</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2002</TableCell>
-                    <TableCell>0</TableCell>
-                    <TableCell>65</TableCell>
-                    <TableCell>5</TableCell>
-                  </TableRow>
-                  <TableRow hover>
-                    <TableCell>2003</TableCell>
-                    <TableCell>5</TableCell>
-                    <TableCell>23</TableCell>
-                    <TableCell style={{backgroundColor: 'red', color: 'white'}}>76</TableCell>
-                  </TableRow>
+                  {
+                    yodDistr[migrRegion].map((el, i) => (
+                      <TableRow key={i}>
+                        {
+                          Object.values(el).map((v,j) => (
+                            <StyledTableCell key={j} value={v} isTotal={false} />
+                          ))
+                        }
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
 
+              {/*
               <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
 
               <p>Table 3. Proportion of migrants infected post arrival by sex, age group and transmission category</p>
@@ -280,6 +270,7 @@ const TabMigrant = props => {
                 min={[15, 30, 30, 20]}
                 range={[10, 20, 25, 20]}
               />
+              */}
 
             </div>}
           </Paper>

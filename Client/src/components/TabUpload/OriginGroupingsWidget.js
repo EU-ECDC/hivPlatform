@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -69,7 +70,7 @@ const OriginGroupingsWidget = (props) => {
   return (
     <Paper sx={{ padding: '10px' }}>
       <Grid container spacing={2}>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
           <Table size='small'>
             <TableHead>
@@ -90,7 +91,7 @@ const OriginGroupingsWidget = (props) => {
             </TableBody>
           </Table>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <Typography variant='overline'>Migrant variable regrouping</Typography>
           <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
             <Select
@@ -108,14 +109,14 @@ const OriginGroupingsWidget = (props) => {
               <MenuItem value='Custom' dense>Custom</MenuItem>
               <ListSubheader><Divider /></ListSubheader>
               <ListSubheader><Typography variant='overline'>Migrant-module specific presets</Typography></ListSubheader>
-              <MenuItem value='REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
-              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + AFRICA + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + AFRICA + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + AFRICA + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
+              <MenuItem value='REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' dense>REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER</MenuItem>
             </Select>
             <FormHelperText>Select regrouping preset</FormHelperText>
           </FormControl>
@@ -130,8 +131,8 @@ const OriginGroupingsWidget = (props) => {
                     checked={rowCount > 0 && selectedCount === rowCount}
                   />
                 </TableCell>
-                <TableCell width={200} sx={{padding: '0px 20px 0px 0px'}}>Grouped Region Of Origin</TableCell>
-                <TableCell width={200} padding='none'>Region For Migration Module Parameter</TableCell>
+                <TableCell width={250} sx={{padding: '0px 20px 0px 0px'}}>Grouped Region Of Origin</TableCell>
+                <TableCell width={250} padding='none'>Region For Migration Module Parameter</TableCell>
                 <TableCell>FullRegionOfOrigin</TableCell>
                 <TableCell align='right' width='10%'>Count</TableCell>
               </TableRow>
@@ -156,6 +157,9 @@ const OriginGroupingsWidget = (props) => {
             onAddClick={handleAddClick}
             onDeleteClick={handleDeleteClick}
           />
+          <Alert severity='info'>
+            Records with value "UNK" are removed from the dataset processed for migration.
+          </Alert>
           <MessageAlert
             valid={appMgr.origGroupMgr.migrantCompatibleStatus}
             msg={appMgr.origGroupMgr.migrantCompatibleMessage}

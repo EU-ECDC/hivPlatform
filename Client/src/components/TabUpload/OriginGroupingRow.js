@@ -83,11 +83,12 @@ const OriginGroupingRow = (props) => {
       onChange={handleMigrantChange}
     >
       <MenuItem value='' dense></MenuItem>
-      <MenuItem value='EUROPE' dense>EUROPE</MenuItem>
+      <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
+      <MenuItem value='EUROPE-NORTH AMERICA' dense>EUROPE-NORTH AMERICA</MenuItem>
       <MenuItem value='AFRICA' dense>AFRICA</MenuItem>
       <MenuItem value='ASIA' dense>ASIA</MenuItem>
       <MenuItem value='CARIBBEAN-LATIN AMERICA' dense>CARIBBEAN-LATIN AMERICA</MenuItem>
-      <MenuItem value='REPCOUNTRY' dense>REPCOUNTRY</MenuItem>
+      <MenuItem value='OTHER' dense>OTHER</MenuItem>
       <MenuItem value='UNK' dense>UNK</MenuItem>
     </Select>;
   const fullRegion =

@@ -325,6 +325,47 @@ PrepareMigrantData <- function(
   baseAIDS[, DTime := as.numeric(DateOfAIDSDiagnosis - DateOfHIVDiagnosis) / 365.25]
   baseAIDS[DTime < 0, DTime := 0]
 
+  # Diagnosis artifacts
+  countDistrData <- rbind(
+    baseCD4VL[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
+    baseAIDS[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
+  )
+  if (nrow(countDistrData) > 0) {
+    countDistr <- countDistrData[,
+      .(Count = .N),
+      keyby = .(
+        YearOfArrival = year(DateOfArrival),
+        YearOfDiagnosis = year(DateOfHIVDiagnosis),
+        MigrantRegionOfOrigin
+      )
+    ]
+
+    regionDistr <- dcast(
+      countDistr,
+      YearOfArrival ~ MigrantRegionOfOrigin,
+      value.var = 'Count',
+      fun.aggregate = sum,
+      fill = 0
+    )
+
+    migrRegions <- levels(countDistr$MigrantRegionOfOrigin)
+    yodDistr <- setNames(lapply(
+      migrRegions,
+      function(migrRegion) {
+        dcast(
+          countDistr[MigrantRegionOfOrigin == migrRegion],
+          YearOfArrival ~ YearOfDiagnosis,
+          value.var = 'Count',
+          fun.aggregate = sum,
+          fill = 0
+        )
+      }
+    ), migrRegions)
+  } else {
+    regionDistr <- NULL
+    yodDistr <- NULL
+  }
+
   return(list(
     Data = list(
       CD4VL = baseCD4VL,
@@ -332,7 +373,9 @@ PrepareMigrantData <- function(
     ),
     Stats = list(
       Missingness = missStat,
-      Imputation = imputeStat
+      Imputation = imputeStat,
+      RegionDistr = regionDistr,
+      YODDistr = ConvertObjToJSON(yodDistr)
     )
   ))
 }

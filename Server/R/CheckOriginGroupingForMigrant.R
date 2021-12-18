@@ -1,7 +1,14 @@
 CheckOriginGroupingForMigrant <- function(
   originGrouping
 ) {
-  allowedNames <- c('EUROPE', 'AFRICA', 'ASIA', 'CARIBBEAN-LATIN AMERICA', 'REPCOUNTRY', 'UNK')
+  allowedNames <- c(
+    'REPCOUNTRY', 'UNK',
+    'EUROPE-NORTH AMERICA',
+    'AFRICA',
+    'ASIA',
+    'CARIBBEAN-LATIN AMERICA',
+    'OTHER'
+  )
 
   migrantOrigins <- unique(sapply(originGrouping, '[[', 'MigrantRegionOfOrigin'))
   wrongNames <- migrantOrigins[!(migrantOrigins %chin% allowedNames)]

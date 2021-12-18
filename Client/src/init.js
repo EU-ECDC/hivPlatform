@@ -346,12 +346,43 @@ export default appMgr => {
           CountAfterImputation: 816,
           CountImputed: 265,
           CountTotal: 7418
+        },
+        RegionDistr: {
+          YearOfArrival: [2014, 2015, 2016, 2017],
+          Africa: [39, 77, 97, 38],
+          Europe: [21, 45, 39, 17],
+          Asia: [5, 8, 7, 2],
+          "Carribean/Latin America": [7, 22, 18, 6]
+        },
+        YODDistr: {
+          Africa: [
+            { 'YearOfArrival': 2014, '2015': 0, '2016': 0, '2018': 0, '2019': 0 },
+            { 'YearOfArrival': 2015, '2015': 1, '2016': 4, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2016, '2015': 2, '2016': 5, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2017, '2015': 3, '2016': 6, '2018': 0, '2019': 9 }
+          ],
+          Europe: [
+            { 'YearOfArrival': 2014, '2015': 0, '2016': 0, '2018': 0, '2019': 0 },
+            { 'YearOfArrival': 2015, '2015': 1, '2016': 4, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2016, '2015': 2, '2016': 5, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2017, '2015': 3, '2016': 6, '2018': 0, '2019': 9 }
+          ],
+          Asia: [
+            { 'YearOfArrival': 2014, '2015': 0, '2016': 0, '2018': 0, '2019': 0 },
+            { 'YearOfArrival': 2015, '2015': 1, '2016': 4, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2016, '2015': 2, '2016': 5, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2017, '2015': 3, '2016': 6, '2018': 0, '2019': 9 }
+          ],
+          "Carribean/Latin America": [
+            { 'YearOfArrival': 2014, '2015': 0, '2016': 0, '2018': 0, '2019': 0 },
+            { 'YearOfArrival': 2015, '2015': 1, '2016': 4, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2016, '2015': 2, '2016': 5, '2018': 0, '2019': 8 },
+            { 'YearOfArrival': 2017, '2015': 3, '2016': 6, '2018': 0, '2019': 9 }
+          ]
         }
       }
     }
   });
-
-
 
   appMgr.onShinyEvent({
     type: 'ADJUSTMENTS_RUN_LOG_SET',
@@ -641,7 +672,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 0);
+  appMgr.uiStateMgr.setActivePageId(1, 0);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);
