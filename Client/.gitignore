@@ -1,7 +1,9 @@
 **/node_modules
 **/build
 **/analyze
-**/.yarn
+**/.yarn/cache
+**/.yarn/unplugged
+**/.yarn/install-state.gz
 yarn-error.log
 .pnp.loader.mjs
 .pnp.cjs
