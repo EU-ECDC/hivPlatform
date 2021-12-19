@@ -4,12 +4,12 @@
 \alias{GetOriginGroupingPreset}
 \title{GetOriginGroupingPreset}
 \usage{
-GetOriginGroupingPreset(type = "REPCOUNTRY + UNK + OTHER", distr)
+GetOriginGroupingPreset(preset = "REPCOUNTRY + UNK + OTHER", distr = NULL)
 }
 \arguments{
-\item{type}{Grouping type. Default = 'REPCOUNTRY + UNK + OTHER'}
+\item{preset}{Grouping preset type. Default = 'REPCOUNTRY + UNK + OTHER'}
 
-\item{distr}{Distribution of RegionOfOrigin}
+\item{distr}{Distribution of RegionOfOrigin. Default = NULL}
 }
 \description{
 Get mapping from RegionOfOrigin to GroupOfOrigin
@@ -19,9 +19,6 @@ distr <- data.table::data.table(
   FullRegionOfOrigin = c('REPCOUNTRY', 'SUBAFR'),
   Count = c(1536, 2237)
 )
-GetOriginGroupingPreset(
-  type = 'REPCOUNTRY + UNK + 3 most prevalent regions + OTHER',
-  distr = distr
-)
+GetOriginGroupingPreset('REPCOUNTRY + UNK + 3 most prevalent regions + OTHER', distr)
 
 }

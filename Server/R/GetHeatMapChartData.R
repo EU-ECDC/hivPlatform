@@ -1,7 +1,8 @@
 GetHeatMapChartData <- function(
   distrData,
   chartCategoriesX = colnames(distrData)[-1],
-  chartCategoriesY = distrData[[1]]
+  chartCategoriesY = distrData[[1]],
+  titleX = 'Region For Migration Module'
 ) {
   matrixData <- unname(as.matrix(distrData[, ..chartCategoriesX]))
   dims <- dim(matrixData)
@@ -15,6 +16,7 @@ GetHeatMapChartData <- function(
   return(
     list(
       chartCategoriesX = chartCategoriesX,
+      titleX = titleX,
       chartCategoriesY = chartCategoriesY,
       seriesData = seriesData,
       dataMax = dataMax

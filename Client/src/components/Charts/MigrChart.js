@@ -39,7 +39,7 @@ const MigrChart = (props) => {
     grid: { top: 40, right: 70, bottom: 40, left: 90 },
     xAxis: {
       type: 'category',
-      name: 'Region For Migration Module',
+      name: data.titleX,
       nameLocation: 'center',
       nameGap: 25,
       data: data.chartCategoriesX,

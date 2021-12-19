@@ -173,6 +173,7 @@ const TabMigrant = props => {
               </FormControl>
               <MigrChart data={{
                 chartCategoriesX: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020],
+                titleX: 'Year of Diagnosis',
                 chartCategoriesY: [2014, 2015, 2016, 2017, 2018],
                 seriesData: [
                   [0, 0, 39], [0, 1, 21], [0, 2, 5], [0, 3, 7], [0, 4, 10],
