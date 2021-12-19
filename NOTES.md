@@ -1,7 +1,6 @@
 1. EUROPE => EUROPE-NORTH AMERICA
-3. Add info that records with "UNK" are removed from the dataset processed for migration
-
 2. Rename "UNK" to "OTHER" in "Region For Migration.." and combine with "CARIBBEAN..." for migration modelling
+3. Add info that records with "UNK" are removed from the dataset processed for migration
 
 4. In case of imputed data show
   a) average (priority)

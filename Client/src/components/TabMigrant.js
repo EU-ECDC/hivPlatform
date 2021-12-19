@@ -19,10 +19,12 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Btn from './Btn';
+import MigrChart from './Charts/MigrChart';
 import HIVChart from './Charts/HIVChart';
 import IsNull from '../utilities/IsNull';
 import ProgressBar from './ProgressBar';
-import PercentageToShade from '../utilities/PercentageToShade';
+
+const Title = (props) => <Typography variant='caption' component='div' {...props}/>
 
 const StyledTableCell = (props) => {
   const { isTotal, value, ...rest } = props;
@@ -36,32 +38,16 @@ const StyledTableCell = (props) => {
   )
 }
 
-const StyledTableCell2 = (props) => {
-  const { isTotal, value, maxValue, ...rest } = props;
-  const style = isTotal ? {
-    fontWeight: 'bold',
-    backgroundColor: '#f9f9f9'
-  } : {
-    backgroundColor: `${PercentageToShade(value / maxValue, 214)}`
-  };
-
-  return (
-    <TableCell {...rest} sx={style}>{value}</TableCell>
-  )
-}
-
 const TabMigrant = props => {
 
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
   const [tabId, setTabId] = React.useState(1);
-  const [migrRegion, setMigrRegion] = React.useState('Europe');
+  const [migrRegion, setMigrRegion] = React.useState('All');
   const handleMigrRegionChange = e => setMigrRegion(e.target.value);
 
   const missingness = appMgr.migrMgr.missingnessArray;
-  const regionDistr = appMgr.migrMgr.regionDistrArray;
-  const yodDistr = appMgr.migrMgr.yodDistr;
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
@@ -120,6 +106,7 @@ const TabMigrant = props => {
               />
               <Tab
                 label='Diagnostics'
+                disabled={IsNull(appMgr.migrMgr.stats) }
               />
             </Tabs>
             {tabId === 0 && <React.Fragment>
@@ -128,10 +115,8 @@ const TabMigrant = props => {
                 style={{ overflowX: 'auto', fontSize: '0.75rem' }}
               />
             </React.Fragment>}
-            {tabId === 1 && <div style={{maxWidth: 800}}>
+            {tabId === 1 && !IsNull(appMgr.migrMgr.stats) && <div style={{maxWidth: 1000}}>
               <h3>1. Overview</h3>
-
-              <p>CAUTION:</p>
 
               <p>
                 Estimates of the time of infection require the following variables: Sex,
@@ -148,7 +133,7 @@ const TabMigrant = props => {
 
               <p>The estimation is performed for adults only.</p>
 
-              <p>Cases excluded due to missing values:</p>
+              <Title>Table 1. Cases excluded due to missing values</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
@@ -160,16 +145,8 @@ const TabMigrant = props => {
                   {
                     missingness.map((el, i) => (
                       <TableRow key={i}>
-                        <StyledTableCell
-                          value={el.excluded}
-
-                          isTotal={el.isTotal}
-                        />
-                        <StyledTableCell
-                          value={el.count}
-                          isTotal={el.isTotal}
-                          align='right'
-                        />
+                        <StyledTableCell value={el.excluded} isTotal={el.isTotal} />
+                        <StyledTableCell value={el.count} isTotal={el.isTotal} align='right' />
                       </TableRow>
                     ))
                   }
@@ -178,84 +155,198 @@ const TabMigrant = props => {
 
               <h3>2. Description of data used in estimation</h3>
 
-              <p>Table 1. Number of cases by Year of Arrival and Region For Migration Module</p>
-              <Table size='small'>
-                <TableHead>
-                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-                    <TableCell rowSpan={2}>Year of arrival</TableCell>
-                    <TableCell colSpan={4}>Region For Migration Module Parameter</TableCell>
-                  </TableRow>
-                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-                    <TableCell align='right'>Europe</TableCell>
-                    <TableCell align='right'>Africa</TableCell>
-                    <TableCell align='right'>Asia</TableCell>
-                    <TableCell align='right'>Carribean/Latin America</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    regionDistr.map((el, i) => (
-                      <TableRow key={i}>
-                        <StyledTableCell value={el.yearOfArrival} isTotal={el.isTotal} />
-                        <StyledTableCell2 value={el.europe} maxValue={100} isTotal={el.isTotal} align='right'/>
-                        <StyledTableCell2 value={el.africa} maxValue={100} isTotal={el.isTotal} align='right'/>
-                        <StyledTableCell2 value={el.asia} maxValue={100} isTotal={el.isTotal} align='right'/>
-                        <StyledTableCell2 value={el.carlam} maxValue={100} isTotal={el.isTotal} align='right'/>
-                      </TableRow>
-                    ))
-                  }
-                </TableBody>
-              </Table>
-
-              <p>Table 2. Number of cases by the Year of Arrival and Year of Diagnosis</p>
+              <Title>Figure 1. Number of cases by Year of Arrival and Region For Migration Module</Title>
+              <MigrChart data={appMgr.migrMgr.regionDistr} />
+              <Title>Figure 2. Number of cases by the Year of Arrival and Year of Diagnosis</Title>
               <FormControl>
                 <Select
                   value={migrRegion}
                   onChange={handleMigrRegionChange}
                 >
-                  <MenuItem value='Europe' dense>Europe</MenuItem>
+                  <MenuItem value='All' dense>All</MenuItem>
+                  <MenuItem value='Africa' dense>Africa</MenuItem>
+                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
+                  <MenuItem value='Asia' dense>Asia</MenuItem>
+                  <MenuItem value='Other' dense>Other</MenuItem>
+                </Select>
+                <FormHelperText>Select region for migration</FormHelperText>
+              </FormControl>
+              <MigrChart data={{
+                chartCategoriesX: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020],
+                chartCategoriesY: [2014, 2015, 2016, 2017, 2018],
+                seriesData: [
+                  [0, 0, 39], [0, 1, 21], [0, 2, 5], [0, 3, 7], [0, 4, 10],
+                  [1, 0, 77], [1, 1, 45], [1, 2, 8], [1, 3, 22], [1, 4, 10],
+                  [2, 0, 97], [2, 1, 39], [2, 2, 7], [2, 3, 18], [2, 4, 10],
+                  [3, 0, 38], [3, 1, 17], [3, 2, 2], [3, 3, 6], [3, 4, 110],
+                  [4, 0, 38], [4, 1, 17], [4, 2, 2], [4, 3, 6], [4, 4, 110],
+                  [5, 0, 38], [5, 1, 17], [5, 2, 2], [5, 3, 6], [5, 4, 110],
+                  [6, 0, 38], [6, 1, 17], [6, 2, 2], [6, 3, 6], [6, 4, 110],
+                  [7, 0, 38], [7, 1, 17], [7, 2, 2], [7, 3, 6], [7, 4, 110],
+                ],
+                dataMax: 110
+              }}
+              />
+
+              <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
+
+              <Title>Table 2. Proportion of migrants infected post arrival by sex, age group and transmission category</Title>
+              <FormControl>
+                <Select
+                  value='All'
+                >
+                  <MenuItem value='All' dense>All</MenuItem>
+                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
                   <MenuItem value='Africa' dense>Africa</MenuItem>
                   <MenuItem value='Asia' dense>Asia</MenuItem>
-                  <MenuItem value='Carribean/Latin America' dense>Carribean/Latin America</MenuItem>
+                  <MenuItem value='Other' dense>Other</MenuItem>
                 </Select>
                 <FormHelperText>Select region for migration</FormHelperText>
               </FormControl>
               <Table size='small'>
                 <TableHead>
                   <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-                    <TableCell rowSpan={2}>Year of arrival</TableCell>
-                    <TableCell colSpan={4}>
-                      Year of diagnosis
-                    </TableCell>
-                  </TableRow>
-                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-                    <TableCell>2000</TableCell>
-                    <TableCell>2001</TableCell>
-                    <TableCell>2002</TableCell>
-                    <TableCell>2003</TableCell>
+                    <TableCell width='100px'>Category</TableCell>
+                    <TableCell align='right'>Count</TableCell>
+                    <TableCell align='right'>Proportion infected prior to arrival</TableCell>
+                    <TableCell align='right'>95% CI for the proportion</TableCell>
+                    <TableCell align='right'>Proportion infected post arrival</TableCell>
+                    <TableCell align='right'>95% CI for the proportion</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {
-                    yodDistr[migrRegion].map((el, i) => (
-                      <TableRow key={i}>
-                        {
-                          Object.values(el).map((v,j) => (
-                            <StyledTableCell key={j} value={v} isTotal={false} />
-                          ))
-                        }
-                      </TableRow>
-                    ))
-                  }
+                  <TableRow>
+                    <StyledTableCell value='Total' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='Sex:' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;Male' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;Female' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='Age group:' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;<25' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;25 - 39' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;40 - 54' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='&emsp;55+' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='Transmission category:' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;MSM' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;IDU' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;HETERO' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;TRANSFU' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                  <TableRow>
+                    <StyledTableCell value='Region of origin:' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value='' isTotal={true} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;EUROPE' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
                 </TableBody>
               </Table>
 
-              {/*
-              <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
-
-              <p>Table 3. Proportion of migrants infected post arrival by sex, age group and transmission category</p>
-
-              <p>Figure 1. Proportion of migrants infected post arrival by region of origin and year of arrival</p>
+              <Title>Figure 3. Proportion of migrants infected post arrival by region of origin and year of arrival</Title>
               <HIVChart
                 year={[2000, 2001, 2002, 2003]}
                 model={[20, 50, 40, 30]}
@@ -263,14 +354,13 @@ const TabMigrant = props => {
                 range={[10, 20, 25, 20]}
               />
 
-              <p>Figure 2. Proportion of migrants infected post arrival by region of origin and year of diagnosis</p>
+              <Title>Figure 4. Proportion of migrants infected post arrival by region of origin and year of diagnosis</Title>
               <HIVChart
                 year={[2000, 2001, 2002, 2003]}
                 model={[20, 50, 40, 30]}
                 min={[15, 30, 30, 20]}
                 range={[10, 20, 25, 20]}
               />
-              */}
 
             </div>}
           </Paper>

@@ -20,7 +20,7 @@ export default class MigrationManager {
       dataCompatibleFlag: observable,
       runInProgress: computed,
       missingnessArray: computed,
-      regionDistrArray: computed,
+      regionDistr: computed,
       setRunProgress: action,
       setRunLog: action,
       setStats: action,
@@ -48,38 +48,13 @@ export default class MigrationManager {
     return arr;
   };
 
-  get regionDistrArray() {
-    let arr = [];
+  get regionDistr() {
+    let res = null;
     if (!IsNull(this.stats) && !IsNull(this.stats.RegionDistr)) {
-      const yearOfArrival = this.stats.RegionDistr.YearOfArrival;
-      const africa = this.stats.RegionDistr.Africa;
-      const europe = this.stats.RegionDistr.Europe;
-      const asia = this.stats.RegionDistr.Asia;
-      const carlam = this.stats.RegionDistr["Carribean/Latin America"];
-      arr = yearOfArrival.map((el, i) => ({
-        yearOfArrival: yearOfArrival[i],
-        europe: europe[i],
-        africa: africa[i],
-        asia: asia[i],
-        carlam: carlam[i],
-        isTotal: /Total/.test(yearOfArrival[i])
-      }));
+      res = this.stats.RegionDistr;
     }
-    return arr;
-  };
-
-  get yodDistr() {
-    let arr = {
-      'Europe': [],
-      'Africa': [],
-      'Asia': [],
-      'Carribean/Latin America': []
-    };
-    if (!IsNull(this.stats) && !IsNull(this.stats.YODDistr)) {
-      arr = this.stats.YODDistr;
-    }
-    return arr;
-  };
+    return res;
+  }
 
   setRunProgress = progress => this.runProgress = progress;
 

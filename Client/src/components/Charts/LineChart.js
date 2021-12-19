@@ -93,8 +93,7 @@ const AreaChart = props => {
         },
       },
     },
-    legend: {
-    }
+    legend: { }
   };
 
   const finalOptions = Object.assign({}, defaultOptions, options);

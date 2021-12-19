@@ -189,7 +189,6 @@ export default class AppManager {
         this.migrMgr.setRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setLastEventType(e.type);
-          console.log(e.payload.Stats);
           this.migrMgr.setStats(e.payload.Stats);
           this.notificationsMgr.setMsg('Migration run finished');
         } else {

@@ -23,7 +23,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
 appMgr$CaseMgr$SetFilters(filters = list(
@@ -72,13 +72,13 @@ appMgr$CaseMgr$RunMigration()
 
 distr <- appMgr$CaseMgr$OriginDistribution
 originGrouping <- GetOriginGroupingPreset(
-  'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-NORTH AMERICA-OTHER + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER'
+  'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 CheckOriginGroupingForMigrant(originGrouping)
 
 data <- copy(appMgr$CaseMgr$Data)
 params <- hivPlatform::GetMigrantParams()
-ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin')
+data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
 ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
 data[, unique(GroupedRegionOfOrigin)]
 data[, unique(MigrantRegionOfOrigin)]

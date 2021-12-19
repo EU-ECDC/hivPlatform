@@ -43,6 +43,9 @@ PrepareMigrantData <- function(
   data[, Gender := as.character(Gender)]
   data[is.na(Gender), Gender := 'UNK']
 
+  # Group Caribbean/Latin America with Other for processing
+  data[MigrantRegionOfOrigin %chin% c('CARIBBEAN-LATIN AMERICA'), MigrantRegionOfOrigin := 'OTHER']
+
   # Add DateOfBirth
   data[, DateOfBirth := DateOfHIVDiagnosis - Age * yearDays]
 
@@ -67,8 +70,8 @@ PrepareMigrantData <- function(
     Excluded := 'Not considered a migrant, because region of origin is the reporting country' # nolint
   ]
   data[
-    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE', 'ASIA', 'CARIBBEAN-LATIN AMERICA')), # nolint
-    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE", "ASIA", "CARIBBEAN-LATIN AMERICA"' # nolint
+    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER')), # nolint
+    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE-NORTH AMERICA", "ASIA", "OTHER"' # nolint
   ]
   data[
     Excluded == '' & !(Gender %chin% c('F', 'M')),
@@ -118,8 +121,8 @@ PrepareMigrantData <- function(
     ),
     MigrantRegionOfOrigin = factor(
       MigrantRegionOfOrigin,
-      levels = c('AFRICA', 'EUROPE', 'ASIA', 'CARIBBEAN-LATIN AMERICA'),
-      labels = c('Africa', 'Europe', 'Asia', 'Carribean/Latin America')
+      levels = c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER'),
+      labels = c('Africa', 'Europe-North America', 'Asia', 'Other')
     ),
     Transmission = factor(
       Transmission,
@@ -186,14 +189,6 @@ PrepareMigrantData <- function(
     by = .(Imputation)
   ]
 
-  PrintH1('Counts of imputed dates of arrival')
-  print(knitr::kable(
-    imputeStat,
-    format = 'simple',
-    escape = FALSE,
-    col.names = c('Imputation', 'Before imputation', 'After imputation', 'Imputed', 'Total')
-  ))
-
   data[, ':='(
     DateOfArrival = DateOfArrivalImputed,
     DateOfArrivalImputed = NULL
@@ -207,13 +202,6 @@ PrepareMigrantData <- function(
     data[, .(Excluded = 'Total excluded', Count = sum(Excluded != ''))],
     data[, .(Excluded = 'Total used in estimation', Count = sum(Excluded == ''))]
   )
-
-  PrintH1('Statistics of exclusions')
-  print(knitr::kable(
-    missStat,
-    format = 'simple',
-    escape = FALSE
-  ))
 
   # Process data -----------------------------------------------------------------------------------
   base <- data[Excluded == '']
@@ -374,7 +362,7 @@ PrepareMigrantData <- function(
     Stats = list(
       Missingness = missStat,
       Imputation = imputeStat,
-      RegionDistr = regionDistr,
+      RegionDistr = GetHeatMapChartData(regionDistr),
       YODDistr = ConvertObjToJSON(yodDistr)
     )
   ))
