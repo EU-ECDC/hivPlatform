@@ -12,18 +12,23 @@ export default class MigrationManager {
 
   dataCompatibleFlag = null;
 
+  yodRegion = 'Africa';
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
       runProgress: observable,
       runLog: observable,
+      yodRegion: observable,
       dataCompatibleFlag: observable,
       runInProgress: computed,
       missingnessArray: computed,
       regionDistr: computed,
+      yodDistr: computed,
       setRunProgress: action,
       setRunLog: action,
       setStats: action,
+      setYodRegion: action,
       setDataCompatibleFlag: action,
       run: action,
       cancel: action
@@ -56,11 +61,21 @@ export default class MigrationManager {
     return res;
   }
 
+  get yodDistr() {
+    let res = null;
+    if (this.yodRegion != '' && !IsNull(this.stats) && !IsNull(this.stats.YODDistr)) {
+      res = this.stats.YODDistr[this.yodRegion];
+    }
+    return res;
+  }
+
   setRunProgress = progress => this.runProgress = progress;
 
   setRunLog = runLog => this.runLog = runLog;
 
   setStats = stats => this.stats = stats;
+
+  setYodRegion = yodRegion => this.yodRegion = yodRegion;
 
   setDataCompatibleFlag = dataCompatibleFlag => this.dataCompatibleFlag = dataCompatibleFlag;
 

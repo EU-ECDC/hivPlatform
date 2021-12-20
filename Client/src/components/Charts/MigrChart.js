@@ -36,12 +36,12 @@ const MigrChart = (props) => {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 70, bottom: 40, left: 90 },
+    grid: { top: 50, right: 70, bottom: 40, left: 90 },
     xAxis: {
       type: 'category',
       name: data.titleX,
       nameLocation: 'center',
-      nameGap: 25,
+      nameGap: 35,
       data: data.chartCategoriesX,
       position: 'top',
       axisTick: {
@@ -70,10 +70,11 @@ const MigrChart = (props) => {
       calculable: true,
       orient: 'vertical',
       left: 'right',
-      top: 'middle',
+      top: 'top',
       inRange: {
-        color: ['white', 'red']
+        color: ['#bedfe1', '#69b023']
       },
+      padding: [40, 0],
       min: 0,
       max: data.dataMax,
       align: 'left',

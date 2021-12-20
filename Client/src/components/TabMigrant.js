@@ -43,9 +43,8 @@ const TabMigrant = props => {
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
-  const [tabId, setTabId] = React.useState(1);
-  const [migrRegion, setMigrRegion] = React.useState('All');
-  const handleMigrRegionChange = e => setMigrRegion(e.target.value);
+  const [tabId, setTabId] = React.useState(0);
+  const handleYodRegionChange = e => appMgr.migrMgr.setYodRegion(e.target.value);
 
   const missingness = appMgr.migrMgr.missingnessArray;
 
@@ -160,10 +159,9 @@ const TabMigrant = props => {
               <Title>Figure 2. Number of cases by the Year of Arrival and Year of Diagnosis</Title>
               <FormControl>
                 <Select
-                  value={migrRegion}
-                  onChange={handleMigrRegionChange}
+                  value={appMgr.migrMgr.yodRegion}
+                  onChange={handleYodRegionChange}
                 >
-                  <MenuItem value='All' dense>All</MenuItem>
                   <MenuItem value='Africa' dense>Africa</MenuItem>
                   <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
                   <MenuItem value='Asia' dense>Asia</MenuItem>
@@ -171,23 +169,7 @@ const TabMigrant = props => {
                 </Select>
                 <FormHelperText>Select region for migration</FormHelperText>
               </FormControl>
-              <MigrChart data={{
-                chartCategoriesX: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020],
-                titleX: 'Year of Diagnosis',
-                chartCategoriesY: [2014, 2015, 2016, 2017, 2018],
-                seriesData: [
-                  [0, 0, 39], [0, 1, 21], [0, 2, 5], [0, 3, 7], [0, 4, 10],
-                  [1, 0, 77], [1, 1, 45], [1, 2, 8], [1, 3, 22], [1, 4, 10],
-                  [2, 0, 97], [2, 1, 39], [2, 2, 7], [2, 3, 18], [2, 4, 10],
-                  [3, 0, 38], [3, 1, 17], [3, 2, 2], [3, 3, 6], [3, 4, 110],
-                  [4, 0, 38], [4, 1, 17], [4, 2, 2], [4, 3, 6], [4, 4, 110],
-                  [5, 0, 38], [5, 1, 17], [5, 2, 2], [5, 3, 6], [5, 4, 110],
-                  [6, 0, 38], [6, 1, 17], [6, 2, 2], [6, 3, 6], [6, 4, 110],
-                  [7, 0, 38], [7, 1, 17], [7, 2, 2], [7, 3, 6], [7, 4, 110],
-                ],
-                dataMax: 110
-              }}
-              />
+              <MigrChart data={appMgr.migrMgr.yodDistr} />
 
               <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
 
@@ -207,12 +189,16 @@ const TabMigrant = props => {
               <Table size='small'>
                 <TableHead>
                   <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-                    <TableCell width='100px'>Category</TableCell>
-                    <TableCell align='right'>Count</TableCell>
-                    <TableCell align='right'>Proportion infected prior to arrival</TableCell>
-                    <TableCell align='right'>95% CI for the proportion</TableCell>
-                    <TableCell align='right'>Proportion infected post arrival</TableCell>
-                    <TableCell align='right'>95% CI for the proportion</TableCell>
+                    <TableCell width='220px' rowSpan={2}>Category</TableCell>
+                    <TableCell align='right' rowSpan={2}>Count</TableCell>
+                    <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected prior to arrival</TableCell>
+                    <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected post arrival</TableCell>
+                  </TableRow>
+                  <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
+                    <TableCell align='right'>Proportion</TableCell>
+                    <TableCell align='right'>95% CI</TableCell>
+                    <TableCell align='right'>Proportion</TableCell>
+                    <TableCell align='right'>95% CI</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -233,7 +219,7 @@ const TabMigrant = props => {
                     <StyledTableCell value='' isTotal={true} />
                   </TableRow>
                   <TableRow>
-                    <StyledTableCell value='&emsp;Male' isTotal={false} />
+                    <StyledTableCell value='&emsp;M' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
@@ -241,7 +227,7 @@ const TabMigrant = props => {
                     <StyledTableCell value='' isTotal={false} />
                   </TableRow>
                   <TableRow>
-                    <StyledTableCell value='&emsp;Female' isTotal={false} />
+                    <StyledTableCell value='&emsp;F' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
@@ -337,7 +323,47 @@ const TabMigrant = props => {
                     <StyledTableCell value='' isTotal={true} />
                   </TableRow>
                  <TableRow>
-                    <StyledTableCell value='&emsp;EUROPE' isTotal={false} />
+                    <StyledTableCell value='&emsp;REPCOUNTRY' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;UNK' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;EUROPE-NORTH AMERICA' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;AFRICA' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;ASIA' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                    <StyledTableCell value='' isTotal={false} />
+                  </TableRow>
+                 <TableRow>
+                    <StyledTableCell value='&emsp;OTHER' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />
                     <StyledTableCell value='' isTotal={false} />

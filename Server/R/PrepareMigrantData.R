@@ -363,7 +363,7 @@ PrepareMigrantData <- function(
       Missingness = missStat,
       Imputation = imputeStat,
       RegionDistr = GetHeatMapChartData(regionDistr),
-      YODDistr = ConvertObjToJSON(yodDistr)
+      YODDistr = lapply(yodDistr, GetHeatMapChartData, titleX = 'Year of Diagnosis')
     )
   ))
 }

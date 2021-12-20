@@ -71,17 +71,14 @@ browseURL(fileName)
 appMgr$CaseMgr$RunMigration()
 
 distr <- appMgr$CaseMgr$OriginDistribution
-originGrouping <- GetOriginGroupingPreset(
-  'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
-)
+originGrouping <- appMgr$CaseMgr$OriginGrouping
+data <- copy(appMgr$CaseMgr$Data)
+
 CheckOriginGroupingForMigrant(originGrouping)
 
-data <- copy(appMgr$CaseMgr$Data)
 params <- hivPlatform::GetMigrantParams()
 data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
 ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
-data[, unique(GroupedRegionOfOrigin)]
-data[, unique(MigrantRegionOfOrigin)]
 migrantData <- hivPlatform::PrepareMigrantData(data)
 
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
