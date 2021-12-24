@@ -44,6 +44,9 @@ const MigrChart = (props) => {
       nameGap: 35,
       data: data.chartCategoriesX,
       position: 'top',
+      axisLabel: {
+        fontSize: 11
+      },
       axisTick: {
         show: false
       },
@@ -58,6 +61,9 @@ const MigrChart = (props) => {
       nameGap: 45,
       data: data.chartCategoriesY,
       inverse: false,
+      axisLabel: {
+        fontSize: 11
+      },
       axisLine: {
         show: false
       },

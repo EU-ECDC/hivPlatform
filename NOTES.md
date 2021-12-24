@@ -7,3 +7,12 @@
   b) specific Imputation?
   c) total?
 5. Check selection of attributes. Currently the focused option is selected.
+
+
+1. Reverse order of the X-axis
+2. Add info about combining CARLAM and OTHER
+3. Keep of order conditions in PrepareMigrantData
+4. Show count of cases with missing transmission category
+5. Add note that date of diagnosis is the date of diagnosis in the reporting country
+6. Add tab in "Modelling" -> "Migrant connection" (before "Populations") and enable if migration module was run
+7. Make migration connection optional in the modelling module

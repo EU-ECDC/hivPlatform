@@ -43,7 +43,7 @@ const TabMigrant = props => {
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
-  const [tabId, setTabId] = React.useState(0);
+  const [tabId, setTabId] = React.useState(1);
   const handleYodRegionChange = e => appMgr.migrMgr.setYodRegion(e.target.value);
 
   const missingness = appMgr.migrMgr.missingnessArray;
