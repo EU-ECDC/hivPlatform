@@ -8,9 +8,11 @@ import {
   TooltipComponent,
   VisualMapComponent,
   LegendPlainComponent,
+  DataZoomComponent,
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 import IsNull from '../../utilities/IsNull';
+import MergeObjects from '../../utilities/MergeObjects';
 
 echarts.use([
   GridComponent,
@@ -18,6 +20,7 @@ echarts.use([
   TooltipComponent,
   LegendPlainComponent,
   VisualMapComponent,
+  DataZoomComponent,
   HeatmapChart,
   SVGRenderer
 ]);
@@ -36,11 +39,14 @@ const MigrChart = (props) => {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 50, right: 70, bottom: 40, left: 90 },
+    grid: { top: 70, right: 0, bottom: 40, left: 90 },
     xAxis: {
       type: 'category',
       name: data.titleX,
       nameLocation: 'center',
+      nameTextStyle: {
+        fontWeight: 'bold'
+      },
       nameGap: 35,
       data: data.chartCategoriesX,
       position: 'top',
@@ -74,23 +80,28 @@ const MigrChart = (props) => {
     visualMap: {
       type: 'continuous',
       calculable: true,
-      orient: 'vertical',
-      left: 'right',
+      orient: 'horizontal',
+      right: 80,
       top: 'top',
       inRange: {
-        color: ['#bedfe1', '#69b023']
+        // color: ['#bedfe1', '#69b023']
+        color: ['blue', 'red']
       },
-      padding: [40, 0],
+      padding: 0,
       min: 0,
       max: data.dataMax,
-      align: 'left',
-      itemHeight: 100
+      align: 'top',
+      textStyle: {
+        fontSize: 11,
+        color: 'rgb(110, 112, 121)'
+      }
     },
     series: [{
       type: 'heatmap',
       data: data.seriesData,
       label: {
-        show: true
+        show: true,
+        fontSize: 10
       },
       itemStyle: {
         borderColor: '#fff',
@@ -122,11 +133,11 @@ const MigrChart = (props) => {
     legend: {}
   };
 
-  const finalOptions = Object.assign({}, defaultOptions, options);
+  const finalOptions = MergeObjects(defaultOptions, options);
 
   return(<ReactEchartsCore
       echarts={echarts}
-      option={finalOptions}
+      option={finalOptions }
       style={{ height: `${height}px`, width: '100%' }}
       notMerge={true}
       lazyUpdate={true}

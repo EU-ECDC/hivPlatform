@@ -34,7 +34,7 @@ const StyledTableCell = (props) => {
   } : null;
 
   return (
-    <TableCell {...rest} sx={style}>{value}</TableCell>
+    <TableCell {...rest} sx={style} align='right'>{value}</TableCell>
   )
 }
 
@@ -53,6 +53,10 @@ const TabMigrant = props => {
   const handleRunBtnClick = () => appMgr.migrMgr.run();
 
   const handleCancelBtnClick = () => appMgr.migrMgr.cancel();
+
+  const endValue = appMgr.migrMgr.yodDistr.chartCategoriesX.length - 1;
+  const startValue = Math.max(endValue - 20 + 1, 0);
+  const tableDistr = appMgr.migrMgr.tableDistr;
 
   return (
     <TabPanel>
@@ -169,7 +173,25 @@ const TabMigrant = props => {
                 </Select>
                 <FormHelperText>Select region for migration</FormHelperText>
               </FormControl>
-              <MigrChart data={appMgr.migrMgr.yodDistr} />
+              <MigrChart
+                data={appMgr.migrMgr.yodDistr}
+                options={{
+                  xAxis: {
+                    inverse: true,
+                  },
+                  dataZoom: [
+                    {
+                      type: 'slider',
+                      xAxisIndex: 0,
+                      bottom: 10,
+                      startValue: startValue,
+                      endValue: endValue,
+                      handleSize: '80%',
+                      showDetail: true
+                    }
+                  ]
+                }}
+              />
 
               <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
 
@@ -204,172 +226,60 @@ const TabMigrant = props => {
                 <TableBody>
                   <TableRow>
                     <StyledTableCell value='Total' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
+                    <StyledTableCell value={tableDistr.Total.Count} isTotal={true} />
+                    <StyledTableCell value={tableDistr.Total.PriorProp} isTotal={true} />
+                    <StyledTableCell value={`${tableDistr.Total.PriorLB} - ${tableDistr.Total.PriorUB}`} isTotal={true} />
+                    <StyledTableCell value={tableDistr.Total.PostProp} isTotal={true} />
+                    <StyledTableCell value={`${tableDistr.Total.PostLB} - ${tableDistr.Total.PostUB}`} isTotal={true} />
                   </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='Sex:' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;M' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;F' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='Age group:' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;<25' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;25 - 39' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;40 - 54' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='&emsp;55+' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='Transmission category:' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;MSM' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;IDU' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;HETERO' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;TRANSFU' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                  <TableRow>
-                    <StyledTableCell value='Region of origin:' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                    <StyledTableCell value='' isTotal={true} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;REPCOUNTRY' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;UNK' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;EUROPE-NORTH AMERICA' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;AFRICA' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;ASIA' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
-                 <TableRow>
-                    <StyledTableCell value='&emsp;OTHER' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                    <StyledTableCell value='' isTotal={false} />
-                  </TableRow>
+                  {
+                    tableDistr.Sex.map((r, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell value={r.Category} isTotal={i === 0} />
+                        <StyledTableCell value={r.Count} isTotal={i === 0} />
+                        <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
+                        <StyledTableCell value={r.PostProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
+                      </TableRow>
+                    ))
+                  }
+                  {
+                  tableDistr.Age.map((r, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell value={r.Category} isTotal={i === 0} />
+                        <StyledTableCell value={r.Count} isTotal={i === 0} />
+                        <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
+                        <StyledTableCell value={r.PostProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
+                      </TableRow>
+                    ))
+                  }
+                  {
+                  tableDistr.Transmission.map((r, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell value={r.Category} isTotal={i === 0} />
+                        <StyledTableCell value={r.Count} isTotal={i === 0} />
+                        <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
+                        <StyledTableCell value={r.PostProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
+                      </TableRow>
+                    ))
+                  }
+                  {
+                  tableDistr.RegionOfOrigin.map((r, i) => (
+                      <TableRow key={i}>
+                        <StyledTableCell value={r.Category} isTotal={i === 0} />
+                        <StyledTableCell value={r.Count} isTotal={i === 0} />
+                        <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
+                        <StyledTableCell value={r.PostProp} isTotal={i === 0} />
+                        <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
 

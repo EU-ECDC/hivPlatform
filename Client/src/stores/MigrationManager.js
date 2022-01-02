@@ -25,6 +25,7 @@ export default class MigrationManager {
       missingnessArray: computed,
       regionDistr: computed,
       yodDistr: computed,
+      tableDistr: computed,
       setRunProgress: action,
       setRunLog: action,
       setStats: action,
@@ -59,12 +60,20 @@ export default class MigrationManager {
       res = this.stats.RegionDistr;
     }
     return res;
-  }
+  };
 
   get yodDistr() {
     let res = null;
     if (this.yodRegion != '' && !IsNull(this.stats) && !IsNull(this.stats.YODDistr)) {
       res = this.stats.YODDistr[this.yodRegion];
+    }
+    return res;
+  };
+
+  get tableDistr() {
+    let res = null;
+    if (!IsNull(this.stats) && !IsNull(this.stats.TableDistr)) {
+      res = this.stats.TableDistr;
     }
     return res;
   }

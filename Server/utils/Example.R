@@ -86,8 +86,9 @@ result <- hivPlatform::PredictInf(input = migrantData$Data, params)
 shiny:::toJSON(migrantData$Stats$Missingness)
 shiny:::toJSON(migrantData$Stats$Imputation)
 shiny:::toJSON(migrantData$Stats$RegionDistr)
-ConvertObjToJSON(as.matrix(migrantData$Stats$RegionDistr))
 ConvertObjToJSON(migrantData$Stats$YODDistr)
+ConvertObjToJSON(data.table(A = c(1, 2), B = c(3, 4)))
+shiny:::toJSON(as.matrix(data.table(A = c(1, 2), B = c(3, 4))))
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
