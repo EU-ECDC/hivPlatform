@@ -1,5 +1,5 @@
 external.libraries: D:/Documents/R/win-library/4.1/
-ignored.packages: testthat
+ignored.packages: testthat, rsconnect
 package.dependency.fields: Imports, LinkingTo, Depends
 r.version:
 snapshot.type: implicit
