@@ -14,10 +14,8 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import Btn from './Btn';
 import MigrChart from './Charts/MigrChart';
 import HIVChart from './Charts/HIVChart';
@@ -46,7 +44,7 @@ const TabMigrant = props => {
 
   const [tabId, setTabId] = React.useState(1);
 
-  const handleYodRegionChange = e => appMgr.migrMgr.setYodRegion(e.target.value);
+  const handleYodRegionChange = (e, value) => appMgr.migrMgr.setYodRegion(value);
 
   const handleTableRegionChange = e => appMgr.migrMgr.setTableRegion(e.target.value);
 
@@ -164,19 +162,19 @@ const TabMigrant = props => {
               <Title>Figure 1. Number of cases by Year of Arrival and Region For Migration Module</Title>
               <MigrChart data={appMgr.migrMgr.regionDistr} />
               <Title>Figure 2. Number of cases by the Year of Arrival and Year of Diagnosis</Title>
-              <FormControl>
-                <Select
-                  value={appMgr.migrMgr.yodRegion}
-                  onChange={handleYodRegionChange}
-                >
-                  <MenuItem value='All' dense>All</MenuItem>
-                  <MenuItem value='Africa' dense>Africa</MenuItem>
-                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
-                  <MenuItem value='Asia' dense>Asia</MenuItem>
-                  <MenuItem value='Other' dense>Other</MenuItem>
-                </Select>
-                <FormHelperText>Select region for migration</FormHelperText>
-              </FormControl>
+              <ToggleButtonGroup
+                exclusive
+                size='small'
+                color='primary'
+                value={appMgr.migrMgr.yodRegion}
+                onChange={handleYodRegionChange}
+              >
+                <ToggleButton value='All'>All</ToggleButton>
+                <ToggleButton value='Africa'>Africa</ToggleButton>
+                <ToggleButton value='Europe-North America'>Europe-North America</ToggleButton>
+                <ToggleButton value='Asia'>Asia</ToggleButton>
+                <ToggleButton value='Other'>Other</ToggleButton>
+              </ToggleButtonGroup>
               <MigrChart
                 data={appMgr.migrMgr.yodDistr}
                 options={{
@@ -200,19 +198,20 @@ const TabMigrant = props => {
               <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
 
               <Title>Table 2. Proportion of migrants infected post arrival by sex, age group and transmission category</Title>
-              <FormControl>
-                <Select
-                  value={appMgr.migrMgr.tableRegion}
-                  onChange={handleTableRegionChange}
-                >
-                  <MenuItem value='All' dense>All</MenuItem>
-                  <MenuItem value='Africa' dense>Africa</MenuItem>
-                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
-                  <MenuItem value='Asia' dense>Asia</MenuItem>
-                  <MenuItem value='Other' dense>Other</MenuItem>
-                </Select>
-                <FormHelperText>Select region for migration</FormHelperText>
-              </FormControl>
+              <ToggleButtonGroup
+                exclusive
+                size='small'
+                color='primary'
+                value={appMgr.migrMgr.tableRegion}
+                onChange={handleTableRegionChange}
+                sx={{marginBottom: '5px'}}
+              >
+                <ToggleButton value='All'>All</ToggleButton>
+                <ToggleButton value='Africa'>Africa</ToggleButton>
+                <ToggleButton value='Europe-North America'>Europe-North America</ToggleButton>
+                <ToggleButton value='Asia'>Asia</ToggleButton>
+                <ToggleButton value='Other'>Other</ToggleButton>
+              </ToggleButtonGroup>
               <Table size='small'>
                 <TableHead>
                   <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
