@@ -43,10 +43,12 @@ const TabMigrant = props => {
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
+
   const [tabId, setTabId] = React.useState(1);
+
   const handleYodRegionChange = e => appMgr.migrMgr.setYodRegion(e.target.value);
 
-  const missingness = appMgr.migrMgr.missingnessArray;
+  const handleTableRegionChange = e => appMgr.migrMgr.setTableRegion(e.target.value);
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
@@ -54,6 +56,7 @@ const TabMigrant = props => {
 
   const handleCancelBtnClick = () => appMgr.migrMgr.cancel();
 
+  const missingness = appMgr.migrMgr.missingnessArray;
   const endValue = appMgr.migrMgr.yodDistr.chartCategoriesX.length - 1;
   const startValue = Math.max(endValue - 20 + 1, 0);
   const tableDistr = appMgr.migrMgr.tableDistr;
@@ -166,6 +169,7 @@ const TabMigrant = props => {
                   value={appMgr.migrMgr.yodRegion}
                   onChange={handleYodRegionChange}
                 >
+                  <MenuItem value='All' dense>All</MenuItem>
                   <MenuItem value='Africa' dense>Africa</MenuItem>
                   <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
                   <MenuItem value='Asia' dense>Asia</MenuItem>
@@ -198,11 +202,12 @@ const TabMigrant = props => {
               <Title>Table 2. Proportion of migrants infected post arrival by sex, age group and transmission category</Title>
               <FormControl>
                 <Select
-                  value='All'
+                  value={appMgr.migrMgr.tableRegion}
+                  onChange={handleTableRegionChange}
                 >
                   <MenuItem value='All' dense>All</MenuItem>
-                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
                   <MenuItem value='Africa' dense>Africa</MenuItem>
+                  <MenuItem value='Europe-North America' dense>Europe-North America</MenuItem>
                   <MenuItem value='Asia' dense>Asia</MenuItem>
                   <MenuItem value='Other' dense>Other</MenuItem>
                 </Select>
@@ -298,7 +303,6 @@ const TabMigrant = props => {
                 min={[15, 30, 30, 20]}
                 range={[10, 20, 25, 20]}
               />
-
             </div>}
           </Paper>
         </Grid>
