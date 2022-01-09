@@ -14,6 +14,10 @@ PrepareMigrantData <- function(
     'DateOfLatestVLCount', 'DateOfArt', 'DateOfAIDSDiagnosis', 'YearOfHIVDiagnosis'
   )
   data <- data[, ..colNames]
+  isOriginalData <- data[, all(Imputation == 0)]
+  if (!isOriginalData) {
+    data <- data[Imputation > 0]
+  }
 
   PrintH2('Checking data structure validity')
   columnSpecs <- GetListObject(
@@ -60,45 +64,65 @@ PrepareMigrantData <- function(
   data[, U := as.numeric(DateOfHIVDiagnosis - AtRiskDate) / 365.25]
 
   # Initialize filters -----------------------------------------------------------------------------
-  data[, Excluded := '']
+  data[, Excluded := factor(
+    NA_character_,
+    levels = c(
+      'Migrant region of origin is missing',
+      'Not considered a migrant, because region of origin is the reporting country',
+      'Migrant region of origin is not one of "AFRICA", "EUROPE-NORTH AMERICA", "ASIA", "OTHER"',
+      'Gender is not either "F" or "M"',
+      'Transmission is missing',
+      'Transmission is not of mode "MSM", "IDU", "HETERO" or "TRANSFU"',
+      'Date of arrival is before date of birth',
+      'Age is missing',
+      'Age is below 16',
+      'Number of years from risk onset to HIV diagnosis is missing',
+      'Date of HIV diagnosis is before risk onset',
+      'Date of arrival is missing'
+    )
+  )]
   data[
-    Excluded == '' & MigrantRegionOfOrigin == 'UNK',
+    is.na(Excluded) & MigrantRegionOfOrigin == 'UNK',
     Excluded := 'Migrant region of origin is missing'
   ]
   data[
-    Excluded == '' & MigrantRegionOfOrigin == 'REPCOUNTRY',
+    is.na(Excluded) & MigrantRegionOfOrigin == 'REPCOUNTRY',
     Excluded := 'Not considered a migrant, because region of origin is the reporting country' # nolint
   ]
   data[
-    Excluded == '' & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER')), # nolint
+    is.na(Excluded) & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER')), # nolint
     Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE-NORTH AMERICA", "ASIA", "OTHER"' # nolint
   ]
   data[
-    Excluded == '' & !(Gender %chin% c('F', 'M')),
+    is.na(Excluded) & !(Gender %chin% c('F', 'M')),
     Excluded := 'Gender is not either "F" or "M"'
   ]
   data[
-    Excluded == '' & !(Transmission %chin% c('MSM', 'IDU', 'HETERO', 'TRANSFU')),
+    is.na(Excluded) & Transmission == 'UNK',
+    Excluded := 'Transmission is missing'
+  ]
+  data[
+    is.na(Excluded) & !(Transmission %chin% c('MSM', 'IDU', 'HETERO', 'TRANSFU')),
     Excluded := 'Transmission is not of mode "MSM", "IDU", "HETERO" or "TRANSFU"'
   ]
   data[
-    Excluded == '' & DateOfArrival < DateOfBirth,
+    is.na(Excluded) & DateOfArrival < DateOfBirth,
     Excluded := 'Date of arrival is before date of birth'
   ]
   data[
-    Excluded == '' & is.na(Age),
+    is.na(Excluded) & is.na(Age),
     Excluded := 'Age is missing'
   ]
   data[
-    Excluded == '' & !is.na(Age) & Age <= 15,
+    is.na(Excluded) & !is.na(Age) & Age <= 15,
     Excluded := 'Age is below 16'
   ]
   data[
-    Excluded == '' & is.na(U),
+    is.na(Excluded) & is.na(U),
     Excluded := 'Number of years from risk onset to HIV diagnosis is missing'
   ]
   data[
-    Excluded == '' & !is.na(U) & U <= 0,
+    is.na(Excluded) & !is.na(U) & U <= 0,
     Excluded := 'Date of HIV diagnosis is before risk onset'
   ]
 
@@ -106,7 +130,7 @@ PrepareMigrantData <- function(
   data[, YearsToArrival := as.numeric(DateOfArrival - DateOfBirth) / yearDays]
   data[, PropBeforeArrival := YearsToArrival / Age]
   data[, ImputeData :=
-    Excluded == '' &
+    is.na(Excluded) &
       (is.na(PropBeforeArrival) | between(PropBeforeArrival, 0, 1)) &
       (Gender != 'UNK' & !is.na(Age) & !is.na(FirstCD4Count) & !is.na(YearOfHIVDiagnosis))
   ]
@@ -129,7 +153,8 @@ PrepareMigrantData <- function(
       levels = c('MSM', 'IDU', 'HETERO', 'TRANSFU'),
       labels = c('MSM', 'IDU', 'MSW', 'Other/Unknown')
     ),
-    YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis)
+    YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis),
+    DateOfArrivalImputed = DateOfArrival
   )]
 
   # Get data to be imputed and a sample of full data for the imputation
@@ -147,43 +172,44 @@ PrepareMigrantData <- function(
     )
   ]
 
-  selNotNA <- imputeData[, !is.na(PropBeforeArrival)]
-  # Prepare logit transformation
-  imputeData[selNotNA & between(PropBeforeArrival, 0, 0.00001), PropBeforeArrival := 0.00001]
-  imputeData[selNotNA & between(PropBeforeArrival, 0.99999, 1), PropBeforeArrival := 0.99999]
-  imputeData[selNotNA, PropBeforeArrivalLogit := log(PropBeforeArrival / (1 - PropBeforeArrival))]
-  imputeData[, PropBeforeArrival := NULL]
-  imputeWhere <- data.table(
-    Imputation = FALSE,
-    Gender = FALSE,
-    MigrantRegionOfOrigin = FALSE,
-    Transmission = FALSE,
-    YearOfHIVDiagnosis = FALSE,
-    Age = FALSE,
-    FirstCD4Count = FALSE,
-    PropBeforeArrivalLogit = !selNotNA
-  )
+  if (nrow(imputeData) > 0) {
+    selNotNA <- imputeData[, !is.na(PropBeforeArrival)]
+    # Prepare logit transformation
+    imputeData[selNotNA & between(PropBeforeArrival, 0, 0.00001), PropBeforeArrival := 0.00001]
+    imputeData[selNotNA & between(PropBeforeArrival, 0.99999, 1), PropBeforeArrival := 0.99999]
+    imputeData[selNotNA, PropBeforeArrivalLogit := log(PropBeforeArrival / (1 - PropBeforeArrival))]
+    imputeData[, PropBeforeArrival := NULL]
+    imputeWhere <- data.table(
+      Imputation = FALSE,
+      Gender = FALSE,
+      MigrantRegionOfOrigin = FALSE,
+      Transmission = FALSE,
+      YearOfHIVDiagnosis = FALSE,
+      Age = FALSE,
+      FirstCD4Count = FALSE,
+      PropBeforeArrivalLogit = !selNotNA
+    )
 
-  set.seed(seed)
-  miceImputation <- suppressWarnings(mice::mice(
-    imputeData,
-    where = imputeWhere,
-    m = 1,
-    maxit = 5,
-    printFlag = FALSE
-  ))
-  imputeData <- setDT(mice::complete(miceImputation, action = 1))
+    set.seed(seed)
+    miceImputation <- suppressWarnings(mice::mice(
+      imputeData,
+      where = imputeWhere,
+      m = 1,
+      maxit = 5,
+      printFlag = FALSE
+    ))
+    imputeData <- setDT(mice::complete(miceImputation, action = 1))
 
-  data[ImputeData == TRUE, PropBeforeArrivalLogit := imputeData$PropBeforeArrivalLogit]
-  data[, PropBeforeArrivalImputed := exp(PropBeforeArrivalLogit) / (1 + exp(PropBeforeArrivalLogit))] # nolint
-  data[, DateOfArrivalImputed := DateOfBirth + (Age * PropBeforeArrivalImputed) * yearDays]
+    data[ImputeData == TRUE, PropBeforeArrivalLogit := imputeData$PropBeforeArrivalLogit]
+    data[ImputeData == TRUE, PropBeforeArrivalImputed := exp(PropBeforeArrivalLogit) / (1 + exp(PropBeforeArrivalLogit))] # nolint
+    data[ImputeData == TRUE, DateOfArrivalImputed := DateOfBirth + (Age * PropBeforeArrivalImputed) * yearDays] # nolint
+  }
 
-  # Print statistics
   imputeStat <- data[,
     .(
-      CountBeforeImputation = sum(ImputeData & !is.na(DateOfArrival)),
-      CountAfterImputation = sum(ImputeData & !is.na(DateOfArrivalImputed)),
-      CountImputed = sum(ImputeData & !is.na(DateOfArrivalImputed)) - sum(ImputeData & !is.na(DateOfArrival)), # nolint
+      CountBeforeImputation = sum(!is.na(DateOfArrival)),
+      CountAfterImputation = sum(!is.na(DateOfArrivalImputed)),
+      CountImputed = sum(!is.na(DateOfArrivalImputed)) - sum(!is.na(DateOfArrival)),
       CountTotal = .N
     ),
     by = .(Imputation)
@@ -195,16 +221,23 @@ PrepareMigrantData <- function(
   )]
 
   # ------------------------------------------------------------------------------------------------
-  data[Excluded == '' & is.na(DateOfArrival), Excluded := 'Date of arrival is missing']
+  data[is.na(Excluded) & is.na(DateOfArrival), Excluded := 'Date of arrival is missing']
+
+  missLevels <- data[, .(Excluded = levels(Excluded), Count = 0)]
+  missLevels[
+    data[!is.na(Excluded), .(Count = .N), by = .(Excluded)],
+    Count := i.Count,
+    on = .(Excluded)
+  ]
 
   missStat <- rbind(
-    data[Excluded != '', .(Count = .N), by = .(Excluded)][order(-Count)],
-    data[, .(Excluded = 'Total excluded', Count = sum(Excluded != ''))],
-    data[, .(Excluded = 'Total used in estimation', Count = sum(Excluded == ''))]
+    missLevels,
+    data[, .(Excluded = 'Total excluded', Count = sum(!is.na(Excluded)))],
+    data[, .(Excluded = 'Total used in estimation', Count = sum(is.na(Excluded)))]
   )
 
   # Process data -----------------------------------------------------------------------------------
-  base <- data[Excluded == '']
+  base <- data[is.na(Excluded)]
 
   # Generate unique identifier
   base[, ':='(
@@ -314,38 +347,54 @@ PrepareMigrantData <- function(
   baseAIDS[DTime < 0, DTime := 0]
 
   # Diagnosis artifacts
-  countDistrData <- rbind(
-    baseCD4VL[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
-    baseAIDS[, .(DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
-  )
+  countDistrData <- rbindlist(list(
+    baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
+    baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
+    baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'All')],
+    baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'All')]
+  ))
   if (nrow(countDistrData) > 0) {
     countDistr <- countDistrData[,
       .(Count = .N),
       keyby = .(
+        Imputation,
         YearOfArrival = year(DateOfArrival),
         YearOfDiagnosis = year(DateOfHIVDiagnosis),
         MigrantRegionOfOrigin
       )
     ]
+    meanCountDistr <- countDistr[,
+      .(Count = mean(Count)),
+      keyby = .(YearOfArrival, YearOfDiagnosis, MigrantRegionOfOrigin)
+    ]
+    migrRegions <- levels(meanCountDistr$MigrantRegionOfOrigin)
 
+    # Number of cases by Year of Arrival and Region For Migration Module
     regionDistr <- dcast(
-      countDistr,
+      meanCountDistr[MigrantRegionOfOrigin != 'All'],
       YearOfArrival ~ MigrantRegionOfOrigin,
       value.var = 'Count',
       fun.aggregate = sum,
       fill = 0
     )
 
-    migrRegions <- levels(countDistr$MigrantRegionOfOrigin)
+    # Number of cases by the Year of Arrival and Year of Diagnosis
+    allYODDistr <- meanCountDistr[MigrantRegionOfOrigin == 'All', .(YearOfArrival, YearOfDiagnosis)]
     yodDistr <- setNames(lapply(
       migrRegions,
       function(migrRegion) {
+        dt <- meanCountDistr[MigrantRegionOfOrigin == migrRegion]
+        dt <- dt[
+          allYODDistr,
+          on = .(YearOfArrival, YearOfDiagnosis)
+        ]
         dcast(
-          countDistr[MigrantRegionOfOrigin == migrRegion],
+          dt,
           YearOfArrival ~ YearOfDiagnosis,
           value.var = 'Count',
           fun.aggregate = sum,
-          fill = 0
+          fill = 0,
+          na.rm = TRUE
         )
       }
     ), migrRegions)

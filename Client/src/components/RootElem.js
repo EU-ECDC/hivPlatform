@@ -12,7 +12,7 @@ import TabWelcome from './TabWelcome';
 import TabUpload from './TabUpload/TabUpload';
 import TabSummary from './TabSummary/TabSummary';
 import TabAdjustments from './TabAdjustments/TabAdjustments';
-import TabMigrant from './TabMigrant';
+import TabMigrant from './TabMigrant/TabMigrant';
 import TabModelling from './TabModelling/TabModelling';
 import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';

@@ -72,15 +72,14 @@ appMgr$CaseMgr$RunMigration()
 
 distr <- appMgr$CaseMgr$OriginDistribution
 originGrouping <- appMgr$CaseMgr$OriginGrouping
-data <- copy(appMgr$CaseMgr$Data)
-
 CheckOriginGroupingForMigrant(originGrouping)
 
-params <- hivPlatform::GetMigrantParams()
+data <- copy(appMgr$CaseMgr$Data)
 data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
 ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
 migrantData <- hivPlatform::PrepareMigrantData(data)
 
+params <- hivPlatform::GetMigrantParams()
 result <- hivPlatform::PredictInf(input = migrantData$Data, params)
 
 shiny:::toJSON(migrantData$Stats$Missingness)
