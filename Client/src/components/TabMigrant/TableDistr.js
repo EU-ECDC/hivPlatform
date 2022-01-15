@@ -9,6 +9,30 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import IsNull from '../../utilities/IsNull';
 import Title from '../Title';
+import StyledTableCell from '../StyledTableCell';
+
+const TableSection = ({ section, isTotal = false, caption = '' }) => {
+
+  let rows = [];
+  if (caption !== '') {
+    rows = [<TableRow key={-1}>
+      <StyledTableCell value={caption} isTotal={true} colSpan={6} />
+    </TableRow>];
+  }
+
+  rows = rows.concat(section.map((r, i) => (
+    <TableRow key={i}>
+      <StyledTableCell value={r.Category} isTotal={isTotal} />
+      <StyledTableCell value={r.Count} isTotal={isTotal} />
+      <StyledTableCell value={r.PriorProp} isTotal={isTotal} isPerc={true} />
+      <StyledTableCell lb={r.PriorPropLB} ub={r.PriorPropUB} isTotal={isTotal} isPerc={true} />
+      <StyledTableCell value={r.PostProp} isTotal={isTotal} isPerc={true} />
+      <StyledTableCell lb={r.PostPropLB} ub={r.PostPropUB} isTotal={isTotal} isPerc={true} />
+    </TableRow>
+  )));
+
+  return (rows);
+};
 
 const TableDistr = (props) => {
   const { migrMgr } = props;
@@ -57,62 +81,11 @@ const TableDistr = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <StyledTableCell value='Total' isTotal={true} />
-            <StyledTableCell value={tableDistr.Total.Count} isTotal={true} />
-            <StyledTableCell value={tableDistr.Total.PriorProp} isTotal={true} />
-            <StyledTableCell value={`${tableDistr.Total.PriorLB} - ${tableDistr.Total.PriorUB}`} isTotal={true} />
-            <StyledTableCell value={tableDistr.Total.PostProp} isTotal={true} />
-            <StyledTableCell value={`${tableDistr.Total.PostLB} - ${tableDistr.Total.PostUB}`} isTotal={true} />
-          </TableRow>
-          {
-            tableDistr.Sex.map((r, i) => (
-              <TableRow key={i}>
-                <StyledTableCell value={r.Category} isTotal={i === 0} />
-                <StyledTableCell value={r.Count} isTotal={i === 0} />
-                <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
-                <StyledTableCell value={r.PostProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
-              </TableRow>
-            ))
-          }
-          {
-          tableDistr.Age.map((r, i) => (
-              <TableRow key={i}>
-                <StyledTableCell value={r.Category} isTotal={i === 0} />
-                <StyledTableCell value={r.Count} isTotal={i === 0} />
-                <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
-                <StyledTableCell value={r.PostProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
-              </TableRow>
-            ))
-          }
-          {
-          tableDistr.Transmission.map((r, i) => (
-              <TableRow key={i}>
-                <StyledTableCell value={r.Category} isTotal={i === 0} />
-                <StyledTableCell value={r.Count} isTotal={i === 0} />
-                <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
-                <StyledTableCell value={r.PostProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
-              </TableRow>
-            ))
-          }
-          {
-          tableDistr.RegionOfOrigin.map((r, i) => (
-              <TableRow key={i}>
-                <StyledTableCell value={r.Category} isTotal={i === 0} />
-                <StyledTableCell value={r.Count} isTotal={i === 0} />
-                <StyledTableCell value={r.PriorProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PriorLB} - ${r.PriorUB}`} isTotal={i === 0} />
-                <StyledTableCell value={r.PostProp} isTotal={i === 0} />
-                <StyledTableCell value={`${r.PostLB} - ${r.PostUB}`} isTotal={i === 0} />
-              </TableRow>
-            ))
-          }
+          <TableSection section={tableDistr.Total} isTotal={true} />
+          <TableSection section={tableDistr.Sex} caption='Sex:' />
+          <TableSection section={tableDistr.AgeGroup} caption='Age Group:'/>
+          <TableSection section={tableDistr.Transmission} caption='Transmission:'/>
+          <TableSection section={tableDistr.RegionOfOrigin} caption='Region Of Origin:'/>
         </TableBody>
       </Table>
   }

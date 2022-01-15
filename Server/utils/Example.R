@@ -16,7 +16,8 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # nolint end
 
 
@@ -75,12 +76,30 @@ originGrouping <- appMgr$CaseMgr$OriginGrouping
 CheckOriginGroupingForMigrant(originGrouping)
 
 data <- copy(appMgr$CaseMgr$Data)
-data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
-ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
-migrantData <- hivPlatform::PrepareMigrantData(data)
+# appMgr$CaseMgr$AdjustedData
+# appMgr$CaseMgr$PreProcessedData
+table <- copy(appMgr$CaseMgr$MigrationResult$Output)
+appMgr$CaseMgr$MigrationResult$Input
 
+# data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
+# ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
+migrantData <- hivPlatform::PrepareMigrantData(data)
 params <- hivPlatform::GetMigrantParams()
-result <- hivPlatform::PredictInf(input = migrantData$Data, params)
+table <- hivPlatform::PredictInf(migrantData$Data, params)
+
+table[, Imputation := as.integer(Imputation)]
+data[table, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+table[, .N, by = .(is.na(ProbPre))]
+data[, .N, by = .(is.na(ProbPre))]
+output <- copy(data)
+stats <- GetMigrantOutputStats(output)
+output[, unique(MigrantRegionOfOrigin)]
+writeLines(jsonlite::toJSON(GetMigrantOutputStats(output[MigrantRegionOfOrigin == 'ASIA'])), 'json.json')
+output[, unique(MigrantRegionOfOrigin)]
+
+jsonlite::toJSON(stats)
+writeLines(jsonlite::toJSON(stats), 'stats.json')
+shiny:::toJSON(stats)
 
 shiny:::toJSON(migrantData$Stats$Missingness)
 shiny:::toJSON(migrantData$Stats$Imputation)
@@ -179,7 +198,10 @@ saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 
 
-data <- appMgr$CaseMgr$PreProcessedData
+
+test <- appMgr$CaseMgr$Data[, Test := 1]
+appMgr$CaseMgr$AdjustedData[, Test := 1]
+address(appMgr$CaseMgr$Data)
 cat(appMgr$CaseMgr$AdjustmentTask$RunLog)
 cat(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog)
 

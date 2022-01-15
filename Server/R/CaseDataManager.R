@@ -493,7 +493,12 @@ CaseDataManager <- R6::R6Class(
             successCallback = function(result) {
               private$Catalogs$MigrationResult <- result
               try({
-                self$Data[result$Output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+                if (!is.null(private$Catalogs$AdjustedData)) {
+                  data <- private$Catalogs$AdjustedData
+                } else {
+                  data <- private$Catalogs$PreProcessedData
+                }
+                data[result$Output$Table, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
               }, silent = TRUE)
               private$InvalidateAfterStep('CASE_BASED_MIGRATION')
               PrintAlert('Migration task finished')
@@ -502,7 +507,8 @@ CaseDataManager <- R6::R6Class(
                 payload = list(
                   ActionStatus = 'SUCCESS',
                   ActionMessage = 'Migration task finished',
-                  Stats = result$Input$Stats
+                  Stats = result$Input$Stats,
+                  OutputStats = result$Output$Stats
                 )
               )
             },

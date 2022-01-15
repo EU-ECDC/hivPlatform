@@ -9,68 +9,15 @@ import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabPanel from '../TabPanel';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import Btn from '../Btn';
 import ProgressBar from '../ProgressBar';
 import MigrChart from '../Charts/MigrChart';
 import HIVChart from '../Charts/HIVChart';
 import IsNull from '../../utilities/IsNull';
-import IsArray from '../../utilities/IsArray';
 import Title from '../Title';
-import TableDistr from './TableDistr';
+import MissStat from './MissStat';
 import YODDistr from './YODDistr';
-
-const StyledTableCell = (props) => {
-  const { isTotal, value, ...rest } = props;
-  const style = isTotal ? {
-    fontWeight: 'bold',
-    backgroundColor: '#f9f9f9'
-  } : null;
-
-  return (
-    <TableCell {...rest} sx={style}>{value}</TableCell>
-  )
-}
-
-const DiagMissStat = (props) => {
-  const { missingness } = props;
-
-  let tableEl = null;
-  if (IsNull(missingness) || (IsArray(missingness) && missingness.length === 0)) {
-    tableEl = <div>No table data available</div>
-  } else {
-    tableEl =
-      <Table size='small'>
-        <TableHead>
-          <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
-            <TableCell align='left' width='700px'>Missing variable</TableCell>
-            <TableCell align='right'>Number of excluded cases</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            missingness.map((el, i) => (
-              <TableRow key={i}>
-                <StyledTableCell value={el.excluded} isTotal={el.isTotal} align='left' />
-                <StyledTableCell value={el.count} isTotal={el.isTotal} align='right' />
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-  }
-
-  return (
-    <React.Fragment>
-      <Title>Table 1. Number of cases excluded</Title>
-      {tableEl}
-    </React.Fragment>
-  )
-};
+import TableDistr from './TableDistr';
 
 const TabMigrant = props => {
 
@@ -158,7 +105,7 @@ const TabMigrant = props => {
                 </p>
 
                 <p>The estimation is performed for adults only.</p>
-                <DiagMissStat missingness={appMgr.migrMgr.missingnessArray} />
+                <MissStat missingness={appMgr.migrMgr.missingnessArray} />
 
                 <h3>2. Description of data used in estimation</h3>
                 <Title>Figure 1. Average number of cases by Year of Arrival and Region For Migration Module</Title>

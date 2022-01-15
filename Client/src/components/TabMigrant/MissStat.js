@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import IsNull from '../../utilities/IsNull';
 import IsArray from '../../utilities/IsArray';
 import Title from '../Title';
+import StyledTableCell from '../StyledTableCell';
 
 const MissStat = (props) => {
   const { missingness } = props;

@@ -205,22 +205,24 @@ PredictInf <- function( # nolint
   }
   PrintAlert('End time: {format(endTime)}')
 
-  output <- list()
+  table <- list()
   if (nrow(outputAIDS) > 0) {
-    output[['AIDS']] <- outputAIDS[Ord == 1, .(Imputation, RecordId, ProbPre)]
+    table[['AIDS']] <- outputAIDS[Ord == 1, .(Imputation, RecordId, ProbPre)]
   }
   if (nrow(outputCD4VL) > 0) {
-    output[['CD4VL']] <- outputCD4VL[Ord == 1, .(Imputation, RecordId, ProbPre)]
+    table[['CD4VL']] <- outputCD4VL[Ord == 1, .(Imputation, RecordId, ProbPre)]
   }
-  output <- rbindlist(output)
+  table <- rbindlist(table)
+  table[, Imputation := as.integer(Imputation)]
 
-  if (nrow(output) == 0) {
-    output <- data.table(
+  if (nrow(table) == 0) {
+    table <- data.table(
       Imputation = integer(),
       RecordId = character(),
       ProbPre = numeric()
     )
+    stats <- NULL
   }
 
-  return(output)
+  return(table)
 }

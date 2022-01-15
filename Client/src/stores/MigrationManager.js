@@ -1,4 +1,4 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable, toJS } from 'mobx';
 import IsNull from '../utilities/IsNull'
 
 export default class MigrationManager {
@@ -8,7 +8,9 @@ export default class MigrationManager {
 
   runLog = null;
 
-  stats = null;
+  inputStats = null;
+
+  outputStats = null;
 
   dataCompatibleFlag = null;
 
@@ -20,6 +22,8 @@ export default class MigrationManager {
     makeObservable(this, {
       runProgress: observable,
       runLog: observable,
+      inputStats: observable,
+      outputStats: observable,
       yodRegion: observable,
       tableRegion: observable,
       dataCompatibleFlag: observable,
@@ -30,7 +34,8 @@ export default class MigrationManager {
       tableDistr: computed,
       setRunProgress: action,
       setRunLog: action,
-      setStats: action,
+      setInputStats: action,
+      setOutputStats: action,
       setYodRegion: action,
       setTableRegion: action,
       setDataCompatibleFlag: action,
@@ -45,9 +50,9 @@ export default class MigrationManager {
 
   get missingnessArray() {
     let arr = [];
-    if (!IsNull(this.stats) && !IsNull(this.stats.Missingness)) {
-      const excluded = this.stats.Missingness.Excluded;
-      const counts = this.stats.Missingness.Count;
+    if (!IsNull(this.inputStats) && !IsNull(this.inputStats.Missingness)) {
+      const excluded = this.inputStats.Missingness.Excluded;
+      const counts = this.inputStats.Missingness.Count;
       arr = excluded.map((el, i) => ({
         excluded: excluded[i],
         count: counts[i],
@@ -59,16 +64,16 @@ export default class MigrationManager {
 
   get regionDistr() {
     let res = null;
-    if (!IsNull(this.stats) && !IsNull(this.stats.RegionDistr)) {
-      res = this.stats.RegionDistr;
+    if (!IsNull(this.inputStats) && !IsNull(this.inputStats.RegionDistr)) {
+      res = this.inputStats.RegionDistr;
     }
     return res;
   };
 
   get yodDistr() {
     let res = null;
-    if (this.yodRegion != '' && !IsNull(this.stats) && !IsNull(this.stats.YODDistr)) {
-      res = this.stats.YODDistr[this.yodRegion];
+    if (this.yodRegion != '' && !IsNull(this.inputStats) && !IsNull(this.inputStats.YODDistr)) {
+      res = this.inputStats.YODDistr[this.yodRegion];
     }
     return res;
   };
@@ -77,11 +82,11 @@ export default class MigrationManager {
     let res = null;
     if (
       this.tableRegion != '' &&
-      !IsNull(this.stats) &&
-      !IsNull(this.stats.TableDistr) &&
-      !IsNull(this.stats.TableDistr[this.tableRegion])
+      !IsNull(this.outputStats) &&
+      !IsNull(this.outputStats.TableDistr) &&
+      !IsNull(this.outputStats.TableDistr[this.tableRegion])
     ) {
-      res = this.stats.TableDistr[this.tableRegion];
+      res = this.outputStats.TableDistr[this.tableRegion];
     }
     return res;
   }
@@ -90,7 +95,9 @@ export default class MigrationManager {
 
   setRunLog = runLog => this.runLog = runLog;
 
-  setStats = stats => this.stats = stats;
+  setInputStats = inputStats => this.inputStats = inputStats;
+
+  setOutputStats = outputStats => this.outputStats = outputStats;
 
   setYodRegion = yodRegion => this.yodRegion = yodRegion;
 
