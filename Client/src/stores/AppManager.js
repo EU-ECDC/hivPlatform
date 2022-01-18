@@ -179,6 +179,7 @@ export default class AppManager {
           this.migrMgr.setRunProgress(1);
           this.migrMgr.setInputStats(null);
           this.migrMgr.setOutputStats(null);
+          this.migrMgr.setOutputPlots(null);
         }
         break;
       case 'MIGRATION_RUN_LOG_SET':
@@ -192,6 +193,7 @@ export default class AppManager {
           this.uiStateMgr.setLastEventType(e.type);
           this.migrMgr.setInputStats(e.payload.InputStats);
           this.migrMgr.setOutputStats(e.payload.OutputStats);
+          this.migrMgr.setOutputPlots(e.payload.OutputPlots);
           this.notificationsMgr.setMsg('Migration run finished');
         } else {
           this.notificationsMgr.setMsg('Migration run failed');

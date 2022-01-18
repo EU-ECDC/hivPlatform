@@ -91,7 +91,7 @@ PrepareMigrantData <- function(
   ]
   data[
     is.na(Excluded) & !(MigrantRegionOfOrigin %chin% c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER')), # nolint
-    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE-NORTH AMERICA", "ASIA", "OTHER"' # nolint
+    Excluded := 'Migrant region of origin is not one of "AFRICA", "EUROPE-NORTH AMERICA", "ASIA", "CARIBBEAN-LATIN AMERICA", "OTHER"' # nolint
   ]
   data[
     is.na(Excluded) & !(Gender %chin% c('F', 'M')),
@@ -137,21 +137,14 @@ PrepareMigrantData <- function(
 
   # Recreate factors with required levels
   data[, ':='(
-    Imputation = factor(Imputation),
-    Gender = factor(
-      Gender,
-      levels = c('F', 'M'),
-      labels = c('Female', 'Male')
-    ),
+    Gender = factor(Gender, levels = c('F', 'M')),
     MigrantRegionOfOrigin = factor(
       MigrantRegionOfOrigin,
-      levels = c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER'),
-      labels = c('Africa', 'Europe-North America', 'Asia', 'Other')
+      levels = c('AFRICA', 'EUROPE-NORTH AMERICA', 'ASIA', 'OTHER')
     ),
     Transmission = factor(
       Transmission,
-      levels = c('MSM', 'IDU', 'HETERO', 'TRANSFU'),
-      labels = c('MSM', 'IDU', 'MSW', 'Other/Unknown')
+      levels = c('MSM', 'IDU', 'HETERO', 'TRANSFU')
     ),
     YearOfHIVDiagnosis = as.factor(YearOfHIVDiagnosis),
     DateOfArrivalImputed = DateOfArrival
@@ -223,7 +216,7 @@ PrepareMigrantData <- function(
   # ------------------------------------------------------------------------------------------------
   data[is.na(Excluded) & is.na(DateOfArrival), Excluded := 'Date of arrival is missing']
 
-  missLevels <- data[, .(Excluded = levels(Excluded), Count = 0)]
+  missLevels <- data[, .(Excluded = levels(Excluded), Count = 0, IsTotalRow = FALSE)]
   missLevels[
     data[!is.na(Excluded), .(Count = .N), by = .(Excluded)],
     Count := i.Count,
@@ -232,8 +225,8 @@ PrepareMigrantData <- function(
 
   missStat <- rbind(
     missLevels,
-    data[, .(Excluded = 'Total excluded', Count = sum(!is.na(Excluded)))],
-    data[, .(Excluded = 'Total used in estimation', Count = sum(is.na(Excluded)))]
+    data[, .(Excluded = 'Total excluded', Count = sum(!is.na(Excluded)), IsTotalRow = TRUE)],
+    data[, .(Excluded = 'Total used in estimation', Count = sum(is.na(Excluded)), IsTotalRow = TRUE)] # nolint
   )
 
   # Process data -----------------------------------------------------------------------------------
@@ -347,12 +340,37 @@ PrepareMigrantData <- function(
   baseAIDS[DTime < 0, DTime := 0]
 
   # Diagnosis artifacts
-  countDistrData <- rbindlist(list(
-    baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
-    baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)],
-    baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'All')],
-    baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'All')]
-  ))
+  countDistrData <- data.table(
+    Imputation = integer(),
+    DateOfArrival = as.Date(integer()),
+    DateOfHIVDiagnosis = as.Date(integer()),
+    MigrantRegionOfOrigin = as.factor(character())
+  )
+  if (nrow(baseCD4VL) > 0) {
+    countDistrData <- rbind(
+      countDistrData,
+      baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
+    )
+  }
+  if (nrow(baseAIDS) > 0) {
+    countDistrData <- rbind(
+      countDistrData,
+      baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
+    )
+  }
+  if (nrow(baseCD4VL) > 0) {
+    countDistrData <- rbind(
+      countDistrData,
+      baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'ALL')]
+    )
+  }
+  if (nrow(baseAIDS) > 0) {
+    countDistrData <- rbind(
+      countDistrData,
+      baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'ALL')]
+    )
+  }
+
   if (nrow(countDistrData) > 0) {
     countDistr <- countDistrData[,
       .(Count = .N),
@@ -371,7 +389,7 @@ PrepareMigrantData <- function(
 
     # Number of cases by Year of Arrival and Region For Migration Module
     regionDistr <- dcast(
-      meanCountDistr[MigrantRegionOfOrigin != 'All'],
+      meanCountDistr[MigrantRegionOfOrigin != 'ALL'],
       YearOfArrival ~ MigrantRegionOfOrigin,
       value.var = 'Count',
       fun.aggregate = sum,
@@ -379,7 +397,7 @@ PrepareMigrantData <- function(
     )
 
     # Number of cases by the Year of Arrival and Year of Diagnosis
-    allYODDistr <- meanCountDistr[MigrantRegionOfOrigin == 'All', .(YearOfArrival, YearOfDiagnosis)]
+    allYODDistr <- meanCountDistr[MigrantRegionOfOrigin == 'ALL', .(YearOfArrival, YearOfDiagnosis)]
     yodDistr <- setNames(lapply(
       migrRegions,
       function(migrRegion) {

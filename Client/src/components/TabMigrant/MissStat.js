@@ -29,8 +29,8 @@ const MissStat = (props) => {
           {
             missingness.map((el, i) => (
               <TableRow key={i}>
-                <StyledTableCell value={el.excluded} isTotal={el.isTotal} align='left' />
-                <StyledTableCell value={el.count} isTotal={el.isTotal} align='right' />
+                <StyledTableCell value={el.Excluded} isTotal={el.IsTotalRow} align='left' />
+                <StyledTableCell value={el.Count} isTotal={el.IsTotalRow} align='right' />
               </TableRow>
             ))
           }

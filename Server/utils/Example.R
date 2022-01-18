@@ -70,6 +70,47 @@ browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
 appMgr$CaseMgr$RunMigration()
+unique(appMgr$CaseMgr$Data$ProbPre)
+appMgr$CaseMgr$Data
+appMgr$CaseMgr$MigrationResult
+appMgr$CaseMgr$MigrationResult$Output
+appMgr$CaseMgr$MigrationResult$Input
+ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Stats$Output)
+writeLines(ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Stats), 'json.json')
+
+outputStats <- GetMigrantOutputStats(data)
+outputPlots <- GetMigrantOutputPlots(data)
+stats <- list(
+  Input = input$Stats,
+  OutputStats = outputStats,
+  OutputPlots = outputPlots
+)
+statsJSON <- list(
+  Input = ConvertObjToJSON(stats$Input, dataframe = 'rows'),
+  OutputStats = ConvertObjToJSON(stats$OutputStats, dataframe = 'rows'),
+  OutputPlots = ConvertObjToJSON(stats$OutputPlots, dataframe = 'columns')
+)
+writeLines(statsJSON$OutputPlots, 'json.json')
+
+data <- copy(appMgr$CaseMgr$Data)
+input <- hivPlatform::PrepareMigrantData(data)
+output <- hivPlatform::PredictInf(input$Data)
+data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+outputStats <- GetMigrantOutputStats(data)
+outputPlots <- GetMigrantOutputPlots(data)
+ConvertObjToJSON(outputStats, dataframe = 'rows')
+ConvertObjToJSON(outputPlots, dataframe = 'columns')
+writeLines(
+  ConvertObjToJSON(
+    list(
+      Input = appMgr$CaseMgr$MigrationResult$Stats$Input,
+      Output = GetMigrantOutputStats(data)
+    )
+  ),
+  'json.json'
+)
+
+
 
 distr <- appMgr$CaseMgr$OriginDistribution
 originGrouping <- appMgr$CaseMgr$OriginGrouping
@@ -85,14 +126,17 @@ appMgr$CaseMgr$MigrationResult$Input
 # ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
 migrantData <- hivPlatform::PrepareMigrantData(data)
 params <- hivPlatform::GetMigrantParams()
-table <- hivPlatform::PredictInf(migrantData$Data, params)
+table <- hivPlatform::PredictInf(input = migrantData$Data, params)
 
+# CODE ---------------------------------------------------------------------------------------------
 table[, Imputation := as.integer(Imputation)]
 data[table, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
 table[, .N, by = .(is.na(ProbPre))]
 data[, .N, by = .(is.na(ProbPre))]
 output <- copy(data)
 stats <- GetMigrantOutputStats(output)
+# --------------------------------------------------------------------------------------------------
+
 output[, unique(MigrantRegionOfOrigin)]
 writeLines(jsonlite::toJSON(GetMigrantOutputStats(output[MigrantRegionOfOrigin == 'ASIA'])), 'json.json')
 output[, unique(MigrantRegionOfOrigin)]

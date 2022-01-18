@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
@@ -50,7 +51,6 @@ const AttributeMapping = (props) => {
           }}
           autoComplete={true}
           autoHighlight={true}
-          autoSelect={true}
           selectOnFocus={true}
           clearOnBlur={true}
           handleHomeEndKeys={true}
@@ -110,6 +110,9 @@ const AttributeMapping = (props) => {
               {attrMappingTableRows}
             </TableBody>
           </Table>
+          <Alert severity='info'>
+            Date of diagnosis is the date of HIV diagnosis in the reporting country.
+          </Alert>
         </Paper>
       </Grid>
     </Grid>

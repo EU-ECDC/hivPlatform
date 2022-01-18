@@ -476,10 +476,19 @@ CaseDataManager <- R6::R6Class(
 
               input <- hivPlatform::PrepareMigrantData(data)
               output <- hivPlatform::PredictInf(input$Data, params)
+              data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+              outputStats <- hivPlatform::GetMigrantOutputStats(data)
+              outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 
               result <- list(
-                Input = input,
-                Output = output
+                Input = input$Data,
+                Output = output,
+                Data = data,
+                Artifacts = list(
+                  InputStats = input$Stats,
+                  OutputStats = outputStats,
+                  OutputPlots = outputPlots
+                )
               )
 
               return(result)
@@ -491,14 +500,13 @@ CaseDataManager <- R6::R6Class(
             ),
             session = private$Session,
             successCallback = function(result) {
-              private$Catalogs$MigrationResult <- result
+              private$Catalogs$MigrationResult <- result[c('Input', 'Output', 'Stats')]
               try({
                 if (!is.null(private$Catalogs$AdjustedData)) {
-                  data <- private$Catalogs$AdjustedData
+                  private$Catalogs$AdjustedData <- copy(result$Data)
                 } else {
-                  data <- private$Catalogs$PreProcessedData
+                  private$Catalogs$PreProcessedData <- copy(result$Data)
                 }
-                data[result$Output$Table, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
               }, silent = TRUE)
               private$InvalidateAfterStep('CASE_BASED_MIGRATION')
               PrintAlert('Migration task finished')
@@ -507,8 +515,9 @@ CaseDataManager <- R6::R6Class(
                 payload = list(
                   ActionStatus = 'SUCCESS',
                   ActionMessage = 'Migration task finished',
-                  Stats = result$Input$Stats,
-                  OutputStats = result$Output$Stats
+                  InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
+                  OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
+                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns') # nolines
                 )
               )
             },

@@ -24,11 +24,11 @@ const YODDistr = (props) => {
         value={migrMgr.yodRegion}
         onChange={handleYodRegionChange}
       >
-        <ToggleButton value='All'>All</ToggleButton>
-        <ToggleButton value='Africa'>Africa</ToggleButton>
-        <ToggleButton value='Europe-North America'>Europe-North America</ToggleButton>
-        <ToggleButton value='Asia'>Asia</ToggleButton>
-        <ToggleButton value='Other'>Other</ToggleButton>
+        <ToggleButton value='ALL'>ALL</ToggleButton>
+        <ToggleButton value='AFRICA'>AFRICA</ToggleButton>
+        <ToggleButton value='EUROPE-NORTH AMERICA'>EUROPE-NORTH AMERICA</ToggleButton>
+        <ToggleButton value='ASIA'>ASIA</ToggleButton>
+        <ToggleButton value='OTHER'>OTHER</ToggleButton>
       </ToggleButtonGroup>;
   }
 

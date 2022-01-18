@@ -12,10 +12,12 @@ export default class MigrationManager {
 
   outputStats = null;
 
+  outputPlots = null;
+
   dataCompatibleFlag = null;
 
-  yodRegion = 'All';
-  tableRegion = 'All';
+  yodRegion = 'ALL';
+  tableRegion = 'ALL';
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -24,14 +26,17 @@ export default class MigrationManager {
       runLog: observable,
       inputStats: observable,
       outputStats: observable,
+      outputPlots: observable,
       yodRegion: observable,
       tableRegion: observable,
       dataCompatibleFlag: observable,
       runInProgress: computed,
-      missingnessArray: computed,
+      missingness: computed,
       regionDistr: computed,
       yodDistr: computed,
       tableDistr: computed,
+      arrivalPlotData: computed,
+      diagnosisPlotData: computed,
       setRunProgress: action,
       setRunLog: action,
       setInputStats: action,
@@ -48,18 +53,12 @@ export default class MigrationManager {
     return this.runProgress !== null;
   };
 
-  get missingnessArray() {
-    let arr = [];
+  get missingness() {
+    let res = null;
     if (!IsNull(this.inputStats) && !IsNull(this.inputStats.Missingness)) {
-      const excluded = this.inputStats.Missingness.Excluded;
-      const counts = this.inputStats.Missingness.Count;
-      arr = excluded.map((el, i) => ({
-        excluded: excluded[i],
-        count: counts[i],
-        isTotal: /Total/.test(excluded[i])
-      }));
+      res = this.inputStats.Missingness;
     }
-    return arr;
+    return res;
   };
 
   get regionDistr() {
@@ -91,6 +90,22 @@ export default class MigrationManager {
     return res;
   }
 
+  get arrivalPlotData() {
+    let res = null;
+    if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.ArrivalPlotData)) {
+      res = this.outputPlots.ArrivalPlotData;
+    }
+    return res;
+  };
+
+  get diagnosisPlotData() {
+    let res = null;
+    if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.DiagnosisPlotData)) {
+      res = this.outputPlots.DiagnosisPlotData;
+    }
+    return res;
+  };
+
   setRunProgress = progress => this.runProgress = progress;
 
   setRunLog = runLog => this.runLog = runLog;
@@ -98,6 +113,8 @@ export default class MigrationManager {
   setInputStats = inputStats => this.inputStats = inputStats;
 
   setOutputStats = outputStats => this.outputStats = outputStats;
+
+  setOutputPlots = outputPlots => this.outputPlots = outputPlots;
 
   setYodRegion = yodRegion => this.yodRegion = yodRegion;
 

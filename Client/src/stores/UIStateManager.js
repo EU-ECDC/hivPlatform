@@ -45,6 +45,7 @@ export default class UIStateManager {
       completed: false,
       disabled: true,
       subPages: [
+        { title: 'Migrant Connection', disabled: false},
         { title: 'Populations', disabled: false },
         { title: 'Inputs', disabled: false },
         { title: 'Advanced', disabled: false },
@@ -52,7 +53,7 @@ export default class UIStateManager {
         { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: false }
       ],
-      activeSubPageId: 0
+      activeSubPageId: 1
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
     { title: 'Outputs', completed: false, disabled: true, subPages: []},

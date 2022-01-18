@@ -18,6 +18,7 @@ import Title from '../Title';
 import MissStat from './MissStat';
 import YODDistr from './YODDistr';
 import TableDistr from './TableDistr';
+import PropCharts from './PropCharts';
 
 const TabMigrant = props => {
 
@@ -25,7 +26,7 @@ const TabMigrant = props => {
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
 
-  const [tabId, setTabId] = React.useState(1);
+  const [tabId, setTabId] = React.useState(0);
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
@@ -79,7 +80,7 @@ const TabMigrant = props => {
               textColor='primary'
             >
               <Tab label='Run log' />
-              <Tab label='Diagnostics' disabled={IsNull(appMgr.migrMgr.stats)}/>
+              <Tab label='Diagnostics' disabled={IsNull(appMgr.migrMgr.inputStats)}/>
             </Tabs>
             {tabId === 0 && <React.Fragment>
               <pre
@@ -105,32 +106,17 @@ const TabMigrant = props => {
                 </p>
 
                 <p>The estimation is performed for adults only.</p>
-                <MissStat missingness={appMgr.migrMgr.missingnessArray} />
+                <MissStat missingness={appMgr.migrMgr.missingness} />
 
                 <h3>2. Description of data used in estimation</h3>
+
                 <Title>Figure 1. Average number of cases by Year of Arrival and Region For Migration Module</Title>
                 <MigrChart data={appMgr.migrMgr.regionDistr} />
-
                 <YODDistr migrMgr={appMgr.migrMgr} />
 
                 <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
                 <TableDistr migrMgr={appMgr.migrMgr}/>
-{/*
-                <Title>Figure 3. Proportion of migrants infected post arrival by region of origin and year of arrival</Title>
-                <HIVChart
-                  year={[2000, 2001, 2002, 2003]}
-                  model={[20, 50, 40, 30]}
-                  min={[15, 30, 30, 20]}
-                  range={[10, 20, 25, 20]}
-                />
-
-                <Title>Figure 4. Proportion of migrants infected post arrival by region of origin and year of diagnosis</Title>
-                <HIVChart
-                  year={[2000, 2001, 2002, 2003]}
-                  model={[20, 50, 40, 30]}
-                  min={[15, 30, 30, 20]}
-                  range={[10, 20, 25, 20]}
-                /> */}
+                <PropCharts migrMgr={appMgr.migrMgr} />
               </div>
             }
           </Paper>

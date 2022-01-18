@@ -1,13 +1,15 @@
 GetMigrantOutputStats <- function(
-  output
+  data
 ) {
-  isOriginalData <- output[, all(Imputation == 0)]
+  isOriginalData <- data[, all(Imputation == 0)]
+  # Keep only either original or imputed data, never both.
   if (!isOriginalData) {
-    output <- output[Imputation > 0]
+    data <- data[Imputation > 0]
   }
-  output <- output[!is.na(ProbPre)]
+  # Keep only records with non-missing probability
+  data <- data[!is.na(ProbPre)]
 
-  output[, ':='(
+  data[, ':='(
     Total = 'Total',
     AgeGroup = cut(
       Age,
@@ -16,13 +18,18 @@ GetMigrantOutputStats <- function(
       right = FALSE
     )
   )]
+  data[
+    MigrantRegionOfOrigin %chin% c('CARIBBEAN-LATIN AMERICA'),
+    MigrantRegionOfOrigin := 'OTHER'
+  ]
 
   GetStats <- function(
+    dt = NULL,
     colName = NULL
   ) {
-    uniqueVals <- output[, unique(get(colName))]
+    uniqueVals <- dt[, sort(unique(get(colName)))]
     stats <- rbindlist(lapply(uniqueVals, function(uniqueVal) {
-      imputeStats <- output[
+      imputeStats <- dt[
         get(colName) == uniqueVal,
         .(
           Category = uniqueVal,
@@ -49,13 +56,24 @@ GetMigrantOutputStats <- function(
     }))
   }
 
-  stats <- list(
-    Total = GetStats(colName = 'Total'),
-    Sex = GetStats(colName = 'Gender'),
-    AgeGroup = GetStats(colName = 'AgeGroup'),
-    Transmission = GetStats(colName = 'Transmission'),
-    RegionOfOrigin = GetStats(colName = 'RegionOfOrigin')
-  )
+  GetStatsList <- function(dt) {
+    list(
+      Total = GetStats(dt, colName = 'Total'),
+      Sex = GetStats(dt, colName = 'Gender'),
+      AgeGroup = GetStats(dt, colName = 'AgeGroup'),
+      Transmission = GetStats(dt, colName = 'Transmission'),
+      RegionOfOrigin = GetStats(dt, colName = 'RegionOfOrigin')
+    )
+  }
 
-  return(stats)
+  migrantRegions <- data[, unique(MigrantRegionOfOrigin)]
+  stats <- setNames(lapply(migrantRegions, function(migrantRegion) {
+    GetStatsList(data[MigrantRegionOfOrigin == migrantRegion])
+  }), migrantRegions)
+
+  stats[['ALL']] <- GetStatsList(data)
+
+  return(list(
+    TableDistr = stats
+  ))
 }

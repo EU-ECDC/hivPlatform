@@ -158,7 +158,8 @@ const OriginGroupingsWidget = (props) => {
             onDeleteClick={handleDeleteClick}
           />
           <Alert severity='info'>
-            Records with value "UNK" are removed from the dataset processed for migration.
+            Records with value "UNK" are removed from the dataset processed for migration.<br />
+            Region "CARIBBEAN-LATIN AMERICA" is combined with region "OTHER" for migration module parameter.
           </Alert>
           <MessageAlert
             valid={appMgr.origGroupMgr.migrantCompatibleStatus}

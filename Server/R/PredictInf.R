@@ -1,6 +1,6 @@
 PredictInf <- function( # nolint
   input,
-  params
+  params = GetMigrantParams()
 ) {
   outputAIDS <- copy(input$AIDS)
   outputCD4VL <- copy(input$CD4VL)
@@ -129,6 +129,11 @@ PredictInf <- function( # nolint
     }
 
     dt <- outputCD4VL[UniqueId == uniqueId]
+    knownPrePost <- dt[Ord == 1, KnownPrePost]
+    if (knownPrePost  != 'Unknown') {
+      outputCD4VL[UniqueId == uniqueId, ProbPre := ifelse(knownPrePost == 'Pre', 1, 0)]
+      next
+    }
 
     x <- dt[, .(Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)]
     y <- dt[, .(YVar)]
@@ -137,10 +142,6 @@ PredictInf <- function( # nolint
     upTime <- dt[Ord == 1, U]
     xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
     maxDTime <- dt[, max(DTime)]
-
-    if (dt[Ord == 1, KnownPrePost] != 'Unknown') {
-      next
-    }
 
     switch(dt[Ord == 1, Only],
       'Both' = {

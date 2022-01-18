@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import TabModellingMigrant from './TabModellingMigrant';
 import TabModellingPopulation from './TabModellingPopulation';
 import TabModellingInputs from './TabModellingInputs';
 import TabModellingAdvanced from './TabModellingAdvanced';
@@ -14,12 +15,13 @@ const TabModelling = (props) => {
 
   return (
     <React.Fragment>
-      {activeSubPageId === 0 && <TabModellingPopulation {...props} />}
-      {activeSubPageId === 1 && <TabModellingInputs {...props} />}
-      {activeSubPageId === 2 && <TabModellingAdvanced {...props} />}
-      {activeSubPageId === 3 && <TabModellingRunMain {...props} />}
-      {activeSubPageId === 4 && <TabModellingRunBootstrap {...props} />}
-      {activeSubPageId === 5 && <TabModellingOutputs {...props} />}
+      {activeSubPageId === 0 && <TabModellingMigrant {...props} />}
+      {activeSubPageId === 1 && <TabModellingPopulation {...props} />}
+      {activeSubPageId === 2 && <TabModellingInputs {...props} />}
+      {activeSubPageId === 3 && <TabModellingAdvanced {...props} />}
+      {activeSubPageId === 4 && <TabModellingRunMain {...props} />}
+      {activeSubPageId === 5 && <TabModellingRunBootstrap {...props} />}
+      {activeSubPageId === 6 && <TabModellingOutputs {...props} />}
     </React.Fragment>
   );
 };
