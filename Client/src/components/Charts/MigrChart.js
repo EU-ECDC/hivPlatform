@@ -84,8 +84,8 @@ const MigrChart = (props) => {
       right: 80,
       top: 'top',
       inRange: {
-        // color: ['#bedfe1', '#69b023']
-        color: ['blue', 'red']
+        color: ['#bedfe1', '#69b023']
+        // color: ['blue', 'red']
       },
       padding: 0,
       min: 0,

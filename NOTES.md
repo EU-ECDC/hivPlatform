@@ -12,3 +12,7 @@ DONE:
 TODO:
 1. Add tab in "Modelling" -> "Migrant connection" (before "Populations") and enable if migration module was run
 2. Make migration connection optional in the modelling module
+1. Migrant diagnosis - Show info that we show average and round to the nearest integer
+2. Incorporate HIVStatus into KnownPrePost
+3. Move Populations to the first location.
+4. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.

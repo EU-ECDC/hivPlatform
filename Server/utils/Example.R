@@ -16,8 +16,8 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # nolint end
 
 
@@ -69,90 +69,111 @@ fileName <- RenderReportToFile(
 browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
+
+# 1. Perform migration
 appMgr$CaseMgr$RunMigration()
-unique(appMgr$CaseMgr$Data$ProbPre)
-appMgr$CaseMgr$Data
-appMgr$CaseMgr$MigrationResult
-appMgr$CaseMgr$MigrationResult$Output
-appMgr$CaseMgr$MigrationResult$Input
-ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Stats$Output)
-writeLines(ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Stats), 'json.json')
-
-outputStats <- GetMigrantOutputStats(data)
-outputPlots <- GetMigrantOutputPlots(data)
-stats <- list(
-  Input = input$Stats,
-  OutputStats = outputStats,
-  OutputPlots = outputPlots
-)
-statsJSON <- list(
-  Input = ConvertObjToJSON(stats$Input, dataframe = 'rows'),
-  OutputStats = ConvertObjToJSON(stats$OutputStats, dataframe = 'rows'),
-  OutputPlots = ConvertObjToJSON(stats$OutputPlots, dataframe = 'columns')
-)
-writeLines(statsJSON$OutputPlots, 'json.json')
-
 data <- copy(appMgr$CaseMgr$Data)
-input <- hivPlatform::PrepareMigrantData(data)
-output <- hivPlatform::PredictInf(input$Data)
-data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
-outputStats <- GetMigrantOutputStats(data)
-outputPlots <- GetMigrantOutputPlots(data)
-ConvertObjToJSON(outputStats, dataframe = 'rows')
-ConvertObjToJSON(outputPlots, dataframe = 'columns')
-writeLines(
-  ConvertObjToJSON(
-    list(
-      Input = appMgr$CaseMgr$MigrationResult$Stats$Input,
-      Output = GetMigrantOutputStats(data)
-    )
-  ),
-  'json.json'
+
+# 2. Classify each case in the case based data
+data[, MigrClass := NA_character_]
+data[
+  is.na(MigrClass) &
+    MigrantRegionOfOrigin == 'REPCOUNTRY',
+  MigrClass := 'Coming from reporting country'
+]
+data[
+  is.na(MigrClass) & !is.na(DateOfHIVDiagnosis) & !is.na(DateOfArrival) &
+    DateOfHIVDiagnosis < DateOfArrival,
+  MigrClass := 'Diagnosed prior to arrival'
+]
+data[
+  is.na(MigrClass) & !is.na(ProbPre) &
+    ProbPre >= 0.5,
+  MigrClass := 'Infected in the country of origin'
+]
+data[
+  is.na(MigrClass) & !is.na(ProbPre) &
+    ProbPre < 0.5,
+  MigrClass := 'Infected in the country of destination'
+]
+
+# 3.	Modelling flow (for population = All):
+
+# a. Prepare the Dead file based on the whole dataset
+if (!('Weight' %in% colnames(data))) {
+  data[, Weight := 1]
+}
+dead <- data[!is.na(DateOfDeath), .(Count = sum(Weight)), keyby = .(Year = year(DateOfDeath))]
+
+# b. Exclude cases classified as b. or c. (in 2.)
+# c. Prepare input datasets (HIV, HIVAIDS, HIV_CD4_XX, AIDS) as usual based on the subset data
+hivData <- PrepareDataSetsForModel(data[
+  !is.na(MigrClass) &
+    MigrClass != 'Diagnosed prior to arrival' &
+    MigrClass != 'Infected in the country of origin'
+])
+hivData[['Dead']] <- dead
+
+# d. Run model
+context <- hivModelling::GetRunContext(
+  data = hivData,
+  settings = list(),
+  parameters = list()
+)
+popData <- hivModelling::GetPopulationData(context)
+fitResults <- hivModelling::PerformMainFit(
+  context,
+  popData,
+  attemptSimplify = TRUE,
+  verbose = TRUE
 )
 
+# e. Estimate New_infections, Cumulative_new_infections, New_diagnoses
+fitResults$MainOutputs
+
+# 4. Prepare data for pre-migration infected cases
+
+# a. Take cases classified as b. or c. (in 2.)
+preMigrantData <- data[
+  !is.na(MigrClass) & !is.na(DateOfArrival) &
+    (MigrClass == 'Diagnosed prior to arrival' | MigrClass == 'Infected in the country of origin')
+]
+
+# b. Summarize by Year of Arrival (let’s call them New_migrant_cases),
+#    create yearly Cumulative_New_migrant_cases)
+newMigrantData <- preMigrantData[,
+  .(NewMigrantCases = sum(Weight)),
+  keyby = .(YearOfArrival = year(DateOfArrival))
+]
+newMigrantData[, CumNewMigrantCases := cumsum(NewMigrantCases)]
+
+# c. Summarize cases diagnosed prior to arrival (b.) by year of arrival and cases diagnosed after
+# arrival (c.) by Year of diagnosis  , add these two columns (call the sum New_migrant_diagnoses),
+# create yearly cumulative count Cumulative_newe_migrant_diagnoses
+newMigrantData2 <- preMigrantData[,
+  .(NewMigrantCases = sum(Weight)),
+  keyby = .(
+    MigrClass,
+    YearOfArrival = year(DateOfArrival)
+  )
+]
+newMigrantData2[, CumNewMigrantCases := cumsum(NewMigrantCases)]
+
+newMigrantData3 <- preMigrantData[,
+  .(NewMigrantCases = sum(Weight)),
+  keyby = .(
+    MigrClass,
+    YearOfDiagnosis = year(DateOfHIVDiagnosis)
+  )
+]
+newMigrantData3[, CumNewMigrantCases := cumsum(NewMigrantCases)]
 
 
-distr <- appMgr$CaseMgr$OriginDistribution
-originGrouping <- appMgr$CaseMgr$OriginGrouping
-CheckOriginGroupingForMigrant(originGrouping)
+# STEP 6 - Modelling - Migration Coonection --------------------------------------------------------
 
-data <- copy(appMgr$CaseMgr$Data)
-# appMgr$CaseMgr$AdjustedData
-# appMgr$CaseMgr$PreProcessedData
-table <- copy(appMgr$CaseMgr$MigrationResult$Output)
-appMgr$CaseMgr$MigrationResult$Input
 
-# data <- ApplyGrouping(data, originGrouping, from = 'FullRegionOfOrigin', to = 'GroupedRegionOfOrigin') # nolint
-# ApplyGrouping(data, originGrouping, from = 'GroupedRegionOfOrigin', to = 'MigrantRegionOfOrigin')
-migrantData <- hivPlatform::PrepareMigrantData(data)
-params <- hivPlatform::GetMigrantParams()
-table <- hivPlatform::PredictInf(input = migrantData$Data, params)
 
-# CODE ---------------------------------------------------------------------------------------------
-table[, Imputation := as.integer(Imputation)]
-data[table, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
-table[, .N, by = .(is.na(ProbPre))]
-data[, .N, by = .(is.na(ProbPre))]
-output <- copy(data)
-stats <- GetMigrantOutputStats(output)
-# --------------------------------------------------------------------------------------------------
-
-output[, unique(MigrantRegionOfOrigin)]
-writeLines(jsonlite::toJSON(GetMigrantOutputStats(output[MigrantRegionOfOrigin == 'ASIA'])), 'json.json')
-output[, unique(MigrantRegionOfOrigin)]
-
-jsonlite::toJSON(stats)
-writeLines(jsonlite::toJSON(stats), 'stats.json')
-shiny:::toJSON(stats)
-
-shiny:::toJSON(migrantData$Stats$Missingness)
-shiny:::toJSON(migrantData$Stats$Imputation)
-shiny:::toJSON(migrantData$Stats$RegionDistr)
-ConvertObjToJSON(migrantData$Stats$YODDistr)
-ConvertObjToJSON(data.table(A = c(1, 2), B = c(3, 4)))
-shiny:::toJSON(as.matrix(data.table(A = c(1, 2), B = c(3, 4))))
-
-# STEP 6 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 7 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
   Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
@@ -189,7 +210,7 @@ data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter)
   setcolorder(dt, 'Imputation')
 }))
 
-# STEP 7 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+# STEP 8 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
@@ -221,7 +242,7 @@ appMgr$HIVModelMgr$BootstrapFitStats
 bootstrap <- rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
 
-# STEP 8 - Explore bootstrap results ---------------------------------------------------------------
+# STEP 9 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
 hist(appMgr$HIVModelMgr$BootstrapFitStats$RunTime)
 table(appMgr$HIVModelMgr$BootstrapFitStats$Converged)
@@ -236,37 +257,11 @@ pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 
-# STEP 7 - Save and load ---------------------------------------------------------------------------
+# STEP 10 - Save and load ---------------------------------------------------------------------------
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 
-
-
-test <- appMgr$CaseMgr$Data[, Test := 1]
-appMgr$CaseMgr$AdjustedData[, Test := 1]
-address(appMgr$CaseMgr$Data)
-cat(appMgr$CaseMgr$AdjustmentTask$RunLog)
-cat(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog)
-
-test <- readRDS(file = 'D:/Downloads/HIVPlatformState_20210516_201741.rds')
-cat(test$UIState)
-
-caseData <- appMgr$CaseMgr$Data
-aggrData <- appMgr$AggrMgr$Data
-popCombination <- list(
-  Case = NULL,
-  Aggr = 'pop_0'
-)
-aggrDataSelection <- data.table(
-  Name = c(
-    'AIDS'
-  ),
-  Use = c(TRUE),
-  MinYear = c(1995),
-  MaxYear = c(2005)
-)
-CombineData(caseData, aggrData, popCombination, aggrDataSelection)
 
 # Migration ----------------------------------------------------------------------------------------
 params <- GetMigrantParams()
