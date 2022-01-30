@@ -6,7 +6,7 @@ import FormatPercentage from '../utilities/FormatPercentage';
 import MergeObjects from '../utilities/MergeObjects';
 import IsNull from '../utilities/IsNull';
 
-const StyledTableCell = ({ isTotal, value, lb, ub, isPerc = false, ...rest }) => {
+const StyledTableCell = ({ isTotal, value, lb, ub, isPerc = false, decimals = 0, ...rest }) => {
 
   const FormatFunc = isPerc ? FormatPercentage : FormatNumber;
 
@@ -15,20 +15,19 @@ const StyledTableCell = ({ isTotal, value, lb, ub, isPerc = false, ...rest }) =>
     backgroundColor: '#f9f9f9'
   } : null;
 
-  let printValue = null;
-  let isNumber = false;
+  let isNumber = !isNaN(value);
+  let printValue = '';
   if (!IsNull(value)) {
-    isNumber = !isNaN(value);
-    printValue = isNumber ? FormatFunc(value) : value;
+    printValue = FormatFunc(value, decimals);
   } else {
     if (!IsNull(lb) && !IsNull(ub)) {
-      printValue = `${FormatFunc(lb)} - ${FormatFunc(ub)}`;
+      printValue = `${FormatFunc(lb, decimals)} - ${FormatFunc(ub, decimals)}`;
       isNumber = true;
     }
   }
 
   const align = isNumber ? 'right' : 'left';
-  const opts = MergeObjects({align: align}, rest);
+  const opts = MergeObjects({ align: align }, rest);
 
   return (
     <TableCell {...opts} sx={style}>{printValue}</TableCell>

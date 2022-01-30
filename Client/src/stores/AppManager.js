@@ -17,6 +17,7 @@ import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
 import FloatToQuarter from '../utilities/FloatToQuarter';
 import SaveDataLocally from '../utilities/SaveDataLocally';
+import runInit from '../init';
 
 configure({
   enforceActions: 'observed',
@@ -378,6 +379,18 @@ export default class AppManager {
       saveState: action,
       setSeed: action
     });
+
+    const appMgr = this;
+    $(() => {
+      console.log('Application manager created. Binding shiny server events handlers.');
+      $(document).on('shiny:disconnected', () => appMgr.setShinyState('DISCONNECTED'));
+      $(document).on('shiny:connected', () => appMgr.setShinyState('CONNECTED'));
+      $(document).on('shiny:sessioninitialized', () => appMgr.setShinyState('SESSION_INITIALIZED'));
+      $(document).on('shiny:message', event => appMgr.setShinyMessage(event));
+      $(document).on('shiny:inputchanged', event => console.log('shiny:inputchanged:', event));
+      $(document).on('shiny:filedownload', event => console.log('shiny:filedownload:', event));
+      runInit(appMgr);
+    })
   };
 
   // Computed

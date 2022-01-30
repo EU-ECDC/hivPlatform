@@ -3,8 +3,3 @@ source(file.path(
   '.vscode-R',
   'init.R'
 ))
-
-.libPaths(c(
-  'Server/renv/library/R-4.1/x86_64-w64-mingw32/',
-  .libPaths()
-))

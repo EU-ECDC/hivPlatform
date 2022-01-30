@@ -257,7 +257,7 @@ pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 
-# STEP 10 - Save and load ---------------------------------------------------------------------------
+# STEP 10 - Save and load --------------------------------------------------------------------------
 
 saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')

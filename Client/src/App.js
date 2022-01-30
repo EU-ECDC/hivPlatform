@@ -110,7 +110,7 @@ const App = () => (
     <ThemeProvider theme={theme}>
       <React.Fragment>
         <CssBaseline />
-        <RootElem />
+        <RootElem/>
       </React.Fragment>
     </ThemeProvider>
   </StyledEngineProvider>

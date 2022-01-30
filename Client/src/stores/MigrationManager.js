@@ -41,6 +41,7 @@ export default class MigrationManager {
       setRunLog: action,
       setInputStats: action,
       setOutputStats: action,
+      setOutputPlots: action,
       setYodRegion: action,
       setTableRegion: action,
       setDataCompatibleFlag: action,

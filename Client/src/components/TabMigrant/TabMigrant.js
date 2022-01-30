@@ -12,7 +12,6 @@ import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import ProgressBar from '../ProgressBar';
 import MigrChart from '../Charts/MigrChart';
-import HIVChart from '../Charts/HIVChart';
 import IsNull from '../../utilities/IsNull';
 import Title from '../Title';
 import MissStat from './MissStat';

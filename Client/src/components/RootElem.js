@@ -19,23 +19,19 @@ import TabOutputs from './TabOutputs';
 import MessageBar from './MessageBar';
 import { NAME, VERSION, DEBUG } from '../settings';
 
-const Page = props => {
-  const { pageId, activePageId, children, ...other } = props;
-
-  return (
-    <Typography
-      component='div'
-      role='tabpanel'
-      hidden={activePageId !== pageId}
-      id={`wrapped-tabpanel-${pageId}`}
-      aria-labelledby={`wrapped-tab-${pageId}`}
-      style={{ flexGrow: 1, overflowY: 'scroll' }}
-      {...other}
-    >
-      {activePageId === pageId && <Box p={2}>{children}</Box>}
-    </Typography>
-  );
-};
+const Page = ({ pageId, activePageId, children, ...other }) => (
+  <Typography
+    component='div'
+    role='tabpanel'
+    hidden={activePageId !== pageId}
+    id={`wrapped-tabpanel-${pageId}`}
+    aria-labelledby={`wrapped-tab-${pageId}`}
+    style={{ flexGrow: 1, overflowY: 'scroll' }}
+    {...other}
+  >
+    {activePageId === pageId && <Box p={2}>{children}</Box>}
+  </Typography>
+);
 
 const RootElem = props => {
   const { appMgr } = props;
@@ -89,7 +85,13 @@ const RootElem = props => {
   };
 
   return (
-    <Box display='flex' flexGrow={1} flexDirection='column' sx={{overflow: 'hidden'}} p={0}>
+    <Box
+      display='flex'
+      flexGrow={1}
+      flexDirection='column'
+      sx={{ overflow: 'hidden' }}
+      p={0}
+    >
       <RightNav {...props} open={rightNavState} onClose={() => setRightNavState(false)}/>
       {appBar}
       <Box
