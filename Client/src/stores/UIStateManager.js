@@ -53,7 +53,7 @@ export default class UIStateManager {
         { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: false }
       ],
-      activeSubPageId: 1
+      activeSubPageId: 0
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
     { title: 'Outputs', completed: false, disabled: true, subPages: []},
@@ -83,6 +83,7 @@ export default class UIStateManager {
       caseBasedAttrMappingEnabled: computed,
       caseBasedOrigGroupingProvisioned: computed,
       caseBasedOrigGroupingEnabled: computed,
+      migrConnEnabled: computed,
       bootstrapEnabled: computed,
       adjustmentsOutputsEnabled: computed,
       repDelOutputsEnabled: computed,
@@ -139,6 +140,7 @@ export default class UIStateManager {
     this.pages[6].disabled = !this.reportsPageEnabled;
     this.pages[7].disabled = !this.outputsPageEnabled;
 
+    this.setSubPageDisabledStatus(5, 0, !this.migrConnEnabled);
     this.setSubPageDisabledStatus(5, 5, !this.bootstrapEnabled);
     this.setSubPageDisabledStatus(5, 6, !this.modellingOutputsEnabled);
   };
@@ -201,6 +203,10 @@ export default class UIStateManager {
       this.caseBasedOrigGroupingProvisioned &&
       this.rootMgr.origGroupMgr.unusedOrigins.length === 0
     );
+  };
+
+  get migrConnEnabled() {
+    return InArray('CASE_BASED_MIGRATION', this.completedSteps);
   };
 
   get bootstrapEnabled() {

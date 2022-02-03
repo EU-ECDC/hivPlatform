@@ -6,17 +6,15 @@ appMgr <- hivPlatform::AppManager$new()
 # nolint start
 # appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # nolint end
 
@@ -72,30 +70,19 @@ browseURL(fileName)
 
 # 1. Perform migration
 appMgr$CaseMgr$RunMigration()
+appMgr$HIVModelMgr$MigrConnFlag
 data <- copy(appMgr$CaseMgr$Data)
+data[!is.na(Excluded), unique(ProbPre)]
+data[is.na(Excluded) & KnownPrePost == 'Pre', unique(ProbPre)]
+data[is.na(Excluded) & KnownPrePost == 'Post', unique(ProbPre)]
 
 # 2. Classify each case in the case based data
-data[, MigrClass := NA_character_]
-data[
-  is.na(MigrClass) &
-    MigrantRegionOfOrigin == 'REPCOUNTRY',
-  MigrClass := 'Coming from reporting country'
-]
-data[
-  is.na(MigrClass) & !is.na(DateOfHIVDiagnosis) & !is.na(DateOfArrival) &
-    DateOfHIVDiagnosis < DateOfArrival,
-  MigrClass := 'Diagnosed prior to arrival'
-]
-data[
-  is.na(MigrClass) & !is.na(ProbPre) &
-    ProbPre >= 0.5,
-  MigrClass := 'Infected in the country of origin'
-]
-data[
-  is.na(MigrClass) & !is.na(ProbPre) &
-    ProbPre < 0.5,
-  MigrClass := 'Infected in the country of destination'
-]
+data[, MigrClass := fcase(
+  !is.na(DateOfHIVDiagnosis) & !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
+  !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
+  !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
+  default = 'Not considered migrant'
+)]
 
 # 3.	Modelling flow (for population = All):
 

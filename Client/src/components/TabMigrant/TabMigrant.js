@@ -101,10 +101,13 @@ const TabMigrant = props => {
 
                 <p>
                   It is possible to run the migration estimation on the original dataset, but it is
-                  recommended to use the imputation first.
+                  recommended to use the imputation first. If multiple imputations adjustment was
+                  run before the migrant module, then all results are computed as average over
+                  imputations and presented rounded to the nearest integer.
                 </p>
 
                 <p>The estimation is performed for adults only.</p>
+
                 <MissStat missingness={appMgr.migrMgr.missingness} />
 
                 <h3>2. Description of data used in estimation</h3>

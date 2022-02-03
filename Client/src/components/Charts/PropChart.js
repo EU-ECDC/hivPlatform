@@ -12,6 +12,7 @@ import {
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 import IsNull from '../../utilities/IsNull';
+import FormatPercentage from '../../utilities/FormatPercentage';
 
 echarts.use([
   GridComponent,
@@ -109,7 +110,7 @@ const PropChart = ({ title, xAxisTitle = 'Year', yAxisTitle = 'Proportion', year
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 20, bottom: 40, left: 80 },
+    grid: { top: 40, right: 20, bottom: 40, left: 65 },
     title: {
       text: title
     },
@@ -130,11 +131,19 @@ const PropChart = ({ title, xAxisTitle = 'Year', yAxisTitle = 'Proportion', year
       type: 'value',
       name: yAxisTitle,
       nameLocation: 'center',
-      nameGap: 65
+      nameGap: 50,
+      axisLabel: {
+        formatter: val => FormatPercentage(val, 0)
+      }
     },
     series: series,
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      formatter: params =>
+        `
+          Year: ${params[0].axisValue}<br/ >
+          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value, 0)}`).join('<br />')}
+        `
     },
     toolbox: {
       show: true,

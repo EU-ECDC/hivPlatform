@@ -9,10 +9,13 @@ DONE:
 8. Add note that date of diagnosis is the date of diagnosis in the reporting country
 9. Check selection of attributes. Currently the focused option is selected.
 
+10. Migrant diagnosis - Show info that we show average and round to the nearest integer
+11. Incorporate HIVStatus into KnownPrePost
+12. Add tab in "Modelling" -> "Migrant connection" (before "Populations") and enable if migration module was run
+13. Make migration connection optional in the modelling module
+14. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
+
 TODO:
-1. Add tab in "Modelling" -> "Migrant connection" (before "Populations") and enable if migration module was run
-2. Make migration connection optional in the modelling module
-1. Migrant diagnosis - Show info that we show average and round to the nearest integer
-2. Incorporate HIVStatus into KnownPrePost
-3. Move Populations to the first location.
-4. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
+
+REDUNDANT:
+1. Move Populations to the first location.

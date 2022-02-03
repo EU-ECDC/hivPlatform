@@ -37,7 +37,6 @@ export default class ModelsManager {
       distributionFit: observable,
       delta4Fac: observable,
       country: observable,
-
       modelsRunProgress: observable,
       modelsRunLog: observable,
       bootstrapRunProgress: observable,
@@ -45,6 +44,7 @@ export default class ModelsManager {
       bootstrapCount: observable,
       bootstrapType: observable,
       plotData: observable,
+      migrConnFlag: observable,
       setModelsParamFile: action,
       setModelsParamFileName: action,
       setMinYear: action,
@@ -74,6 +74,7 @@ export default class ModelsManager {
       setModelsRunLog: action,
       runBootstrap: action,
       cancelBootstrap: action,
+      setMigrConnFlag: action,
       modelsRunInProgress: computed,
       bootstrapRunInProgress: computed,
       gofTable1Data: computed,
@@ -97,6 +98,11 @@ export default class ModelsManager {
     autorun(() => {
       this.timeIntCollMgr.setMaxYear(this.maxYear);
     });
+
+    autorun(
+      () => this.parentMgr.inputValueSet('migrConnFlag', this.migrConnFlag),
+      { delay: 1000 }
+    );
   };
 
   // File details
@@ -133,6 +139,9 @@ export default class ModelsManager {
   modelsRunLog = null;
   bootstrapRunProgress = null;
   bootstrapRunLog = null;
+
+  // Migration connection
+  migrConnFlag = false;
 
   plotData = null;
 
@@ -233,6 +242,8 @@ export default class ModelsManager {
   });
 
   cancelBootstrap = () => this.parentMgr.btnClicked('cancelBootstrapBtn');
+
+  setMigrConnFlag = flag => this.migrConnFlag = flag;
 
   get modelsRunInProgress() {
     return this.modelsRunProgress !== null;

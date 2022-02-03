@@ -8,23 +8,19 @@ PrepareMigrantData <- function(
 
   # Pre-process data -------------------------------------------------------------------------------
   colNames <- c(
-    'Imputation', 'RecordId', 'Gender', 'Transmission', 'Age', 'DateOfArrival',
-    'MigrantRegionOfOrigin', 'DateOfHIVDiagnosis', 'AcuteInfection', 'FirstCD4Count',
+    'Imputation', 'RecordId', 'UniqueId', 'Gender', 'Transmission', 'Age', 'DateOfArrival',
+    'HIVStatus', 'MigrantRegionOfOrigin', 'DateOfHIVDiagnosis', 'AcuteInfection', 'FirstCD4Count',
     'LatestCD4Count', 'DateOfFirstCD4Count', 'DateOfLatestCD4Count', 'LatestVLCount',
     'DateOfLatestVLCount', 'DateOfArt', 'DateOfAIDSDiagnosis', 'YearOfHIVDiagnosis'
   )
-  data <- data[, ..colNames]
-  isOriginalData <- data[, all(Imputation == 0)]
-  if (!isOriginalData) {
-    data <- data[Imputation > 0]
-  }
+  data <- data[FinalData == TRUE, ..colNames]
 
   PrintH2('Checking data structure validity')
   columnSpecs <- GetListObject(
     GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE
   )
-  columnSpecs[['Imputation']] <- list(
+  columnSpecs[['UniqueId']] <- list(
     type = 'integer',
     defaultValue = NA_integer_
   )
@@ -46,6 +42,7 @@ PrepareMigrantData <- function(
   data[is.na(Transmission), Transmission := 'UNK']
   data[, Gender := as.character(Gender)]
   data[is.na(Gender), Gender := 'UNK']
+  data[is.na(HIVStatus), HIVStatus := 'UNK']
 
   # Group Caribbean/Latin America with Other for processing
   data[MigrantRegionOfOrigin %chin% c('CARIBBEAN-LATIN AMERICA'), MigrantRegionOfOrigin := 'OTHER']
@@ -229,22 +226,20 @@ PrepareMigrantData <- function(
     data[, .(Excluded = 'Total used in estimation', Count = sum(is.na(Excluded)), IsTotalRow = TRUE)] # nolint
   )
 
-  # Process data -----------------------------------------------------------------------------------
-  base <- data[is.na(Excluded)]
-
-  # Generate unique identifier
-  base[, ':='(
-    UniqueId = rleid(Imputation, RecordId),
-    Ord = rowid(Imputation, RecordId)
-  )]
-
   # Years since 1/1/1980
-  base[, Calendar := as.numeric(DateOfHIVDiagnosis - minDate) / 365.25]
+  data[, Calendar := as.numeric(DateOfHIVDiagnosis - minDate) / 365.25]
 
   # Years from migration to HIV diagosis
-  base[, Mig := as.numeric(DateOfHIVDiagnosis - DateOfArrival) / 365.25]
+  data[, Mig := as.numeric(DateOfHIVDiagnosis - DateOfArrival) / 365.25]
 
-  base[, KnownPrePost := fcase(Mig < 0, 'Pre', Mig > U, 'Post', default = 'Unknown')]
+  data[is.na(Excluded), KnownPrePost := fcase(
+    Mig < 0 | HIVStatus == 'PREVPOS', 'Pre',
+    Mig >= U, 'Post',
+    default = 'Unknown'
+  )]
+
+  # Process data -----------------------------------------------------------------------------------
+  base <- data[is.na(Excluded)]
 
   # CD4 dataset
   if (nrow(base) > 0) {
@@ -333,6 +328,9 @@ PrepareMigrantData <- function(
     RobsTime = DTime * (1 - Consc),
     RLogObsTime2 = log(DTime + 0.013) * (1 - Consc)
   )]
+
+  # Add unique identifier within the UniqueId
+  baseCD4VL[, Ord := rowid(UniqueId)]
 
   # Cases with no pre-ART/AIDS markers (CD4, VL) at all
   baseAIDS <- base[!(UniqueId %chin% baseCD4VL$UniqueId)]
@@ -423,6 +421,7 @@ PrepareMigrantData <- function(
 
   return(list(
     Data = list(
+      Input = data[, .(UniqueId, Excluded, KnownPrePost)],
       CD4VL = baseCD4VL,
       AIDS = baseAIDS
     ),

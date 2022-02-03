@@ -475,8 +475,16 @@ CaseDataManager <- R6::R6Class(
               .Random.seed <- randomSeed # nolint
 
               input <- hivPlatform::PrepareMigrantData(data)
-              output <- hivPlatform::PredictInf(input$Data, params)
-              data[output, ProbPre := i.ProbPre, on = .(Imputation, RecordId)]
+              output <- hivPlatform::PredictInf(input, params)
+              data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
+              data[
+                input$Data$Input,
+                ':='(
+                  Excluded = i.Excluded,
+                  KnownPrePost = i.KnownPrePost
+                ),
+                on = .(UniqueId)
+              ]
               outputStats <- hivPlatform::GetMigrantOutputStats(data)
               outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 
@@ -517,7 +525,7 @@ CaseDataManager <- R6::R6Class(
                   ActionMessage = 'Migration task finished',
                   InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
                   OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
-                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns') # nolines
+                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns') # nolint
                 )
               )
             },

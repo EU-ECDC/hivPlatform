@@ -2,8 +2,8 @@ PredictInf <- function( # nolint
   input,
   params = GetMigrantParams()
 ) {
-  outputAIDS <- copy(input$AIDS)
-  outputCD4VL <- copy(input$CD4VL)
+  outputAIDS <- copy(input$Data$AIDS)
+  outputCD4VL <- copy(input$Data$CD4VL)
 
   if (is.null(outputAIDS)) {
     outputAIDS <- data.table(
@@ -57,6 +57,12 @@ PredictInf <- function( # nolint
         type = 'success'
       )
       lastTime <- currentTime
+    }
+
+    knownPrePost <- outputAIDS$KnownPrePost[i]
+    if (knownPrePost != 'Unknown') {
+      outputAIDS[i, ProbPre := ifelse(knownPrePost == 'Pre', 1, 0)]
+      next
     }
 
     fit1 <- try(integrate(
@@ -129,9 +135,11 @@ PredictInf <- function( # nolint
     }
 
     dt <- outputCD4VL[UniqueId == uniqueId]
+
+    # Predetermined status results in a fixed probability
     knownPrePost <- dt[Ord == 1, KnownPrePost]
     if (knownPrePost  != 'Unknown') {
-      outputCD4VL[UniqueId == uniqueId, ProbPre := ifelse(knownPrePost == 'Pre', 1, 0)]
+      outputCD4VL[UniqueId == uniqueId, ProbPre := fifelse(knownPrePost == 'Pre', 1.0, 0.0)]
       next
     }
 
@@ -208,21 +216,18 @@ PredictInf <- function( # nolint
 
   table <- list()
   if (nrow(outputAIDS) > 0) {
-    table[['AIDS']] <- outputAIDS[Ord == 1, .(Imputation, RecordId, ProbPre)]
+    table[['AIDS']] <- outputAIDS[, .(UniqueId, ProbPre)]
   }
   if (nrow(outputCD4VL) > 0) {
-    table[['CD4VL']] <- outputCD4VL[Ord == 1, .(Imputation, RecordId, ProbPre)]
+    table[['CD4VL']] <- outputCD4VL[Ord == 1, .(UniqueId, ProbPre)]
   }
   table <- rbindlist(table)
-  table[, Imputation := as.integer(Imputation)]
 
   if (nrow(table) == 0) {
     table <- data.table(
-      Imputation = integer(),
-      RecordId = character(),
+      UniqueId = integer(),
       ProbPre = numeric()
     )
-    stats <- NULL
   }
 
   return(table)

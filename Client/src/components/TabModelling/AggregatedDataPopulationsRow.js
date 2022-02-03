@@ -5,10 +5,7 @@ import TableRow from '@mui/material/TableRow';
 import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
 
-const AggregatedDataPopulationsRow = (props) => {
-
-  const { i, rowCount, dataFile, appMgr } = props;
-
+const AggregatedDataPopulationsRow = ({ i, rowCount, dataFile, appMgr }) => {
   const handleUseChange = e => {
     appMgr.aggrDataMgr.setDataFileUse(dataFile.name, e.target.checked);
   };
@@ -16,6 +13,9 @@ const AggregatedDataPopulationsRow = (props) => {
   const handleYearsChange = (e, years) => {
     appMgr.aggrDataMgr.setDataFileYears(dataFile.name, years);
   };
+
+  const disabled = dataFile.name !== 'Dead' && appMgr.modelMgr.migrConnFlag;
+  const style = disabled ? { color: 'rgba(0, 0, 0, 0.26)' } : null;
 
   let lastColumn = null;
   if (rowCount === 1 || (rowCount > 1 && i === 0)) {
@@ -38,15 +38,22 @@ const AggregatedDataPopulationsRow = (props) => {
           getAriaLabel={index => index.toFixed()}
           getAriaValueText={value => value.toFixed()}
           color='secondary'
+          disabled={disabled}
         />
       </TableCell>
   }
 
   return (
     <TableRow>
-      <TableCell>{dataFile.name}</TableCell>
+      <TableCell sx={style}>{dataFile.name}</TableCell>
       <TableCell>
-        <Switch color='primary' checked={dataFile.use} onChange={handleUseChange} size='small' />
+        <Switch
+          color='primary'
+          checked={dataFile.use}
+          onChange={handleUseChange}
+          size='small'
+          disabled={disabled}
+        />
       </TableCell>
       { lastColumn }
     </TableRow>

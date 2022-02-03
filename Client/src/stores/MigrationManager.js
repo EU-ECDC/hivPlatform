@@ -121,7 +121,7 @@ export default class MigrationManager {
 
   setTableRegion = tableRegion => this.tableRegion = tableRegion;
 
-  setDataCompatibleFlag = dataCompatibleFlag => this.dataCompatibleFlag = dataCompatibleFlag;
+  setDataCompatibleFlag = flag => this.dataCompatibleFlag = flag;
 
   run = () => this.rootMgr.btnClicked('runMigrantBtn');
 

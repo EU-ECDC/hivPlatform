@@ -322,15 +322,6 @@ export default appMgr => {
   });
 
   appMgr.onShinyEvent({
-    type: 'MIGRATION_RUN_FINISHED',
-    payload: {
-      ActionStatus: 'SUCCESS',
-      ActionMessage: 'Migration task finished',
-      ...MigrantStats
-    }
-  });
-
-  appMgr.onShinyEvent({
     type: 'ADJUSTMENTS_RUN_LOG_SET',
     payload: {
       ActionStatus: 'SUCCESS',
@@ -360,6 +351,27 @@ export default appMgr => {
     }
   });
 
+
+  appMgr.onShinyEvent({
+    type: 'MIGRATION_RUN_FINISHED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'Migration task finished',
+      ...MigrantStats
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'COMPLETED_STEPS_SET',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      CompletedSteps: [
+        'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_ADJUSTMENTS', 'CASE_BASED_MIGRATION'
+      ]
+    }
+  });
+
   appMgr.onShinyEvent({
     type: 'CREATING_REPORT_FINISHED',
     payload: {
@@ -375,7 +387,8 @@ export default appMgr => {
       ActionStatus: 'SUCCESS',
       CompletedSteps: [
         'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
-        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS'
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS',
+        'CASE_BASED_MIGRATION', 'REPORTS'
       ]
     }
   });
@@ -590,8 +603,8 @@ export default appMgr => {
       ActionStatus: 'SUCCESS',
       CompletedSteps: [
         'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
-        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS',
-        'AGGR_READ', 'MODELLING'
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS',
+        'CASE_BASED_MIGRATION', 'REPORTS', 'AGGR_READ', 'MODELLING'
       ]
     }
   });
@@ -612,13 +625,13 @@ export default appMgr => {
       ActionStatus: 'SUCCESS',
       CompletedSteps: [
         'SESSION_INITIALIZED', 'CASE_BASED_READ', 'CASE_BASED_ATTR_MAPPING',
-        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS', 'REPORTS',
-        'AGGR_READ', 'MODELLING', 'BOOTSTRAP'
+        'CASE_BASED_ORIGIN_GROUPING', 'CASE_BASED_SUMMARY', 'CASE_BASED_ADJUSTMENTS',
+        'CASE_BASED_MIGRATION', 'REPORTS', 'AGGR_READ', 'MODELLING', 'BOOTSTRAP'
       ]
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(4, 0);
+  appMgr.uiStateMgr.setActivePageId(5, 1);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);

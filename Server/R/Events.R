@@ -307,6 +307,10 @@ Events <- function(
     )
   })
 
+  observeEvent(input$migrConnFlag, {
+    appMgr$HIVModelMgr$SetMigrConnFlag(input$migrConnFlag)
+  })
+
   observeEvent(input$aggrFilters, {
       appMgr$HIVModelMgr$SetAggrFilters(input$aggrFilters)
     },

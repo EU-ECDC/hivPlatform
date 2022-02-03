@@ -13,6 +13,7 @@ import {
 import { SVGRenderer } from 'echarts/renderers';
 import IsNull from '../../utilities/IsNull';
 import MergeObjects from '../../utilities/MergeObjects';
+import FormatNumber from '../../utilities/FormatNumber';
 
 echarts.use([
   GridComponent,
@@ -101,7 +102,8 @@ const MigrChart = (props) => {
       data: data.seriesData,
       label: {
         show: true,
-        fontSize: 10
+        fontSize: 10,
+        formatter: d => FormatNumber(d.data[2], 0)
       },
       itemStyle: {
         borderColor: '#fff',

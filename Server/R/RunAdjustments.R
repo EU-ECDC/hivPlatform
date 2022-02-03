@@ -78,6 +78,8 @@ RunAdjustments <- function(
       setorderv(output$Data, 'Imputation')
     }
 
+    AppendRecordIndicators(output$Data)
+
     adjustResults <- list(
       Data = output$Data,
       Artifacts = output$Artifacts,

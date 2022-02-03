@@ -23,6 +23,7 @@ HIVModelManager <- R6::R6Class(
       private$Session <- session
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
+        MigrConnFlag = FALSE,
         PopCombination = NULL,
         AggrDataSelection = NULL,
         MainFitTask = NULL,
@@ -40,6 +41,13 @@ HIVModelManager <- R6::R6Class(
     },
 
     # USER ACTIONS =================================================================================
+
+    SetMigrConnFlag = function(
+      migrConnFlag
+    ) {
+      private$Catalogs$MigrConnFlag <- migrConnFlag
+      return(invisible(self))
+    },
 
     LoadParameters = function(
       xmlModel
@@ -71,6 +79,8 @@ HIVModelManager <- R6::R6Class(
       }
 
       private$SendMessage('MODELS_PARAMS_LOADED', payload)
+
+      return(invisible(self))
     },
 
     DetermineYearRanges = function() {
@@ -605,6 +615,10 @@ HIVModelManager <- R6::R6Class(
   ),
 
   active = list(
+    MigrConnFlag = function() {
+      return(private$Catalogs$MigrConnFlag)
+    },
+
     PopCombination = function() {
       return(private$Catalogs$PopCombination)
     },
