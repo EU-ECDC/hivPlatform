@@ -6,7 +6,8 @@ appMgr <- hivPlatform::AppManager$new()
 # nolint start
 # appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
@@ -18,6 +19,12 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # nolint end
 
+# library(data.table)
+# dt <- ReadDataFile('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+# WriteDataFile(
+#   dt[sample(seq_len(nrow(dt)), size = 500, replace = FALSE)],
+#   'D:/VirtualBox_Shared/dummy2019_exclUK_sample500.csv'
+# )
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
@@ -42,9 +49,9 @@ appMgr$CaseMgr$SetFilters(filters = list(
 adjustmentSpecs <-
   hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
-adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
-adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
-adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
+# adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
+# adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
+# adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
@@ -70,94 +77,12 @@ browseURL(fileName)
 
 # 1. Perform migration
 appMgr$CaseMgr$RunMigration()
-appMgr$HIVModelMgr$MigrConnFlag
 data <- copy(appMgr$CaseMgr$Data)
-data[!is.na(Excluded), unique(ProbPre)]
-data[is.na(Excluded) & KnownPrePost == 'Pre', unique(ProbPre)]
-data[is.na(Excluded) & KnownPrePost == 'Post', unique(ProbPre)]
-
-# 2. Classify each case in the case based data
-data[, MigrClass := fcase(
-  !is.na(DateOfHIVDiagnosis) & !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
-  !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
-  !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
-  default = 'Not considered migrant'
-)]
-
-# 3.	Modelling flow (for population = All):
-
-# a. Prepare the Dead file based on the whole dataset
-if (!('Weight' %in% colnames(data))) {
-  data[, Weight := 1]
-}
-dead <- data[!is.na(DateOfDeath), .(Count = sum(Weight)), keyby = .(Year = year(DateOfDeath))]
-
-# b. Exclude cases classified as b. or c. (in 2.)
-# c. Prepare input datasets (HIV, HIVAIDS, HIV_CD4_XX, AIDS) as usual based on the subset data
-hivData <- PrepareDataSetsForModel(data[
-  !is.na(MigrClass) &
-    MigrClass != 'Diagnosed prior to arrival' &
-    MigrClass != 'Infected in the country of origin'
-])
-hivData[['Dead']] <- dead
-
-# d. Run model
-context <- hivModelling::GetRunContext(
-  data = hivData,
-  settings = list(),
-  parameters = list()
-)
-popData <- hivModelling::GetPopulationData(context)
-fitResults <- hivModelling::PerformMainFit(
-  context,
-  popData,
-  attemptSimplify = TRUE,
-  verbose = TRUE
-)
-
-# e. Estimate New_infections, Cumulative_new_infections, New_diagnoses
-fitResults$MainOutputs
-
-# 4. Prepare data for pre-migration infected cases
-
-# a. Take cases classified as b. or c. (in 2.)
-preMigrantData <- data[
-  !is.na(MigrClass) & !is.na(DateOfArrival) &
-    (MigrClass == 'Diagnosed prior to arrival' | MigrClass == 'Infected in the country of origin')
-]
-
-# b. Summarize by Year of Arrival (let’s call them New_migrant_cases),
-#    create yearly Cumulative_New_migrant_cases)
-newMigrantData <- preMigrantData[,
-  .(NewMigrantCases = sum(Weight)),
-  keyby = .(YearOfArrival = year(DateOfArrival))
-]
-newMigrantData[, CumNewMigrantCases := cumsum(NewMigrantCases)]
-
-# c. Summarize cases diagnosed prior to arrival (b.) by year of arrival and cases diagnosed after
-# arrival (c.) by Year of diagnosis  , add these two columns (call the sum New_migrant_diagnoses),
-# create yearly cumulative count Cumulative_newe_migrant_diagnoses
-newMigrantData2 <- preMigrantData[,
-  .(NewMigrantCases = sum(Weight)),
-  keyby = .(
-    MigrClass,
-    YearOfArrival = year(DateOfArrival)
-  )
-]
-newMigrantData2[, CumNewMigrantCases := cumsum(NewMigrantCases)]
-
-newMigrantData3 <- preMigrantData[,
-  .(NewMigrantCases = sum(Weight)),
-  keyby = .(
-    MigrClass,
-    YearOfDiagnosis = year(DateOfHIVDiagnosis)
-  )
-]
-newMigrantData3[, CumNewMigrantCases := cumsum(NewMigrantCases)]
-
+data[is.na(DateOfArrival), DateOfArrival := DateOfArrivalPostMigr]
+data[Imputation > 0 & is.na(Excluded)]
+migr <- PerformMigrantConnection(data)
 
 # STEP 6 - Modelling - Migration Coonection --------------------------------------------------------
-
 
 
 # STEP 7 - Fit the HIV model -----------------------------------------------------------------------
@@ -228,7 +153,6 @@ appMgr$HIVModelMgr$BootstrapFitStats
 # 6. Main output stats (rds)
 bootstrap <- rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
-
 # STEP 9 - Explore bootstrap results ---------------------------------------------------------------
 # All data sets
 hist(appMgr$HIVModelMgr$BootstrapFitStats$RunTime)
@@ -246,7 +170,7 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 # STEP 10 - Save and load --------------------------------------------------------------------------
 
-saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
+saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr_large.rds')
 appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 
 

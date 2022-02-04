@@ -44,7 +44,7 @@ const AggregatedDataPopulationsRow = ({ i, rowCount, dataFile, appMgr }) => {
   }
 
   return (
-    <TableRow>
+    <TableRow hover={!disabled}>
       <TableCell sx={style}>{dataFile.name}</TableCell>
       <TableCell>
         <Switch

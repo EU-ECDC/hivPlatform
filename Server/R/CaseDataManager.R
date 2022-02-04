@@ -481,7 +481,8 @@ CaseDataManager <- R6::R6Class(
                 input$Data$Input,
                 ':='(
                   Excluded = i.Excluded,
-                  KnownPrePost = i.KnownPrePost
+                  KnownPrePost = i.KnownPrePost,
+                  DateOfArrivalPostMigr = i.DateOfArrival
                 ),
                 on = .(UniqueId)
               ]

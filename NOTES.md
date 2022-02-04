@@ -16,6 +16,9 @@ DONE:
 14. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
 
 TODO:
+1. Check why there are missings in GroupedRegionOfOrigin
+2. Leave migrant connection at first place
+3. Add three new columns to the outputs of the model, rather than adjusting existing columns
 
 REDUNDANT:
 1. Move Populations to the first location.

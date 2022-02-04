@@ -421,7 +421,7 @@ PrepareMigrantData <- function(
 
   return(list(
     Data = list(
-      Input = data[, .(UniqueId, Excluded, KnownPrePost)],
+      Input = data[, .(UniqueId, DateOfArrival, Excluded, KnownPrePost)],
       CD4VL = baseCD4VL,
       AIDS = baseAIDS
     ),
