@@ -6,6 +6,7 @@
 #' @param originGrouping List object with mapping. Required.
 #' @param from Column name for mapping from
 #' @param to Column name for mapping to
+#' @param asFactor Logical indicating to convert "from" and "to" columns to factor.
 #'
 #' @return inputData
 #'
@@ -24,7 +25,8 @@ ApplyGrouping <- function(
   data,
   originGrouping,
   from = 'FullRegionOfOrigin',
-  to = 'GroupedRegionOfOrigin'
+  to = 'GroupedRegionOfOrigin',
+  asFactor = FALSE
 ) {
   if (to %in% colnames(data)) {
     data[, (to) := NULL]
@@ -44,6 +46,11 @@ ApplyGrouping <- function(
   }
   data[get(to) == 'UNK', (to) := NA_character_]
   data[get(from) == 'UNK', (from) := NA_character_]
+
+  if (asFactor) {
+    data[, (from) := as.factor(get(from))]
+    data[, (to) := as.factor(get(to))]
+  }
 
   return(invisible(data))
 }

@@ -8,7 +8,7 @@
 NULL
 
 #' @export
-CaseDataManager <- R6::R6Class(
+CaseDataManager <- R6::R6Class( # nolint
   classname = 'CaseDataManager',
   class = FALSE,
   cloneable = FALSE,
@@ -217,7 +217,8 @@ CaseDataManager <- R6::R6Class(
           preProcessedData,
           originGrouping,
           from = 'GroupedRegionOfOrigin',
-          to = 'MigrantRegionOfOrigin'
+          to = 'MigrantRegionOfOrigin',
+          asFactor = TRUE
         )
 
         migrantCompatibility <- CheckOriginGroupingForMigrant(originGrouping)
@@ -378,7 +379,16 @@ CaseDataManager <- R6::R6Class(
             session = private$Session,
             successCallback = function(result) {
               private$Catalogs$AdjustmentResult <- result
-              private$Catalogs$AdjustedData <- copy(self$LastAdjustmentResult$Data)
+
+              data <- ApplyGrouping(
+                copy(self$LastAdjustmentResult$Data),
+                private$Catalogs$OriginGrouping,
+                from = 'GroupedRegionOfOrigin',
+                to = 'MigrantRegionOfOrigin',
+                asFactor = TRUE
+              )
+              private$Catalogs$AdjustedData <- data
+
               private$InvalidateAfterStep('CASE_BASED_ADJUSTMENTS')
               PrintAlert('Adjustment task finished')
               private$SendMessage(

@@ -53,6 +53,15 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 # adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+appMgr$CaseMgr$Data[FinalData == TRUE, table(is.na(GroupedRegionOfOrigin))]
+appMgr$CaseMgr$Data[FinalData == FALSE, table(is.na(GroupedRegionOfOrigin))]
+appMgr$CaseMgr$Data[FinalData == TRUE, table(is.na(MigrantRegionOfOrigin))]
+appMgr$CaseMgr$Data[FinalData == FALSE, table(is.na(MigrantRegionOfOrigin))]
+
+unique(appMgr$CaseMgr$Data[FinalData == FALSE, .(GroupedRegionOfOrigin, MigrantRegionOfOrigin)])
+
+appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts
+
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 

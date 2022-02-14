@@ -14,11 +14,8 @@ DONE:
 12. Add tab in "Modelling" -> "Migrant connection" (before "Populations") and enable if migration module was run
 13. Make migration connection optional in the modelling module
 14. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
+15. Check why there are missings in GroupedRegionOfOrigin.
 
 TODO:
-1. Check why there are missings in GroupedRegionOfOrigin
-2. Leave migrant connection at first place
-3. Add three new columns to the outputs of the model, rather than adjusting existing columns
-
-REDUNDANT:
-1. Move Populations to the first location.
+1. Leave migrant connection at first place
+2. Add three new columns to the outputs of the model, rather than adjusting existing columns
