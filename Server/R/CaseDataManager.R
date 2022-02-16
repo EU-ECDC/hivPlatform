@@ -492,7 +492,7 @@ CaseDataManager <- R6::R6Class( # nolint
                 ':='(
                   Excluded = i.Excluded,
                   KnownPrePost = i.KnownPrePost,
-                  DateOfArrivalPostMigr = i.DateOfArrival
+                  DateOfArrival = i.DateOfArrival
                 ),
                 on = .(UniqueId)
               ]

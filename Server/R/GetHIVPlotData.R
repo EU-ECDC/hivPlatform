@@ -18,9 +18,9 @@
 #' @export
 GetHIVPlotData <- function(
   mainFitResult,
-  bootstrapFitStats
+  bootstrapFitStats = NULL
 ) {
-  dt <- mainFitResult$`0`$Results$MainOutputs[, .(
+  dt <- mainFitResult[, .(
     Year,
     N_HIV_D, N_HIV_Obs_M,
     N_CD4_1_D, N_CD4_1_Obs_M,

@@ -4,43 +4,23 @@
 \alias{CombineData}
 \title{CombineData}
 \usage{
-CombineData(
-  caseData,
-  aggrData,
-  popCombination = NULL,
-  aggrDataSelection = NULL
-)
+CombineData(set1, set2)
 }
 \arguments{
-\item{caseData}{Case-based data (before or after adjustments). Required.}
+\item{set1}{Set 1, case-based data. Optional.}
 
-\item{aggrData}{Aggregated data. Required.}
-
-\item{popCombination}{List of populations to combine per case-based and aggregated data.
-Required.}
-
-\item{aggrDataSelection}{Data.table with specification of aggregated data selection. Contains
-columns: \code{DataType}, \code{Use}, \code{MinYear}, \code{MaxYear}}
+\item{set2}{Set 2, aggregated data. Optional.}
 }
 \value{
-List of aggregated data asets
+Combined data set - a list of aggregated data sets
 }
 \description{
-Combines case-based and aggregated data for HIV Model
+Combines two aggregated data sets for HIV Model.
+Data is set 2 overrides data in set 1.
 }
 \examples{
 \dontrun{
-popCombination <- list(
-  Case = list(Values = c('M'), Variables = c('Gender')),
-  Aggr = c('pop_0')
-)
-aggrDataSelection <- data.table(
-  Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
-  Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
-  MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
-  MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
-)
-CombineData(casedData, aggrData, popCombination, aggrDataSelection)
+CombineData(set1, set2)
 }
 
 }

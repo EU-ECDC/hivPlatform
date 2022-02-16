@@ -50,7 +50,7 @@ export default class AppManager {
 
   // Shiny custom event handlers
   onShinyEvent = e => {
-    console.log('onShinyEvent', e);
+    console.log('onShinyEvent', e.type, e);
     switch (e.type) {
       case 'COMPLETED_STEPS_SET':
         if (e.payload.ActionStatus === 'SUCCESS') {

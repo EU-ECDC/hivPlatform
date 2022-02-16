@@ -4,7 +4,7 @@
 \alias{GetHIVPlotData}
 \title{GetHIVPlotData}
 \usage{
-GetHIVPlotData(mainFitResult, bootstrapFitStats)
+GetHIVPlotData(mainFitResult, bootstrapFitStats = NULL)
 }
 \arguments{
 \item{mainFitResult}{mainFitResult}

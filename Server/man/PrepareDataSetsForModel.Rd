@@ -4,7 +4,13 @@
 \alias{PrepareDataSetsForModel}
 \title{PrepareDataSetsForModel}
 \usage{
-PrepareDataSetsForModel(dt, splitBy = NULL, strata = NULL, listIndex = 0)
+PrepareDataSetsForModel(
+  dt,
+  splitBy = NULL,
+  strata = NULL,
+  listIndex = 0,
+  dataSets = c("HIV", "AIDS", "HIVAIDS", "Dead", "CD4")
+)
 }
 \arguments{
 \item{dt}{Input data set as data.table object. Required.}
@@ -17,6 +23,9 @@ Default = \code{NULL}}
 \item{listIndex}{Index in the output list to use if 'splitBy' columns does not exist in the
 input data set and cannot be used for indexing output data set. If NULL then output file set
 is not indexed and returned directly. Optional. Default = 0.}
+
+\item{dataSets}{Character vector of names of datasets to return.
+Default = \code{c('HIV', 'AIDS', 'HIVAIDS', 'Dead', 'CD4')}}
 }
 \value{
 List of HIV models
@@ -26,7 +35,7 @@ Prepares data sets for HIV Model
 }
 \examples{
 \dontrun{
-  PrepareDataSetsForModel(dt, splitBy = 'Imputation', strata = 'Transmission')
+  PrepareDataSetsForModel(dt, splitBy = 'Imputation', strata = 'Transmission', dataSets)
 }
 
 }

@@ -37,6 +37,7 @@ PrepareMigrantData <- function(
 
   # Replace NA with 'UNK'
   data[is.na(AcuteInfection), AcuteInfection := 'UNK']
+  data[, MigrantRegionOfOrigin := as.character(MigrantRegionOfOrigin)]
   data[is.na(MigrantRegionOfOrigin), MigrantRegionOfOrigin := 'UNK']
   data[, Transmission := as.character(Transmission)]
   data[is.na(Transmission), Transmission := 'UNK']

@@ -8,7 +8,8 @@ ApplyGrouping(
   data,
   originGrouping,
   from = "FullRegionOfOrigin",
-  to = "GroupedRegionOfOrigin"
+  to = "GroupedRegionOfOrigin",
+  asFactor = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ ApplyGrouping(
 \item{from}{Column name for mapping from}
 
 \item{to}{Column name for mapping to}
+
+\item{asFactor}{Logical indicating to convert "from" and "to" columns to factor.}
 }
 \value{
 inputData

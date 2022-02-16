@@ -8,7 +8,7 @@
 NULL
 
 #' @export
-HIVModelManager <- R6::R6Class(
+HIVModelManager <- R6::R6Class( # nolint
   classname = 'HIVModelManager',
   class = FALSE,
   cloneable = FALSE,
@@ -103,7 +103,9 @@ HIVModelManager <- R6::R6Class(
         # Aggregated data filters
         aggrDataSelection <- private$Catalogs$AggrDataSelection
 
-        dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)[[1]]
+        res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
+        caseDataAll <- PrepareDataSetsForModel(caseData)
+        dataSets <- CombineData(caseDataAll, res$Aggr)[[1]]
         dataSets <- Filter(function(dt) nrow(dt) > 0, dataSets)
         optimalYears <- hivModelling::GetAllowedYearRanges(dataSets)
         rangeYears <- lapply(dataSets, function(dt) dt[, c(min(Year), max(Year))])
@@ -121,7 +123,6 @@ HIVModelManager <- R6::R6Class(
           ActionStatus = status,
           ActionMessage = msg,
           Years = private$Catalogs$Years
-          # Intervals = intervals # nolint
         )
       } else {
         payload <- list(
@@ -171,6 +172,7 @@ HIVModelManager <- R6::R6Class(
             parameters,
             popCombination,
             aggrDataSelection,
+            migrConnFlag,
             randomSeed
           ) {
             if (!require('hivPlatform', quietly = TRUE)) {
@@ -181,6 +183,9 @@ HIVModelManager <- R6::R6Class(
             .Random.seed <- randomSeed # nolint
 
             PrintH1('Parameters')
+
+            PrintH2('Migrant module connection')
+            PrintAlert('Enabled: {ifelse(migrConnFlag, "Yes", "No")}')
 
             if (length(popCombination$Aggr) > 0) {
               PrintH2('Aggregated data selection')
@@ -227,7 +232,53 @@ HIVModelManager <- R6::R6Class(
             PrintAlert('Country-specific settings                            : {parameters$Country}')
             # nolint end
 
-            dataSets <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
+            caseData <- caseData[FinalData == TRUE]
+            if (!('Weight' %in% colnames(caseData))) {
+              caseData[, Weight := 1]
+            }
+            dataAfterMigr <- 'ProbPre' %in% colnames(caseData)
+
+            if (migrConnFlag && dataAfterMigr) {
+              stopifnot(caseData[!is.na(Excluded), is.na(unique(ProbPre))])
+              stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Pre', unique(ProbPre) == 1])
+              stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Post', unique(ProbPre) == 0])
+
+              caseData[, MigrClass := fcase(
+                !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
+                !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
+                !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
+                default = 'Not considered migrant'
+              )]
+              stopifnot(caseData[, sum(is.na(MigrClass)) == 0])
+            }
+
+            # Select population data
+            res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
+            caseData <- res$Case
+            aggrData <- res$Aggr
+
+            # Prepare data sets for the HIV model
+            if (migrConnFlag && dataAfterMigr) {
+              # Prepare the Dead file based on the whole population dataset
+              caseDataDead <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation', dataSets = 'Dead') # nolint
+
+              # Prepare other datasets based on the subset of population
+              caseDataRest <- PrepareDataSetsForModel(
+                caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                splitBy = 'Imputation',
+                dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
+              )
+              caseDataAll <- modifyList(caseDataDead, caseDataRest)
+
+              if ('Dead' %in% names(aggrData)) {
+                aggrData <- aggrData['Dead']
+              } else {
+                aggrData <- NULL
+              }
+            } else {
+              caseDataAll <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation')
+            }
+            dataSets <- CombineData(caseDataAll, aggrData)
 
             if (is.null(dataSets)) {
               stop('No input data specified')
@@ -256,6 +307,42 @@ HIVModelManager <- R6::R6Class(
               )
               runTime <- Sys.time() - startTime
 
+              if (migrConnFlag && dataAfterMigr) {
+                model <- fitResults$MainOutputs
+
+                model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
+
+                # Prepare data for pre-migration infected cases
+                preMigrArrY <- caseData[
+                  Imputation == as.integer(imp) &
+                    MigrClass %chin% 'Diagnosed prior to arrival' &
+                    !is.na(DateOfArrival),
+                  .(Count = sum(Weight)),
+                  keyby = .(Year = year(DateOfArrival))
+                ]
+
+                preMigrDiagY <- caseData[
+                  Imputation == as.integer(imp) &
+                    MigrClass %chin% 'Infected in the country of origin',
+                  .(Count = sum(Weight)),
+                  keyby = .(Year = YearOfHIVDiagnosis)
+                ]
+
+                model[preMigrArrY, DiagPriorArrival := i.Count, on = .(Year)]
+                model[is.na(DiagPriorArrival), DiagPriorArrival := 0]
+                model[preMigrDiagY, InfCountryOfOrigin := i.Count, on = .(Year)]
+                model[is.na(InfCountryOfOrigin), InfCountryOfOrigin := 0]
+                model[, NewMigrantDiagnoses := DiagPriorArrival + InfCountryOfOrigin]
+                model[, ':='(
+                  CumInfectionsInclMigr =
+                    cumsum(N_Inf_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D) -
+                      cumsum(DeadsUndiagnosed),
+                  CumDiagnosedCasesInclMigr =
+                    cumsum(N_HIV_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D)
+                )]
+                model[, UndiagnosedFrac := 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr]
+              }
+
               impResult[[imp]] <- list(
                 Context = context,
                 PopData = popData,
@@ -265,12 +352,12 @@ HIVModelManager <- R6::R6Class(
               )
             }
 
-            plotData <- GetHIVPlotData(impResult, NULL)
+            # First set is used only!
+            plotData <- GetHIVPlotData(impResult[[1]]$Results$MainOutputs)
 
             result <- list(
               MainFitResult = impResult,
-              PlotData = plotData,
-              JSONPlotData = jsonlite::toJSON(plotData, dataframe = 'columns')
+              PlotData = plotData
             )
 
             return(result)
@@ -282,6 +369,7 @@ HIVModelManager <- R6::R6Class(
             parameters = parameters,
             popCombination = popCombination,
             aggrDataSelection = private$Catalogs$AggrDataSelection,
+            migrConnFlag = private$Catalogs$MigrConnFlag,
             randomSeed = .Random.seed
           ),
           session = private$Session,
@@ -296,7 +384,7 @@ HIVModelManager <- R6::R6Class(
               payload = list(
                 ActionStatus = 'SUCCESS',
                 ActionMessage = 'Running HIV Model main fit task finished',
-                PlotData = result$JSONPlotData
+                PlotData = ConvertObjToJSON(result$PlotData, dataframe = 'columns')
               )
             )
           },
@@ -432,8 +520,9 @@ HIVModelManager <- R6::R6Class(
                 # Bootstrap data set
                 if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
                   bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
-                  bootData <-
-                    CombineData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection)[[1]]
+                  res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
+                  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
+                  bootData <- CombineData(bootCaseDataImp, res$Aggr)[[1]]
                 }
 
                 bootContext <- hivModelling::GetRunContext(

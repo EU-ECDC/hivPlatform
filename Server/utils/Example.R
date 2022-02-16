@@ -7,10 +7,10 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
-# appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
+appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
@@ -22,8 +22,8 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample500.csv')
 # library(data.table)
 # dt <- ReadDataFile('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # WriteDataFile(
-#   dt[sample(seq_len(nrow(dt)), size = 500, replace = FALSE)],
-#   'D:/VirtualBox_Shared/dummy2019_exclUK_sample500.csv'
+#   dt[sample(seq_len(nrow(dt)), size = 200, replace = FALSE)],
+#   'D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv'
 # )
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
@@ -53,15 +53,6 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
 # adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
-appMgr$CaseMgr$Data[FinalData == TRUE, table(is.na(GroupedRegionOfOrigin))]
-appMgr$CaseMgr$Data[FinalData == FALSE, table(is.na(GroupedRegionOfOrigin))]
-appMgr$CaseMgr$Data[FinalData == TRUE, table(is.na(MigrantRegionOfOrigin))]
-appMgr$CaseMgr$Data[FinalData == FALSE, table(is.na(MigrantRegionOfOrigin))]
-
-unique(appMgr$CaseMgr$Data[FinalData == FALSE, .(GroupedRegionOfOrigin, MigrantRegionOfOrigin)])
-
-appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts
-
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 
@@ -84,17 +75,9 @@ browseURL(fileName)
 
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
-# 1. Perform migration
 appMgr$CaseMgr$RunMigration()
-data <- copy(appMgr$CaseMgr$Data)
-data[is.na(DateOfArrival), DateOfArrival := DateOfArrivalPostMigr]
-data[Imputation > 0 & is.na(Excluded)]
-migr <- PerformMigrantConnection(data)
 
-# STEP 6 - Modelling - Migration Coonection --------------------------------------------------------
-
-
-# STEP 7 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
   Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
@@ -103,10 +86,10 @@ aggrDataSelection <- data.table(
 )
 appMgr$HIVModelMgr$SetAggrFilters(aggrDataSelection)
 
+appMgr$HIVModelMgr$SetMigrConnFlag(TRUE)
+appMgr$HIVModelMgr$MigrConnFlag
 appMgr$HIVModelMgr$RunMainFit(
-  settings = list(Verbose = FALSE),
-  parameters = test$params,
-  popCombination = test$popCombination
+  settings = list(Verbose = FALSE)
 )
 
 popCombination <- list(

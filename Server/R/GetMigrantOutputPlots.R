@@ -1,14 +1,10 @@
 GetMigrantOutputPlots <- function(
-  data,
-  asJSON = FALSE
+  data
 ) {
-  isOriginalData <- data[, all(Imputation == 0)]
-  # Keep only either original or imputed data, never both.
-  if (!isOriginalData) {
-    data <- data[Imputation > 0]
-  }
   # Keep only records with non-missing probability
-  data <- data[!is.na(ProbPre)]
+  data <- data[FinalData == TRUE & !is.na(ProbPre)]
+
+  isOriginalData <- data[, all(Imputation == 0)]
 
   GetPlotData <- function(colName) {
     imputeData <- data[,
@@ -40,10 +36,6 @@ GetMigrantOutputPlots <- function(
     ArrivalPlotData = arrivalPlotData,
     DiagnosisPlotData = diagnosisPlotData
   )
-
-  if (asJSON) {
-    res <- ConvertObjToJSON(res, dataframe = 'columns')
-  }
 
   return(res)
 }

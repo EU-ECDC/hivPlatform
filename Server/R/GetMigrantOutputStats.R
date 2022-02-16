@@ -1,13 +1,8 @@
 GetMigrantOutputStats <- function(
   data
 ) {
-  isOriginalData <- data[, all(Imputation == 0)]
-  # Keep only either original or imputed data, never both.
-  if (!isOriginalData) {
-    data <- data[Imputation > 0]
-  }
   # Keep only records with non-missing probability
-  data <- data[!is.na(ProbPre)]
+  data <- data[FinalData == TRUE & !is.na(ProbPre)]
 
   data[, ':='(
     Total = 'Total',
@@ -19,7 +14,7 @@ GetMigrantOutputStats <- function(
     )
   )]
   data[
-    MigrantRegionOfOrigin %chin% c('CARIBBEAN-LATIN AMERICA'),
+    MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
     MigrantRegionOfOrigin := 'OTHER'
   ]
 

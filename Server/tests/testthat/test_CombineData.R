@@ -26,24 +26,23 @@ aggrDataSelection <- data.table(
 )
 
 test_that('combining NULL data is correct', {
-  expect_null(CombineData(NULL, NULL, NULL, NULL))
-  expect_null(CombineData(NULL, NULL, popCombination, NULL))
-  expect_null(CombineData(NULL, NULL, NULL, aggrDataSelection))
-  expect_null(CombineData(NULL, NULL, popCombination, aggrDataSelection))
+  expect_null(CombineData(NULL, NULL))
 })
 
 test_that('combining full data is correct', {
-  dataAll <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
+  res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
+  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
+  dataAll <- CombineData(caseDataAll, res$Aggr)
   expect_is(dataAll, 'list')
   expect_equal(length(dataAll), 1)
   expect_equal(names(dataAll), '0')
 
-  dataCaseOnly <- CombineData(caseData, NULL, popCombination, aggrDataSelection)
+  dataCaseOnly <- CombineData(caseDataAll, NULL)
   expect_is(dataCaseOnly, 'list')
   expect_equal(length(dataCaseOnly), 1)
   expect_equal(names(dataCaseOnly), '0')
 
-  dataAggrOnly <- CombineData(NULL, aggrData, popCombination, aggrDataSelection)
+  dataAggrOnly <- CombineData(NULL, res$Aggr)
   expect_is(dataAggrOnly, 'list')
   expect_equal(length(dataAggrOnly), 1)
   expect_equal(names(dataAggrOnly), '0')
@@ -69,17 +68,19 @@ test_that('combining full data is correct', {
     ),
     Aggr = NULL
   )
-  dataCaseExplicit <- CombineData(caseData, aggrData, popCombination, aggrDataSelection)
+  res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
+  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
+  dataCaseExplicit <- CombineData(caseDataAll, res$Aggr)
   expect_equal(sum(dataCaseExplicit$`0`$HIV_CD4_4$Count), 688)
 
-  data <- CombineData(caseData, aggrData, NULL, aggrDataSelection)
+  res <- GetPopulationData(caseData, aggrData, NULL, aggrDataSelection)
+  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
+  data <- CombineData(caseDataAll, res$Aggr)
   expect_equal(sum(data$`0`$HIV_CD4_4$Count), 688)
 
-  popCombination <- list(
-    Case = NULL,
-    Aggr = NULL
-  )
-  dataCaseImplicit <- CombineData(caseData, aggrData, NULL, NULL)
+  res <- GetPopulationData(caseData, aggrData, NULL, NULL)
+  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
+  dataCaseImplicit <- CombineData(caseDataAll, res$Aggr)
   expect_equal(sum(dataCaseImplicit$`0`$HIV_CD4_4$Count), 688)
 
   expect_identical(dataCaseExplicit, dataCaseImplicit)

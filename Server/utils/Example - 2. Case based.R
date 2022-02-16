@@ -27,9 +27,7 @@ if (!is.null(appMgr$FinalAdjustedCaseBasedData$Table)) {
 
 dataSets <- CombineData(
   caseBasedData = copy(appMgr$FinalAdjustedCaseBasedData$Table),
-  aggregatedData = copy(appMgr$AggregatedData),
-  popCombination = appMgr$PopulationCombination,
-  aggrDataSelection = appMgr$AggregatedDataSelection
+  aggregatedData = copy(appMgr$AggregatedData)
 )
 
 settings <- list(Verbose = FALSE)
