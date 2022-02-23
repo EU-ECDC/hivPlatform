@@ -76,6 +76,11 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
 appMgr$CaseMgr$RunMigration()
+input <- PrepareMigrantData(copy(appMgr$CaseMgr$Data))
+system.time(output <- PredictInf(input))
+system.time(output2 <- PredictInf(input))
+system.time(output3 <- PredictInf(input))
+system.time(output4 <- PredictInf(input))
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(

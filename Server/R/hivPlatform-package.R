@@ -14,6 +14,7 @@
 #' Author: Ard van Sighem \email{<a.i.vansighem@amsterdamumc.nl>}\cr
 #' Creator: Daniel Lewandowski \email{<daniel@@nextpagesoft.net>}
 #'
+#' @importFrom Rcpp sourceCpp
 #' @importFrom grDevices dev.control dev.off hcl pdf recordPlot
 #' @importFrom grid grid.newpage grid.layout viewport pushViewport
 #' @importFrom stats setNames lowess quantile sd var acf glm poisson as.formula coef coefficients
@@ -24,4 +25,5 @@
 #' @import data.table
 #' @import ggplot2
 #'
+#' @useDynLib hivPlatform, .registration = TRUE
 NULL

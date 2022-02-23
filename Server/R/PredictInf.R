@@ -138,14 +138,14 @@ PredictInf <- function( # nolint
 
     # Predetermined status results in a fixed probability
     knownPrePost <- dt[Ord == 1, KnownPrePost]
-    if (knownPrePost  != 'Unknown') {
+    if (knownPrePost %chin% c('Pre', 'Post')) {
       outputCD4VL[UniqueId == uniqueId, ProbPre := fifelse(knownPrePost == 'Pre', 1.0, 0.0)]
       next
     }
 
-    x <- dt[, .(Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)]
     y <- dt[, .(YVar)]
     z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
+    formulaeData <- dt[, .(YVar, Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
     migTime <- dt[Ord == 1, Mig]
     upTime <- dt[Ord == 1, U]
     xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
@@ -175,24 +175,43 @@ PredictInf <- function( # nolint
     fit1 <- try(integrate(
       func,
       lower = migTime, upper = upTime,
-      x = x, y = y, z = z,
+      y = y, z = z,
       xAIDS = xAIDS, maxDTime = maxDTime,
       betaAIDS = params$betaAIDS, kappa = params$kappa,
-      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE
+      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE,
+      fxCD4Data = formulaeData[Consc == 1],
+      fxVRData = formulaeData[Consr == 1],
+      fzData = cbind(y, z),
+      consc = dt$Consc,
+      consr = dt$Consr
     ), silent = TRUE)
+    # fit2 <- try(integrate(
+    #   func,
+    #   lower = 0, upper = upTime,
+    #   x = x, y = y, z = z,
+    #   xAIDS = xAIDS, maxDTime = maxDTime,
+    #   betaAIDS = params$betaAIDS, kappa = params$kappa,
+    #   bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE
+    # ), silent = TRUE)
     fit2 <- try(integrate(
       func,
-      lower = 0, upper = upTime,
-      x = x, y = y, z = z,
+      lower = 0, upper = migTime,
+      y = y, z = z,
       xAIDS = xAIDS, maxDTime = maxDTime,
       betaAIDS = params$betaAIDS, kappa = params$kappa,
-      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE
+      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE,
+      fxCD4Data = formulaeData[Consc == 1],
+      fxVRData = formulaeData[Consr == 1],
+      fzData = cbind(y, z),
+      consc = dt$Consc,
+      consr = dt$Consr
     ), silent = TRUE)
 
     if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
       next
     } else {
-      outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / fit2$value]
+      # outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / fit2$value]
+      outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / (fit1$value + fit2$value)]
     }
   }
   endTime <- Sys.time()
