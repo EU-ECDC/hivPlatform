@@ -16,3 +16,7 @@ DONE:
 14. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
 15. Check why there are missings in GroupedRegionOfOrigin.
 16. Add three new columns to the outputs of the model, rather than adjusting existing columns
+
+
+1. Derive the incidence curve as exp(average(log)) over adjusted data set, get average diagnosis rate matrix and compute all HIV model outputs. Use that as the "benchmark" HIV model fit for plots, tables.
+2. Research comparison between main fit point estimates and the median of bootstrap

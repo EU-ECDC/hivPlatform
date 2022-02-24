@@ -1,114 +1,89 @@
+outputCD4VL <- readRDS('./outputCD4VL.Rds')
+params <- GetMigrantParams()
+uniqueId <- 415
+dt <- outputCD4VL[UniqueId == uniqueId]
+
+# Predetermined status results in a fixed probability
+knownPrePost <- dt[Ord == 1, KnownPrePost]
+if (knownPrePost %chin% c('Pre', 'Post')) {
+  outputCD4VL[UniqueId == uniqueId, ProbPre := fifelse(knownPrePost == 'Pre', 1.0, 0.0)]
+  next
+}
+
+y <- dt[, .(YVar)]
+z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
+formulaeData <- dt[, .(YVar, Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
+migTime <- dt[Ord == 1, Mig]
+upTime <- dt[Ord == 1, U]
+xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
+maxDTime <- dt[, max(DTime)]
+fxCD4Data <- formulaeData[Consc == 1]
+fxVLData <- formulaeData[Consr == 1]
+fzData <- cbind(y, z)
+baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
+baseVLDM <- GetBaseVLDesignMatrix(fxVLData)
+baseRandEffDM <- GetBaseRandEffDesignMatrix(fzData)
+
+switch(dt[Ord == 1, Only],
+  'Both' = {
+    bFE <- params$bFE
+    sigma2 <- params$sigma2
+    varCovRE <- params$varCovRE
+    func <- VPostW
+  },
+  'CD4 only' = {
+    bFE <- params$bFECD4
+    sigma2 <- params$sigma2CD4
+    varCovRE <- params$varCovRECD4
+    func <- VPostWCD4
+  },
+  'VL only' = {
+    bFE <- params$bFEVL
+    sigma2 <- params$sigma2VL
+    varCovRE <- params$varCovREVL
+    func <- VPostWVL
+  }
+)
+
 PostW(
   w = 0.9,
   y = y,
-  z = z,
   xAIDS = xAIDS,
   maxDTime = maxDTime,
-  betaAIDS = matrix(params$betaAIDS, ncol = 1),
+  betaAIDS = params$betaAIDS,
   kappa = params$kappa,
   bFE = bFE,
   sigma2 = sigma2,
   varCovRE = varCovRE,
-  fxCD4Data = formulaeData[Consc == 1],
-  fxVRData = formulaeData[Consr == 1],
-  fzData = cbind(y, z),
+  baseCD4DM = baseCD4DM,
+  fxCD4Data = fxCD4Data,
+  baseVLDM = baseVLDM,
+  fxVLData = fxVLData,
+  baseRandEffDM = baseRandEffDM,
+  fzData = fzData,
   consc = dt$Consc,
   consr = dt$Consr
 )
-VPostW(
-  w = c(0.9, 1),
-  y = y,
-  z = z,
-  xAIDS = xAIDS,
-  maxDTime = maxDTime,
-  betaAIDS = matrix(params$betaAIDS, ncol = 1),
-  kappa = params$kappa,
-  bFE = bFE,
-  sigma2 = sigma2,
-  varCovRE = varCovRE,
-  fxCD4Data = formulaeData[Consc == 1],
-  fxVRData = formulaeData[Consr == 1],
-  fzData = cbind(y, z),
-  consc = dt$Consc,
-  consr = dt$Consr
-)
-
-ls(environment(test))
-get('w', envir = environment(test))
 
 PostWCpp(
   w = 0.9,
   y = y,
-  z = z,
   xAIDS = xAIDS,
-  maxDTime = 1,
+  maxDTime = maxDTime,
   betaAIDS = matrix(params$betaAIDS, ncol = 1),
-  kappa = 1,
-  bFE = 1,
-  sigma2 = 1,
-  varCovRE = 1,
-  fxCD4Data = 1,
-  fxVRData = 1,
-  fzData = 1,
-  consc = 1,
-  consr = 1
+  kappa = params$kappa,
+  bFE = matrix(bFE, ncol = 1),
+  sigma2 = sigma2,
+  varCovRE = varCovRE,
+  baseCD4DM = baseCD4DM,
+  fxCD4Data = fxCD4Data,
+  baseVLDM = baseVLDM,
+  fxVLData = fxVLData,
+  baseRandEffDM = baseRandEffDM,
+  fzData = fzData,
+  consc = dt$Consc,
+  consr = dt$Consr
 )
 
-
-dm <- model.matrix(
-  formula(
-    ~
-    DTime +
-      Gender +
-      MigrantRegionOfOrigin +
-      Transmission +
-      lspline::lspline(I(Age), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar), knots = c(16, 22))
-  ),
-  data = fxCD4Data
-)
-colMapping <- attr(dm, 'assign')
-termDTime <- which(colMapping == 1) # I(DTime)
-termGender <- which(colMapping == 2) # Gender
-termRegion <- which(colMapping == 3) # MigrantRegionOfOrigin
-termTrans <- which(colMapping == 4) # Transmission
-termAge <- which(colMapping == 5) # lspline::lspline(I(Age), knots = c(25, 35, 45))
-termCalendar <- which(colMapping == 6) # lspline::lspline(I(Calendar), knots = c(16, 22))
-
-UpdateCD4DesignMatrix <- function(
-  dm,
-  termDTime,
-  termGender,
-  termRegion,
-  termTrans,
-  termAge,
-  termCalendar,
-  fxCD4Data,
-  w
-) {
-  dm[, termDTime] <- fxCD4Data$DTime + w
-  dm[, termAge] <- lspline::lspline(fxCD4Data$Age - w, knots = c(25, 35, 45))
-  dm[, termCalendar] <- lspline::lspline(fxCD4Data$Calendar - w, knots = c(16, 22))
-
-  dm <- cbind(
-    dm,
-    dm[, termDTime] * dm[, termGender],
-    dm[, termDTime] * dm[, termRegion],
-    dm[, termDTime] * dm[, termTrans],
-    dm[, termDTime] * dm[, termAge]
-  )
-
-  return(dm)
-}
-
-UpdateCD4DesignMatrix(
-  dm,
-  termDTime,
-  termGender,
-  termRegion,
-  termTrans,
-  termAge,
-  termCalendar,
-  fxCD4Data,
-  w
-)
+b <- GetBaseRandEffDesignMatrix(fzData)
+z <- UpdateRandEffDesignMatrix(b, fzData, w)

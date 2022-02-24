@@ -78,9 +78,6 @@ browseURL(fileName)
 appMgr$CaseMgr$RunMigration()
 input <- PrepareMigrantData(copy(appMgr$CaseMgr$Data))
 system.time(output <- PredictInf(input))
-system.time(output2 <- PredictInf(input))
-system.time(output3 <- PredictInf(input))
-system.time(output4 <- PredictInf(input))
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(
@@ -185,17 +182,15 @@ baseAIDS[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseAIDS,
   c(
-    'RecordId', 'Gender', 'Mode', 'Age', 'GroupedRegionOfOrigin', 'Calendar', 'Art', 'DateOfArt',
-    'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth', 'AtRiskDate',
-    'U', 'Mig', 'KnownPrePost', 'UniqueId', 'DTime'
+    'RecordId', 'Gender', 'Transmission', 'Age', 'MigrantRegionOfOrigin', 'Calendar', 'Art',
+    'DateOfArt', 'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth',
+    'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'UniqueId', 'DTime'
   )
 )
 currentLevels <- levels(baseAIDS$Gender)
 newLevels <- c('M', 'F')
 levels(baseAIDS$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
-baseAIDS[, Ord := rowid(RecordId)]
-baseAIDS[, Imputation := 0L]
-baseAIDS[, RecordId := as.character(RecordId)]
+baseAIDS[, Ord := rowid(UniqueId)]
 
 baseCD4VL <- reconCD4VL[, 1:27]
 isLabelled <- sapply(baseCD4VL, haven::is.labelled)
@@ -204,46 +199,36 @@ baseCD4VL[, (colNames) := lapply(.SD, haven::as_factor), .SDcols = colNames]
 setnames(
   baseCD4VL,
   c(
-    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Mode', 'Age', 'GroupedRegionOfOrigin',
-    'Calendar', 'Art', 'DateOfArt', 'DateOfHIVDiagnosis', 'DateOfAIDSDiagnosis', 'DateOfArrival',
-    'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost', 'DTime', 'UniqueId', 'Consc', 'Consr',
-    'CobsTime', 'RobsTime', 'RLogObsTime2', 'Only'
+    'RecordId', 'DateOfExam', 'YVar', 'Indi', 'Gender', 'Transmission', 'Age',
+    'MigrantRegionOfOrigin', 'Calendar', 'Art', 'DateOfArt', 'DateOfHIVDiagnosis',
+    'DateOfAIDSDiagnosis', 'DateOfArrival', 'DateOfBirth', 'AtRiskDate', 'U', 'Mig', 'KnownPrePost',
+    'DTime', 'UniqueId', 'Consc', 'Consr', 'CobsTime', 'RobsTime', 'RLogObsTime2', 'Only'
   )
 )
 currentLevels <- levels(baseCD4VL$Gender)
 newLevels <- c('M', 'F')
 levels(baseCD4VL$Gender) <- newLevels[match(currentLevels, c('Male', 'Female'))]
-baseCD4VL[, Ord := rowid(RecordId)]
-baseCD4VL[, Imputation := 0L]
-baseCD4VL[, RecordId := as.character(RecordId)]
-
-baseCD4VL$Gender
-baseCD4VL$Mode
-baseCD4VL$GroupedRegionOfOrigin
+baseCD4VL[, Ord := rowid(UniqueId)]
+baseCD4VL[, UniqueId := UniqueId + max(baseAIDS$UniqueId)]
 input <- list(
-  AIDS = baseAIDS[1:10],
-  CD4VL = baseCD4VL[1:10]
+  Data = list(
+    AIDS = baseAIDS,
+    CD4VL = baseCD4VL
+  )
 )
 
-test <- PredictInf(input, params)
+test <- PredictInf(input, params = GetMigrantParams())
 recon <- rbind(
-  unique(reconAIDS[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)]),
-  unique(reconCD4VL[1:10, .(Imputation = 0L, RecordId = as.character(PATIENT), ProbPre)])
+  unique(reconAIDS[, .(UniqueId = id, ProbPre)]),
+  unique(reconCD4VL[, .(UniqueId = id + max(reconAIDS$id), ProbPre)])
 )
 
 compare <- merge(
   recon,
   test,
-  by = c('Imputation', 'RecordId'),
+  by = c('UniqueId'),
   suffix = c('.Recon', '.Test'),
   all = TRUE
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
-compare[abs(Diff) > 1e-7]
-
-unique(data$AcuteInfection)
-class(data$AcuteInfection)
-data[Transmission %in% c('MSM', 'IDU', 'HETERO', NA_character_), unique(Transmission)]
-data[, unique(Transmission)]
-
-unique(appMgr$CaseMgr$Data$Transmission)
+compare[abs(Diff) > 1e-3]

@@ -1,86 +1,148 @@
-PostWTest <- function(
-  w,
-  y,
-  z,
-  xAIDS,
-  maxDTime,
-  betaAIDS,
-  kappa,
-  bFE,
-  sigma2,
-  varCovRE,
-  fxCD4Data,
-  fxVRData,
-  fzData,
-  consc,
-  consr
+GetBaseCD4DesignMatrix <- function(
+  data
 ) {
-  xAIDS[3] <- xAIDS[3] - w
-
-  lambda <- exp(xAIDS %*% betaAIDS)
-
-  # Get the design matrix for CD4
-  fxCD4 <- formula(
-    YVar ~
-    I(DTime + w) * Gender +
-      I(DTime + w) * MigrantRegionOfOrigin +
-      I(DTime + w) * Transmission +
-      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar - w), knots = c(16, 22))
+  dm <- model.matrix(
+    formula(
+      ~
+      DTime * Gender +
+        DTime * MigrantRegionOfOrigin +
+        DTime * Transmission +
+        DTime * lspline::lspline(Age, knots = c(25, 35, 45)) +
+        lspline::lspline(Calendar, knots = c(16, 22))
+    ),
+    data = data
   )
-  xCD4 <- model.matrix(fxCD4, data = fxCD4Data)
-  dimCD4 <- dim(xCD4)
+  colMapping <- attr(dm, 'assign')
 
-  test <- caret::dummyVars(fxCD4, cbind(fxCD4Data, w = w), fullRank = TRUE)
-  predict(test, cbind(fxCD4Data, w = w))
-  class(test)
+  return(list(
+    dm = dm,
+    colsDTime = which(colMapping == 1),
+    colsGender = which(colMapping == 2),
+    colsRegion = which(colMapping == 3),
+    colsTrans = which(colMapping == 4),
+    colsAge = which(colMapping == 5),
+    colsCalendar = which(colMapping == 6),
+    colsDTimeGender = which(colMapping == 7),
+    colsDTimeRegion = which(colMapping == 8),
+    colsDTimeTrans = which(colMapping == 9),
+    colsDTimeAge = which(colMapping == 10)
+  ))
+}
 
-  return(fxCD4)
+UpdateCD4DesignMatrix <- function(
+  b,
+  data,
+  w
+) {
+  b$dm[, b$colsDTime] <- data$DTime + w
+  b$dm[, b$colsAge] <- lspline::lspline(data$Age - w, knots = c(25, 35, 45))
+  b$dm[, b$colsCalendar] <- lspline::lspline(data$Calendar - w, knots = c(16, 22))
+  b$dm[, b$colsDTimeGender] <- b$dm[, b$colsDTime] * b$dm[, b$colsGender]
+  b$dm[, b$colsDTimeRegion] <- b$dm[, b$colsDTime] * b$dm[, b$colsRegion]
+  b$dm[, b$colsDTimeTrans] <- b$dm[, b$colsDTime] * b$dm[, b$colsTrans]
+  b$dm[, b$colsDTimeAge] <- b$dm[, b$colsDTime] * b$dm[, b$colsAge]
 
+  return(b$dm)
+}
 
-  # # Get the design matrix for VL
-  # fxVR <- formula(
-  #   YVar ~
-  #   I(DTime + w) * Gender +
-  #     I(DTime + w) * MigrantRegionOfOrigin +
-  #     I(DTime + w) * Transmission +
-  #     I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-  #     I(log(DTime + w + 0.013)) * Gender +
-  #     I(log(DTime + w + 0.013)) * MigrantRegionOfOrigin +
-  #     I(log(DTime + w + 0.013)) * Transmission +
-  #     I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-  #     lspline::lspline(I(Calendar - w), knots = c(16, 22))
-  # )
-  # xVR <- model.matrix(fxVR, data = fxVRData)
-  # dimVR <- dim(xVR)
+GetBaseVLDesignMatrix <- function(
+  data
+) {
+  dm <- model.matrix(
+    formula(
+      ~
+      DTime * Gender +
+        DTime * MigrantRegionOfOrigin +
+        DTime * Transmission +
+        DTime * lspline::lspline(Age, knots = c(25, 35, 45)) +
+        log(DTime) * Gender +
+        log(DTime) * MigrantRegionOfOrigin +
+        log(DTime) * Transmission +
+        log(DTime) * lspline::lspline(Age, knots = c(25, 35, 45)) +
+        lspline::lspline(Calendar, knots = c(16, 22))
+    ),
+    data = data
+  )
+  colMapping <- attr(dm, 'assign')
 
-  # # Combine into one design matrix
-  # x <- rbind(
-  #   cbind(matrix(0, nrow = dimVR[1], ncol = dimCD4[2]), xVR),
-  #   cbind(xCD4, matrix(0, nrow = dimCD4[1], ncol = dimVR[2]))
-  # )
+  return(list(
+    dm = dm,
+    colsDTime = which(colMapping == 1),
+    colsGender = which(colMapping == 2),
+    colsRegion = which(colMapping == 3),
+    colsTrans = which(colMapping == 4),
+    colsAge = which(colMapping == 5),
+    colsLogDTime = which(colMapping == 6),
+    colsCalendar = which(colMapping == 7),
+    colsDTimeGender = which(colMapping == 8),
+    colsDTimeRegion = which(colMapping == 9),
+    colsDTimeTrans = which(colMapping == 10),
+    colsDTimeAge = which(colMapping == 11),
+    colsLogDTimeGender = which(colMapping == 12),
+    colsLogDTimeRegion = which(colMapping == 13),
+    colsLogDTimeTrans = which(colMapping == 14),
+    colsLogDTimeAge = which(colMapping == 15)
+  ))
+}
 
-  # # Formula for the design matrices of the random effects
-  # fz <- formula(
-  #   YVar ~
-  #     -1 + Consc + I((DTime + w) * Consc) + Consr + I((DTime + w) * Consr) +
-  #     I(log(DTime + w + 0.013) * Consr)
-  # )
-  # z <- model.matrix(fz, data = fzData)
+UpdateVLDesignMatrix <- function(
+  b,
+  data,
+  w
+) {
+  b$dm[, b$colsDTime] <- data$DTime + w
+  b$dm[, b$colsAge] <- lspline::lspline(data$Age - w, knots = c(25, 35, 45))
+  b$dm[, b$colsLogDTime] <- log(data$DTime + w + 0.013)
+  b$dm[, b$colsCalendar] <- lspline::lspline(data$Calendar - w, knots = c(16, 22))
+  b$dm[, b$colsDTimeGender] <- b$dm[, b$colsDTime] * b$dm[, b$colsGender]
+  b$dm[, b$colsDTimeRegion] <- b$dm[, b$colsDTime] * b$dm[, b$colsRegion]
+  b$dm[, b$colsDTimeTrans] <- b$dm[, b$colsDTime] * b$dm[, b$colsTrans]
+  b$dm[, b$colsDTimeAge] <- b$dm[, b$colsDTime] * b$dm[, b$colsAge]
+  b$dm[, b$colsLogDTimeGender] <- b$dm[, b$colsLogDTime] * b$dm[, b$colsGender]
+  b$dm[, b$colsLogDTimeRegion] <- b$dm[, b$colsLogDTime] * b$dm[, b$colsRegion]
+  b$dm[, b$colsLogDTimeTrans] <- b$dm[, b$colsLogDTime] * b$dm[, b$colsTrans]
+  b$dm[, b$colsLogDTimeAge] <- b$dm[, b$colsLogDTime] * b$dm[, b$colsAge]
 
-  # # Mean and variance of the normal distribution
-  # mu <- c(x %*% bFE)
-  # var <- z %*% tcrossprod(varCovRE, z) + diag(consr * sigma2[2] + consc * sigma2[1])
+  return(b$dm)
+}
 
-  # p <- exp(mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE) - lambda * (w + maxDTime)^kappa)
+GetBaseRandEffDesignMatrix <- function(data) {
+  dm <- model.matrix(
+    formula(
+     ~
+      -1 +
+      Consc + I(DTime * Consc) +
+      Consr + I(DTime * Consr) + I(log(DTime + 1) * Consr)
+    ),
+    data = data
+  )
+  colMapping <- attr(dm, 'assign')
 
-  # return(p)
+  return(list(
+    dm = dm,
+    colsConsc = which(colMapping == 1),
+    colsDTimeConsc = which(colMapping == 2),
+    colsConsr = which(colMapping == 3),
+    colsDTimeConsr = which(colMapping == 4),
+    colsLogDTimeConsr = which(colMapping == 5)
+  ))
+}
+
+UpdateRandEffDesignMatrix <- function(
+  b,
+  data,
+  w
+) {
+  b$dm[, b$colsDTimeConsc] <- (data$DTime + w) * data$Consc
+  b$dm[, b$colsDTimeConsr] <- (data$DTime + w) * data$Consr
+  b$dm[, b$colsLogDTimeConsr] <- log(data$DTime + w + 0.013) * data$Consr
+
+  return(b$dm)
 }
 
 PostW <- function(
   w,
   y,
-  z,
   xAIDS,
   maxDTime,
   betaAIDS,
@@ -88,8 +150,11 @@ PostW <- function(
   bFE,
   sigma2,
   varCovRE,
+  baseCD4DM,
   fxCD4Data,
-  fxVRData,
+  baseVLDM,
+  fxVLData,
+  baseRandEffDM,
   fzData,
   consc,
   consr
@@ -97,53 +162,22 @@ PostW <- function(
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
 
-  # Formulae used for constructing the appropriate design matrices
-
-  # Get the design matrix for CD4
-  fxCD4 <- formula(
-    YVar ~
-    I(DTime + w) * Gender +
-      I(DTime + w) * MigrantRegionOfOrigin +
-      I(DTime + w) * Transmission +
-      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar - w), knots = c(16, 22))
-  )
-  xCD4 <- model.matrix(fxCD4, data = fxCD4Data)
-  dimCD4 <- dim(xCD4)
-
-  # Get the design matrix for VL
-  fxVR <- formula(
-    YVar ~
-    I(DTime + w) * Gender +
-      I(DTime + w) * MigrantRegionOfOrigin +
-      I(DTime + w) * Transmission +
-      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      I(log(DTime + w + 0.013)) * Gender +
-      I(log(DTime + w + 0.013)) * MigrantRegionOfOrigin +
-      I(log(DTime + w + 0.013)) * Transmission +
-      I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar - w), knots = c(16, 22))
-  )
-  xVR <- model.matrix(fxVR, data = fxVRData)
-  dimVR <- dim(xVR)
+  xCD4 <- UpdateCD4DesignMatrix(baseCD4DM, fxCD4Data, w)
+  xVL <- UpdateVLDesignMatrix(baseVLDM, fxVLData, w)
 
   # Combine into one design matrix
+  dimCD4 <- dim(xCD4)
+  dimVL <- dim(xVL)
   x <- rbind(
-    cbind(matrix(0, nrow = dimVR[1], ncol = dimCD4[2]), xVR),
-    cbind(xCD4, matrix(0, nrow = dimCD4[1], ncol = dimVR[2]))
+    cbind(matrix(0, nrow = dimVL[1], ncol = dimCD4[2]), xVL),
+    cbind(xCD4, matrix(0, nrow = dimCD4[1], ncol = dimVL[2]))
   )
 
-  # Formula for the design matrices of the random effects
-  fz <- formula(
-    YVar ~
-      -1 + Consc + I((DTime + w) * Consc) + Consr + I((DTime + w) * Consr) +
-      I(log(DTime + w + 0.013) * Consr)
-  )
-  z <- model.matrix(fz, data = fzData)
+  z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)
 
   # Mean and variance of the normal distribution
   mu <- c(x %*% bFE)
-  var <- z %*% tcrossprod(varCovRE, z) + diag(consr * sigma2[2] + consc * sigma2[1])
+  var <- z %*% tcrossprod(varCovRE, z) + diag(consc * sigma2[1] + consr * sigma2[2])
 
   p <- exp(mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE) - lambda * (w + maxDTime)^kappa)
 
@@ -153,7 +187,6 @@ PostW <- function(
 PostWCD4 <- function(
   w,
   y,
-  z,
   xAIDS,
   maxDTime,
   betaAIDS,
@@ -161,29 +194,19 @@ PostWCD4 <- function(
   bFE,
   sigma2,
   varCovRE,
+  baseCD4DM,
   fxCD4Data,
-  fxVRData,
+  baseVLDM,
+  fxVLData,
+  baseRandEffDM,
   fzData,
   consc,
   consr
 ) {
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
-
-  # Formula for design matrix of fixed effects
-  fxCD4 <- formula(
-    YVar ~
-      I(DTime + w) * Gender +
-      I(DTime + w) * MigrantRegionOfOrigin +
-      I(DTime + w) * Transmission +
-      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar - w), knots = c(16, 22))
-  )
-  x <- model.matrix(fxCD4, data = fxCD4Data)
-
-  # Formula for design matrix of random effects
-  fz <- formula(YVar ~ -1 + Consc + I(DTime + w))
-  z <- model.matrix(fz, data = fzData)
+  x <- UpdateCD4DesignMatrix(baseCD4DM, fxCD4Data, w)
+  z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)[, 1:2, drop = FALSE]
 
   # Mean and variance of the normal kernel
   mu <- c(x %*% bFE)
@@ -197,7 +220,6 @@ PostWCD4 <- function(
 PostWVL <- function(
   w,
   y,
-  z,
   xAIDS,
   maxDTime,
   betaAIDS,
@@ -205,8 +227,11 @@ PostWVL <- function(
   bFE,
   sigma2,
   varCovRE,
+  baseCD4DM,
   fxCD4Data,
-  fxVRData,
+  baseVLDM,
+  fxVLData,
+  baseRandEffDM,
   fzData,
   consc,
   consr
@@ -214,26 +239,8 @@ PostWVL <- function(
   # Design matrix of the time-to-AIDS model
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
-
-  # Formula for design matrices
-  fxVR <- formula(
-    YVar ~
-    I(DTime + w) * Gender +
-      I(DTime + w) * MigrantRegionOfOrigin +
-      I(DTime + w) * Transmission +
-      I(DTime + w) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      I(log(DTime + w + 0.013)) * Gender +
-      I(log(DTime + w + 0.013)) * MigrantRegionOfOrigin +
-      I(log(DTime + w + 0.013)) * Transmission +
-      I(log(DTime + w + 0.013)) * lspline::lspline(I(Age - w), knots = c(25, 35, 45)) +
-      lspline::lspline(I(Calendar - w), knots = c(16, 22))
-  )
-
-  x <- model.matrix(fxVR, data = fxVRData)
-
-  # Formula for design matrix of random effects
-  fz <- formula(YVar ~ -1 + Consr + I((DTime + w) * Consr) + I(log(DTime + w + 0.013) * Consr))
-  z <- model.matrix(fz, data = fzData)
+  x <- UpdateVLDesignMatrix(baseVLDM, data = fxVLData, w)
+  z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)[, 3:5, drop = FALSE]
 
   # Mean and variance of the normal kernel
   mu <- c(x %*% bFE)

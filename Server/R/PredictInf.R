@@ -150,6 +150,12 @@ PredictInf <- function( # nolint
     upTime <- dt[Ord == 1, U]
     xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
     maxDTime <- dt[, max(DTime)]
+    fxCD4Data <- formulaeData[Consc == 1]
+    fxVLData <- formulaeData[Consr == 1]
+    fzData <- cbind(y, z)
+    baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
+    baseVLDM <- GetBaseVLDesignMatrix(fxVLData)
+    baseRandEffDM <- GetBaseRandEffDesignMatrix(fzData)
 
     switch(dt[Ord == 1, Only],
       'Both' = {
@@ -174,35 +180,43 @@ PredictInf <- function( # nolint
 
     fit1 <- try(integrate(
       func,
-      lower = migTime, upper = upTime,
-      y = y, z = z,
-      xAIDS = xAIDS, maxDTime = maxDTime,
-      betaAIDS = params$betaAIDS, kappa = params$kappa,
-      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE,
-      fxCD4Data = formulaeData[Consc == 1],
-      fxVRData = formulaeData[Consr == 1],
-      fzData = cbind(y, z),
+      lower = migTime,
+      upper = upTime,
+      y = y,
+      xAIDS = xAIDS,
+      maxDTime = maxDTime,
+      betaAIDS = params$betaAIDS,
+      kappa = params$kappa,
+      bFE = bFE,
+      sigma2 = sigma2,
+      varCovRE = varCovRE,
+      baseCD4DM = baseCD4DM,
+      fxCD4Data = fxCD4Data,
+      baseVLDM = baseVLDM,
+      fxVLData = fxVLData,
+      baseRandEffDM = baseRandEffDM,
+      fzData = fzData,
       consc = dt$Consc,
       consr = dt$Consr
     ), silent = TRUE)
-    # fit2 <- try(integrate(
-    #   func,
-    #   lower = 0, upper = upTime,
-    #   x = x, y = y, z = z,
-    #   xAIDS = xAIDS, maxDTime = maxDTime,
-    #   betaAIDS = params$betaAIDS, kappa = params$kappa,
-    #   bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE
-    # ), silent = TRUE)
     fit2 <- try(integrate(
       func,
-      lower = 0, upper = migTime,
-      y = y, z = z,
-      xAIDS = xAIDS, maxDTime = maxDTime,
-      betaAIDS = params$betaAIDS, kappa = params$kappa,
-      bFE = bFE, sigma2 = sigma2, varCovRE = varCovRE,
-      fxCD4Data = formulaeData[Consc == 1],
-      fxVRData = formulaeData[Consr == 1],
-      fzData = cbind(y, z),
+      lower = 0,
+      upper = migTime,
+      y = y,
+      xAIDS = xAIDS,
+      maxDTime = maxDTime,
+      betaAIDS = params$betaAIDS,
+      kappa = params$kappa,
+      bFE = bFE,
+      sigma2 = sigma2,
+      varCovRE = varCovRE,
+      baseCD4DM = baseCD4DM,
+      fxCD4Data = fxCD4Data,
+      baseVLDM = baseVLDM,
+      fxVLData = fxVLData,
+      baseRandEffDM = baseRandEffDM,
+      fzData = fzData,
       consc = dt$Consc,
       consr = dt$Consr
     ), silent = TRUE)
@@ -210,7 +224,6 @@ PredictInf <- function( # nolint
     if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
       next
     } else {
-      # outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / fit2$value]
       outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / (fit1$value + fit2$value)]
     }
   }

@@ -1,14 +1,6 @@
 #include "header.h"
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector Seq(
-  const int& start,
-  const int& end
-) {
-  return hivPlatform::Seq(start, end);
-}
-
-// [[Rcpp::export]]
 Rcpp::List integrate_test()
 {
   const double a = 3, b = 10;
@@ -31,23 +23,25 @@ Rcpp::List integrate_test()
 double PostWCpp(
   const double& w,
   const Rcpp::DataFrame& y,
-  const Rcpp::DataFrame& z,
   const Eigen::MatrixXd& xAIDS,
-  const Rcpp::NumericVector& maxDTime,
+  const double& maxDTime,
   const Eigen::MatrixXd& betaAIDS,
-  const Rcpp::NumericVector& kappa,
-  const Rcpp::NumericVector& bFE,
+  const double& kappa,
+  const Eigen::MatrixXd& bFE,
   const Rcpp::NumericVector& sigma2,
-  const Rcpp::NumericVector& varCovRE,
-  const Rcpp::NumericVector& fxCD4Data,
-  const Rcpp::NumericVector& fxVRData,
-  const Rcpp::NumericVector& fzData,
+  const Eigen::MatrixXd& varCovRE,
+  const Rcpp::List& baseCD4DM,
+  const Rcpp::DataFrame& fxCD4Data,
+  const Rcpp::List& baseVLDM,
+  const Rcpp::DataFrame& fxVLData,
+  const Rcpp::List& baseRandEffDM,
+  const Rcpp::DataFrame& fzData,
   const Rcpp::NumericVector& consc,
   const Rcpp::NumericVector& consr
 ) {
   hivPlatform::PostW f(
-    y, z, xAIDS, maxDTime, betaAIDS, kappa, bFE, sigma2, varCovRE, fxCD4Data, fxVRData, fzData,
-    consc, consr
+    y, xAIDS, maxDTime, betaAIDS, kappa, bFE, sigma2, varCovRE, baseCD4DM, fxCD4Data, baseVLDM,
+    fxVLData, baseRandEffDM, fzData, consc, consr
   );
 
   return f(w);
