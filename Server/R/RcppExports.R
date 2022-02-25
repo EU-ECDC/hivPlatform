@@ -9,3 +9,7 @@ PostWCpp <- function(w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, sigma2, varCov
     .Call(`_hivPlatform_PostWCpp`, w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, sigma2, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, consc, consr)
 }
 
+Lspline <- function(x, knots) {
+    .Call(`_hivPlatform_Lspline`, x, knots)
+}
+

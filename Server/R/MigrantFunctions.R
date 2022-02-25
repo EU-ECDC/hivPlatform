@@ -205,7 +205,7 @@ PostWCD4 <- function(
 ) {
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
-  x <- UpdateCD4DesignMatrix(baseCD4DM, fxCD4Data, w)
+  x <- UpdateCD4DesignMatrix(b = baseCD4DM, data = fxCD4Data, w)
   z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)[, 1:2, drop = FALSE]
 
   # Mean and variance of the normal kernel

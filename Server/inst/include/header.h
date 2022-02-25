@@ -12,5 +12,6 @@
 
 #include "BetaPDF.hpp"
 #include "PostW.hpp"
+#include "Lspline.hpp"
 
 #endif // _hivPlatform_header_

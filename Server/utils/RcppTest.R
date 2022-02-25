@@ -1,4 +1,4 @@
-outputCD4VL <- readRDS('./outputCD4VL.Rds')
+outputCD4VL <- readRDS('../../outputCD4VL.Rds')
 params <- GetMigrantParams()
 uniqueId <- 415
 dt <- outputCD4VL[UniqueId == uniqueId]
@@ -85,5 +85,29 @@ PostWCpp(
   consr = dt$Consr
 )
 
+baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
+baseCD4DM$dm
+baseCD4DM$colsDTime
+
 b <- GetBaseRandEffDesignMatrix(fzData)
 z <- UpdateRandEffDesignMatrix(b, fzData, w)
+
+
+lspline::lspline(x = data$Age - w, knots = c(25, 35, 45))
+
+x <- c(40.1, 10, 60)
+knots <- c(25, 35, 45)
+lspline::lspline(x, knots)
+
+Lspline(x, knots)
+
+n <- length(x)
+nvars <- length(knots) + 1
+rval <- matrix(0, nrow = n, ncol = nvars)
+rval[, 1] <- pmin(x, knots[1])
+rval[, nvars] <- pmax(x, knots[length(knots)]) - knots[length(knots)]
+if (nvars > 2) {
+  for (i in seq(2, nvars - 1)) {
+    rval[, i] <- pmax(pmin(x, knots[i]), knots[i - 1]) - knots[i - 1]
+  }
+}

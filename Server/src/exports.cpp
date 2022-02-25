@@ -46,3 +46,11 @@ double PostWCpp(
 
   return f(w);
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix Lspline(
+  const Rcpp::NumericMatrix& x,
+  const Rcpp::NumericMatrix& knots
+) {
+  return hivPlatform::Lspline(x, knots);
+}

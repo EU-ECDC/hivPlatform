@@ -49,10 +49,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Lspline
+Rcpp::NumericMatrix Lspline(const Rcpp::NumericMatrix& x, const Rcpp::NumericMatrix& knots);
+RcppExport SEXP _hivPlatform_Lspline(SEXP xSEXP, SEXP knotsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type knots(knotsSEXP);
+    rcpp_result_gen = Rcpp::wrap(Lspline(x, knots));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hivPlatform_integrate_test", (DL_FUNC) &_hivPlatform_integrate_test, 0},
     {"_hivPlatform_PostWCpp", (DL_FUNC) &_hivPlatform_PostWCpp, 17},
+    {"_hivPlatform_Lspline", (DL_FUNC) &_hivPlatform_Lspline, 2},
     {NULL, NULL, 0}
 };
 

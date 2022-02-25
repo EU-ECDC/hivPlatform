@@ -1,6 +1,8 @@
 #ifndef _hivPlatform_PostW_
 #define _hivPlatform_PostW_
 
+#include "Lspline.hpp"
+
 namespace hivPlatform {
 
 class PostW: public Numer::Func
@@ -62,20 +64,42 @@ public:
   double operator()(const double& w) const
   {
     try {
+      const static Rcpp::NumericVector knotsAge = Rcpp::NumericVector::create(25, 35, 45);
+      const static Rcpp::NumericVector knotsCalendar = Rcpp::NumericVector::create(16, 22);
+
       Eigen::MatrixXd xAIDSnew(xAIDS);
       xAIDSnew(0, 2) = xAIDSnew(0, 2) - w;
 
       const double lambda = (xAIDSnew * betaAIDS).array().exp()(0, 0);
 
       // Update CD4 design matrix
-      Eigen::Map<Eigen::MatrixXd> dm(Rcpp::as<Eigen::Map<Eigen::MatrixXd>>(baseCD4DM["dm"]));
+      arma::dmat dm = Rcpp::as<arma::dmat>(baseCD4DM["dm"]);
+      // Eigen::MatrixXd dm(Rcpp::as<Eigen::MatrixXd>(baseCD4DM["dm"]));
+      // Rcpp::NumericMatrix dm(Rcpp::as<Rcpp::NumericMatrix>(baseCD4DM["dm"]));
+      const arma::uvec& colsDTime = Rcpp::as<arma::uvec>(baseCD4DM["colsDTime"]);
+      const arma::uvec& colsAge = Rcpp::as<arma::uvec>(baseCD4DM["colsAge"]);
+      const arma::uvec& colsCalendar = Rcpp::as<arma::uvec>(baseCD4DM["colsCalendar"]);
+      const arma::uvec& colsDTimeGender = Rcpp::as<arma::uvec>(baseCD4DM["colsDTimeGender"]);
+      const arma::uvec& colsDTimeRegion = Rcpp::as<arma::uvec>(baseCD4DM["colsDTimeRegion"]);
+      const arma::uvec& colsDTimeTrans = Rcpp::as<arma::uvec>(baseCD4DM["colsDTimeTrans"]);
+      const arma::uvec& colsDTimeAge = Rcpp::as<arma::uvec>(baseCD4DM["colsDTimeAge"]);
+      const arma::uvec& colsGender = Rcpp::as<arma::uvec>(baseCD4DM["colsGender"]);
+      const arma::uvec& colsRegion = Rcpp::as<arma::uvec>(baseCD4DM["colsRegion"]);
+      const arma::uvec& colsTrans = Rcpp::as<arma::uvec>(baseCD4DM["colsTrans"]);
 
-      // b$dm[, b$colsAge] <- lspline::lspline(data$Age - w, knots = c(25, 35, 45))
-      // b$dm[, b$colsCalendar] <- lspline::lspline(data$Calendar - w, knots = c(16, 22))
-      // b$dm[, b$colsDTimeGender] <- b$dm[, b$colsDTime] * b$dm[, b$colsGender]
-      // b$dm[, b$colsDTimeRegion] <- b$dm[, b$colsDTime] * b$dm[, b$colsRegion]
-      // b$dm[, b$colsDTimeTrans] <- b$dm[, b$colsDTime] * b$dm[, b$colsTrans]
-      // b$dm[, b$colsDTimeAge] <- b$dm[, b$colsDTime] * b$dm[, b$colsAge]
+      const arma::dvec& DTime = Rcpp::as<arma::dvec>(fxCD4Data["DTime"]);
+      const Rcpp::NumericVector& Age = Rcpp::as<Rcpp::NumericVector>(fxCD4Data["Age"]);
+      const Rcpp::NumericVector& Calendar = Rcpp::as<Rcpp::NumericVector>(fxCD4Data["Calendar"]);
+
+      dm.cols(colsDTime - 1) = DTime + w;
+      dm.cols(colsAge - 1) = Rcpp::as<arma::dmat>(Lspline(Age - w, knotsAge));
+      dm.cols(colsCalendar - 1) = Rcpp::as<arma::dmat>(Lspline(Calendar - w, knotsCalendar));
+      dm.cols(colsDTimeGender - 1) = dm.cols(colsDTime - 1) * dm.cols(colsGender - 1);
+      dm.cols(colsDTimeRegion - 1) = dm.cols(colsDTime - 1) * dm.cols(colsRegion - 1);
+      dm.cols(colsDTimeTrans - 1) = dm.cols(colsDTime - 1) * dm.cols(colsTrans - 1);
+      dm.cols(colsDTimeAge - 1) = dm.cols(colsDTime - 1) * dm.cols(colsAge - 1);
+
+      Rcpp::Rcout << dm << std::endl;
 
       return lambda;
     } catch(...) {
