@@ -1,4 +1,4 @@
-data-raw/
-tests/
-utils/
-rsconnect/
+/data-raw/
+/tests/
+/utils/
+/rsconnect/
