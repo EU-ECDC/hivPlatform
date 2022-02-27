@@ -1,3 +1,11 @@
+## 2.0.5
+
+###### _Februrary 27 2022_
+
+- Allow loading a single aggregated data file (for instance "Dead")
+- Update dependencies
+
+
 ## 2.0.4
 
 ###### _November 03 2021_

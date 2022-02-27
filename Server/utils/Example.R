@@ -4,7 +4,8 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -15,6 +16,8 @@ appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
+appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
+# appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # nolint end
