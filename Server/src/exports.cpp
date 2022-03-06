@@ -23,25 +23,26 @@ Rcpp::List integrate_test()
 double PostWCpp(
   const double& w,
   const Rcpp::DataFrame& y,
-  const Eigen::MatrixXd& xAIDS,
+  const arma::dmat& xAIDS,
   const double& maxDTime,
-  const Eigen::MatrixXd& betaAIDS,
+  const arma::dmat& betaAIDS,
   const double& kappa,
-  const Eigen::MatrixXd& bFE,
+  const arma::dmat& bFE,
   const Rcpp::NumericVector& sigma2,
-  const Eigen::MatrixXd& varCovRE,
+  const arma::dmat& varCovRE,
   const Rcpp::List& baseCD4DM,
   const Rcpp::DataFrame& fxCD4Data,
   const Rcpp::List& baseVLDM,
   const Rcpp::DataFrame& fxVLData,
   const Rcpp::List& baseRandEffDM,
   const Rcpp::DataFrame& fzData,
-  const Rcpp::NumericVector& consc,
-  const Rcpp::NumericVector& consr
+  const arma::dvec& consc,
+  const arma::dvec& consr,
+  const arma::dmat& err
 ) {
   hivPlatform::PostW f(
     y, xAIDS, maxDTime, betaAIDS, kappa, bFE, sigma2, varCovRE, baseCD4DM, fxCD4Data, baseVLDM,
-    fxVLData, baseRandEffDM, fzData, consc, consr
+    fxVLData, baseRandEffDM, fzData, consc, consr, err
   );
 
   return f(w);
@@ -53,4 +54,19 @@ Rcpp::NumericMatrix Lspline(
   const Rcpp::NumericMatrix& knots
 ) {
   return hivPlatform::Lspline(x, knots);
+}
+
+// [[Rcpp::export]]
+double GetLogMVNPdf(
+  const Rcpp::NumericVector& x,
+  const Rcpp::NumericVector& mu,
+  const Rcpp::NumericMatrix& sigma
+) {
+  const double out = hivPlatform::GetLogMVNPdf(
+    Rcpp::as<arma::dvec>(x),
+    Rcpp::as<arma::dvec>(mu),
+    Rcpp::as<arma::dmat>(sigma)
+  );
+
+  return out;
 }

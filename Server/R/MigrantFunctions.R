@@ -157,7 +157,8 @@ PostW <- function(
   baseRandEffDM,
   fzData,
   consc,
-  consr
+  consr,
+  err
 ) {
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
@@ -177,7 +178,7 @@ PostW <- function(
 
   # Mean and variance of the normal distribution
   mu <- c(x %*% bFE)
-  var <- z %*% tcrossprod(varCovRE, z) + diag(consc * sigma2[1] + consr * sigma2[2])
+  var <- z %*% tcrossprod(varCovRE, z) + err
 
   p <- exp(mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE) - lambda * (w + maxDTime)^kappa)
 
@@ -201,7 +202,8 @@ PostWCD4 <- function(
   baseRandEffDM,
   fzData,
   consc,
-  consr
+  consr,
+  err
 ) {
   xAIDS[3] <- xAIDS[3] - w
   lambda <- exp(xAIDS %*% betaAIDS)[1, 1]

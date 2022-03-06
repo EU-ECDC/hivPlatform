@@ -10,6 +10,7 @@ if (knownPrePost %chin% c('Pre', 'Post')) {
   next
 }
 
+w <- 0.9
 y <- dt[, .(YVar)]
 z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
 formulaeData <- dt[, .(YVar, Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
@@ -23,6 +24,8 @@ fzData <- cbind(y, z)
 baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
 baseVLDM <- GetBaseVLDesignMatrix(fxVLData)
 baseRandEffDM <- GetBaseRandEffDesignMatrix(fzData)
+consc <- dt$Consc
+consr <- dt$Consr
 
 switch(dt[Ord == 1, Only],
   'Both' = {
@@ -44,9 +47,17 @@ switch(dt[Ord == 1, Only],
     func <- VPostWVL
   }
 )
+err <- diag(dt$Consc * sigma2[1] + dt$Consr * sigma2[2])
+diag(dt$Consc * sigma2[1])
+diag(dt$Consr * sigma2[2])
+
+betaAIDS <- matrix(params$betaAIDS, ncol = 1)
+bFE <- matrix(bFE, ncol = 1)
+kappa <- params$kappa
+
 
 PostW(
-  w = 0.9,
+  w = w,
   y = y,
   xAIDS = xAIDS,
   maxDTime = maxDTime,
@@ -62,11 +73,34 @@ PostW(
   baseRandEffDM = baseRandEffDM,
   fzData = fzData,
   consc = dt$Consc,
-  consr = dt$Consr
+  consr = dt$Consr,
+  err = err
 )
 
+PostWCD4(
+  w = w,
+  y = y,
+  xAIDS = xAIDS,
+  maxDTime = maxDTime,
+  betaAIDS = params$betaAIDS,
+  kappa = params$kappa,
+  bFE = bFE,
+  sigma2 = sigma2,
+  varCovRE = varCovRE,
+  baseCD4DM = baseCD4DM,
+  fxCD4Data = fxCD4Data,
+  baseVLDM = baseVLDM,
+  fxVLData = fxVLData,
+  baseRandEffDM = baseRandEffDM,
+  fzData = fzData,
+  consc = dt$Consc,
+  consr = dt$Consr,
+  err = err
+)
+
+
 PostWCpp(
-  w = 0.9,
+  w = w,
   y = y,
   xAIDS = xAIDS,
   maxDTime = maxDTime,
@@ -82,32 +116,9 @@ PostWCpp(
   baseRandEffDM = baseRandEffDM,
   fzData = fzData,
   consc = dt$Consc,
-  consr = dt$Consr
+  consr = dt$Consr,
+  err = err
 )
 
-baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
-baseCD4DM$dm
-baseCD4DM$colsDTime
-
-b <- GetBaseRandEffDesignMatrix(fzData)
-z <- UpdateRandEffDesignMatrix(b, fzData, w)
-
-
-lspline::lspline(x = data$Age - w, knots = c(25, 35, 45))
-
-x <- c(40.1, 10, 60)
-knots <- c(25, 35, 45)
-lspline::lspline(x, knots)
-
-Lspline(x, knots)
-
-n <- length(x)
-nvars <- length(knots) + 1
-rval <- matrix(0, nrow = n, ncol = nvars)
-rval[, 1] <- pmin(x, knots[1])
-rval[, nvars] <- pmax(x, knots[length(knots)]) - knots[length(knots)]
-if (nvars > 2) {
-  for (i in seq(2, nvars - 1)) {
-    rval[, i] <- pmax(pmin(x, knots[i]), knots[i - 1]) - knots[i - 1]
-  }
-}
+GetLogMVNPdf(y$YVar, mu, sigma = var)
+mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE)
