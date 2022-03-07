@@ -1,6 +1,6 @@
 outputCD4VL <- readRDS('../../outputCD4VL.Rds')
 params <- GetMigrantParams()
-uniqueId <- 415
+uniqueId <- 209
 dt <- outputCD4VL[UniqueId == uniqueId]
 
 # Predetermined status results in a fixed probability
@@ -10,11 +10,12 @@ if (knownPrePost %chin% c('Pre', 'Post')) {
   next
 }
 
-w <- 0.9
+
 y <- dt[, .(YVar)]
 z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
 formulaeData <- dt[, .(YVar, Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
 migTime <- dt[Ord == 1, Mig]
+w <- migTime
 upTime <- dt[Ord == 1, U]
 xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
 maxDTime <- dt[, max(DTime)]
@@ -27,44 +28,25 @@ baseRandEffDM <- GetBaseRandEffDesignMatrix(fzData)
 consc <- dt$Consc
 consr <- dt$Consr
 
-switch(dt[Ord == 1, Only],
-  'Both' = {
-    bFE <- params$bFE
-    sigma2 <- params$sigma2
-    varCovRE <- params$varCovRE
-    func <- VPostW
-  },
-  'CD4 only' = {
-    bFE <- params$bFECD4
-    sigma2 <- params$sigma2CD4
-    varCovRE <- params$varCovRECD4
-    func <- VPostWCD4
-  },
-  'VL only' = {
-    bFE <- params$bFEVL
-    sigma2 <- params$sigma2VL
-    varCovRE <- params$varCovREVL
-    func <- VPostWVL
-  }
-)
-err <- diag(dt$Consc * sigma2[1] + dt$Consr * sigma2[2])
-diag(dt$Consc * sigma2[1])
-diag(dt$Consr * sigma2[2])
+sigma2 <- params$sigma2
+bFE <- params$bFE
+varCovRE <- params$varCovRE
+func <- VPostW
+x <- consc * sigma2[1] + consr * sigma2[2]
+err <- diag(x, nrow = length(x))
 
 betaAIDS <- matrix(params$betaAIDS, ncol = 1)
 bFE <- matrix(bFE, ncol = 1)
 kappa <- params$kappa
-
 
 PostW(
   w = w,
   y = y,
   xAIDS = xAIDS,
   maxDTime = maxDTime,
-  betaAIDS = params$betaAIDS,
+  betaAIDS = betaAIDS,
   kappa = params$kappa,
   bFE = bFE,
-  sigma2 = sigma2,
   varCovRE = varCovRE,
   baseCD4DM = baseCD4DM,
   fxCD4Data = fxCD4Data,
@@ -72,20 +54,17 @@ PostW(
   fxVLData = fxVLData,
   baseRandEffDM = baseRandEffDM,
   fzData = fzData,
-  consc = dt$Consc,
-  consr = dt$Consr,
   err = err
 )
 
-PostWCD4(
+PostWCpp(
   w = w,
   y = y,
   xAIDS = xAIDS,
   maxDTime = maxDTime,
-  betaAIDS = params$betaAIDS,
+  betaAIDS = betaAIDS,
   kappa = params$kappa,
   bFE = bFE,
-  sigma2 = sigma2,
   varCovRE = varCovRE,
   baseCD4DM = baseCD4DM,
   fxCD4Data = fxCD4Data,
@@ -93,13 +72,10 @@ PostWCD4(
   fxVLData = fxVLData,
   baseRandEffDM = baseRandEffDM,
   fzData = fzData,
-  consc = dt$Consc,
-  consr = dt$Consr,
   err = err
 )
 
-
-PostWCpp(
+PostWCD4(
   w = w,
   y = y,
   xAIDS = xAIDS,
@@ -120,5 +96,33 @@ PostWCpp(
   err = err
 )
 
-GetLogMVNPdf(y$YVar, mu, sigma = var)
-mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE)
+PostWVL(
+  w = w,
+  y = y,
+  xAIDS = xAIDS,
+  maxDTime = maxDTime,
+  betaAIDS = matrix(params$betaAIDS, ncol = 1),
+  kappa = params$kappa,
+  bFE = matrix(bFE, ncol = 1),
+  sigma2 = sigma2,
+  varCovRE = varCovRE,
+  baseCD4DM = baseCD4DM,
+  fxCD4Data = fxCD4Data,
+  baseVLDM = baseVLDM,
+  fxVLData = fxVLData,
+  baseRandEffDM = baseRandEffDM,
+  fzData = fzData,
+  consc = dt$Consc,
+  consr = dt$Consr,
+  err = err
+)
+
+
+
+
+microbenchmark(
+  mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE),
+  GetLogMVNPdf(y$YVar, mu, sigma = var),
+  GetLogMVNPdf2(y$YVar, mu, sigma = var),
+  times = 1000
+)

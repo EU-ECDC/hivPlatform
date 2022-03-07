@@ -42,7 +42,7 @@ PredictInf <- function( # nolint
   PrintH1('Processing AIDS data')
   PrintAlert('Start time: {format(startTime)}')
   for (i in seq_len(countAIDS)) {
-    if (i %% 500 == 0) {
+    if (i %% 1000 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countAIDS * 100),
@@ -117,7 +117,7 @@ PredictInf <- function( # nolint
   PrintAlert('Start time: {format(startTime)}')
   for (uniqueId in outputCD4VL[, unique(UniqueId)]) {
     i <- i + 1
-    if (i %% 500 == 0) {
+    if (i %% 1000 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countCD4VL * 100),
@@ -143,52 +143,36 @@ PredictInf <- function( # nolint
       next
     }
 
-    y <- dt[, .(YVar)]
-    z <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
-    formulaeData <- dt[, .(YVar, Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
     migTime <- dt[Ord == 1, Mig]
     upTime <- dt[Ord == 1, U]
+    y <- dt$YVar
     xAIDS <- as.matrix(dt[Ord == 1, .(1, as.integer(Gender == 'M'), Age)])
     maxDTime <- dt[, max(DTime)]
+    betaAIDS <- matrix(params$betaAIDS, ncol = 1)
+    kappa <- params$kappa
+    bFE <- matrix(params$bFE, ncol = 1)
+    varCovRE <- params$varCovRE
+    formulaeData <- dt[, .(Gender, MigrantRegionOfOrigin, Transmission, Age, DTime, Calendar, Consc, Consr)] # nolint
     fxCD4Data <- formulaeData[Consc == 1]
-    fxVLData <- formulaeData[Consr == 1]
-    fzData <- cbind(y, z)
     baseCD4DM <- GetBaseCD4DesignMatrix(fxCD4Data)
+    fxVLData <- formulaeData[Consr == 1]
     baseVLDM <- GetBaseVLDesignMatrix(fxVLData)
+    fzData <- dt[, .(Consc, CobsTime, Consr, RobsTime, RLogObsTime2, DTime)]
     baseRandEffDM <- GetBaseRandEffDesignMatrix(fzData)
 
-    switch(dt[Ord == 1, Only],
-      'Both' = {
-        bFE <- params$bFE
-        sigma2 <- params$sigma2
-        varCovRE <- params$varCovRE
-        func <- VPostW
-      },
-      'CD4 only' = {
-        bFE <- params$bFECD4
-        sigma2 <- params$sigma2CD4
-        varCovRE <- params$varCovRECD4
-        func <- VPostWCD4
-      },
-      'VL only' = {
-        bFE <- params$bFEVL
-        sigma2 <- params$sigma2VL
-        varCovRE <- params$varCovREVL
-        func <- VPostWVL
-      }
-    )
+    sigma2 <- params$sigma2
+    errM <- dt$Consc * sigma2[1] + dt$Consr * sigma2[2]
+    err <- diag(errM, nrow = length(errM))
 
-    fit1 <- try(integrate(
-      func,
+    fit1 <- try(IntegratePostWCpp(
       lower = migTime,
       upper = upTime,
       y = y,
       xAIDS = xAIDS,
       maxDTime = maxDTime,
-      betaAIDS = params$betaAIDS,
-      kappa = params$kappa,
+      betaAIDS = betaAIDS,
+      kappa = kappa,
       bFE = bFE,
-      sigma2 = sigma2,
       varCovRE = varCovRE,
       baseCD4DM = baseCD4DM,
       fxCD4Data = fxCD4Data,
@@ -196,20 +180,17 @@ PredictInf <- function( # nolint
       fxVLData = fxVLData,
       baseRandEffDM = baseRandEffDM,
       fzData = fzData,
-      consc = dt$Consc,
-      consr = dt$Consr
+      err = err
     ), silent = TRUE)
-    fit2 <- try(integrate(
-      func,
+    fit2 <- try(IntegratePostWCpp(
       lower = 0,
       upper = migTime,
       y = y,
       xAIDS = xAIDS,
       maxDTime = maxDTime,
-      betaAIDS = params$betaAIDS,
-      kappa = params$kappa,
+      betaAIDS = betaAIDS,
+      kappa = kappa,
       bFE = bFE,
-      sigma2 = sigma2,
       varCovRE = varCovRE,
       baseCD4DM = baseCD4DM,
       fxCD4Data = fxCD4Data,
@@ -217,11 +198,11 @@ PredictInf <- function( # nolint
       fxVLData = fxVLData,
       baseRandEffDM = baseRandEffDM,
       fzData = fzData,
-      consc = dt$Consc,
-      consr = dt$Consr
+      err = err
     ), silent = TRUE)
 
-    if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
+
+    if (IsError(fit1) || IsError(fit2) || fit1$errorCode != 0 || fit2$errorCode != 0) {
       next
     } else {
       outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / (fit1$value + fit2$value)]

@@ -235,3 +235,4 @@ compare <- merge(
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-3]
+compare[is.na(ProbPre.Test)]

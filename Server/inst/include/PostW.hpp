@@ -9,16 +9,15 @@
 
 namespace hivPlatform {
 
-class PostW
+class PostW: public Numer::Func
 {
 private:
-  const Rcpp::DataFrame& y;
+  const arma::dvec& y;
   const arma::dmat& xAIDS;
   const double& maxDTime;
   const arma::dmat& betaAIDS;
   const double& kappa;
   const arma::dmat& bFE;
-  const Rcpp::NumericVector& sigma2;
   const arma::dmat& varCovRE;
   const Rcpp::List& baseCD4DM;
   const Rcpp::DataFrame& fxCD4Data;
@@ -26,18 +25,15 @@ private:
   const Rcpp::DataFrame& fxVLData;
   const Rcpp::List& baseRandEffDM;
   const Rcpp::DataFrame& fzData;
-  const arma::dvec& consc;
-  const arma::dvec& consr;
   const arma::dmat& err;
 public:
   PostW(
-    const Rcpp::DataFrame& y_,
+    const arma::dvec& y_,
     const arma::dmat& xAIDS_,
     const double& maxDTime_,
     const arma::dmat& betaAIDS_,
     const double& kappa_,
     const arma::dmat& bFE_,
-    const Rcpp::NumericVector& sigma2_,
     const arma::dmat& varCovRE_,
     const Rcpp::List& baseCD4DM_,
     const Rcpp::DataFrame& fxCD4Data_,
@@ -45,8 +41,6 @@ public:
     const Rcpp::DataFrame& fxVLData_,
     const Rcpp::List& baseRandEffDM_,
     const Rcpp::DataFrame& fzData_,
-    const arma::dvec& consc_,
-    const arma::dvec& consr_,
     const arma::dmat& err_
   ) :
     y(y_),
@@ -55,7 +49,6 @@ public:
     betaAIDS(betaAIDS_),
     kappa(kappa_),
     bFE(bFE_),
-    sigma2(sigma2_),
     varCovRE(varCovRE_),
     baseCD4DM(baseCD4DM_),
     fxCD4Data(fxCD4Data_),
@@ -63,8 +56,6 @@ public:
     fxVLData(fxVLData_),
     baseRandEffDM(baseRandEffDM_),
     fzData(fzData_),
-    consc(consc_),
-    consr(consr_),
     err(err_)
     {}
 
@@ -85,12 +76,10 @@ public:
         arma::join_rows(xCD4, arma::zeros<arma::dmat>(xCD4.n_rows, xVL.n_cols))
       );
 
-      const arma::vec mu = x * bFE;
+      const arma::dvec mu = x * bFE;
       const arma::dmat var = z * (varCovRE * z.t()) + err;
 
-      const arma::dvec& YVar = Rcpp::as<Rcpp::NumericVector>(y["YVar"]);
-
-      const double p = std::exp(GetLogMVNPdf(YVar, mu, var) - lambda * std::pow(w + maxDTime, kappa));
+      const double p = std::exp(GetLogMVNPdf(y, mu, var) - lambda * std::pow(w + maxDTime, kappa));
 
       return p;
     } catch(...) {

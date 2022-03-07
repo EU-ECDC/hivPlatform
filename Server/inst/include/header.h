@@ -5,6 +5,7 @@
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppNumerical)]]
 
+#define ARMA_NO_DEBUG true
 #define BOOST_DISABLE_ASSERTS true
 
 #include <RcppArmadillo.h>
@@ -16,6 +17,7 @@
 #include "PostW.hpp"
 #include "Lspline.hpp"
 #include "GetLogMVNPdf.hpp"
+#include "GetLogMVNPdf2.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>

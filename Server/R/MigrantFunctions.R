@@ -148,7 +148,6 @@ PostW <- function(
   betaAIDS,
   kappa,
   bFE,
-  sigma2,
   varCovRE,
   baseCD4DM,
   fxCD4Data,
@@ -156,8 +155,6 @@ PostW <- function(
   fxVLData,
   baseRandEffDM,
   fzData,
-  consc,
-  consr,
   err
 ) {
   xAIDS[3] <- xAIDS[3] - w
@@ -185,74 +182,6 @@ PostW <- function(
   return(p)
 }
 
-PostWCD4 <- function(
-  w,
-  y,
-  xAIDS,
-  maxDTime,
-  betaAIDS,
-  kappa,
-  bFE,
-  sigma2,
-  varCovRE,
-  baseCD4DM,
-  fxCD4Data,
-  baseVLDM,
-  fxVLData,
-  baseRandEffDM,
-  fzData,
-  consc,
-  consr,
-  err
-) {
-  xAIDS[3] <- xAIDS[3] - w
-  lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
-  x <- UpdateCD4DesignMatrix(b = baseCD4DM, data = fxCD4Data, w)
-  z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)[, 1:2, drop = FALSE]
-
-  # Mean and variance of the normal kernel
-  mu <- c(x %*% bFE)
-  var <- z %*% tcrossprod(varCovRE, z) + sigma2 * diag(length(x[, 1]))
-
-  p <- exp(mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE) - lambda * (w + maxDTime)^kappa)
-
-  return(p)
-}
-
-PostWVL <- function(
-  w,
-  y,
-  xAIDS,
-  maxDTime,
-  betaAIDS,
-  kappa,
-  bFE,
-  sigma2,
-  varCovRE,
-  baseCD4DM,
-  fxCD4Data,
-  baseVLDM,
-  fxVLData,
-  baseRandEffDM,
-  fzData,
-  consc,
-  consr
-) {
-  # Design matrix of the time-to-AIDS model
-  xAIDS[3] <- xAIDS[3] - w
-  lambda <- exp(xAIDS %*% betaAIDS)[1, 1]
-  x <- UpdateVLDesignMatrix(baseVLDM, data = fxVLData, w)
-  z <- UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w)[, 3:5, drop = FALSE]
-
-  # Mean and variance of the normal kernel
-  mu <- c(x %*% bFE)
-  var <- z %*% tcrossprod(varCovRE, z) + sigma2 * diag(length(x[, 1]))
-
-  p <- exp(mvnfast::dmvn(y$YVar, mu = mu, sigma = var, log = TRUE) - lambda * (w + maxDTime)^kappa)
-
-  return(p)
-}
-
 PostWAIDS <- function(
   w,
   x,
@@ -269,6 +198,4 @@ PostWAIDS <- function(
 
 # Vectorize the functions as the "integrate" function works with vectorized functions
 VPostW <- Vectorize(PostW, vectorize.args = c('w'))
-VPostWCD4 <- Vectorize(PostWCD4, vectorize.args = c('w'))
-VPostWVL <- Vectorize(PostWVL, vectorize.args = c('w'))
 VPostWAIDS <- Vectorize(PostWAIDS, vectorize.args = c('w'))
