@@ -61,32 +61,24 @@ public:
 
   double operator()(const double& w) const
   {
-    try {
-      arma::dmat xAIDSnew(xAIDS);
-      xAIDSnew(0, 2) -= w;
+    arma::dmat xAIDSnew(xAIDS);
+    xAIDSnew(0, 2) -= w;
 
-      const double lambda = arma::as_scalar(arma::exp(xAIDSnew * betaAIDS));
+    const double lambda = arma::as_scalar(arma::exp(xAIDSnew * betaAIDS));
 
-      const arma::dmat xCD4 = UpdateCD4DesignMatrix(baseCD4DM, fxCD4Data, w);
-      const arma::dmat xVL = UpdateVLDesignMatrix(baseVLDM, fxVLData, w);
-      const arma::dmat z = UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w);
+    const arma::dmat xCD4 = UpdateCD4DesignMatrix(baseCD4DM, fxCD4Data, w);
+    const arma::dmat xVL = UpdateVLDesignMatrix(baseVLDM, fxVLData, w);
+    const arma::dmat z = UpdateRandEffDesignMatrix(baseRandEffDM, fzData, w);
 
-      const arma::dmat x = arma::join_cols(
-        arma::join_rows(arma::zeros<arma::dmat>(xVL.n_rows, xCD4.n_cols), xVL),
-        arma::join_rows(xCD4, arma::zeros<arma::dmat>(xCD4.n_rows, xVL.n_cols))
-      );
+    const arma::dmat x = arma::join_cols(
+      arma::join_rows(arma::zeros<arma::dmat>(xVL.n_rows, xCD4.n_cols), xVL),
+      arma::join_rows(xCD4, arma::zeros<arma::dmat>(xCD4.n_rows, xVL.n_cols))
+    );
 
-      const arma::dvec mu = x * bFE;
-      const arma::dmat var = z * (varCovRE * z.t()) + err;
+    const arma::dvec mu = x * bFE;
+    const arma::dmat var = z * (varCovRE * z.t()) + err;
 
-      const double p = std::exp(GetLogMVNPdf(y, mu, var) - lambda * std::pow(w + maxDTime, kappa));
-
-      return p;
-    } catch(...) {
-      Rcpp::Rcout << 'Error' << std::endl;
-    }
-
-    return 0.0;
+    return std::exp(GetLogMVNPdf(y, mu, var) - lambda * std::pow(w + maxDTime, kappa));
   }
 };
 

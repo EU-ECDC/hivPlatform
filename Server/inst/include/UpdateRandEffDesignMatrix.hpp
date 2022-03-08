@@ -9,6 +9,11 @@ arma::dmat UpdateRandEffDesignMatrix(
   const double& w
 ) {
   arma::dmat dm = Rcpp::as<arma::dmat>(baseDM["dm"]);
+
+  if (dm.n_rows == 0) {
+    return dm;
+  }
+
   const arma::uvec& colsDTimeConsc = Rcpp::as<arma::uvec>(baseDM["colsDTimeConsc"]);
   const arma::uvec& colsDTimeConsr = Rcpp::as<arma::uvec>(baseDM["colsDTimeConsr"]);
   const arma::uvec& colsLogDTimeConsr = Rcpp::as<arma::uvec>(baseDM["colsLogDTimeConsr"]);

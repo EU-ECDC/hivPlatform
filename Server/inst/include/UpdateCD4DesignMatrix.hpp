@@ -1,6 +1,8 @@
 #ifndef _hivPlatform_UpdateCD4DesignMatrix_
 #define _hivPlatform_UpdateCD4DesignMatrix_
 
+#include "const.h"
+
 namespace hivPlatform {
 
 arma::dmat UpdateCD4DesignMatrix(
@@ -8,10 +10,13 @@ arma::dmat UpdateCD4DesignMatrix(
   const Rcpp::DataFrame& data,
   const double& w
 ) {
-  const static Rcpp::NumericVector knotsAge = Rcpp::NumericVector::create(25, 35, 45);
-  const static Rcpp::NumericVector knotsCalendar = Rcpp::NumericVector::create(16, 22);
 
   arma::dmat dm = Rcpp::as<arma::dmat>(baseDM["dm"]);
+
+  if (dm.n_rows == 0) {
+    return dm;
+  }
+
   const arma::uvec& colsDTime = Rcpp::as<arma::uvec>(baseDM["colsDTime"]);
   const arma::uvec& colsAge = Rcpp::as<arma::uvec>(baseDM["colsAge"]);
   const arma::uvec& colsCalendar = Rcpp::as<arma::uvec>(baseDM["colsCalendar"]);

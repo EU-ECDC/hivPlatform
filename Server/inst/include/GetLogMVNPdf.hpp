@@ -1,11 +1,11 @@
 #ifndef _hivPlatform_GetLogMVNPdf_
 #define _hivPlatform_GetLogMVNPdf_
 
+#include "const.h"
+
 namespace hivPlatform {
 
-static double const halfLog2Pi = -0.5 * std::log(2.0 * M_PI);
-
-double GetLogMVNPdf(
+static double GetLogMVNPdf(
   const arma::dvec& x,
   const arma::dvec& mu,
   const arma::dmat& sigma
