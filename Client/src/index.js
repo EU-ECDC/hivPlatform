@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOMClient from 'react-dom/client';
 import { Provider } from 'mobx-react';
 import $ from 'jquery';
 import App from './App';
@@ -11,7 +11,7 @@ window.$ = $;
 
 const appMgr = new AppManager();
 const container = document.getElementById('app');
-const root = ReactDOM.createRoot(container);
+const root = ReactDOMClient.createRoot(container);
 
 root.render(
   <Provider appMgr={appMgr}>
