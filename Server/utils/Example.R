@@ -236,3 +236,27 @@ compare <- merge(
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-3]
 compare[is.na(ProbPre.Test)]
+
+plot(
+  seq(outputAIDS$Mig[i], outputAIDS$U[i], 0.1),
+  VPostWAIDS(
+    seq(outputAIDS$Mig[i], outputAIDS$U[i], 0.1),
+    x = xAIDS[i, ],
+    dTime = outputAIDS$DTime[i],
+    betaAIDS = params$betaAIDS,
+    kappa = params$kappa
+  )
+)
+
+optim(
+  1,
+  PostWAIDS,
+  control = list(fnscale = -1),
+  method = 'L-BFGS-B',
+  lower = outputAIDS$Mig[i],
+  upper = outputAIDS$U[i],
+  x = xAIDS[i, ],
+  dTime = outputAIDS$DTime[i],
+  betaAIDS = params$betaAIDS,
+  kappa = params$kappa
+)

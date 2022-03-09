@@ -13,7 +13,6 @@
 #include <RcppEigen.h>
 #include <RcppNumerical.h>
 
-#include "BetaPDF.hpp"
 #include "PostW.hpp"
 #include "Lspline.hpp"
 #include "GetLogMVNPdf.hpp"
