@@ -5,6 +5,10 @@ PostWCpp <- function(w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, base
     .Call(`_hivPlatform_PostWCpp`, w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err)
 }
 
+VPostWCpp <- function(w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err) {
+    .Call(`_hivPlatform_VPostWCpp`, w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err)
+}
+
 IntegratePostWCpp <- function(lower, upper, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err) {
     .Call(`_hivPlatform_IntegratePostWCpp`, lower, upper, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err)
 }

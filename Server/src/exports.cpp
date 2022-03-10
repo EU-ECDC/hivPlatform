@@ -27,6 +27,38 @@ double PostWCpp(
 };
 
 // [[Rcpp::export]]
+Rcpp::NumericVector VPostWCpp(
+  const arma::dvec& w,
+  const arma::dvec& y,
+  const arma::dmat& xAIDS,
+  const double& maxDTime,
+  const arma::dmat& betaAIDS,
+  const double& kappa,
+  const arma::dmat& bFE,
+  const arma::dmat& varCovRE,
+  const Rcpp::List& baseCD4DM,
+  const Rcpp::DataFrame& fxCD4Data,
+  const Rcpp::List& baseVLDM,
+  const Rcpp::DataFrame& fxVLData,
+  const Rcpp::List& baseRandEffDM,
+  const Rcpp::DataFrame& fzData,
+  const arma::dmat& err
+) {
+  hivPlatform::PostW f(
+    y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData,
+    baseRandEffDM, fzData, err
+  );
+
+  Rcpp::NumericVector out(w.n_elem);
+  for (size_t i = 0; i != w.n_elem; ++i) {
+    out[i] = f(w[i]);
+  }
+  out.attr("dim") = R_NilValue;
+
+  return out;
+};
+
+// [[Rcpp::export]]
 Rcpp::List IntegratePostWCpp(
   const double& lower,
   const double& upper,

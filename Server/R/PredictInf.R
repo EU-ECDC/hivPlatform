@@ -1,17 +1,18 @@
 PredictInf <- function( # nolint
   input,
-  params = GetMigrantParams()
+  params = GetMigrantParams(),
+  sampleSize = 50
 ) {
   outputAIDS <- copy(input$Data$AIDS)
   outputCD4VL <- copy(input$Data$CD4VL)
+  sampleColNames <- paste0('ImpSCtoDiag', seq_len(sampleSize))
 
   if (is.null(outputAIDS)) {
     outputAIDS <- data.table(
       Imputation = integer(),
       RecordId = character(),
       UniqueId = integer(),
-      Ord = integer(),
-      ProbPre = numeric()
+      Ord = integer()
     )
   }
 
@@ -20,29 +21,30 @@ PredictInf <- function( # nolint
       Imputation = integer(),
       RecordId = character(),
       UniqueId = integer(),
-      Ord = integer(),
-      ProbPre = numeric()
+      Ord = integer()
     )
   }
 
   # AIDS -------------------------------------------------------------------------------------------
+  countAIDS <- outputAIDS[, .N]
+  countAIDSNChar <- nchar(as.character(countAIDS))
+  outputAIDS[, ':='(
+    ProbPre = NA_real_,
+    EstSCtoDiag = NA_real_
+  )]
+  outputAIDS[, (sampleColNames) := NA_real_]
+
   xAIDS <- cbind(
     1,
     as.integer(outputAIDS$Gender == 'M'),
     outputAIDS$Age
   )
-
-  countAIDS <- outputAIDS[, .N]
-  countAIDSNChar <- nchar(as.character(countAIDS))
-  if (countAIDS > 0) {
-    outputAIDS[, ProbPre := NA_real_]
-  }
   startTime <- Sys.time()
   lastTime <- startTime
   PrintH1('Processing AIDS data')
   PrintAlert('Start time: {format(startTime)}')
   for (i in seq_len(countAIDS)) {
-    if (i %% 1000 == 0) {
+    if (i %% 500 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countAIDS * 100),
@@ -61,28 +63,68 @@ PredictInf <- function( # nolint
 
     knownPrePost <- outputAIDS$KnownPrePost[i]
     if (knownPrePost != 'Unknown') {
-      outputAIDS[i, ProbPre := ifelse(knownPrePost == 'Pre', 1, 0)]
+      outputAIDS[i, ':='(
+        ProbPre = fifelse(knownPrePost == 'Pre', 1.0, 0.0),
+        EstSCtoDiag = NA_real_
+      )]
+      outputAIDS[i, (sampleColNames) := 0]
       next
     }
 
-    fit1 <- try(integrate(
+    intFit1 <- try(integrate(
       VPostWAIDS,
-      lower = outputAIDS$Mig[i], upper = outputAIDS$U[i],
-      x = xAIDS[i, ], dTime = outputAIDS$DTime[i],
-      betaAIDS = params$betaAIDS, kappa = params$kappa
+      lower = 0,
+      upper = outputAIDS$Mig[i],
+      x = xAIDS[i, ],
+      dTime = outputAIDS$DTime[i],
+      betaAIDS = params$betaAIDS,
+      kappa = params$kappa
     ), silent = TRUE)
 
-    fit2 <- try(integrate(
+    intFit2 <- try(integrate(
       VPostWAIDS,
-      lower = 0, upper = outputAIDS$U[i],
-      x = xAIDS[i, ], dTime = outputAIDS$DTime[i],
-      betaAIDS = params$betaAIDS, kappa = params$kappa
+      lower = outputAIDS$Mig[i],
+      upper = outputAIDS$U[i],
+      x = xAIDS[i, ],
+      dTime = outputAIDS$DTime[i],
+      betaAIDS = params$betaAIDS,
+      kappa = params$kappa
     ), silent = TRUE)
 
-    if (IsError(fit1) || IsError(fit2) || fit1$message != 'OK' || fit2$message != 'OK') {
+    if (IsError(intFit1) || IsError(intFit2) || intFit1$message != 'OK' || intFit2$message != 'OK') { # nolint
       next
     } else {
-      outputAIDS[i, ProbPre := fit1$value / fit2$value]
+      outputAIDS[i, ProbPre := intFit2$value / (intFit1$value + intFit2$value)]
+
+      modeFit <- try(optim(
+        outputAIDS$Mig[i],
+        PostWAIDS,
+        method = 'Brent',
+        control = list(fnscale = -1),
+        lower = 0,
+        upper = outputAIDS$U[i],
+        x = xAIDS[i, ],
+        dTime = outputAIDS$DTime[i],
+        betaAIDS = params$betaAIDS,
+        kappa = params$kappa
+      ), silent = TRUE)
+
+      if (IsError(modeFit) || modeFit$convergence != 0) {
+        next
+      } else {
+        outputAIDS[i, EstSCtoDiag := modeFit$par]
+        outputAIDS[i, (sampleColNames) := as.list(PerformRejectionSampling(
+          n = sampleSize,
+          density = VPostWAIDS,
+          mode = outputAIDS$EstSCtoDiag[i],
+          lower = 0,
+          upper = outputAIDS$U[i],
+          x = xAIDS[i, ],
+          dTime = outputAIDS$DTime[i],
+          betaAIDS = params$betaAIDS,
+          kappa = params$kappa
+        ))]
+      }
     }
   }
   endTime <- Sys.time()
@@ -107,9 +149,12 @@ PredictInf <- function( # nolint
   # CD4VL ------------------------------------------------------------------------------------------
   countCD4VL <- outputCD4VL[, uniqueN(UniqueId)]
   countCD4VLNChar <- nchar(as.character(countCD4VL))
-  if (countCD4VL > 0) {
-    outputCD4VL[, ProbPre := NA_real_]
-  }
+  outputCD4VL[, ':='(
+    ProbPre = NA_real_,
+    EstSCtoDiag = NA_real_
+  )]
+  outputCD4VL[, (sampleColNames) := NA_real_]
+
   i <- 0
   startTime <- Sys.time()
   lastTime <- startTime
@@ -117,7 +162,7 @@ PredictInf <- function( # nolint
   PrintAlert('Start time: {format(startTime)}')
   for (uniqueId in outputCD4VL[, unique(UniqueId)]) {
     i <- i + 1
-    if (i %% 1000 == 0) {
+    if (i %% 500 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countCD4VL * 100),
@@ -139,7 +184,11 @@ PredictInf <- function( # nolint
     # Predetermined status results in a fixed probability
     knownPrePost <- dt[Ord == 1, KnownPrePost]
     if (knownPrePost %chin% c('Pre', 'Post')) {
-      outputCD4VL[UniqueId == uniqueId, ProbPre := fifelse(knownPrePost == 'Pre', 1.0, 0.0)]
+      outputCD4VL[UniqueId == uniqueId, ':='(
+        ProbPre = fifelse(knownPrePost == 'Pre', 1.0, 0.0),
+        EstSCtoDiag = 0
+      )]
+      outputCD4VL[UniqueId == uniqueId, (sampleColNames) := 0]
       next
     }
 
@@ -164,25 +213,7 @@ PredictInf <- function( # nolint
     errM <- dt$Consc * sigma2[1] + dt$Consr * sigma2[2]
     err <- diag(errM, nrow = length(errM))
 
-    fit1 <- try(IntegratePostWCpp(
-      lower = migTime,
-      upper = upTime,
-      y = y,
-      xAIDS = xAIDS,
-      maxDTime = maxDTime,
-      betaAIDS = betaAIDS,
-      kappa = kappa,
-      bFE = bFE,
-      varCovRE = varCovRE,
-      baseCD4DM = baseCD4DM,
-      fxCD4Data = fxCD4Data,
-      baseVLDM = baseVLDM,
-      fxVLData = fxVLData,
-      baseRandEffDM = baseRandEffDM,
-      fzData = fzData,
-      err = err
-    ), silent = TRUE)
-    fit2 <- try(IntegratePostWCpp(
+    intFit1 <- try(IntegratePostWCpp(
       lower = 0,
       upper = migTime,
       y = y,
@@ -201,11 +232,79 @@ PredictInf <- function( # nolint
       err = err
     ), silent = TRUE)
 
+    intFit2 <- try(IntegratePostWCpp(
+      lower = migTime,
+      upper = upTime,
+      y = y,
+      xAIDS = xAIDS,
+      maxDTime = maxDTime,
+      betaAIDS = betaAIDS,
+      kappa = kappa,
+      bFE = bFE,
+      varCovRE = varCovRE,
+      baseCD4DM = baseCD4DM,
+      fxCD4Data = fxCD4Data,
+      baseVLDM = baseVLDM,
+      fxVLData = fxVLData,
+      baseRandEffDM = baseRandEffDM,
+      fzData = fzData,
+      err = err
+    ), silent = TRUE)
 
-    if (IsError(fit1) || IsError(fit2) || fit1$errorCode != 0 || fit2$errorCode != 0) {
+    if (IsError(intFit1) || IsError(intFit2) || intFit1$errorCode != 0 || intFit2$errorCode != 0) {
       next
     } else {
-      outputCD4VL[UniqueId == uniqueId, ProbPre := fit1$value / (fit1$value + fit2$value)]
+      outputCD4VL[UniqueId == uniqueId, ProbPre := intFit2$value / (intFit1$value + intFit2$value)]
+
+      modeFit <- try(optim(
+        migTime,
+        PostWCpp,
+        method = 'Brent',
+        control = list(fnscale = -1),
+        lower = 0,
+        upper = upTime,
+        y = y,
+        xAIDS = xAIDS,
+        maxDTime = maxDTime,
+        betaAIDS = betaAIDS,
+        kappa = kappa,
+        bFE = bFE,
+        varCovRE = varCovRE,
+        baseCD4DM = baseCD4DM,
+        fxCD4Data = fxCD4Data,
+        baseVLDM = baseVLDM,
+        fxVLData = fxVLData,
+        baseRandEffDM = baseRandEffDM,
+        fzData = fzData,
+        err = err
+      ), silent = TRUE)
+
+      if (IsError(modeFit) || modeFit$convergence != 0) {
+        next
+      } else {
+        outputCD4VL[UniqueId == uniqueId, EstSCtoDiag := modeFit$par]
+        outputCD4VL[UniqueId == uniqueId, (sampleColNames) := as.list(PerformRejectionSampling(
+          n = sampleSize,
+          density = VPostWCpp,
+          mode = modeFit$par,
+          lower = 0,
+          upper = upTime,
+          y = y,
+          xAIDS = xAIDS,
+          maxDTime = maxDTime,
+          betaAIDS = betaAIDS,
+          kappa = kappa,
+          bFE = bFE,
+          varCovRE = varCovRE,
+          baseCD4DM = baseCD4DM,
+          fxCD4Data = fxCD4Data,
+          baseVLDM = baseVLDM,
+          fxVLData = fxVLData,
+          baseRandEffDM = baseRandEffDM,
+          fzData = fzData,
+          err = err
+        ))]
+      }
     }
   }
   endTime <- Sys.time()
@@ -227,20 +326,23 @@ PredictInf <- function( # nolint
   }
   PrintAlert('End time: {format(endTime)}')
 
+  outputColNames <- union(c('UniqueId', 'ProbPre', 'EstSCtoDiag'), sampleColNames)
   table <- list()
   if (nrow(outputAIDS) > 0) {
-    table[['AIDS']] <- outputAIDS[, .(UniqueId, ProbPre)]
+    table[['AIDS']] <- outputAIDS[, ..outputColNames]
   }
   if (nrow(outputCD4VL) > 0) {
-    table[['CD4VL']] <- outputCD4VL[Ord == 1, .(UniqueId, ProbPre)]
+    table[['CD4VL']] <- outputCD4VL[Ord == 1, ..outputColNames]
   }
   table <- rbindlist(table)
 
   if (nrow(table) == 0) {
     table <- data.table(
       UniqueId = integer(),
-      ProbPre = numeric()
+      ProbPre = numeric(),
+      EstSCtoDiag = numeric()
     )
+    table[, (sampleColNames) := NA_real_]
   }
 
   return(table)
