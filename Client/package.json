@@ -25,18 +25,18 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.8.1",
+    "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.5.0",
-    "@mui/lab": "^5.0.0-alpha.72",
-    "@mui/material": "^5.5.0",
-    "@mui/system": "5.5.0",
+    "@mui/icons-material": "^5.5.1",
+    "@mui/lab": "5.0.0-alpha.73",
+    "@mui/material": "^5.5.1",
+    "@mui/system": "5.5.1",
     "echarts": "^5.3.1",
     "echarts-for-react": "^3.0.2",
     "file-saver": "^2.0.5",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
-    "mobx": "^6.4.2",
+    "mobx": "^6.5.0",
     "mobx-react": "^7.3.0",
     "react": "^18.0.0-rc.2-next-b9de50d2f-20220308",
     "react-dom": "^18.0.0-rc.2-next-b9de50d2f-20220308",
@@ -44,7 +44,7 @@
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@babel/core": "7.17.5",
+    "@babel/core": "7.17.7",
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/preset-env": "7.16.11",
     "@babel/preset-react": "7.16.7",
