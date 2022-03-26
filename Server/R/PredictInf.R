@@ -44,7 +44,7 @@ PredictInf <- function( # nolint
   PrintH1('Processing AIDS data')
   PrintAlert('Start time: {format(startTime)}')
   for (i in seq_len(countAIDS)) {
-    if (i %% 500 == 0) {
+    if (i %% 1000 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countAIDS * 100),
@@ -162,7 +162,7 @@ PredictInf <- function( # nolint
   PrintAlert('Start time: {format(startTime)}')
   for (uniqueId in outputCD4VL[, unique(UniqueId)]) {
     i <- i + 1
-    if (i %% 500 == 0) {
+    if (i %% 1000 == 0) {
       currentTime <- Sys.time()
       percComplete <- stringi::stri_pad_left(
         sprintf('%0.2f%%', i / countCD4VL * 100),
@@ -213,7 +213,7 @@ PredictInf <- function( # nolint
     errM <- dt$Consc * sigma2[1] + dt$Consr * sigma2[2]
     err <- diag(errM, nrow = length(errM))
 
-    intFit1 <- try(IntegratePostWCpp(
+    intFit1 <- try(IntegratePostW(
       lower = 0,
       upper = migTime,
       y = y,
@@ -232,7 +232,7 @@ PredictInf <- function( # nolint
       err = err
     ), silent = TRUE)
 
-    intFit2 <- try(IntegratePostWCpp(
+    intFit2 <- try(IntegratePostW(
       lower = migTime,
       upper = upTime,
       y = y,

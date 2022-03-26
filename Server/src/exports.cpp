@@ -1,7 +1,25 @@
 #include "header.h"
 
 // [[Rcpp::export]]
-double PostWCpp(
+Rcpp::NumericVector Lspline(
+  const Rcpp::NumericVector& x,
+  const Rcpp::NumericVector& knots
+) {
+  return hivPlatform::Lspline(x, knots);
+};
+
+
+// [[Rcpp::export]]
+double GetLogMVNPdf(
+  const arma::dvec& x,
+  const arma::dvec& mu,
+  const arma::dmat& sigma
+) {
+  return hivPlatform::GetLogMVNPdf(x, mu, sigma);
+};
+
+// [[Rcpp::export]]
+double PostW(
   const double& w,
   const arma::dvec& y,
   const arma::dmat& xAIDS,
@@ -59,7 +77,7 @@ Rcpp::NumericVector VPostWCpp(
 };
 
 // [[Rcpp::export]]
-Rcpp::List IntegratePostWCpp(
+Rcpp::List IntegratePostW(
   const double& lower,
   const double& upper,
   const arma::dvec& y,
@@ -100,37 +118,4 @@ Rcpp::List IntegratePostWCpp(
     Rcpp::Named("errorEstimate") = errEst,
     Rcpp::Named("errorCode") = errCode
   );
-};
-
-// [[Rcpp::export]]
-Rcpp::NumericMatrix Lspline(
-  const Rcpp::NumericMatrix& x,
-  const Rcpp::NumericMatrix& knots
-) {
-  return hivPlatform::Lspline(x, knots);
-};
-
-
-// [[Rcpp::export]]
-double GetLogMVNPdf(
-  const arma::dvec& x,
-  const arma::dvec& mu,
-  const arma::dmat& sigma
-) {
-  return hivPlatform::GetLogMVNPdf(x, mu, sigma);
-};
-
-// [[Rcpp::export]]
-double GetLogMVNPdf2(
-  const Rcpp::NumericVector& x,
-  const Rcpp::NumericVector& mu,
-  const Rcpp::NumericMatrix& sigma
-) {
-  const double out = hivPlatform::GetLogMVNPdf2(
-    Rcpp::as<arma::dvec>(x),
-    Rcpp::as<arma::dvec>(mu),
-    Rcpp::as<arma::dmat>(sigma)
-  );
-
-  return out;
 };

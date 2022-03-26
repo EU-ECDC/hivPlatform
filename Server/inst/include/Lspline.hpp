@@ -3,7 +3,7 @@
 
 namespace hivPlatform {
 
-Rcpp::NumericMatrix Lspline(
+Rcpp::NumericVector Lspline(
   const Rcpp::NumericVector& x,
   const Rcpp::NumericVector& knots
 ) {

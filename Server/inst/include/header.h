@@ -13,10 +13,9 @@
 #include <RcppEigen.h>
 #include <RcppNumerical.h>
 
-#include "PostW.hpp"
 #include "Lspline.hpp"
 #include "GetLogMVNPdf.hpp"
-#include "GetLogMVNPdf2.hpp"
+#include "PostW.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
