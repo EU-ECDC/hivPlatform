@@ -62,9 +62,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// VPostWCpp
-Rcpp::NumericVector VPostWCpp(const arma::dvec& w, const arma::dvec& y, const arma::dmat& xAIDS, const double& maxDTime, const arma::dmat& betaAIDS, const double& kappa, const arma::dmat& bFE, const arma::dmat& varCovRE, const Rcpp::List& baseCD4DM, const Rcpp::DataFrame& fxCD4Data, const Rcpp::List& baseVLDM, const Rcpp::DataFrame& fxVLData, const Rcpp::List& baseRandEffDM, const Rcpp::DataFrame& fzData, const arma::dmat& err);
-RcppExport SEXP _hivPlatform_VPostWCpp(SEXP wSEXP, SEXP ySEXP, SEXP xAIDSSEXP, SEXP maxDTimeSEXP, SEXP betaAIDSSEXP, SEXP kappaSEXP, SEXP bFESEXP, SEXP varCovRESEXP, SEXP baseCD4DMSEXP, SEXP fxCD4DataSEXP, SEXP baseVLDMSEXP, SEXP fxVLDataSEXP, SEXP baseRandEffDMSEXP, SEXP fzDataSEXP, SEXP errSEXP) {
+// VPostW
+Rcpp::NumericVector VPostW(const arma::dvec& w, const arma::dvec& y, const arma::dmat& xAIDS, const double& maxDTime, const arma::dmat& betaAIDS, const double& kappa, const arma::dmat& bFE, const arma::dmat& varCovRE, const Rcpp::List& baseCD4DM, const Rcpp::DataFrame& fxCD4Data, const Rcpp::List& baseVLDM, const Rcpp::DataFrame& fxVLData, const Rcpp::List& baseRandEffDM, const Rcpp::DataFrame& fzData, const arma::dmat& err);
+RcppExport SEXP _hivPlatform_VPostW(SEXP wSEXP, SEXP ySEXP, SEXP xAIDSSEXP, SEXP maxDTimeSEXP, SEXP betaAIDSSEXP, SEXP kappaSEXP, SEXP bFESEXP, SEXP varCovRESEXP, SEXP baseCD4DMSEXP, SEXP fxCD4DataSEXP, SEXP baseVLDMSEXP, SEXP fxVLDataSEXP, SEXP baseRandEffDMSEXP, SEXP fzDataSEXP, SEXP errSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -83,7 +83,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::List& >::type baseRandEffDM(baseRandEffDMSEXP);
     Rcpp::traits::input_parameter< const Rcpp::DataFrame& >::type fzData(fzDataSEXP);
     Rcpp::traits::input_parameter< const arma::dmat& >::type err(errSEXP);
-    rcpp_result_gen = Rcpp::wrap(VPostWCpp(w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err));
+    rcpp_result_gen = Rcpp::wrap(VPostW(w, y, xAIDS, maxDTime, betaAIDS, kappa, bFE, varCovRE, baseCD4DM, fxCD4Data, baseVLDM, fxVLData, baseRandEffDM, fzData, err));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -118,7 +118,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hivPlatform_Lspline", (DL_FUNC) &_hivPlatform_Lspline, 2},
     {"_hivPlatform_GetLogMVNPdf", (DL_FUNC) &_hivPlatform_GetLogMVNPdf, 3},
     {"_hivPlatform_PostW", (DL_FUNC) &_hivPlatform_PostW, 15},
-    {"_hivPlatform_VPostWCpp", (DL_FUNC) &_hivPlatform_VPostWCpp, 15},
+    {"_hivPlatform_VPostW", (DL_FUNC) &_hivPlatform_VPostW, 15},
     {"_hivPlatform_IntegratePostW", (DL_FUNC) &_hivPlatform_IntegratePostW, 16},
     {NULL, NULL, 0}
 };

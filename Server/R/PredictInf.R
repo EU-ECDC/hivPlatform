@@ -258,7 +258,7 @@ PredictInf <- function( # nolint
 
       modeFit <- try(optim(
         migTime,
-        PostWCpp,
+        PostW,
         method = 'Brent',
         control = list(fnscale = -1),
         lower = 0,
@@ -285,7 +285,7 @@ PredictInf <- function( # nolint
         outputCD4VL[UniqueId == uniqueId, EstSCtoDiag := modeFit$par]
         outputCD4VL[UniqueId == uniqueId, (sampleColNames) := as.list(PerformRejectionSampling(
           n = sampleSize,
-          density = VPostWCpp,
+          density = VPostW,
           mode = modeFit$par,
           lower = 0,
           upper = upTime,

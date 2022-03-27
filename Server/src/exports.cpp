@@ -45,7 +45,7 @@ double PostW(
 };
 
 // [[Rcpp::export]]
-Rcpp::NumericVector VPostWCpp(
+Rcpp::NumericVector VPostW(
   const arma::dvec& w,
   const arma::dvec& y,
   const arma::dmat& xAIDS,
