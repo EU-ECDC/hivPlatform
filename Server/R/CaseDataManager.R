@@ -499,6 +499,19 @@ CaseDataManager <- R6::R6Class( # nolint
               outputStats <- hivPlatform::GetMigrantOutputStats(data)
               outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 
+              # Enrich outputs with extra dimensions for confidence bounds calculation
+              output[
+                data,
+                ':='(
+                  Gender = i.Gender,
+                  Transmission = i.Transmission,
+                  Age = i.Age,
+                  GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
+                ),
+                on = .(UniqueId)
+              ]
+              confBounds <- hivPlatform::GetMigrantConfBounds(output, variables = c())
+
               result <- list(
                 Input = input$Data,
                 Output = output,
@@ -506,7 +519,8 @@ CaseDataManager <- R6::R6Class( # nolint
                 Artifacts = list(
                   InputStats = input$Stats,
                   OutputStats = outputStats,
-                  OutputPlots = outputPlots
+                  OutputPlots = outputPlots,
+                  ConfBounds = confBounds
                 )
               )
 
@@ -519,7 +533,7 @@ CaseDataManager <- R6::R6Class( # nolint
             ),
             session = private$Session,
             successCallback = function(result) {
-              private$Catalogs$MigrationResult <- result[c('Input', 'Output', 'Stats')]
+              private$Catalogs$MigrationResult <- result[c('Input', 'Output', 'Artifacts')]
               try({
                 if (!is.null(private$Catalogs$AdjustedData)) {
                   private$Catalogs$AdjustedData <- copy(result$Data)
@@ -536,7 +550,8 @@ CaseDataManager <- R6::R6Class( # nolint
                   ActionMessage = 'Migration task finished',
                   InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
                   OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
-                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns') # nolint
+                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns'), # nolint
+                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds, dataframe = 'columns')
                 )
               )
             },

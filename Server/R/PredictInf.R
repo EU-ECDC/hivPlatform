@@ -112,11 +112,11 @@ PredictInf <- function( # nolint
       if (IsError(modeFit) || modeFit$convergence != 0) {
         next
       } else {
-        outputAIDS[i, EstSCtoDiag := modeFit$par]
+        outputAIDS[i, ModeSCtoDiag := modeFit$par]
         outputAIDS[i, (sampleColNames) := as.list(PerformRejectionSampling(
           n = sampleSize,
           density = VPostWAIDS,
-          mode = outputAIDS$EstSCtoDiag[i],
+          mode = outputAIDS$ModeSCtoDiag[i],
           lower = 0,
           upper = outputAIDS$U[i],
           x = xAIDS[i, ],
@@ -282,7 +282,7 @@ PredictInf <- function( # nolint
       if (IsError(modeFit) || modeFit$convergence != 0) {
         next
       } else {
-        outputCD4VL[UniqueId == uniqueId, EstSCtoDiag := modeFit$par]
+        outputCD4VL[UniqueId == uniqueId, ModeSCtoDiag := modeFit$par]
         outputCD4VL[UniqueId == uniqueId, (sampleColNames) := as.list(PerformRejectionSampling(
           n = sampleSize,
           density = VPostW,
@@ -326,7 +326,7 @@ PredictInf <- function( # nolint
   }
   PrintAlert('End time: {format(endTime)}')
 
-  outputColNames <- union(c('UniqueId', 'ProbPre', 'EstSCtoDiag'), sampleColNames)
+  outputColNames <- union(c('UniqueId', 'ProbPre', 'Mig', 'ModeSCtoDiag'), sampleColNames)
   table <- list()
   if (nrow(outputAIDS) > 0) {
     table[['AIDS']] <- outputAIDS[, ..outputColNames]

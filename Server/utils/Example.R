@@ -4,11 +4,11 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
-appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
-# appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
+appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
+
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
 appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
@@ -79,6 +79,10 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
 appMgr$CaseMgr$RunMigration()
+appMgr$CaseMgr$MigrationResult$Output
+GetMigrantConfBounds(appMgr$CaseMgr$MigrationResult$Output, variables = c('GroupedRegionOfOrigin'))
+appMgr$CaseMgr$Data[!is.na(ProbPre)]
+
 input <- PrepareMigrantData(copy(appMgr$CaseMgr$Data))
 system.time(output <- PredictInf(input))
 
@@ -221,6 +225,13 @@ input <- list(
 )
 
 test <- PredictInf(input, params = GetMigrantParams())
+GetMigrantConfBounds(
+  data = copy(table),
+  variables = c()
+)
+
+data <- copy(test)
+
 recon <- rbind(
   unique(reconAIDS[, .(UniqueId = id, ProbPre)]),
   unique(reconCD4VL[, .(UniqueId = id + max(reconAIDS$id), ProbPre)])
@@ -236,3 +247,14 @@ compare <- merge(
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
 compare[abs(Diff) > 1e-3]
 compare[is.na(ProbPre.Test)]
+
+# -------------------------------------------------------------------------------------------------
+testmi <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/MIexample.dta'))
+setnames(testmi, 'mig', 'Mig')
+testmi[, A := factor(sample.int(10, .N, replace = TRUE))]
+testmi[, A := as.integer(A)]
+testmi[, group := factor(group)]
+GetMigrantConfBounds(data = copy(testmi), variables = c())
+GetMigrantConfBounds(testmi, variables = c('group'))
+GetMigrantConfBounds(testmi, variables = c('A', 'group'))
+GetMigrantConfBounds(testmi, variables = c('A'))
