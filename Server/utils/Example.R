@@ -4,18 +4,22 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
-
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/Dummy_case_based.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss2.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
-appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
+# appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
-appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
+# appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
 # appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
@@ -23,10 +27,10 @@ appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
 # nolint end
 
 # library(data.table)
-# dt <- ReadDataFile('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
+# dt <- ReadDataFile('D:/VirtualBox_Shared/BE.csv')
 # WriteDataFile(
-#   dt[sample(seq_len(nrow(dt)), size = 200, replace = FALSE)],
-#   'D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv'
+#   dt[sample(seq_len(nrow(dt)), size = 500, replace = FALSE)],
+#   'D:/VirtualBox_Shared/BE_sample500.csv'
 # )
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
@@ -79,9 +83,30 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
 appMgr$CaseMgr$RunMigration()
-appMgr$CaseMgr$MigrationResult$Output
-GetMigrantConfBounds(appMgr$CaseMgr$MigrationResult$Output, variables = c('GroupedRegionOfOrigin'))
-appMgr$CaseMgr$Data[!is.na(ProbPre)]
+
+data <- appMgr$CaseMgr$Data
+input <- hivPlatform::PrepareMigrantData(data)
+output <- hivPlatform::PredictInf(input, GetMigrantParams())
+
+output <- copy(appMgr$CaseMgr$MigrationResult$Output)
+output[, Gender := as.integer(Gender)]
+output[, Transmission := as.integer(Transmission)]
+GetMigrantConfBounds(
+  data = copy(output),
+  variables = c('Gender', 'Transmission')
+)
+GetMigrantConfBounds(
+  data = copy(output),
+  variables = c('Gender')
+)
+GetMigrantConfBounds(
+  data = copy(output),
+  variables = c('Transmission')
+)
+GetMigrantConfBounds(
+  data = copy(output[Transmission == 'IDU']),
+  variables = c()
+)
 
 input <- PrepareMigrantData(copy(appMgr$CaseMgr$Data))
 system.time(output <- PredictInf(input))
@@ -257,4 +282,18 @@ testmi[, group := factor(group)]
 GetMigrantConfBounds(data = copy(testmi), variables = c())
 GetMigrantConfBounds(testmi, variables = c('group'))
 GetMigrantConfBounds(testmi, variables = c('A', 'group'))
-GetMigrantConfBounds(testmi, variables = c('A'))
+test <- GetMigrantConfBounds(testmi, variables = c('A'))
+test[, -1]
+writeLines(ConvertObjToJSON(test[, -1], dataframe = 'rows'), 'file.json')
+
+dt <- test[, -1]
+json <- ConvertObjToJSON(test[, -1], asMatrix = TRUE)
+writeLines(json, 'file.json')
+
+test <- list(
+  Gender = TRUE,
+  Transmission = FALSE,
+  Age = FALSE,
+  Migration = FALSE
+)
+names(test)[unlist(test)]

@@ -37,6 +37,7 @@ CaseDataManager <- R6::R6Class( # nolint
         AdjustedData = NULL,
         AdjustmentTask = NULL,
         AdjustmentResult = NULL,
+        MigrationPropStrat = c(),
         MigrationTask = NULL,
         MigrationResult = NULL
       )
@@ -477,7 +478,7 @@ CaseDataManager <- R6::R6Class( # nolint
 
         if (nrow(data) > 0) {
           private$Catalogs$MigrationTask <- Task$new(
-            function(data, params, randomSeed) {
+            function(data, params, strat, randomSeed) {
               if (!requireNamespace('hivPlatform', quietly = TRUE)) {
                 suppressMessages(pkgload::load_all())
               }
@@ -510,7 +511,10 @@ CaseDataManager <- R6::R6Class( # nolint
                 ),
                 on = .(UniqueId)
               ]
-              confBounds <- hivPlatform::GetMigrantConfBounds(output, variables = c())
+              confBounds <- hivPlatform::GetMigrantConfBounds(
+                output,
+                variables = strat
+              )
 
               result <- list(
                 Input = input$Data,
@@ -529,6 +533,7 @@ CaseDataManager <- R6::R6Class( # nolint
             args = list(
               data = data,
               params = params,
+              strat = private$Catalogs$MigrationPropStrat,
               randomSeed = .Random.seed
             ),
             session = private$Session,
@@ -551,7 +556,7 @@ CaseDataManager <- R6::R6Class( # nolint
                   InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
                   OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
                   OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns'), # nolint
-                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds, dataframe = 'columns')
+                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds[, -1], asMatrix = TRUE)
                 )
               )
             },
@@ -607,6 +612,24 @@ CaseDataManager <- R6::R6Class( # nolint
       }
 
       return(invisible(self))
+    },
+
+    SetMigrationPropStrat = function(strat) {
+      private$Catalogs$MigrationPropStrat <- strat
+
+      if (!is.null(private$Catalogs$MigrationResult$Output)) {
+        confBounds <- GetMigrantConfBounds(
+          data = private$Catalogs$MigrationResult$Output,
+          variables = strat
+        )
+        private$SendMessage(
+          'MIGRATION_CONF_BOUNDS_COMPUTED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ConfBounds = ConvertObjToJSON(confBounds[, -1], asMatrix = TRUE)
+          )
+        )
+      }
     }
   ),
 

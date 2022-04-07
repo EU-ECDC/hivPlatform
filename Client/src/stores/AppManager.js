@@ -195,6 +195,7 @@ export default class AppManager {
           this.migrMgr.setInputStats(e.payload.InputStats);
           this.migrMgr.setOutputStats(e.payload.OutputStats);
           this.migrMgr.setOutputPlots(e.payload.OutputPlots);
+          this.migrMgr.setConfBounds(e.payload.ConfBounds);
           this.notificationsMgr.setMsg('Migration run finished');
         } else {
           this.notificationsMgr.setMsg('Migration run failed');
@@ -204,6 +205,11 @@ export default class AppManager {
         this.migrMgr.setRunProgress(null);
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.notificationsMgr.setMsg('Migration run cancelled');
+        }
+        break;
+      case 'MIGRATION_CONF_BOUNDS_COMPUTED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.migrMgr.setConfBounds(e.payload.ConfBounds);
         }
         break;
       case 'CREATING_REPORT_STARTED':

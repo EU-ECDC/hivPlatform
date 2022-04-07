@@ -1,5 +1,6 @@
-import { observable, action, computed, makeObservable, toJS } from 'mobx';
-import IsNull from '../utilities/IsNull'
+import { observable, action, computed, makeObservable, autorun, toJS } from 'mobx';
+import IsNull from '../utilities/IsNull';
+import RemoveValuesFromArray from '../utilities/RemoveValuesFromArray';
 
 export default class MigrationManager {
   rootMgr = null;
@@ -14,10 +15,20 @@ export default class MigrationManager {
 
   outputPlots = null;
 
+  confBounds = null;
+
   dataCompatibleFlag = null;
 
   yodRegion = 'ALL';
+
   tableRegion = 'ALL';
+
+  propTableStrat = {
+    Gender: false,
+    Transmission: false,
+    Age: false,
+    GroupedRegionOfOrigin: false
+  };
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -27,8 +38,10 @@ export default class MigrationManager {
       inputStats: observable,
       outputStats: observable,
       outputPlots: observable,
+      confBounds: observable,
       yodRegion: observable,
       tableRegion: observable,
+      propTableStrat: observable,
       dataCompatibleFlag: observable,
       runInProgress: computed,
       missingness: computed,
@@ -42,12 +55,19 @@ export default class MigrationManager {
       setInputStats: action,
       setOutputStats: action,
       setOutputPlots: action,
+      setConfBounds: action,
       setYodRegion: action,
       setTableRegion: action,
       setDataCompatibleFlag: action,
+      updatePropTableStratFlag: action,
       run: action,
       cancel: action
     });
+
+    autorun(
+      () => this.rootMgr.inputValueSet('propTableStrat', toJS(this.propTableStrat)),
+      { delay: 1000 }
+    );
   };
 
   get runInProgress() {
@@ -89,7 +109,7 @@ export default class MigrationManager {
       res = this.outputStats.TableDistr[this.tableRegion];
     }
     return res;
-  }
+  };
 
   get arrivalPlotData() {
     let res = null;
@@ -117,11 +137,17 @@ export default class MigrationManager {
 
   setOutputPlots = outputPlots => this.outputPlots = outputPlots;
 
+  setConfBounds = confBounds => this.confBounds = confBounds;
+
   setYodRegion = yodRegion => this.yodRegion = yodRegion;
 
   setTableRegion = tableRegion => this.tableRegion = tableRegion;
 
   setDataCompatibleFlag = flag => this.dataCompatibleFlag = flag;
+
+  updatePropTableStratFlag = (stratName, flag) => {
+    this.propTableStrat[stratName] = flag;
+  };
 
   run = () => this.rootMgr.btnClicked('runMigrantBtn');
 

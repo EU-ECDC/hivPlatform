@@ -18,6 +18,7 @@ import MissStat from './MissStat';
 import YODDistr from './YODDistr';
 import TableDistr from './TableDistr';
 import PropCharts from './PropCharts';
+import PropTable from './PropTable';
 
 const TabMigrant = props => {
 
@@ -25,7 +26,7 @@ const TabMigrant = props => {
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
 
-  const [tabId, setTabId] = React.useState(0);
+  const [tabId, setTabId] = React.useState(1);
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 
@@ -117,8 +118,9 @@ const TabMigrant = props => {
                 <YODDistr migrMgr={appMgr.migrMgr} />
 
                 <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
-                <TableDistr migrMgr={appMgr.migrMgr}/>
+                <TableDistr migrMgr={appMgr.migrMgr} />
                 <PropCharts migrMgr={appMgr.migrMgr} />
+                <PropTable migrMgr={appMgr.migrMgr} />
               </div>
             }
           </Paper>

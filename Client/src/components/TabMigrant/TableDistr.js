@@ -15,9 +15,11 @@ const TableSection = ({ section, isTotal = false, caption = '' }) => {
 
   let rows = [];
   if (caption !== '') {
-    rows = [<TableRow key={-1}>
-      <StyledTableCell value={caption} isTotal={true} colSpan={6} />
-    </TableRow>];
+    rows = [
+      <TableRow key={-1}>
+        <StyledTableCell value={caption} isTotal={true} colSpan={6} />
+      </TableRow>
+    ];
   }
 
   rows = rows.concat(section.map((r, i) => (

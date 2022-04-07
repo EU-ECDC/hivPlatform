@@ -1,4 +1,7 @@
-GetMigrantConfBounds <- function(data, variables) {
+GetMigrantConfBounds <- function(
+  data,
+  variables
+) {
   data <- droplevels(melt(
     data,
     measure.vars = patterns('^ImpSCtoDiag'),

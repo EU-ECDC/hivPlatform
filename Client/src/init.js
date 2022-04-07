@@ -631,7 +631,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(5, 1);
+  appMgr.uiStateMgr.setActivePageId(4, 0);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);

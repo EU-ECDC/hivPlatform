@@ -251,7 +251,11 @@ PredictInf <- function( # nolint
       err = err
     ), silent = TRUE)
 
-    if (IsError(intFit1) || IsError(intFit2) || intFit1$errorCode != 0 || intFit2$errorCode != 0) {
+    if (
+      IsError(intFit1) || IsError(intFit2) ||
+        intFit1$errorCode != 0 || intFit2$errorCode != 0 ||
+        is.na(intFit1$value) || is.na(intFit2$value)
+    ) {
       next
     } else {
       outputCD4VL[UniqueId == uniqueId, ProbPre := intFit2$value / (intFit1$value + intFit2$value)]
