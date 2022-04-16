@@ -16,5 +16,10 @@ DONE:
 15. Check why there are missings in GroupedRegionOfOrigin.
 16. Add three new columns to the outputs of the model, rather than adjusting existing columns
 
-1. Derive the incidence curve as exp(average(log)) over adjusted data set, get average diagnosis rate matrix and compute all HIV model outputs. Use that as the "benchmark" HIV model fit for plots, tables.
+1. Derive the incidence curve as exp(average(log(BSpline)) over adjusted data set, get average diagnosis rate matrix and compute all HIV model outputs. Use that as the "benchmark" HIV model fit for plots, tables.
 2. Research comparison between main fit point estimates and the median of bootstrap
+
+If small data set issue a warning that there are too few cases to estimate confidence bounds.
+Show median as point estimate instead, no bounds.
+Create a new column that is a composite of stratification variables.
+Filter results on length of betas - keep only those that have the length of betas is consistent with the length of the levels of factor. Issue a warning when this happens (results are based on a lower number of imputations).

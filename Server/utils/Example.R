@@ -8,7 +8,8 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/Dummy_case_based.csv')
@@ -61,6 +62,14 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
+hivPlatform::RunAdjustments(
+  data = appMgr$CaseMgr$Data,
+  adjustmentSpecs = adjustmentSpecs,
+  diagYearRange = NULL,
+  notifQuarterRange = NULL,
+  seed = NULL
+)
+
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
@@ -89,11 +98,12 @@ input <- hivPlatform::PrepareMigrantData(data)
 output <- hivPlatform::PredictInf(input, GetMigrantParams())
 
 output <- copy(appMgr$CaseMgr$MigrationResult$Output)
+output <- output[!is.na(ProbPre)]
 output[, Gender := as.integer(Gender)]
 output[, Transmission := as.integer(Transmission)]
 GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Gender', 'Transmission')
+  variables = c('Gender', 'Transmission', 'Age')
 )
 GetMigrantConfBounds(
   data = copy(output),
@@ -279,7 +289,7 @@ setnames(testmi, 'mig', 'Mig')
 testmi[, A := factor(sample.int(10, .N, replace = TRUE))]
 testmi[, A := as.integer(A)]
 testmi[, group := factor(group)]
-GetMigrantConfBounds(data = copy(testmi), variables = c())
+GetMigrantConfBounds(testmi, variables = c())
 GetMigrantConfBounds(testmi, variables = c('group'))
 GetMigrantConfBounds(testmi, variables = c('A', 'group'))
 test <- GetMigrantConfBounds(testmi, variables = c('A'))

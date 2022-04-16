@@ -1,34 +1,25 @@
+Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
+
 library(hivPlatform)
 
 appMgr <- AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$ReadCaseBasedData('D:/VirtualBox_Shared/dummy_miss1.zip')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss1.zip')
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
-appMgr$ApplyAttributesMappingToCaseBasedData()
-appMgr$PreProcessCaseBasedData()
-appMgr$ApplyOriginGrouping(groups = list())
+appMgr$CaseMgr$ApplyAttributesMapping()
+appMgr$CaseMgr$ApplyOriginGrouping()
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- GetAdjustmentSpecs(c(
-  'Multiple Imputation using Chained Equations - MICE'
-))
-appMgr$AdjustCaseBasedData(adjustmentSpecs)
-appMgr$AdjustedCaseBasedData <- appMgr$AdjustmentTask$Result
+adjustmentSpecs <-
+  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-# STEP 5 - Fit the HIV model -----------------------------------------------------------------------
+# STEP 4 - Fit the HIV model -----------------------------------------------------------------------
+caseBasedData <- appMgr$CaseMgr$Data
 
-if (!is.null(appMgr$FinalAdjustedCaseBasedData$Table)) {
-  caseBasedData <- appMgr$FinalAdjustedCaseBasedData$Table
-} else {
-  caseBasedData <- appMgr$PreProcessedCaseBasedData$Table
-}
-
-dataSets <- CombineData(
-  caseBasedData = copy(appMgr$FinalAdjustedCaseBasedData$Table),
-  aggregatedData = copy(appMgr$AggregatedData)
-)
+dataSets <- CombineData(caseBasedData, NULL)
 
 settings <- list(Verbose = FALSE)
 parameters <- list()
