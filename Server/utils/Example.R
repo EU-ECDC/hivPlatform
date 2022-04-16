@@ -8,8 +8,8 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/Dummy_case_based.csv')
@@ -94,8 +94,39 @@ browseURL(fileName)
 appMgr$CaseMgr$RunMigration()
 
 data <- appMgr$CaseMgr$Data
+data[, ':='(
+  Excluded = NULL,
+  KnownPrePost = NULL
+)]
 input <- hivPlatform::PrepareMigrantData(data)
 output <- hivPlatform::PredictInf(input, GetMigrantParams())
+data[
+  input$Data$Input,
+  ':='(
+    Excluded = i.Excluded,
+    KnownPrePost = i.KnownPrePost,
+    DateOfArrival = i.DateOfArrival
+  ),
+  on = .(UniqueId)
+]
+outputStats <- hivPlatform::GetMigrantOutputStats(data)
+outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
+output[
+  data,
+  ':='(
+    Gender = i.Gender,
+    Transmission = i.Transmission,
+    Age = i.Age,
+    GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
+  ),
+  on = .(UniqueId)
+]
+
+output <- appMgr$CaseMgr$MigrationResult$Output
+confBounds <- GetMigrantConfBounds(
+  data = copy(output),
+  variables = c('Gender' = 'G', 'Transmission' = 'T')
+)
 
 output <- copy(appMgr$CaseMgr$MigrationResult$Output)
 output <- output[!is.na(ProbPre)]
@@ -103,7 +134,7 @@ output[, Gender := as.integer(Gender)]
 output[, Transmission := as.integer(Transmission)]
 GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Gender', 'Transmission', 'Age')
+  variables = c('Gender' = 'G', 'Transmission' = 'T')
 )
 GetMigrantConfBounds(
   data = copy(output),

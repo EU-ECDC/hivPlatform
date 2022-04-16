@@ -488,12 +488,14 @@ CaseDataManager <- R6::R6Class( # nolint
               input <- hivPlatform::PrepareMigrantData(data)
               output <- hivPlatform::PredictInf(input, params)
               data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
+
+              # Enrich data with extra dimensions
               data[
                 input$Data$Input,
                 ':='(
+                  DateOfArrival = i.DateOfArrival,
                   Excluded = i.Excluded,
-                  KnownPrePost = i.KnownPrePost,
-                  DateOfArrival = i.DateOfArrival
+                  KnownPrePost = i.KnownPrePost
                 ),
                 on = .(UniqueId)
               ]

@@ -27,14 +27,10 @@ GetAvailableStrata <- function(
 ) {
   colNames <- intersect(names(variables), colnames(dt))
 
-  if (dt[, all(Imputation == 0)]) {
-    data <- dt[Imputation == 0, ..colNames]
-  } else {
-    data <- dt[Imputation != 0, ..colNames]
-  }
+  data <- dt[FinalData == TRUE, ..colNames]
   setorderv(data, colNames)
 
-  ConvertDataTableColumns(data, setNames(rep('string', length(colNames)), colNames))
+  ConvertDataTableColumns(data, setNames(rep('character', length(colNames)), colNames))
   data[is.na(data)] <- 'NA'
 
   totalCount <- nrow(data)
