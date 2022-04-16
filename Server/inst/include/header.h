@@ -5,8 +5,11 @@
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppNumerical)]]
 
+#define NDEBUG true
 #define ARMA_NO_DEBUG true
 #define BOOST_DISABLE_ASSERTS true
+#define EIGEN_NO_DEBUG true
+#define EIGEN_NO_STATIC_ASSERT true
 
 #include <RcppArmadillo.h>
 #include <Rcpp.h>

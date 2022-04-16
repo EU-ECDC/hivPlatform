@@ -284,7 +284,7 @@ compare[abs(Diff) > 1e-3]
 compare[is.na(ProbPre.Test)]
 
 # -------------------------------------------------------------------------------------------------
-testmi <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/MIexample.dta'))
+testmi <- data.table::setDT(haven::read_dta('G:/My Drive/Projects/19. PZH/Migrant/Set 2/MIexample.dta'))
 setnames(testmi, 'mig', 'Mig')
 testmi[, A := factor(sample.int(10, .N, replace = TRUE))]
 testmi[, A := as.integer(A)]
