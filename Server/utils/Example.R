@@ -125,8 +125,16 @@ output[
 output <- appMgr$CaseMgr$MigrationResult$Output
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Gender' = 'G', 'Transmission' = 'T')
+  variables = c('Gender', 'Transmission')
 )
+
+DT <- data.table(grp = rep(c("A", "B", "C", "A", "B"), c(2, 2, 3, 1, 2)), value = 1:10)
+DT <- data.table(grp = c("A", "A", "C", "A", "C"), A = c("1", "2", "3", "1", "3"))
+DT[, Key := .GRP, by = .(grp, A)]
+rleid(DT$grp)
+rleid(DT$grp, prefix = "grp")
+DT[, sum(value), by = .(grp, rleid(grp))]
+DT[, sum(value), by = .(grp)]
 
 output <- copy(appMgr$CaseMgr$MigrationResult$Output)
 output <- output[!is.na(ProbPre)]

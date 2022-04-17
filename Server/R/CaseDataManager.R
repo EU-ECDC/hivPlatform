@@ -558,7 +558,7 @@ CaseDataManager <- R6::R6Class( # nolint
                   InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
                   OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
                   OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns'), # nolint
-                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds[, -1], asMatrix = TRUE)
+                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds, asMatrix = TRUE)
                 )
               )
             },
