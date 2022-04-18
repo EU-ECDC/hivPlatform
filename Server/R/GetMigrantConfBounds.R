@@ -2,21 +2,25 @@ GetMigrantConfBounds <- function(
   data,
   variables
 ) {
+  strataColNames <- intersect(variables, colnames(data))
+  data[, Strata := .GRP, by = strataColNames]
+  allColNames <- union('Strata', strataColNames)
+  combinations <- data[, .(Count = .N), keyby = eval(union(allColNames, 'Imputation'))]
+  combinations <- combinations[, .(Count = mean(Count)), keyby = allColNames]
+  combinations[,
+    Category := paste(.SD, collapse = ', '),
+    by = seq_len(nrow(combinations)),
+    .SDcols = strataColNames
+  ]
+
   data <- melt(
     data,
     measure.vars = patterns('^ImpSCtoDiag'),
     variable.name = 'Imp',
     value.name = 'ImpSCtoDiag'
   )
-
-  # Add stratification variable
-  strataColNames <- intersect(variables, colnames(data))
-  data[, Strata := .GRP, by = strataColNames]
   data[, PreMigrInf := as.integer(ImpSCtoDiag > Mig)]
   dataList <- mitools::imputationList(split(data, by = 'Imp'))
-
-  allColNames <- union('Strata', strataColNames)
-  combinations <- unique(data[, ..allColNames])
 
   if (nrow(combinations) > 1) {
     models <- with(dataList, glm(PreMigrInf ~ factor(Strata), family = binomial()))
@@ -24,7 +28,6 @@ GetMigrantConfBounds <- function(
     models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
   }
 
-  # models <- with(dataList, glm(PreMigrInf ~ Gender:Transmission, family = binomial()))
   betas <- mitools::MIextract(models, fun = coef)
   vars <- mitools::MIextract(models, fun = vcov)
   t <- mitools::MIcombine(betas, vars)
@@ -48,11 +51,17 @@ GetMigrantConfBounds <- function(
   ub <- est + bound
 
   result <- data.table(
-    combinations,
-    Est = InvLogit(est),
-    LB = InvLogit(lb),
-    UB = InvLogit(ub)
-  )[, -1]
+    combinations[, .(Category, Count)],
+    PriorProp = InvLogit(est),
+    PriorPropLB = InvLogit(lb),
+    PriorPropUB = InvLogit(ub)
+  )
+  setorder(result, Category)
+  result[, ':='(
+    PostProp = 1 - PriorProp,
+    PostPropLB = 1 - PriorPropUB,
+    PostPropUB = 1 - PriorPropLB
+  )]
 
   return(result)
 }

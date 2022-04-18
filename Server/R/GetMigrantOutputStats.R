@@ -2,21 +2,7 @@ GetMigrantOutputStats <- function(
   data
 ) {
   # Keep only records with non-missing probability
-  data <- data[FinalData == TRUE & !is.na(ProbPre)]
-
-  data[, ':='(
-    Total = 'Total',
-    AgeGroup = cut(
-      Age,
-      breaks = c(-Inf, 25, 40, 55, Inf),
-      labels = c('< 25', '25 - 39', '40 - 54', '55+'),
-      right = FALSE
-    )
-  )]
-  data[
-    MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
-    MigrantRegionOfOrigin := 'OTHER'
-  ]
+  data <- data[!is.na(ProbPre)]
 
   GetStats <- function(
     dt = NULL,
@@ -51,13 +37,23 @@ GetMigrantOutputStats <- function(
     }))
   }
 
-  GetStatsList <- function(dt) {
+  GetStatsListOld <- function(dt) {
     list(
       Total = GetStats(dt, colName = 'Total'),
       Sex = GetStats(dt, colName = 'Gender'),
       AgeGroup = GetStats(dt, colName = 'AgeGroup'),
       Transmission = GetStats(dt, colName = 'Transmission'),
       RegionOfOrigin = GetStats(dt, colName = 'RegionOfOrigin')
+    )
+  }
+
+  GetStatsList <- function(dt) {
+    list(
+      Total = GetMigrantConfBounds(dt, variables = 'Total'),
+      Sex = GetMigrantConfBounds(dt, variables = 'Gender'),
+      AgeGroup = GetMigrantConfBounds(dt, variables = 'AgeGroup'),
+      Transmission = GetMigrantConfBounds(dt, variables = 'Transmission'),
+      RegionOfOrigin = GetMigrantConfBounds(dt, variables = 'RegionOfOrigin')
     )
   }
 

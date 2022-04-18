@@ -93,15 +93,11 @@ browseURL(fileName)
 
 appMgr$CaseMgr$RunMigration()
 
-data <- appMgr$CaseMgr$Data
-data[, ':='(
-  Excluded = NULL,
-  KnownPrePost = NULL
-)]
+data <- copy(appMgr$CaseMgr$Data)
 input <- hivPlatform::PrepareMigrantData(data)
 output <- hivPlatform::PredictInf(input, GetMigrantParams())
-data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 
+data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 data[
   input$Data$Input,
   ':='(
@@ -111,25 +107,39 @@ data[
   ),
   on = .(UniqueId)
 ]
-outputStats <- hivPlatform::GetMigrantOutputStats(data)
-outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 output[
   data,
   ':='(
-    Gender = i.Gender,
-    Transmission = i.Transmission,
+    Imputation = i.Imputation,
+    MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
+    Gender = as.character(i.Gender),
+    Transmission = as.character(i.Transmission),
     Age = i.Age,
-    GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
+    RegionOfOrigin = as.character(i.RegionOfOrigin)
   ),
   on = .(UniqueId)
 ]
+output[, ':='(
+  Total = 'Total',
+  AgeGroup = as.character(cut(
+    Age,
+    breaks = c(-Inf, 25, 40, 55, Inf),
+    labels = c('< 25', '25 - 39', '40 - 54', '55+'),
+    right = FALSE
+  ))
+)]
+output[
+  MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
+  MigrantRegionOfOrigin := 'OTHER'
+]
+
+outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(outputs))
+outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 
 output <- appMgr$CaseMgr$MigrationResult$Output
-output[, Test := 1]
-variables <- ''
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Test')
+  variables = c('Gender', 'AgeGroup')
 )
 
 DT <- data.table(grp = rep(c("A", "B", "C", "A", "B"), c(2, 2, 3, 1, 2)), value = 1:10)

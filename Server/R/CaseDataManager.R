@@ -489,7 +489,7 @@ CaseDataManager <- R6::R6Class( # nolint
               output <- hivPlatform::PredictInf(input, params)
               data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 
-              # Enrich data with extra dimensions
+              # Enrich data with extra dimensions from the input preparation step
               data[
                 input$Data$Input,
                 ':='(
@@ -499,8 +499,6 @@ CaseDataManager <- R6::R6Class( # nolint
                 ),
                 on = .(UniqueId)
               ]
-              outputStats <- hivPlatform::GetMigrantOutputStats(data)
-              outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
 
               # Enrich outputs with extra dimensions for confidence bounds calculation
               output[
@@ -513,10 +511,22 @@ CaseDataManager <- R6::R6Class( # nolint
                 ),
                 on = .(UniqueId)
               ]
-              confBounds <- hivPlatform::GetMigrantConfBounds(
-                output,
-                variables = strat
-              )
+              output[, ':='(
+                Total = 'Total',
+                AgeGroup = as.character(cut(
+                  Age,
+                  breaks = c(-Inf, 25, 40, 55, Inf),
+                  labels = c('< 25', '25 - 39', '40 - 54', '55+'),
+                  right = FALSE
+                ))
+              )]
+              output[
+                MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
+                MigrantRegionOfOrigin := 'OTHER'
+              ]
+              outputStats <- hivPlatform::GetMigrantOutputStats(output)
+              outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
+              confBounds <- hivPlatform::GetMigrantConfBounds(output, strat)
 
               result <- list(
                 Input = input$Data,
