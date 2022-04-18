@@ -10,17 +10,20 @@ GetMigrantConfBounds <- function(
   )
 
   # Add stratification variable
-  colNames <- intersect(variables, colnames(data))
-
-  data[, Strata := .GRP, by = colNames]
+  strataColNames <- intersect(variables, colnames(data))
+  data[, Strata := .GRP, by = strataColNames]
   data[, PreMigrInf := as.integer(ImpSCtoDiag > Mig)]
-
-  # data <- data[Strata == 2]
-  # unique(data[Strata == 1, .(Gender, Transmission)])
-
   dataList <- mitools::imputationList(split(data, by = 'Imp'))
 
-  models <- with(dataList, glm(PreMigrInf ~ factor(Strata), family = binomial()))
+  allColNames <- union('Strata', strataColNames)
+  combinations <- unique(data[, ..allColNames])
+
+  if (nrow(combinations) > 1) {
+    models <- with(dataList, glm(PreMigrInf ~ factor(Strata), family = binomial()))
+  } else {
+    models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
+  }
+
   # models <- with(dataList, glm(PreMigrInf ~ Gender:Transmission, family = binomial()))
   betas <- mitools::MIextract(models, fun = coef)
   vars <- mitools::MIextract(models, fun = vcov)
@@ -45,7 +48,7 @@ GetMigrantConfBounds <- function(
   ub <- est + bound
 
   result <- data.table(
-    x,
+    combinations,
     Est = InvLogit(est),
     LB = InvLogit(lb),
     UB = InvLogit(ub)

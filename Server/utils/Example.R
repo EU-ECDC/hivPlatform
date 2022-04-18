@@ -100,6 +100,8 @@ data[, ':='(
 )]
 input <- hivPlatform::PrepareMigrantData(data)
 output <- hivPlatform::PredictInf(input, GetMigrantParams())
+data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
+
 data[
   input$Data$Input,
   ':='(
@@ -123,9 +125,11 @@ output[
 ]
 
 output <- appMgr$CaseMgr$MigrationResult$Output
+output[, Test := 1]
+variables <- ''
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Gender', 'Transmission')
+  variables = c('Test')
 )
 
 DT <- data.table(grp = rep(c("A", "B", "C", "A", "B"), c(2, 2, 3, 1, 2)), value = 1:10)
