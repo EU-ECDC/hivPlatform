@@ -24,6 +24,7 @@ Get available strata
 \examples{
 dt <- data.table::data.table(
   Imputation = c(0, 1, 2),
+  FinalData = c(FALSE, TRUE, TRUE),
   Gender = c('F', 'F', 'M'),
   Transmission = c('IDU', 'IDU', 'MSM')
 )
