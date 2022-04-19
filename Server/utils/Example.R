@@ -107,15 +107,18 @@ data[
   ),
   on = .(UniqueId)
 ]
+
 output[
   data,
   ':='(
     Imputation = i.Imputation,
+    DateOfArrival = i.DateOfArrival,
+    DateOfHIVDiagnosis = i.DateOfHIVDiagnosis,
     MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
     Gender = as.character(i.Gender),
     Transmission = as.character(i.Transmission),
     Age = i.Age,
-    RegionOfOrigin = as.character(i.RegionOfOrigin)
+    GroupedRegionOfOrigin = as.character(i.GroupedRegionOfOrigin)
   ),
   on = .(UniqueId)
 ]
@@ -133,46 +136,13 @@ output[
   MigrantRegionOfOrigin := 'OTHER'
 ]
 
-outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(outputs))
-outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
-
-output <- appMgr$CaseMgr$MigrationResult$Output
+outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
+outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  variables = c('Gender', 'AgeGroup')
+  strat = c('GroupedRegionOfOrigin'),
+  region = 'AFRICA'
 )
-
-DT <- data.table(grp = rep(c("A", "B", "C", "A", "B"), c(2, 2, 3, 1, 2)), value = 1:10)
-DT <- data.table(grp = c("A", "A", "C", "A", "C"), A = c("1", "2", "3", "1", "3"))
-DT[, Key := .GRP, by = .(grp, A)]
-rleid(DT$grp)
-rleid(DT$grp, prefix = "grp")
-DT[, sum(value), by = .(grp, rleid(grp))]
-DT[, sum(value), by = .(grp)]
-
-output <- copy(appMgr$CaseMgr$MigrationResult$Output)
-output <- output[!is.na(ProbPre)]
-output[, Gender := as.integer(Gender)]
-output[, Transmission := as.integer(Transmission)]
-GetMigrantConfBounds(
-  data = copy(output),
-  variables = c('Gender' = 'G', 'Transmission' = 'T')
-)
-GetMigrantConfBounds(
-  data = copy(output),
-  variables = c('Gender')
-)
-GetMigrantConfBounds(
-  data = copy(output),
-  variables = c('Transmission')
-)
-GetMigrantConfBounds(
-  data = copy(output[Transmission == 'IDU']),
-  variables = c()
-)
-
-input <- PrepareMigrantData(copy(appMgr$CaseMgr$Data))
-system.time(output <- PredictInf(input))
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(

@@ -37,6 +37,7 @@ CaseDataManager <- R6::R6Class( # nolint
         AdjustedData = NULL,
         AdjustmentTask = NULL,
         AdjustmentResult = NULL,
+        MigrationRegion = 'ALL',
         MigrationPropStrat = c(),
         MigrationTask = NULL,
         MigrationResult = NULL
@@ -478,7 +479,7 @@ CaseDataManager <- R6::R6Class( # nolint
 
         if (nrow(data) > 0) {
           private$Catalogs$MigrationTask <- Task$new(
-            function(data, params, strat, randomSeed) {
+            function(data, params, strat, region, randomSeed) {
               if (!requireNamespace('hivPlatform', quietly = TRUE)) {
                 suppressMessages(pkgload::load_all())
               }
@@ -504,10 +505,14 @@ CaseDataManager <- R6::R6Class( # nolint
               output[
                 data,
                 ':='(
-                  Gender = i.Gender,
-                  Transmission = i.Transmission,
+                  Imputation = i.Imputation,
+                  DateOfArrival = i.DateOfArrival,
+                  DateOfHIVDiagnosis = i.DateOfHIVDiagnosis,
+                  MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
+                  Gender = as.character(i.Gender),
+                  Transmission = as.character(i.Transmission),
                   Age = i.Age,
-                  GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
+                  GroupedRegionOfOrigin = as.character(i.GroupedRegionOfOrigin)
                 ),
                 on = .(UniqueId)
               ]
@@ -524,9 +529,10 @@ CaseDataManager <- R6::R6Class( # nolint
                 MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
                 MigrantRegionOfOrigin := 'OTHER'
               ]
+
+              outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
               outputStats <- hivPlatform::GetMigrantOutputStats(output)
-              outputPlots <- hivPlatform::GetMigrantOutputPlots(data)
-              confBounds <- hivPlatform::GetMigrantConfBounds(output, strat)
+              confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
 
               result <- list(
                 Input = input$Data,
@@ -546,6 +552,7 @@ CaseDataManager <- R6::R6Class( # nolint
               data = data,
               params = params,
               strat = private$Catalogs$MigrationPropStrat,
+              region = private$Catalogs$MigrationRegion,
               randomSeed = .Random.seed
             ),
             session = private$Session,
@@ -567,8 +574,8 @@ CaseDataManager <- R6::R6Class( # nolint
                   ActionMessage = 'Migration task finished',
                   InputStats = ConvertObjToJSON(result$Artifacts$InputStats, dataframe = 'rows'),
                   OutputStats = ConvertObjToJSON(result$Artifacts$OutputStats, dataframe = 'rows'),
-                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns'), # nolint
-                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds, asMatrix = TRUE)
+                  ConfBounds = ConvertObjToJSON(result$Artifacts$ConfBounds, dataframe = 'rows'),
+                  OutputPlots = ConvertObjToJSON(result$Artifacts$OutputPlots, dataframe = 'columns') # nolint
                 )
               )
             },
@@ -626,19 +633,39 @@ CaseDataManager <- R6::R6Class( # nolint
       return(invisible(self))
     },
 
+    SetMigrationRegion = function(region) {
+      private$Catalogs$MigrationRegion <- region
+
+      if (!is.null(private$Catalogs$MigrationResult$Output)) {
+        confBounds <- GetMigrantConfBounds(
+          data = private$Catalogs$MigrationResult$Output,
+          strat = private$Catalogs$MigrationPropStrat,
+          region = private$Catalogs$MigrationRegion
+        )
+        private$SendMessage(
+          'MIGRATION_CONF_BOUNDS_COMPUTED',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ConfBounds = ConvertObjToJSON(confBounds, dataframe = 'rows')
+          )
+        )
+      }
+    },
+
     SetMigrationPropStrat = function(strat) {
       private$Catalogs$MigrationPropStrat <- strat
 
       if (!is.null(private$Catalogs$MigrationResult$Output)) {
         confBounds <- GetMigrantConfBounds(
           data = private$Catalogs$MigrationResult$Output,
-          variables = strat
+          strat = private$Catalogs$MigrationPropStrat,
+          region = private$Catalogs$MigrationRegion
         )
         private$SendMessage(
           'MIGRATION_CONF_BOUNDS_COMPUTED',
           payload = list(
             ActionStatus = 'SUCCESS',
-            ConfBounds = ConvertObjToJSON(confBounds[, -1], asMatrix = TRUE)
+            ConfBounds = ConvertObjToJSON(confBounds, dataframe = 'rows')
           )
         )
       }

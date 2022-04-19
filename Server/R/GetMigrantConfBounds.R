@@ -1,8 +1,16 @@
 GetMigrantConfBounds <- function(
   data,
-  variables
+  strat = c(),
+  region = 'ALL'
 ) {
-  strataColNames <- intersect(variables, colnames(data))
+  if (!(region %in% c('ALL', ''))) {
+    data <- data[MigrantRegionOfOrigin == region]
+  }
+
+  # Keep only records with non-missing probability
+  data <- data[!is.na(ProbPre)]
+
+  strataColNames <- intersect(strat, colnames(data))
   data[, Strata := .GRP, by = strataColNames]
   allColNames <- union('Strata', strataColNames)
   combinations <- data[, .(Count = .N), keyby = eval(union(allColNames, 'Imputation'))]

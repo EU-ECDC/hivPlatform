@@ -119,8 +119,8 @@ const TabMigrant = props => {
 
                 <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
                 <TableDistr migrMgr={appMgr.migrMgr} />
-                <PropCharts migrMgr={appMgr.migrMgr} />
                 <PropTable migrMgr={appMgr.migrMgr} />
+                <PropCharts migrMgr={appMgr.migrMgr} />
               </div>
             }
           </Paper>

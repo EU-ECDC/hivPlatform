@@ -23,12 +23,7 @@ export default class MigrationManager {
 
   tableRegion = 'ALL';
 
-  propTableStrat = {
-    Gender: false,
-    Transmission: false,
-    Age: false,
-    GroupedRegionOfOrigin: false
-  };
+  propTableStrat = [];
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -59,13 +54,18 @@ export default class MigrationManager {
       setYodRegion: action,
       setTableRegion: action,
       setDataCompatibleFlag: action,
-      updatePropTableStratFlag: action,
+      setPropTableStrat: action,
       run: action,
       cancel: action
     });
 
     autorun(
       () => this.rootMgr.inputValueSet('propTableStrat', toJS(this.propTableStrat)),
+      { delay: 1000 }
+    );
+
+    autorun(
+      () => this.rootMgr.inputValueSet('migrRegion', toJS(this.tableRegion)),
       { delay: 1000 }
     );
   };
@@ -145,8 +145,8 @@ export default class MigrationManager {
 
   setDataCompatibleFlag = flag => this.dataCompatibleFlag = flag;
 
-  updatePropTableStratFlag = (stratName, flag) => {
-    this.propTableStrat[stratName] = flag;
+  setPropTableStrat = (strat) => {
+    this.propTableStrat = strat;
   };
 
   run = () => this.rootMgr.btnClicked('runMigrantBtn');

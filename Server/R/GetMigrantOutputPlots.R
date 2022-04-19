@@ -2,7 +2,7 @@ GetMigrantOutputPlots <- function(
   data
 ) {
   # Keep only records with non-missing probability
-  data <- data[FinalData == TRUE & !is.na(ProbPre)]
+  data <- data[!is.na(ProbPre)]
 
   isOriginalData <- data[, all(Imputation == 0)]
 

@@ -311,10 +311,15 @@ Events <- function(
     appMgr$HIVModelMgr$SetMigrConnFlag(input$migrConnFlag)
   })
 
-  observeEvent(input$propTableStrat, {
-    strat <- names(input$propTableStrat)[unlist(input$propTableStrat)]
-    appMgr$CaseMgr$SetMigrationPropStrat(strat)
+  observeEvent(input$migrRegion, {
+    print(input$migrRegion)
+    appMgr$CaseMgr$SetMigrationRegion(input$migrRegion)
   })
+
+  observeEvent(input$propTableStrat, {
+    print(input$propTableStrat)
+    appMgr$CaseMgr$SetMigrationPropStrat(input$propTableStrat)
+  }, ignoreNULL = FALSE)
 
   observeEvent(input$aggrFilters, {
       appMgr$HIVModelMgr$SetAggrFilters(input$aggrFilters)

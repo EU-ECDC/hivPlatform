@@ -36,12 +36,11 @@ const TableSection = ({ section, isTotal = false, caption = '' }) => {
   return (rows);
 };
 
-const TableDistr = (props) => {
-  const { migrMgr } = props;
-
-  const handleTableRegionChange = e => migrMgr.setTableRegion(e.target.value);
+const TableDistr = ({migrMgr}) => {
 
   const tableDistr = migrMgr.tableDistr;
+
+  const handleTableRegionChange = e => migrMgr.setTableRegion(e.target.value);
 
   let regionButtons = null;
   if (!IsNull(migrMgr.yodDistr)) {
@@ -87,7 +86,7 @@ const TableDistr = (props) => {
           <TableSection section={tableDistr.Sex} caption='Sex:' />
           <TableSection section={tableDistr.AgeGroup} caption='Age Group:'/>
           <TableSection section={tableDistr.Transmission} caption='Transmission:'/>
-          <TableSection section={tableDistr.RegionOfOrigin} caption='Region Of Origin:'/>
+          <TableSection section={tableDistr.GroupedRegionOfOrigin} caption='Grouped Region Of Origin:'/>
         </TableBody>
       </Table>
   }
