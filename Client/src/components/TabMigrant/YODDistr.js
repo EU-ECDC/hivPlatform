@@ -55,6 +55,7 @@ const YODDistr = (props) => {
           ]
         }}
       />
+      Last 20 years selected by default.
     </React.Fragment>
   )
 };

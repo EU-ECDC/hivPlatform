@@ -14,10 +14,7 @@ const PropTable = ({ migrMgr }) => {
 
   const propTable = migrMgr.confBounds;
 
-  const handleStratChange = (e, strat) => {
-    console.log(strat);
-    migrMgr.setPropTableStrat(strat);
-  }
+  const handleStratChange = (e, strat) => migrMgr.setPropTableStrat(strat);
 
   let stratButtons = null;
   if (!IsNull(propTable)) {
@@ -75,7 +72,6 @@ const PropTable = ({ migrMgr }) => {
 
   return (
     <React.Fragment>
-      {/* {stratCheckBoxes} */}
       {stratButtons}
       {tableEl}
     </React.Fragment>

@@ -1,7 +1,7 @@
 GetMigrantOutputStats <- function(
   data
 ) {
-  migrantRegions <- data[, unique(MigrantRegionOfOrigin)]
+  migrantRegions <- union('ALL', data[, unique(MigrantRegionOfOrigin)])
   stats <- setNames(lapply(migrantRegions, function(region) {
     list(
       Total = GetMigrantConfBounds(data, strat = 'Total', region),
@@ -11,8 +11,6 @@ GetMigrantOutputStats <- function(
       GroupedRegionOfOrigin = GetMigrantConfBounds(data, strat = 'GroupedRegionOfOrigin', region)
     )
   }), migrantRegions)
-
-  stats[['ALL']] <- GetMigrantConfBounds(data, strat = 'Total', region = 'ALL')
 
   return(list(
     TableDistr = stats

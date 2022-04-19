@@ -15,7 +15,7 @@ const StyledTableCell = ({ isTotal, value, lb, ub, isPerc = false, decimals = 0,
     backgroundColor: '#f9f9f9'
   } : null;
 
-  let isNumber = !isNaN(value);
+  let isNumber = !isNaN(value) && value !== '';
   let printValue = '';
   if (!IsNull(value)) {
     printValue = FormatFunc(value, decimals);

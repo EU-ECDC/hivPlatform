@@ -38,7 +38,7 @@ CaseDataManager <- R6::R6Class( # nolint
         AdjustmentTask = NULL,
         AdjustmentResult = NULL,
         MigrationRegion = 'ALL',
-        MigrationPropStrat = c(),
+        MigrationPropStrat = c('Total'),
         MigrationTask = NULL,
         MigrationResult = NULL
       )
@@ -653,6 +653,9 @@ CaseDataManager <- R6::R6Class( # nolint
     },
 
     SetMigrationPropStrat = function(strat) {
+      if (is.null(strat)) {
+        strat <- 'Total'
+      }
       private$Catalogs$MigrationPropStrat <- strat
 
       if (!is.null(private$Catalogs$MigrationResult$Output)) {

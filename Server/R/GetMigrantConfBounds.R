@@ -28,7 +28,7 @@ GetMigrantConfBounds <- function(
     value.name = 'ImpSCtoDiag'
   )
   data[, PreMigrInf := as.integer(ImpSCtoDiag > Mig)]
-  dataList <- mitools::imputationList(split(data, by = 'Imp'))
+  dataList <- mitools::imputationList(split(data, by = c('Imp')))
 
   if (nrow(combinations) > 1) {
     models <- with(dataList, glm(PreMigrInf ~ factor(Strata), family = binomial()))

@@ -1,5 +1,6 @@
 import React from 'react';
-import { observer } from 'mobx-react';
+import { observer} from 'mobx-react';
+import { toJS } from 'mobx';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';

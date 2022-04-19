@@ -140,7 +140,7 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('GroupedRegionOfOrigin'),
+  strat = c('AgeGroup', 'GroupedRegionOfOrigin'),
   region = 'AFRICA'
 )
 

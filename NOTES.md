@@ -22,3 +22,7 @@ TODO:
 3. If small data set issue a warning that there are too few cases to estimate confidence bounds. Show median as point estimate instead, no bounds.
 4. Create a new column that is a composite of stratification variables.
 5. Filter results on length of betas - keep only those that have the length of betas is consistent with the length of the levels of factor. Issue a warning when this happens (results are based on a lower number of imputations).
+
+
+1. Reformat data to have Imputation count times the sample size. Drop incomplete data (strat), (max 10%). Always print out the percent of sample used.
+2. Test splines for year of arrival

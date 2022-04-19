@@ -312,12 +312,10 @@ Events <- function(
   })
 
   observeEvent(input$migrRegion, {
-    print(input$migrRegion)
     appMgr$CaseMgr$SetMigrationRegion(input$migrRegion)
   })
 
   observeEvent(input$propTableStrat, {
-    print(input$propTableStrat)
     appMgr$CaseMgr$SetMigrationPropStrat(input$propTableStrat)
   }, ignoreNULL = FALSE)
 
