@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
@@ -62,13 +62,6 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-hivPlatform::RunAdjustments(
-  data = appMgr$CaseMgr$Data,
-  adjustmentSpecs = adjustmentSpecs,
-  diagYearRange = NULL,
-  notifQuarterRange = NULL,
-  seed = NULL
-)
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 
@@ -140,7 +133,7 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('AgeGroup', 'GroupedRegionOfOrigin'),
+  strat = c('Transmission'),
   region = 'AFRICA'
 )
 

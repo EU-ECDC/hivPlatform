@@ -11,10 +11,15 @@ GetMigrantConfBounds <- function(
   data <- data[!is.na(ProbPre)]
 
   strataColNames <- intersect(strat, colnames(data))
-  data[, Strata := .GRP, by = strataColNames]
-  allColNames <- union('Strata', strataColNames)
-  combinations <- data[, .(Count = .N), keyby = eval(union(allColNames, 'Imputation'))]
+  data[, StrataId := .GRP, by = strataColNames]
+  allColNames <- union(strataColNames, 'StrataId')
+  combinations <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
   combinations <- combinations[, .(Count = mean(Count)), keyby = allColNames]
+  combinations[
+    data[, .(PriorProp = median(ProbPre)), keyby = StrataId],
+    PriorProp := i.PriorProp,
+    on = 'StrataId'
+  ]
   combinations[,
     Category := paste(.SD, collapse = ', '),
     by = seq_len(nrow(combinations)),
@@ -23,47 +28,78 @@ GetMigrantConfBounds <- function(
 
   data <- melt(
     data,
-    measure.vars = patterns('^ImpSCtoDiag'),
-    variable.name = 'Imp',
-    value.name = 'ImpSCtoDiag'
+    measure.vars = patterns('^SCtoDiag'),
+    variable.name = 'Sample',
+    value.name = 'SCtoDiag'
   )
-  data[, PreMigrInf := as.integer(ImpSCtoDiag > Mig)]
-  dataList <- mitools::imputationList(split(data, by = c('Imp')))
+  data[, PreMigrInf := as.integer(SCtoDiag > Mig)]
+  dataList <- mitools::imputationList(split(data, by = c('Imputation', 'Sample')))
 
   if (nrow(combinations) > 1) {
-    models <- with(dataList, glm(PreMigrInf ~ factor(Strata), family = binomial()))
+    models <- with(dataList, glm(PreMigrInf ~ factor(StrataId), family = binomial()))
+    expLength <- length(unique(data$StrataId))
   } else {
     models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
+    expLength <- 1
   }
 
   betas <- mitools::MIextract(models, fun = coef)
+  betasPass <- sapply(betas, function(beta) { length(beta) == expLength })
+
+  stats <- data.table(
+    TotalCount = length(betas),
+    UsedCount = sum(betasPass)
+  )
+  stats[, UsedRatio := UsedCount / TotalCount]
+
   vars <- mitools::MIextract(models, fun = vcov)
-  t <- mitools::MIcombine(betas, vars)
+  varsPass <- sapply(vars, function(var) { ncol(var) == expLength })
 
-  x <- stats::model.matrix(models[[1]]$formula)
-  x <- unique(x[, names(betas[[1]])])
-
-  if (anyNA(t$coefficients)) {
-    naCoef <- which(is.na(t$coefficients))
-    x <- x[, -naCoef]
-    coefficients <- t$coefficients[-naCoef]
-    variance <- t$variance[-naCoef, -naCoef]
-  } else {
-    coefficients <- t$coefficients
-    variance <- t$variance
+  dataAvailable <- TRUE
+  if (sum(betasPass) != sum(varsPass)) {
+    PrintAlert('Incompatible length of betas and vars', type = 'warning')
+    dataAvailable <- FALSE
+  } else if (stats$UsedRatio < 0.9) {
+    PrintAlert('Stratification too granular', type = 'warning')
+    dataAvailable <- FALSE
   }
 
-  est <- as.vector(x %*% coefficients)
-  bound <- qnorm(0.975) * sqrt(diag(x %*% variance %*% t(x)))
-  lb <- est - bound
-  ub <- est + bound
+  if (dataAvailable) {
+    t <- mitools::MIcombine(betas[betasPass], vars[varsPass])
 
-  result <- data.table(
-    combinations[, .(Category, Count)],
-    PriorProp = InvLogit(est),
-    PriorPropLB = InvLogit(lb),
-    PriorPropUB = InvLogit(ub)
-  )
+    x <- stats::model.matrix(models[[1]]$formula)
+    x <- unique(x[, names(betas[betasPass][[1]])])
+
+    naCoef <- which(is.na(t$coefficients))
+    if (length(naCoef) > 0) {
+      x <- x[, -naCoef]
+      coefficients <- t$coefficients[-naCoef]
+      variance <- t$variance[-naCoef, -naCoef]
+    } else {
+      coefficients <- t$coefficients
+      variance <- t$variance
+    }
+
+    est <- as.vector(x %*% coefficients)
+    bound <- qnorm(0.975) * sqrt(diag(x %*% variance %*% t(x)))
+    lb <- est - bound
+    ub <- est + bound
+
+    result <- data.table(
+      combinations[, .(Category, Count)],
+      PriorProp = InvLogit(est),
+      PriorPropLB = InvLogit(lb),
+      PriorPropUB = InvLogit(ub)
+    )
+  } else {
+    result <- combinations[, .(
+      Category,
+      Count,
+      PriorProp,
+      PriorPropLB = NA_real_,
+      PriorPropUB = NA_real_
+    )]
+  }
   setorder(result, Category)
   result[, ':='(
     PostProp = 1 - PriorProp,
@@ -71,5 +107,8 @@ GetMigrantConfBounds <- function(
     PostPropUB = 1 - PriorPropLB
   )]
 
-  return(result)
+  return(list(
+    Stats = stats,
+    Result = result
+  ))
 }

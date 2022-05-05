@@ -5,7 +5,7 @@ PredictInf <- function( # nolint
 ) {
   outputAIDS <- copy(input$Data$AIDS)
   outputCD4VL <- copy(input$Data$CD4VL)
-  sampleColNames <- paste0('ImpSCtoDiag', seq_len(sampleSize))
+  sampleColNames <- paste0('SCtoDiag', seq_len(sampleSize))
 
   if (is.null(outputAIDS)) {
     outputAIDS <- data.table(

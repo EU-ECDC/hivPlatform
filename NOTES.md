@@ -15,14 +15,12 @@ DONE:
 14. If migrant connection is selected then aggregated data sets override is deselected and inactive, except Dead.
 15. Check why there are missings in GroupedRegionOfOrigin.
 16. Add three new columns to the outputs of the model, rather than adjusting existing columns
+17. Create a new column that is a composite of stratification variables.
 
 TODO:
 1. Derive the incidence curve as exp(average(log(BSpline)) over adjusted data set, get average diagnosis rate matrix and compute all HIV model outputs. Use that as the "benchmark" HIV model fit for plots, tables.
 2. Research comparison between main fit point estimates and the median of bootstrap
 3. If small data set issue a warning that there are too few cases to estimate confidence bounds. Show median as point estimate instead, no bounds.
-4. Create a new column that is a composite of stratification variables.
-5. Filter results on length of betas - keep only those that have the length of betas is consistent with the length of the levels of factor. Issue a warning when this happens (results are based on a lower number of imputations).
-
-
-1. Reformat data to have Imputation count times the sample size. Drop incomplete data (strat), (max 10%). Always print out the percent of sample used.
-2. Test splines for year of arrival
+4. Filter results on length of betas - keep only those that have the length of betas consistent with the length of the levels of factor. Issue a warning when this happens (results are based on a lower number of imputations).
+5. Reformat data to have Imputation count times the sample size. Drop incomplete data (strat), (max 10%). Always print out the percent of sample used.
+6. Test splines for year of arrival
