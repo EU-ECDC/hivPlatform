@@ -11,6 +11,7 @@ GetMigrantConfBounds <- function(
   data <- data[!is.na(ProbPre)]
 
   strataColNames <- intersect(strat, colnames(data))
+  setorderv(data, strataColNames)
   data[, StrataId := .GRP, by = strataColNames]
   allColNames <- union(strataColNames, 'StrataId')
   combinations <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
@@ -21,7 +22,7 @@ GetMigrantConfBounds <- function(
     on = 'StrataId'
   ]
   combinations[,
-    Category := paste(.SD, collapse = ', '),
+    Category := paste(lapply(.SD, as.character), collapse = ', '),
     by = seq_len(nrow(combinations)),
     .SDcols = strataColNames
   ]
@@ -43,32 +44,33 @@ GetMigrantConfBounds <- function(
     expLength <- 1
   }
 
-  betas <- mitools::MIextract(models, fun = coef)
-  betasPass <- sapply(betas, function(beta) { length(beta) == expLength })
+  strataIds <- data[, sort(unique(StrataId))]
+  checkVec <- rep(FALSE, length(strataIds))
+  checkDetailed <- as.data.table(transpose(lapply(models, function(model) {
+    res <- checkVec
+    res[as.integer(model$xlevels[[1]])] <- TRUE
+    return(res)
+  })))
+  setnames(checkDetailed, as.character(strataIds))
+  checkDetailed[,
+    AllPresent := all(.SD),
+    by = .(Idx = seq_len(nrow(checkDetailed))),
+    .SDcols = as.character(strataIds)
+  ]
+  checkAggregated <- transpose(checkDetailed[, lapply(.SD, sum)])
+  setnames(checkAggregated, 'PresentCount')
+  checkAggregated[, TotalCount := length(models)]
+  checkAggregated[, PresentRatio := PresentCount / TotalCount]
+  checkAggregated[, StrataId := colnames(checkDetailed)]
 
-  stats <- data.table(
-    TotalCount = length(betas),
-    UsedCount = sum(betasPass)
-  )
-  stats[, UsedRatio := UsedCount / TotalCount]
+  if (checkAggregated[StrataId == 'AllPresent', PresentRatio > 0.9]) {
+    betas <- mitools::MIextract(models, fun = coef)
+    vars <- mitools::MIextract(models, fun = vcov)
 
-  vars <- mitools::MIextract(models, fun = vcov)
-  varsPass <- sapply(vars, function(var) { ncol(var) == expLength })
+    t <- mitools::MIcombine(betas[checkDetailed$AllPresent], vars[checkDetailed$AllPresent])
 
-  dataAvailable <- TRUE
-  if (sum(betasPass) != sum(varsPass)) {
-    PrintAlert('Incompatible length of betas and vars', type = 'warning')
-    dataAvailable <- FALSE
-  } else if (stats$UsedRatio < 0.9) {
-    PrintAlert('Stratification too granular', type = 'warning')
-    dataAvailable <- FALSE
-  }
-
-  if (dataAvailable) {
-    t <- mitools::MIcombine(betas[betasPass], vars[varsPass])
-
-    x <- stats::model.matrix(models[[1]]$formula)
-    x <- unique(x[, names(betas[betasPass][[1]])])
+    x <- unique(stats::model.matrix(models[[1]]$formula))
+    x <- x[, names(betas[checkDetailed$AllPresent][[1]])]
 
     naCoef <- which(is.na(t$coefficients))
     if (length(naCoef) > 0) {
@@ -92,6 +94,7 @@ GetMigrantConfBounds <- function(
       PriorPropUB = InvLogit(ub)
     )
   } else {
+    PrintAlert('Stratification too granular', type = 'warning')
     result <- combinations[, .(
       Category,
       Count,
@@ -108,7 +111,8 @@ GetMigrantConfBounds <- function(
   )]
 
   return(list(
-    Stats = stats,
+    CheckDetailed = checkDetailed,
+    CheckAggregated = checkAggregated,
     Result = result
   ))
 }

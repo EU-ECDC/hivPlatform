@@ -4,7 +4,7 @@ appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
-appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
@@ -107,22 +107,22 @@ output[
     Imputation = i.Imputation,
     DateOfArrival = i.DateOfArrival,
     DateOfHIVDiagnosis = i.DateOfHIVDiagnosis,
-    MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
-    Gender = as.character(i.Gender),
-    Transmission = as.character(i.Transmission),
+    MigrantRegionOfOrigin = i.MigrantRegionOfOrigin,
+    Gender = i.Gender,
+    Transmission = i.Transmission,
     Age = i.Age,
-    GroupedRegionOfOrigin = as.character(i.GroupedRegionOfOrigin)
+    GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
   ),
   on = .(UniqueId)
 ]
 output[, ':='(
   Total = 'Total',
-  AgeGroup = as.character(cut(
+  AgeGroup = cut(
     Age,
     breaks = c(-Inf, 25, 40, 55, Inf),
     labels = c('< 25', '25 - 39', '40 - 54', '55+'),
     right = FALSE
-  ))
+  )
 )]
 output[
   MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
@@ -133,8 +133,8 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('Transmission'),
-  region = 'AFRICA'
+  strat = c('GroupedRegionOfOrigin'),
+  region = 'ALL'
 )
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
