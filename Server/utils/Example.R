@@ -133,8 +133,8 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('GroupedRegionOfOrigin'),
-  region = 'ALL'
+  strat = c('Transmission'),
+  region = 'AFRICA'
 )
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------

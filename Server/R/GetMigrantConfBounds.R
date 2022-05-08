@@ -15,17 +15,21 @@ GetMigrantConfBounds <- function(
   data[, StrataId := .GRP, by = strataColNames]
   allColNames <- union(strataColNames, 'StrataId')
   combinations <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
-  combinations <- combinations[, .(Count = mean(Count)), keyby = allColNames]
+  combinations <- combinations[, .(AverageCount = mean(Count)), keyby = allColNames]
   combinations[
-    data[, .(PriorProp = median(ProbPre)), keyby = StrataId],
-    PriorProp := i.PriorProp,
+    data[, .(MedianPriorProp = median(ProbPre)), keyby = StrataId],
+    MedianPriorProp := i.MedianPriorProp,
     on = 'StrataId'
   ]
-  combinations[,
-    Category := paste(lapply(.SD, as.character), collapse = ', '),
-    by = seq_len(nrow(combinations)),
-    .SDcols = strataColNames
-  ]
+  if (length(strataColNames) > 0) {
+    combinations[,
+      Category := paste(lapply(.SD, as.character), collapse = ', '),
+      by = seq_len(nrow(combinations)),
+      .SDcols = strataColNames
+    ]
+  } else {
+    combinations[, Category := 'ALL']
+  }
 
   data <- melt(
     data,
@@ -36,41 +40,46 @@ GetMigrantConfBounds <- function(
   data[, PreMigrInf := as.integer(SCtoDiag > Mig)]
   dataList <- mitools::imputationList(split(data, by = c('Imputation', 'Sample')))
 
+  strataIds <- data[, sort(unique(StrataId))]
   if (nrow(combinations) > 1) {
     models <- with(dataList, glm(PreMigrInf ~ factor(StrataId), family = binomial()))
-    expLength <- length(unique(data$StrataId))
+    checkVec <- rep(FALSE, length(strataIds))
+    checkDetailed <- as.data.table(transpose(lapply(models, function(model) {
+      res <- checkVec
+      res[as.integer(model$xlevels[[1]])] <- TRUE
+      return(res)
+    })))
   } else {
     models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
-    expLength <- 1
+    checkDetailed <- data.table(rep(TRUE, length(models)))
   }
-
-  strataIds <- data[, sort(unique(StrataId))]
-  checkVec <- rep(FALSE, length(strataIds))
-  checkDetailed <- as.data.table(transpose(lapply(models, function(model) {
-    res <- checkVec
-    res[as.integer(model$xlevels[[1]])] <- TRUE
-    return(res)
-  })))
   setnames(checkDetailed, as.character(strataIds))
   checkDetailed[,
-    AllPresent := all(.SD),
+    ALL := all(.SD),
     by = .(Idx = seq_len(nrow(checkDetailed))),
     .SDcols = as.character(strataIds)
   ]
+
   checkAggregated <- transpose(checkDetailed[, lapply(.SD, sum)])
   setnames(checkAggregated, 'PresentCount')
   checkAggregated[, TotalCount := length(models)]
   checkAggregated[, PresentRatio := PresentCount / TotalCount]
   checkAggregated[, StrataId := colnames(checkDetailed)]
+  checkAggregated[
+    combinations[, .(StrataId = as.character(StrataId), Category)],
+    Category := i.Category,
+    on = .(StrataId)
+  ]
+  checkAggregated[StrataId == 'ALL', Category := 'ALL']
 
-  if (checkAggregated[StrataId == 'AllPresent', PresentRatio > 0.9]) {
+  if (checkAggregated[StrataId == 'ALL', PresentRatio > 0.9]) {
     betas <- mitools::MIextract(models, fun = coef)
     vars <- mitools::MIextract(models, fun = vcov)
 
-    t <- mitools::MIcombine(betas[checkDetailed$AllPresent], vars[checkDetailed$AllPresent])
+    t <- mitools::MIcombine(betas[checkDetailed$ALL], vars[checkDetailed$ALL])
 
     x <- unique(stats::model.matrix(models[[1]]$formula))
-    x <- x[, names(betas[checkDetailed$AllPresent][[1]])]
+    x <- x[, names(betas[checkDetailed$ALL][[1]])]
 
     naCoef <- which(is.na(t$coefficients))
     if (length(naCoef) > 0) {
@@ -88,22 +97,23 @@ GetMigrantConfBounds <- function(
     ub <- est + bound
 
     result <- data.table(
-      combinations[, .(Category, Count)],
+      combinations[, .(Category, Count = AverageCount)],
       PriorProp = InvLogit(est),
       PriorPropLB = InvLogit(lb),
       PriorPropUB = InvLogit(ub)
     )
+    algorithmUsed <- 'GLM'
   } else {
-    PrintAlert('Stratification too granular', type = 'warning')
+    PrintAlert('Stratification too granular. Median probability reported.', type = 'warning')
     result <- combinations[, .(
       Category,
-      Count,
-      PriorProp,
+      Count = AverageCount,
+      PriorProp = MedianPriorProp,
       PriorPropLB = NA_real_,
       PriorPropUB = NA_real_
     )]
+    algorithmUsed <- 'MEDIAN'
   }
-  setorder(result, Category)
   result[, ':='(
     PostProp = 1 - PriorProp,
     PostPropLB = 1 - PriorPropUB,
@@ -111,8 +121,10 @@ GetMigrantConfBounds <- function(
   )]
 
   return(list(
+    AlgorithmUsed = algorithmUsed,
     CheckDetailed = checkDetailed,
     CheckAggregated = checkAggregated,
+    Combinations = combinations,
     Result = result
   ))
 }
