@@ -17,8 +17,16 @@ GetMigrantConfBounds <- function(
   combinations <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
   combinations <- combinations[, .(AverageCount = mean(Count)), keyby = allColNames]
   combinations[
-    data[, .(MedianPriorProp = median(ProbPre)), keyby = StrataId],
-    MedianPriorProp := i.MedianPriorProp,
+    data[, .(
+      MedianPriorProp = median(ProbPre),
+      MeanPriorProp = mean(ProbPre)
+    ),
+    keyby = StrataId
+    ],
+    ':='(
+      MedianPriorProp = i.MedianPriorProp,
+      MeanPriorProp = i.MeanPriorProp
+    ),
     on = 'StrataId'
   ]
   if (length(strataColNames) > 0) {

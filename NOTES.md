@@ -24,3 +24,11 @@ TODO:
 4. Filter results on length of betas - keep only those that have the length of betas consistent with the length of the levels of factor. Issue a warning when this happens (results are based on a lower number of imputations).
 5. Reformat data to have Imputation count times the sample size. Drop incomplete data (strat), (max 10%). Always print out the percent of sample used.
 6. Test splines for year of arrival
+
+// 2022/05/09
+1. Migrant conf: check in CheckAggregated which strata has PresentRatio < 0.9 and remove them from
+   the data. Compute GLM based on that filtered dataset.
+   Base the probabilities for the removed categories on mean of ProbPre.
+2. HIV modelling combining: thetas can have different length if models got simplified. Allow passing
+   spline as vector to cpp side, rather than having it computed their. Pass average spline, rather
+   than average theta (since we can't have that).

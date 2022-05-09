@@ -133,7 +133,7 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('Transmission'),
+  strat = c('AgeGroup', 'Transmission'),
   region = 'AFRICA'
 )
 
@@ -158,11 +158,40 @@ popCombination <- list(
 )
 appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE),
-  popCombination = popCombination
+  popCombination = list(Case = NULL, Aggr = NULL)
 )
 
 # 1. Detailed HIV Model main fit results (rds)
-names(appMgr$HIVModelMgr$MainFitResult$`0`$Results$MainOutputs)
+names(appMgr$HIVModelMgr$MainFitResult$`1`$Results$MainOutputs)
+names(appMgr$HIVModelMgr$MainFitResult$`1`$Results$Param)
+
+hivModels <- appMgr$HIVModelMgr$MainFitResult
+hivModels[[1]]$Results$Param
+
+betas <- as.data.table(lapply(hivModels, function(model) {
+  model$Results$Param$Beta
+}))
+betas[, Avg := rowMeans(betas)]
+
+thetas <- as.data.table(lapply(hivModels, function(model) {
+  model$Results$Param$Theta
+}))
+thetas[, Avg := rowMeans(thetas)]
+
+lapply(hivModels, function(model) {
+  model$Results$Param$DeltaM
+})
+hivModels[[1]]$Results$Param
+hivModels[[1]]$Results$Info
+
+splines <- as.matrix(as.data.table(lapply(hivModels, GetSplines)))
+splines <- cbind(
+  splines,
+  AvgCurve = rowMeans(splines),
+  AvgParams = GetSplines(hivModels[[1]], thetas$Avg)
+)
+matplot(splines, type = c('l'), pch = 1, col = 1:7)
+legend('topleft', legend = 1:7, pch = 1, col = 1:7)
 
 # 2. Main outputs (txt, rds, stata)
 data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter) {
