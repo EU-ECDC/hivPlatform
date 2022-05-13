@@ -86,9 +86,10 @@ browseURL(fileName)
 
 appMgr$CaseMgr$RunMigration()
 
+params <- GetMigrantParams()
 data <- copy(appMgr$CaseMgr$Data)
 input <- hivPlatform::PrepareMigrantData(data)
-output <- hivPlatform::PredictInf(input, GetMigrantParams())
+output <- hivPlatform::PredictInf(input, params)
 
 data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 data[
@@ -133,8 +134,8 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('AgeGroup', 'Transmission'),
-  region = 'AFRICA'
+  strat = c('Transmission'),
+  region = 'ALL'
 )
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
@@ -258,10 +259,11 @@ appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 # Migration ----------------------------------------------------------------------------------------
 params <- GetMigrantParams()
 
-# Reconciliations
+# Recon data set
 reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
 reconCD4VL <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseCD4VL.dta'))
 
+# Create inputs for testing
 baseAIDS <- reconAIDS[, 1:18]
 isLabelled <- sapply(baseAIDS, haven::is.labelled)
 colNames <- names(isLabelled[isLabelled])
@@ -304,14 +306,10 @@ input <- list(
   )
 )
 
-test <- PredictInf(input, params = GetMigrantParams())
-GetMigrantConfBounds(
-  data = copy(table),
-  variables = c()
-)
+# Create test dataset
+test <- PredictInf(input, params)
 
-data <- copy(test)
-
+# Reconcile
 recon <- rbind(
   unique(reconAIDS[, .(UniqueId = id, ProbPre)]),
   unique(reconCD4VL[, .(UniqueId = id + max(reconAIDS$id), ProbPre)])
@@ -325,6 +323,8 @@ compare <- merge(
   all = TRUE
 )
 compare[, Diff := ProbPre.Recon - ProbPre.Test]
+
+# Show differences
 compare[abs(Diff) > 1e-3]
 compare[is.na(ProbPre.Test)]
 

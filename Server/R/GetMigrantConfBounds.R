@@ -1,7 +1,8 @@
 GetMigrantConfBounds <- function(
   data,
   strat = c(),
-  region = 'ALL'
+  region = 'ALL',
+  minPresentRatio = 0.9
 ) {
   if (!(region %in% c('ALL', ''))) {
     data <- data[MigrantRegionOfOrigin == region]
@@ -14,9 +15,9 @@ GetMigrantConfBounds <- function(
   setorderv(data, strataColNames)
   data[, StrataId := .GRP, by = strataColNames]
   allColNames <- union(strataColNames, 'StrataId')
-  combinations <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
-  combinations <- combinations[, .(AverageCount = mean(Count)), keyby = allColNames]
-  combinations[
+  result <- data[, .(Count = .N), keyby = eval(union('Imputation', allColNames))]
+  result <- result[, .(Count = mean(Count)), keyby = allColNames]
+  result[
     data[, .(
       MedianPriorProp = median(ProbPre),
       MeanPriorProp = mean(ProbPre)
@@ -30,13 +31,13 @@ GetMigrantConfBounds <- function(
     on = 'StrataId'
   ]
   if (length(strataColNames) > 0) {
-    combinations[,
+    result[,
       Category := paste(lapply(.SD, as.character), collapse = ', '),
-      by = seq_len(nrow(combinations)),
+      by = seq_len(nrow(result)),
       .SDcols = strataColNames
     ]
   } else {
-    combinations[, Category := 'ALL']
+    result[, Category := 'ALL']
   }
 
   data <- melt(
@@ -46,48 +47,67 @@ GetMigrantConfBounds <- function(
     value.name = 'SCtoDiag'
   )
   data[, PreMigrInf := as.integer(SCtoDiag > Mig)]
-  dataList <- mitools::imputationList(split(data, by = c('Imputation', 'Sample')))
+  strataIdColNames <- as.character(sort(unique(data$StrataId)))
 
-  strataIds <- data[, sort(unique(StrataId))]
-  if (nrow(combinations) > 1) {
-    models <- with(dataList, glm(PreMigrInf ~ factor(StrataId), family = binomial()))
-    checkVec <- rep(FALSE, length(strataIds))
-    checkDetailed <- as.data.table(transpose(lapply(models, function(model) {
-      res <- checkVec
-      res[as.integer(model$xlevels[[1]])] <- TRUE
-      return(res)
-    })))
-  } else {
-    models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
-    checkDetailed <- data.table(rep(TRUE, length(models)))
-  }
-  setnames(checkDetailed, as.character(strataIds))
+  checkDetailed <- CJ(
+    Imputation = unique(data$Imputation),
+    Sample = unique(data$Sample),
+    StrataId = unique(data$StrataId),
+    Present = FALSE
+  )
+  checkDetailed[
+    unique(data[, .(Imputation, Sample, StrataId)]),
+    Present := TRUE
+  ]
+  checkDetailed <- dcast(checkDetailed, Imputation + Sample ~ StrataId, value.var = 'Present')
   checkDetailed[,
     ALL := all(.SD),
     by = .(Idx = seq_len(nrow(checkDetailed))),
-    .SDcols = as.character(strataIds)
+    .SDcols = strataIdColNames
+  ]
+  checkDetailed[,
+    ModelId := paste(lapply(.SD, as.character), collapse = '.'),
+    by = seq_len(nrow(checkDetailed)),
+    .SDcols = c('Imputation', 'Sample')
   ]
 
-  checkAggregated <- transpose(checkDetailed[, lapply(.SD, sum)])
+  checkAggregated <- transpose(checkDetailed[, lapply(.SD, sum), .SDcols = strataIdColNames])
   setnames(checkAggregated, 'PresentCount')
-  checkAggregated[, TotalCount := length(models)]
+  checkAggregated[, TotalCount := nrow(checkDetailed)]
   checkAggregated[, PresentRatio := PresentCount / TotalCount]
-  checkAggregated[, StrataId := colnames(checkDetailed)]
-  checkAggregated[
-    combinations[, .(StrataId = as.character(StrataId), Category)],
-    Category := i.Category,
+  checkAggregated[, StrataId := as.integer(strataIdColNames)]
+  result[
+    checkAggregated,
+    ':='(
+      PresentCount = i.PresentCount,
+      TotalCount = i.TotalCount,
+      PresentRatio = i.PresentRatio,
+      Algorithm = ifelse(i.PresentRatio >= minPresentRatio, 'GLM', 'MEAN')
+    ),
     on = .(StrataId)
   ]
-  checkAggregated[StrataId == 'ALL', Category := 'ALL']
 
-  if (checkAggregated[StrataId == 'ALL', PresentRatio > 0.9]) {
+  if (any(result$Algorithm == 'GLM')) {
+
+    dataList <- mitools::imputationList(split(
+      data[StrataId %in% result[Algorithm == 'GLM', sort(unique(StrataId))]],
+      by = c('Imputation', 'Sample')
+    ))
+    if (nrow(result[Algorithm == 'GLM']) > 1) {
+      models <- with(dataList, glm(PreMigrInf ~ factor(StrataId), family = binomial()))
+    } else {
+      models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
+    }
+
     betas <- mitools::MIextract(models, fun = coef)
     vars <- mitools::MIextract(models, fun = vcov)
 
-    t <- mitools::MIcombine(betas[checkDetailed$ALL], vars[checkDetailed$ALL])
+    # checkDetailed <- checkDetailed[match(names(betas), checkDetailed$ModelId)]
+
+    t <- mitools::MIcombine(betas, vars)
 
     x <- unique(stats::model.matrix(models[[1]]$formula))
-    x <- x[, names(betas[checkDetailed$ALL][[1]])]
+    x <- x[, names(betas[[1]])]
 
     naCoef <- which(is.na(t$coefficients))
     if (length(naCoef) > 0) {
@@ -104,24 +124,22 @@ GetMigrantConfBounds <- function(
     lb <- est - bound
     ub <- est + bound
 
-    result <- data.table(
-      combinations[, .(Category, Count = AverageCount)],
-      PriorProp = InvLogit(est),
-      PriorPropLB = InvLogit(lb),
-      PriorPropUB = InvLogit(ub)
-    )
-    algorithmUsed <- 'GLM'
-  } else {
-    PrintAlert('Stratification too granular. Median probability reported.', type = 'warning')
-    result <- combinations[, .(
-      Category,
-      Count = AverageCount,
-      PriorProp = MedianPriorProp,
-      PriorPropLB = NA_real_,
-      PriorPropUB = NA_real_
-    )]
-    algorithmUsed <- 'MEDIAN'
+    result[
+      Algorithm == 'GLM',
+      ':='(
+        PriorProp = InvLogit(est),
+        PriorPropLB = InvLogit(lb),
+        PriorPropUB = InvLogit(ub)
+      )
+    ]
   }
+
+  result[Algorithm == 'MEAN', ':='(
+    PriorProp = MeanPriorProp,
+    PriorPropLB = NA_real_,
+    PriorPropUB = NA_real_
+  )]
+
   result[, ':='(
     PostProp = 1 - PriorProp,
     PostPropLB = 1 - PriorPropUB,
@@ -129,10 +147,8 @@ GetMigrantConfBounds <- function(
   )]
 
   return(list(
-    AlgorithmUsed = algorithmUsed,
     CheckDetailed = checkDetailed,
     CheckAggregated = checkAggregated,
-    Combinations = combinations,
     Result = result
   ))
 }

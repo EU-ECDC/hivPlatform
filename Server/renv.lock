@@ -505,10 +505,10 @@
     },
     "globals": {
       "Package": "globals",
-      "Version": "0.14.0",
+      "Version": "0.15.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "eca8023ed5ca6372479ebb9b3207f5ae",
+      "Hash": "ace993e2dad5e64ed46391302b79e94f",
       "Requirements": [
         "codetools"
       ]
@@ -547,9 +547,9 @@
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "HEAD",
-      "RemoteSha": "49a4956c74fa97a56d321d43c71b0fefb9809f1a",
+      "RemoteSha": "3919cc9fe2957c5b45eeaecd4d0b88566997ae4e",
       "RemoteHost": "api.github.com",
-      "Hash": "75a3640b10acab4a66fcdab106f390d0",
+      "Hash": "d25e4472ea349af2501f1c3c3b2c7b29",
       "Requirements": [
         "Rcpp",
         "cli",
@@ -1426,10 +1426,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.30",
+      "Version": "0.31",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e83f48136b041845e50a6658feffb197",
+      "Hash": "a318c6f752b8dcfe9fb74d897418ab2b",
       "Requirements": []
     },
     "xml2": {
