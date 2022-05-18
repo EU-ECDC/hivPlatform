@@ -1,3 +1,4 @@
+#' @export
 PredictInf <- function( # nolint
   input,
   params = GetMigrantParams(),
