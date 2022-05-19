@@ -1,3 +1,18 @@
+#' PredictInf
+#'
+#' Compute probability of infection prior to migration.
+#'
+#' @param input input
+#' @param params params
+#' @param sampleSize sampleSize
+#'
+#' @return data.table
+#'
+#' @examples
+#' \dontrun{
+#' PredictInf(input, params = GetMigrantParams(), sampleSize = 50)
+#' }
+#'
 #' @export
 PredictInf <- function( # nolint
   input,
