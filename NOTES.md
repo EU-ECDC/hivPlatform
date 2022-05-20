@@ -32,3 +32,18 @@ TODO:
 2. HIV modelling combining: thetas can have different length if models got simplified. Allow passing
    spline as vector to cpp side, rather than having it computed their. Pass average spline, rather
    than average theta (since we can't have that).
+
+
+// 2022/05/20
+
+Output charts:
+1. Migrants who arrive infected in chart "HIV infections per year",
+   title "New arrivals of infected migrants"
+2. Chart 2 - time between arrival and infection
+3. Chart 3 - show 2 curves and total, add count of undiagnosed and diagnosed in this chart just like in the Windows version.
+4. Chart 4 - Fix y-axis title ("Proportion")
+
+Colors of curves:
+- green - output of the model
+- blue - migration
+- black - total

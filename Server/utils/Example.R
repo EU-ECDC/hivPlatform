@@ -134,7 +134,7 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
 confBounds <- GetMigrantConfBounds(
   data = copy(output),
-  strat = c('Transmission'),
+  strat = c('Transmission', 'AgeGroup'),
   region = 'ALL'
 )
 
@@ -153,46 +153,70 @@ appMgr$HIVModelMgr$RunMainFit(
   settings = list(Verbose = FALSE)
 )
 
-popCombination <- list(
-  Case = NULL,
-  Aggr = appMgr$AggrMgr$PopulationNames
-)
-appMgr$HIVModelMgr$RunMainFit(
-  settings = list(Verbose = FALSE),
-  popCombination = list(Case = NULL, Aggr = NULL)
-)
+# popCombination <- list(
+#   Case = NULL,
+#   Aggr = appMgr$AggrMgr$PopulationNames
+# )
+# appMgr$HIVModelMgr$RunMainFit(
+#   settings = list(Verbose = FALSE),
+#   popCombination = list(Case = NULL, Aggr = NULL)
+# )
 
-# 1. Detailed HIV Model main fit results (rds)
-names(appMgr$HIVModelMgr$MainFitResult$`1`$Results$MainOutputs)
-names(appMgr$HIVModelMgr$MainFitResult$`1`$Results$Param)
-
+# 1. Detailed HIV Model main fit results
 hivModels <- appMgr$HIVModelMgr$MainFitResult
-hivModels[[1]]$Results$Param
+hivModel <- hivModels[[1]]
+hivModel$Results$MainOutputs
+hivModel$Results$ModelResults
 
+# Average betas
 betas <- as.data.table(lapply(hivModels, function(model) {
   model$Results$Param$Beta
 }))
 betas[, Avg := rowMeans(betas)]
 
-thetas <- as.data.table(lapply(hivModels, function(model) {
-  model$Results$Param$Theta
-}))
-thetas[, Avg := rowMeans(thetas)]
+# Average incidence curve
 
-lapply(hivModels, function(model) {
-  model$Results$Param$DeltaM
-})
-hivModels[[1]]$Results$Param
-hivModels[[1]]$Results$Info
-
-splines <- as.matrix(as.data.table(lapply(hivModels, GetSplines)))
-splines <- cbind(
-  splines,
-  AvgCurve = rowMeans(splines),
-  AvgParams = GetSplines(hivModels[[1]], thetas$Avg)
+numPoints <- 5000
+years <- seq(
+  hivModel$Results$Info$ModelMinYear,
+  hivModel$Results$Info$ModelMaxYear,
+  length.out = numPoints
 )
-matplot(splines, type = c('l'), pch = 1, col = 1:7)
-legend('topleft', legend = 1:7, pch = 1, col = 1:7)
+incidenceCurves <- as.data.table(lapply(
+  hivModels,
+  function(hivModel) {
+    sapply(
+      years,
+      hivModelling:::GetBSpline,
+      theta = hivModel$Results$Param$Theta,
+      kOrder = hivModel$Results$Info$SplineOrder,
+      modelSplineN = hivModel$Results$Info$ModelSplineN,
+      myKnots = hivModel$Results$Info$MyKnots,
+      minYear = hivModel$Results$Info$ModelMinYear,
+      maxYear = hivModel$Results$Info$ModelMaxYear
+    )
+  }
+))
+incidenceCurves[, Avg := rowMeans(.SD)]
+matplot(years, incidenceCurves, type = c('l'), pch = 1, col = 1:6)
+legend('topleft', legend = 1:6, pch = 1, col = 1:6)
+
+# Average model
+avgModel <- hivModelling::FitModel(
+  beta = betas$Avg,
+  theta = rep(0, length(hivModel$Results$Param$Theta)),
+  context = hivModel$Context,
+  data = hivModel$PopData,
+  preCompBSpline = as.matrix(incidenceCurves[, .(years, Avg)])
+)
+avgModelOutputs <- hivModelling::GetModelOutputs(avgModel, hivModel$PopData)
+avgPlots <- hivModelling::CreateOutputPlots(avgModelOutputs)
+
+test <- avgModelOutputs$MainOutputs[, .(Year, N_Inf_M)]
+test[, Avg_N_Inf_M := approx(years, incidenceCurves$Avg, test$Year)$y]
+
+
+
 
 # 2. Main outputs (txt, rds, stata)
 data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter) {
