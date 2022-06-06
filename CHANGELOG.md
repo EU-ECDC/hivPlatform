@@ -1,3 +1,13 @@
+## 2.0.6
+
+###### _June 6 2022_
+
+- Remove pre-existing Weight column in RD with trend
+- Remove NAs when creating summary per notification quarter
+- Rotate X axis label in RD total plots
+- Update dependencies
+
+
 ## 2.0.5
 
 ###### _Februrary 27 2022_
