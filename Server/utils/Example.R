@@ -8,7 +8,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -25,6 +25,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
+appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # nolint end
 
 # library(data.table)
@@ -54,14 +55,15 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <-
-  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
-# adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
-# adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
-# adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 3
+# adjustmentSpecs <-
+#   hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
+data <- copy(appMgr$CaseMgr$PreProcessedData)
+data$Weight
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
-
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
 

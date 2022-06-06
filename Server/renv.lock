@@ -465,10 +465,10 @@
     },
     "future": {
       "Package": "future",
-      "Version": "1.25.0",
+      "Version": "1.26.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "877024e372cf61e41f5d13eafd8d4bac",
+      "Hash": "cd20396d5395828de2e12d60467f6a53",
       "Requirements": [
         "digest",
         "globals",
@@ -541,15 +541,15 @@
     },
     "hivModelling": {
       "Package": "hivModelling",
-      "Version": "0.9.30",
+      "Version": "0.9.31",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "HEAD",
-      "RemoteSha": "3919cc9fe2957c5b45eeaecd4d0b88566997ae4e",
+      "RemoteSha": "ec57594659938823eec46fe83fb62e86d718fd6f",
       "RemoteHost": "api.github.com",
-      "Hash": "d25e4472ea349af2501f1c3c3b2c7b29",
+      "Hash": "65e8f43f6a878d402d235f6021180661",
       "Requirements": [
         "Rcpp",
         "cli",
@@ -845,10 +845,10 @@
     },
     "nloptr": {
       "Package": "nloptr",
-      "Version": "2.0.1",
+      "Version": "2.0.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "158916799afe8d32e07b0b1920ea79a8",
+      "Hash": "277c67a08f358f42b6a77826e4492f79",
       "Requirements": []
     },
     "numDeriv": {
@@ -1120,10 +1120,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.15.4",
+      "Version": "0.15.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c1078316e1d4f70275fc1ea60c0bc431",
+      "Hash": "6a38294e7d12f5d8e656b08c5bd8ae34",
       "Requirements": []
     },
     "rlang": {
