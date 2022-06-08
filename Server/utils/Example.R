@@ -8,7 +8,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -25,7 +25,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
-appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
+# appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # nolint end
 
 # library(data.table)
@@ -55,14 +55,12 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-# adjustmentSpecs <-
-#   hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
-data <- copy(appMgr$CaseMgr$PreProcessedData)
-data$Weight
+adjustmentSpecs <-
+  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 # saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
@@ -92,6 +90,8 @@ params <- GetMigrantParams()
 data <- copy(appMgr$CaseMgr$Data)
 input <- hivPlatform::PrepareMigrantData(data)
 output <- hivPlatform::PredictInf(input, params)
+output.copy <- copy(output)
+output <- copy(output.copy)
 
 data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 data[
@@ -108,8 +108,8 @@ output[
   data,
   ':='(
     Imputation = i.Imputation,
-    DateOfArrival = i.DateOfArrival,
-    DateOfHIVDiagnosis = i.DateOfHIVDiagnosis,
+    YearOfArrival = year(i.DateOfArrival),
+    YearOfHIVDiagnosis = i.YearOfHIVDiagnosis,
     MigrantRegionOfOrigin = i.MigrantRegionOfOrigin,
     Gender = i.Gender,
     Transmission = i.Transmission,
@@ -133,12 +133,25 @@ output[
 ]
 
 outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
-outputStats <- hivPlatform::GetMigrantOutputStats(data = copy(output))
+outputStats <- hivPlatform::GetMigrantOutputStats(output)
 confBounds <- GetMigrantConfBounds(
-  data = copy(output),
+  data = output,
   strat = c('Transmission', 'AgeGroup'),
   region = 'ALL'
 )
+json <- lapply(outputPlots, ConvertObjToJSON, dataframe = 'cols')
+json <- ConvertObjToJSON(outputPlots, dataframe = 'columns')
+writeLines(json, 'json.txt')
+
+
+data <- copy(output)
+data[, Year := factor(year(DateOfArrival))]
+test <- GetMigrantConfBounds(
+  data,
+  strat = c('YearOfHIVDiagnosis'),
+  region = 'ALL'
+)
+
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 aggrDataSelection <- data.table(

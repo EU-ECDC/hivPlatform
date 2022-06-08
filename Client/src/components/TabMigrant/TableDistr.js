@@ -18,7 +18,7 @@ const TableSection = ({ section, isTotal = false, caption = '' }) => {
   if (caption !== '') {
     rows = [
       <TableRow key={-1}>
-        <StyledTableCell value={caption} isTotal={true} colSpan={6} />
+        <StyledTableCell value={caption} isTotal={true} colSpan={7} />
       </TableRow>
     ];
   }
@@ -27,6 +27,7 @@ const TableSection = ({ section, isTotal = false, caption = '' }) => {
     <TableRow key={i}>
       <StyledTableCell value={r.Category} isTotal={isTotal} />
       <StyledTableCell value={r.Count} isTotal={isTotal} />
+      <StyledTableCell value={r.Algorithm} isTotal={isTotal} align='right'/>
       <StyledTableCell value={r.PriorProp} isTotal={isTotal} isPerc={true} />
       <StyledTableCell lb={r.PriorPropLB} ub={r.PriorPropUB} isTotal={isTotal} isPerc={true} />
       <StyledTableCell value={r.PostProp} isTotal={isTotal} isPerc={true} />
@@ -64,7 +65,34 @@ const TableDistr = ({migrMgr}) => {
 
   let tableEl = null;
   if (IsNull(tableDistr)) {
-    tableEl = <div>No table data available</div>
+    tableEl =
+      <Table size='small'>
+        <TableHead>
+          <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
+            <TableCell width='220px' rowSpan={2}>Category</TableCell>
+            <TableCell align='right' rowSpan={2}>Count</TableCell>
+            <TableCell align='right' rowSpan={2}>Algorithm</TableCell>
+            <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected prior to arrival</TableCell>
+            <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected post arrival</TableCell>
+          </TableRow>
+          <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
+            <TableCell align='right'>Proportion</TableCell>
+            <TableCell align='right'>95% CI</TableCell>
+            <TableCell align='right'>Proportion</TableCell>
+            <TableCell align='right'>95% CI</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <StyledTableCell value={'Total'} isTotal={true} />
+            <StyledTableCell value={0} isTotal={true} />
+            <StyledTableCell value={null} isTotal={true} />
+            <StyledTableCell value={null} isTotal={true} />
+            <StyledTableCell value={null} isTotal={true} />
+            <StyledTableCell value={null} isTotal={true} />
+          </TableRow>
+        </TableBody>
+      </Table>
   } else {
     tableEl =
       <Table size='small'>
@@ -72,6 +100,7 @@ const TableDistr = ({migrMgr}) => {
           <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
             <TableCell width='220px' rowSpan={2}>Category</TableCell>
             <TableCell align='right' rowSpan={2}>Count</TableCell>
+            <TableCell align='right' rowSpan={2}>Algorithm</TableCell>
             <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected prior to arrival</TableCell>
             <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected post arrival</TableCell>
           </TableRow>

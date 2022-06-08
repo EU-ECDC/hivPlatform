@@ -109,16 +109,19 @@ const TabMigrant = props => {
 
                 <p>The estimation is performed for adults only.</p>
 
+                <h3>2. Excluded data overview</h3>
                 <MissStat missingness={appMgr.migrMgr.missingness} />
 
-                <h3>2. Description of data used in estimation</h3>
+                <h3>3. Description of data used in estimation</h3>
 
                 <Title>Figure 1. Average number of cases by Year of Arrival and Region For Migration Module</Title>
                 <MigrChart data={appMgr.migrMgr.regionDistr} />
+                <br />
                 <YODDistr migrMgr={appMgr.migrMgr} />
 
-                <h3>3. Estimates of the proportion of the migrants infected prior and post arrival</h3>
+                <h3>4. Estimates of the proportion of the migrants infected prior and post arrival</h3>
                 <TableDistr migrMgr={appMgr.migrMgr} />
+                <br />
                 <PropTable migrMgr={appMgr.migrMgr} />
                 <PropCharts migrMgr={appMgr.migrMgr} />
               </div>

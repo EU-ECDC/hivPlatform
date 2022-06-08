@@ -24,7 +24,15 @@ echarts.use([
   SVGRenderer
 ]);
 
-const PropChart = ({ title, xAxisTitle = 'Year', yAxisTitle = 'Proportion', year, data, min, range }) => {
+const PropChart = ({
+  title,
+  xAxisTitle = 'Year',
+  yAxisTitle = 'Proportion',
+  year,
+  data,
+  min,
+  range
+}) => {
 
   let legendData = [];
   let series = [];

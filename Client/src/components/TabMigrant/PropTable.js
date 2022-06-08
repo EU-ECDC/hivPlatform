@@ -44,6 +44,7 @@ const PropTable = ({ migrMgr }) => {
           <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
             <TableCell width='220px' rowSpan={2}>Category</TableCell>
             <TableCell align='right' rowSpan={2}>Count</TableCell>
+            <TableCell align='right' rowSpan={2}>Algorithm</TableCell>
             <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected prior to arrival</TableCell>
             <TableCell align='right' colSpan={2} sx={{textAlign: 'center'}}>Infected post arrival</TableCell>
           </TableRow>
@@ -60,6 +61,7 @@ const PropTable = ({ migrMgr }) => {
               <TableRow key={i}>
                 <StyledTableCell value={r.Category} isTotal={isTotal} />
                 <StyledTableCell value={r.Count} isTotal={isTotal} />
+                <StyledTableCell value={r.Algorithm} isTotal={isTotal} align='right' />
                 <StyledTableCell value={r.PriorProp} isTotal={isTotal} isPerc={true} />
                 <StyledTableCell lb={r.PriorPropLB} ub={r.PriorPropUB} isTotal={isTotal} isPerc={true} />
                 <StyledTableCell value={r.PostProp} isTotal={isTotal} isPerc={true} />

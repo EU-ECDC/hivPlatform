@@ -42,20 +42,28 @@ const YODDistr = (props) => {
           xAxis: {
             inverse: true,
           },
+          title: {
+            subtext: 'Last 20 years selected by default',
+            subtextStyle: {
+              fontSize: 11
+            }
+          },
           dataZoom: [
             {
               type: 'slider',
               xAxisIndex: 0,
-              bottom: 10,
+              top: 51,
+              height: 25,
               startValue: startValue,
               endValue: endValue,
               handleSize: '80%',
-              showDetail: true
+              showDetail: false,
+              borderColor: 'transparent',
+              fillerColor: 'transparent'
             }
           ]
         }}
       />
-      Last 20 years selected by default.
     </React.Fragment>
   )
 };

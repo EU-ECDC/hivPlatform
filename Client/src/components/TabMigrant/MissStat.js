@@ -21,6 +21,7 @@ const MissStat = (props) => {
       <Table size='small'>
         <TableHead>
           <TableRow hover={false} sx={{ backgroundColor: '#bedfe1' }}>
+            <TableCell align='right'>Priority</TableCell>
             <TableCell align='left' width='700px'>Missing variable</TableCell>
             <TableCell align='right'>Number of excluded cases</TableCell>
           </TableRow>
@@ -29,6 +30,7 @@ const MissStat = (props) => {
           {
             missingness.map((el, i) => (
               <TableRow key={i}>
+                <StyledTableCell value={el.IsTotalRow ? null: i+1} isTotal={el.IsTotalRow} align='right' />
                 <StyledTableCell value={el.Excluded} isTotal={el.IsTotalRow} align='left' />
                 <StyledTableCell value={el.Count} isTotal={el.IsTotalRow} align='right' />
               </TableRow>
@@ -40,7 +42,7 @@ const MissStat = (props) => {
 
   return (
     <React.Fragment>
-      <Title>Table 1. Number of cases excluded</Title>
+      <Title>Table 1. Number of excluded cases</Title>
       {tableEl}
     </React.Fragment>
   )

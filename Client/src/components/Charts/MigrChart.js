@@ -40,7 +40,7 @@ const MigrChart = (props) => {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 70, right: 0, bottom: 40, left: 90 },
+    grid: { top: 80, right: 0, bottom: 0, left: 90 },
     xAxis: {
       type: 'category',
       name: data.titleX,
@@ -86,7 +86,6 @@ const MigrChart = (props) => {
       top: 'top',
       inRange: {
         color: ['#bedfe1', '#69b023']
-        // color: ['blue', 'red']
       },
       padding: 0,
       min: 0,

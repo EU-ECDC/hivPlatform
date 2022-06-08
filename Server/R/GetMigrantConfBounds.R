@@ -2,7 +2,8 @@ GetMigrantConfBounds <- function(
   data,
   strat = c(),
   region = 'ALL',
-  minPresentRatio = 0.9
+  minPresentRatio = 0.9,
+  detailed = FALSE
 ) {
   if (!(region %in% c('ALL', ''))) {
     data <- data[MigrantRegionOfOrigin == region]
@@ -93,7 +94,7 @@ GetMigrantConfBounds <- function(
       data[StrataId %in% result[Algorithm == 'GLM', sort(unique(StrataId))]],
       by = c('Imputation', 'Sample')
     ))
-    if (nrow(result[Algorithm == 'GLM']) > 1) {
+    if (nrow(result[Algorithm == 'GLM']) >= 2) {
       models <- with(dataList, glm(PreMigrInf ~ factor(StrataId), family = binomial()))
     } else {
       models <- with(dataList, glm(PreMigrInf ~ 1, family = binomial()))
@@ -101,8 +102,6 @@ GetMigrantConfBounds <- function(
 
     betas <- mitools::MIextract(models, fun = coef)
     vars <- mitools::MIextract(models, fun = vcov)
-
-    # checkDetailed <- checkDetailed[match(names(betas), checkDetailed$ModelId)]
 
     t <- mitools::MIcombine(betas, vars)
 
@@ -139,16 +138,23 @@ GetMigrantConfBounds <- function(
     PriorPropLB = NA_real_,
     PriorPropUB = NA_real_
   )]
+  result[, PriorPropRange := PriorPropUB - PriorPropLB]
 
   result[, ':='(
+    PriorPropRange = PriorPropUB - PriorPropLB,
     PostProp = 1 - PriorProp,
     PostPropLB = 1 - PriorPropUB,
-    PostPropUB = 1 - PriorPropLB
+    PostPropUB = 1 - PriorPropLB,
+    PostPropRange = PriorPropUB - PriorPropLB
   )]
 
-  return(list(
-    CheckDetailed = checkDetailed,
-    CheckAggregated = checkAggregated,
-    Result = result
-  ))
+  if (detailed) {
+    result <- list(
+      CheckDetailed = checkDetailed,
+      CheckAggregated = checkAggregated,
+      Result = result
+    )
+  }
+
+  return(result)
 }
