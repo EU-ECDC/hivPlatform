@@ -114,7 +114,12 @@ export default class MigrationManager {
   get arrivalPlotData() {
     let res = null;
     if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.ArrivalPlotData)) {
-      res = this.outputPlots.ArrivalPlotData;
+      res = this.outputPlots.ArrivalPlotData.map(
+        el => ({
+          data: el.PlotData.YearOfArrival.map((year, i) => [year, el.PlotData.PostProp[i]]),
+          name: el.GroupedRegionOfOrigin
+        })
+      );
     }
     return res;
   };
@@ -122,7 +127,13 @@ export default class MigrationManager {
   get diagnosisPlotData() {
     let res = null;
     if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.DiagnosisPlotData)) {
-      res = this.outputPlots.DiagnosisPlotData;
+      res = this.outputPlots.DiagnosisPlotData.map(
+        el => ({
+          data: el.PlotData.YearOfHIVDiagnosis.map((year, i) => [year, el.PlotData.PostProp[i]]),
+          name: el.GroupedRegionOfOrigin
+        })
+      );
+
     }
     return res;
   };

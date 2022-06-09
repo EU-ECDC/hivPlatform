@@ -506,8 +506,8 @@ CaseDataManager <- R6::R6Class( # nolint
                 data,
                 ':='(
                   Imputation = i.Imputation,
-                  DateOfArrival = i.DateOfArrival,
-                  DateOfHIVDiagnosis = i.DateOfHIVDiagnosis,
+                  YearOfArrival = year(i.DateOfArrival),
+                  YearOfHIVDiagnosis = i.YearOfHIVDiagnosis,
                   MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
                   Gender = as.character(i.Gender),
                   Transmission = as.character(i.Transmission),
@@ -530,9 +530,10 @@ CaseDataManager <- R6::R6Class( # nolint
                 MigrantRegionOfOrigin := 'OTHER'
               ]
 
-              outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
+              PrintH2('Preparing diagnostic statistics and plots')
               outputStats <- hivPlatform::GetMigrantOutputStats(output)
               confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
+              outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
 
               result <- list(
                 Input = input$Data,
@@ -545,6 +546,8 @@ CaseDataManager <- R6::R6Class( # nolint
                   ConfBounds = confBounds
                 )
               )
+
+              PrintH2('Done')
 
               return(result)
             },

@@ -132,7 +132,7 @@ output[
   MigrantRegionOfOrigin := 'OTHER'
 ]
 
-outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
+outputPlots <- hivPlatform::GetMigrantOutputPlots(data = copy(output))
 outputStats <- hivPlatform::GetMigrantOutputStats(output)
 confBounds <- GetMigrantConfBounds(
   data = output,

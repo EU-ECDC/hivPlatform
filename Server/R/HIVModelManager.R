@@ -321,7 +321,13 @@ HIVModelManager <- R6::R6Class( # nolint
                   keyby = .(Year = year(DateOfArrival))
                 ]
 
-                preMigrDiagY <- caseData[
+                preMigrDiagY1 <- caseData[
+                  Imputation == as.integer(imp) &
+                    MigrClass %chin% 'Infected in the country of origin',
+                  .(Count = sum(Weight)),
+                  keyby = .(Year = year(DateOfArrival))
+                ]
+                preMigrDiagY2 <- caseData[
                   Imputation == as.integer(imp) &
                     MigrClass %chin% 'Infected in the country of origin',
                   .(Count = sum(Weight)),
@@ -330,15 +336,18 @@ HIVModelManager <- R6::R6Class( # nolint
 
                 model[preMigrArrY, DiagPriorArrival := i.Count, on = .(Year)]
                 model[is.na(DiagPriorArrival), DiagPriorArrival := 0]
-                model[preMigrDiagY, InfCountryOfOrigin := i.Count, on = .(Year)]
-                model[is.na(InfCountryOfOrigin), InfCountryOfOrigin := 0]
-                model[, NewMigrantDiagnoses := DiagPriorArrival + InfCountryOfOrigin]
+                model[preMigrDiagY1, InfCountryOfOriginPerArrYear := i.Count, on = .(Year)]
+                model[is.na(InfCountryOfOriginPerArrYear), InfCountryOfOriginPerArrYear := 0]
+                model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
+                model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
+                model[, NewMigrantDiagnosesPerArrYear := DiagPriorArrival + InfCountryOfOriginPerArrYear]
+                model[, NewMigrantDiagnosesPerDiagYear := DiagPriorArrival + InfCountryOfOriginPerDiagYear]
                 model[, ':='(
                   CumInfectionsInclMigr =
-                    cumsum(N_Inf_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D) -
+                    cumsum(N_Inf_M) + cumsum(NewMigrantDiagnosesPerArrYear) - cumsum(N_Dead_D) -
                       cumsum(DeadsUndiagnosed),
                   CumDiagnosedCasesInclMigr =
-                    cumsum(N_HIV_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D)
+                    cumsum(N_HIV_M) + cumsum(NewMigrantDiagnosesPerDiagYear) - cumsum(N_Dead_D)
                 )]
                 model[, UndiagnosedFrac := 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr]
               }

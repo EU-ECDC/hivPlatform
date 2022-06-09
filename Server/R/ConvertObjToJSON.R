@@ -1,4 +1,8 @@
-ConvertObjToJSON <- function(obj, dataframe = 'rows', asMatrix = FALSE) {
+ConvertObjToJSON <- function(
+  obj,
+  dataframe = 'rows',
+  asMatrix = FALSE
+) {
   if (!is.null(obj)) {
     if (asMatrix && is.data.frame(obj)) {
       obj <- list(

@@ -2,15 +2,20 @@ GetMigrantConfBounds <- function(
   data,
   strat = c(),
   region = 'ALL',
+  regionColumn = 'MigrantRegionOfOrigin',
   minPresentRatio = 0.9,
   detailed = FALSE
 ) {
   if (!(region %in% c('ALL', ''))) {
-    data <- data[MigrantRegionOfOrigin == region]
+    data <- data[get(regionColumn) == region]
   }
 
   # Keep only records with non-missing probability
   data <- data[!is.na(ProbPre)]
+
+  if (nrow(data) == 0) {
+    return(NULL)
+  }
 
   strataColNames <- intersect(strat, colnames(data))
   setorderv(data, strataColNames)

@@ -23,9 +23,7 @@ echarts.use([
   SVGRenderer
 ]);
 
-const HIVChart = (props) => {
-
-  const { title, year, data, model, min, range } = props;
+const HIVChart = ({ title, yAxisName = 'Count', year, data, dataNotUsed = null, model, min, range }) => {
 
   let legendData = [];
   let series = [];
@@ -86,39 +84,71 @@ const HIVChart = (props) => {
       name: 'Model',
       type: 'line',
       smooth: false,
-      color: '#69b023',
+      symbol: 'none',
+      symbolSize: 4,
+      color: 'silver',
+      lineStyle: {
+        type: 'dotted',
+      },
       data: model,
-      emphasis: {
-        scale: false,
-        focus: 'none',
-        lineStyle: {
-          width: 2,
-          color: '#69b023',
-        }
-      }
+      // emphasis: {
+      //   scale: false,
+      //   focus: 'none',
+      //   lineStyle: {
+      //     width: 2,
+      //     color: '#69b023',
+      //   }
+      // }
     });
   }
 
   if (!IsNull(data)) {
     series.push({
-      name: 'Data',
+      name: 'Data used',
       type: 'line',
       data: data,
       lineStyle: {
-        type: 'dashed',
+        type: 'solid',
       },
-      emphasis: {
-        scale: false,
-        focus: 'none',
-        lineStyle: {
-          width: 2,
-          color: '#000',
-        }
-      },
+      symbol: 'none',
+      symbolSize: 4,
+      // emphasis: {
+      //   scale: false,
+      //   focus: 'none',
+      //   lineStyle: {
+      //     width: 2,
+      //     color: '#000',
+      //   }
+      // },
       smooth: false,
-      color: '#777',
+      color: '#69b023',
     });
-    legendData.push({ name: 'Data' });
+    legendData.push({ name: 'Data used' });
+  }
+
+
+  if (!IsNull(data)) {
+    series.push({
+      name: 'Data NOT used',
+      type: 'line',
+      data: data,
+      lineStyle: {
+        type: 'dotted',
+      },
+      symbol: 'none',
+      symbolSize: 4,
+      // emphasis: {
+      //   scale: false,
+      //   focus: 'none',
+      //   lineStyle: {
+      //     width: 2,
+      //     color: '#000',
+      //   }
+      // },
+      smooth: false,
+      color: '#69b023',
+    });
+    legendData.push({ name: 'Data NOT used' });
   }
 
   if (!IsNull(model)) {
@@ -153,7 +183,7 @@ const HIVChart = (props) => {
     },
     yAxis: {
       type: 'value',
-      name: 'Count',
+      name: yAxisName,
       nameLocation: 'center',
       nameGap: 65
     },

@@ -11,7 +11,6 @@ import {
   GridComponent,
   ToolboxComponent,
   TooltipComponent,
-  TitleComponent,
   LegendPlainComponent,
 } from 'echarts/components';
 import {
@@ -24,7 +23,6 @@ echarts.use([
   GridComponent,
   ToolboxComponent,
   TooltipComponent,
-  TitleComponent,
   LegendPlainComponent,
   LineChart,
   CustomChart,
@@ -40,6 +38,7 @@ const PropChart2 = ({
 
   const chartRef = React.useRef(null);
 
+  // https://stackoverflow.com/questions/61724715/echarts-plot-the-variance-of-signals
   const CalcContourCoords = (seriesData, ctx) => {
     console.log(seriesData);
     const pixelCoords = []
@@ -123,37 +122,25 @@ const PropChart2 = ({
 
   let legendData = [];
   let series = [];
-  let xAxis = [];
+  let selected = {};
 
   const AddSeries = s => {
     if (!IsNull(s)) {
-      xAxis.push({
-        type: 'category',
-        nameLocation: 'center',
-        data: s.year,
-        name: xAxisTitle,
-        nameTextStyle: {
-          padding: [10, 0, 0, 0],
-        },
-        axisTick: {
-          alignWithLabel: true
-        },
-        boundaryGap: false,
-        show: xAxis.length === 0
-      });
-
       if (!IsNull(s.data)) {
         series.push({
           name: s.name,
           type: 'line',
           smooth: false,
-          color: s.color,
+          symbol: 'circle',
+          symbolSize: 4,
+          // color: s.color,
           data: s.data,
-          emphasis: { scale: false, focus: 'none', lineStyle: { width: 2, color: s.color } },
-          xAxisIndex: xAxis.length - 1,
-          yAxisIndex: 0
+          // emphasis: { scale: false, focus: 'none', lineStyle: { width: 2, color: s.color } },
         });
-        legendData.push({ name: s.name });
+        legendData.push({
+          name: s.name
+        });
+        selected[s.name] = series.length === 1
       }
 
       // if (!IsNull(s.min) && !IsNull(s.max)) {
@@ -182,11 +169,22 @@ const PropChart2 = ({
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 20, bottom: 40, left: 65 },
+    grid: { top: 40, right: 240, bottom: 40, left: 65 },
     title: {
       text: title
     },
-    xAxis: xAxis,
+    xAxis: {
+      type: 'category',
+      nameLocation: 'center',
+      name: xAxisTitle,
+      nameTextStyle: {
+        padding: [10, 0, 0, 0],
+      },
+      axisTick: {
+        alignWithLabel: true
+      },
+      boundaryGap: false
+    },
     yAxis: {
       type: 'value',
       name: yAxisTitle,
@@ -202,7 +200,7 @@ const PropChart2 = ({
       formatter: params =>
         `
           Year: ${params[0].axisValue}<br/ >
-          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value, 0)}`).join('<br />')}
+          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[1], 0)}`).join('<br />')}
         `
     },
     toolbox: {
@@ -218,7 +216,15 @@ const PropChart2 = ({
       }
     },
     legend: {
-      data: legendData
+      data: legendData,
+      orient: 'vertical',
+      right: 0,
+      top: 'center',
+      selector: true,
+      selected: selected,
+      textStyle: {
+        fontSize: 11
+      }
     }
   };
 

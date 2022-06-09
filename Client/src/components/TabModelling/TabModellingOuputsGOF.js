@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import HIVChart from '../Charts/HIVChart';
+import HIVChart2 from '../Charts/HIVChart2';
 import IsNull from '../../utilities/IsNull';
 import SmallTable from './SmallTable';
 
@@ -27,6 +28,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_HIV_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_HIV_Obs_M}
           min={appMgr.modelMgr.plotData.N_HIV_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_HIV_Obs_M_Range}
@@ -45,6 +47,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_CD4_1_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_CD4_1_Obs_M}
           min={appMgr.modelMgr.plotData.N_CD4_1_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_CD4_1_Obs_M_Range}
@@ -63,6 +66,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_CD4_2_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_CD4_2_Obs_M}
           min={appMgr.modelMgr.plotData.N_CD4_2_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_CD4_2_Obs_M_Range}
@@ -81,6 +85,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_CD4_3_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_CD4_3_Obs_M}
           min={appMgr.modelMgr.plotData.N_CD4_3_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_CD4_3_Obs_M_Range}
@@ -99,6 +104,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_CD4_4_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_CD4_4_Obs_M}
           min={appMgr.modelMgr.plotData.N_CD4_4_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_CD4_4_Obs_M_Range}
@@ -117,6 +123,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_HIVAIDS_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M}
           min={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_LB}
           range={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_Range}
@@ -135,6 +142,7 @@ const TabModellingOutputsGOF = props => {
         <HIVChart
           year={appMgr.modelMgr.plotData.Year}
           data={appMgr.modelMgr.plotData.N_AIDS_D}
+          dataNotUsed={null}
           model={appMgr.modelMgr.plotData.N_AIDS_M}
           min={appMgr.modelMgr.plotData.N_AIDS_M_LB}
           range={appMgr.modelMgr.plotData.N_AIDS_M_Range}

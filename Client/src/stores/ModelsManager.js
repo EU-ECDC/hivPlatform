@@ -290,7 +290,7 @@ export default class ModelsManager {
   };
 
   get outputTable3Data() {
-    return (this.getTableData(['Year', 'N_Alive', 'N_Alive_LB', 'N_Alive_UB']));
+    return (this.getTableData(['Year', 'N_Alive', 'N_Alive_Diag_M', 'N_Und']));
   };
 
   get outputTable4Data() {

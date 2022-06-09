@@ -47,3 +47,27 @@ Colors of curves:
 - green - output of the model
 - blue - migration
 - black - total
+
+// 2022/06/09
+1. Chart A.
+
+    N_Inf_M: New incident infections
+    NewMigrantDiagnosesPerArrYear: New arrivals of infected migrants
+    Total: N_Inf_M + NewMigrantDiagnosesPerArrYear
+
+    Add mapping from model outputs to chart labels
+
+2. Chart B. No changes
+
+3. Chart C.
+
+    Diagnosed from model: N_Alive_Diag_M
+    Diagnosed migrants: CumDiagnosedCasesInclMigr
+    Undiagnosed from model: N_Und
+    Undiagnosed migrants: CumInfectionsInclMigr - CumDiagnosedCasesInclMigr
+    Alive: sum of all the above
+
+4. Chart D.
+
+    if migrant module: UndiagnosedFrac
+    else N_Und_Alive_p
