@@ -2,6 +2,7 @@
 **/build
 **/analyze
 **/.yarn/cache
+**/.yarn/plugins
 **/.yarn/unplugged
 **/.yarn/install-state.gz
 yarn-error.log

@@ -89,10 +89,10 @@
     },
     "RcppArmadillo": {
       "Package": "RcppArmadillo",
-      "Version": "0.11.1.1.0",
+      "Version": "0.11.2.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "631929e53829901562986c504f86104b",
+      "Hash": "1d3c02a90401734e893954c7f8f92f3e",
       "Requirements": [
         "Rcpp"
       ]
@@ -106,17 +106,6 @@
       "Requirements": [
         "Matrix",
         "Rcpp"
-      ]
-    },
-    "RcppNumerical": {
-      "Package": "RcppNumerical",
-      "Version": "0.4-0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "750f0527a0edaf99c29cf1e778b27a6f",
-      "Requirements": [
-        "Rcpp",
-        "RcppEigen"
       ]
     },
     "SparseM": {
@@ -292,10 +281,10 @@
     },
     "conquer": {
       "Package": "conquer",
-      "Version": "1.0.2",
+      "Version": "1.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a31720f692920e635ecef0481d478247",
+      "Hash": "41b877c7b44abe843d8e51b162a4f919",
       "Requirements": [
         "Matrix",
         "Rcpp",
@@ -898,10 +887,10 @@
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.31.1",
+      "Version": "1.32.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "115faaa1a50897c3e2339d1cb7d3d493",
+      "Hash": "022489ebce2ef2438db4583fae118240",
       "Requirements": []
     },
     "pillar": {
@@ -975,10 +964,10 @@
     },
     "processx": {
       "Package": "processx",
-      "Version": "3.5.3",
+      "Version": "3.6.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8bbae1a548d0d3fdf6647bdd9d35bf6d",
+      "Hash": "4acae60adac4791e8c8833d8494f270d",
       "Requirements": [
         "R6",
         "ps"
