@@ -5,7 +5,7 @@ appMgr <- hivPlatform::AppManager$new()
 
 # nolint start
 # appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
-appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
+# appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
@@ -16,10 +16,11 @@ appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
-appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
+# appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
 # appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
 # appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # nolint end
 
 
@@ -41,12 +42,21 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
-adjustmentSpecs$`Reporting Delays`$Parameters$startYear$value <- 2015
-adjustmentSpecs$`Reporting Delays`$Parameters$endYear$value <- 2020
-adjustmentSpecs$`Reporting Delays`$Parameters$endQrt$value <- 2
+# adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+adjName <- 'Reporting Delays with trend'
+adjustmentSpecs <- GetAdjustmentSpecs(adjName)
+adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1980
+adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2022
+adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 1
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+
+appMgr$CaseMgr$AdjustmentResult
+
+q2 <- appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts$RdDistribution
+q1 <- appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts$RdDistribution
+
+data <- copy(appMgr$CaseMgr$PreProcessedData)
+
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
