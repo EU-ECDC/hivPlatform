@@ -5,6 +5,8 @@ appMgr <- hivPlatform::AppManager$new()
 
 # nolint start
 # appMgr$CaseMgr$ReadData(filePath = hivPlatform::GetSystemFile('testData', 'dummy_miss1.zip'))
+# appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/dummy2019Manual.csv')
+# appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
@@ -26,6 +28,8 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # nolint end
 
 # library(data.table)
@@ -61,9 +65,21 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
+
+# adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+adjName <- 'Reporting Delays with trend'
+adjustmentSpecs <- GetAdjustmentSpecs(adjName)
+adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1980
+adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2022
+adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 1
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-# saveRDS(appMgr$CaseMgr$Data, 'D:/VirtualBox_Shared/BE_adjusted.rds') # nolint
+appMgr$CaseMgr$AdjustmentResult
+
+q2 <- appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts$RdDistribution
+q1 <- appMgr$CaseMgr$AdjustmentResult[[1]]$Artifacts$RdDistribution
+
+data <- copy(appMgr$CaseMgr$PreProcessedData)
 
 # STEP 4 - Create adjusted case-based data report --------------------------------------------------
 appMgr$CreateReport(
