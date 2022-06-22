@@ -1,7 +1,7 @@
 pkgName <- 'hivPlatform'
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgVersion <- pkgDescr$Version
-rVersion <- '4.1'
+rVersion <- '4.2'
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s', pkgVersion))
 repoCRAN <- 'https://cloud.r-project.org'
