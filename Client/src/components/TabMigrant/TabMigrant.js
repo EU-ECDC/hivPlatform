@@ -26,7 +26,7 @@ const TabMigrant = props => {
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4);
 
-  const [tabId, setTabId] = React.useState(0);
+  const [tabId, setTabId] = React.useState(1);
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
 

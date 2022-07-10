@@ -23,7 +23,7 @@ echarts.use([
   SVGRenderer
 ]);
 
-const HIVChart = ({
+const HIVChart2 = ({
   title,
   xAxisTitle = 'Year',
   yAxisName = 'Count',
@@ -38,11 +38,11 @@ const HIVChart = ({
       if (!IsNull(s.data)) {
         series.push({
           name: s.name,
+          data: s.data,
           type: 'line',
           smooth: false,
           symbol: 'circle',
-          symbolSize: 4,
-          data: s.data,
+          symbolSize: 4
         });
         legendData.push({
           name: s.name
@@ -116,4 +116,4 @@ const HIVChart = ({
   );
 };
 
-export default observer(HIVChart);
+export default observer(HIVChart2);

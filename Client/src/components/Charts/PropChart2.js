@@ -43,38 +43,39 @@ const PropChart2 = ({
     console.log(seriesData);
     const pixelCoords = []
 
-    for (let i = 0; i < seriesData[0].length; i++) {
+    for (let i = 0; i < seriesData.length; i++) {
       pixelCoords.push([
         ctx.convertToPixel({ xAxisIndex: 0 }, i),
-        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[1][i])
+        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][2])
       ]);
     }
 
-    for (let i = seriesData[0].length - 1; i >= 0; i--) {
+    for (let i = seriesData.length - 1; i >= 0; i--) {
       pixelCoords.push([
         ctx.convertToPixel({ xAxisIndex: 0 }, i),
-        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[0][i])
+        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][1])
       ]);
 
       if (i == 0) {
         pixelCoords.push([
           ctx.convertToPixel({ xAxisIndex: 0 }, i),
-          ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[1][i])
+          ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][2])
         ]);
       }
     }
+    console.log(pixelCoords);
 
     var linePath = new ClipperLib.Path();
 
     var delta = 10;
     var scale = 1;
 
-    for (var i = 0; i < pixelCoords.length; i++) {
-      var point = new ClipperLib.IntPoint(...pixelCoords[i]);
+    for (let i = 0; i < pixelCoords.length; i++) {
+      let point = new ClipperLib.IntPoint(...pixelCoords[i]);
       linePath.push(point);
     }
 
-    var co = new ClipperLib.ClipperOffset(1.0, 0.25);
+    let co = new ClipperLib.ClipperOffset(1.0, 0.25);
     co.AddPath(linePath, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
     co.Execute(linePath, delta * scale);
 
@@ -83,12 +84,12 @@ const PropChart2 = ({
 
   // Render visual by calculated coords
   const RenderItem = (params, api) => {
-    console.log('here');
-    const myChart = chartRef.current.getEchartsInstance();
-
-    // Prevent multiple call
-    if (params.context.rendered) return;
+    if (params.context.rendered) {
+      return;
+    }
     params.context.rendered = true;
+
+    const myChart = chartRef.current.getEchartsInstance();
 
     // Get stored in series data for band
     const series = myChart.getModel().getSeriesByName(params.seriesName)[0];
@@ -109,9 +110,7 @@ const PropChart2 = ({
         })
       },
       style: {
-        fill: api.style({
-          fill: series.option.itemStyle.color
-        })
+        fill: api.visual('color')
       }
     };
   }
@@ -126,16 +125,14 @@ const PropChart2 = ({
 
   const AddSeries = s => {
     if (!IsNull(s)) {
-      if (!IsNull(s.data)) {
+      if (!IsNull(s.value)) {
         series.push({
           name: s.name,
+          data: s.value,
           type: 'line',
           smooth: false,
           symbol: 'circle',
           symbolSize: 4,
-          // color: s.color,
-          data: s.data,
-          // emphasis: { scale: false, focus: 'none', lineStyle: { width: 2, color: s.color } },
         });
         legendData.push({
           name: s.name
@@ -143,23 +140,22 @@ const PropChart2 = ({
         selected[s.name] = series.length === 1
       }
 
-      // if (!IsNull(s.min) && !IsNull(s.max)) {
-      //   console.log('here');
-      //   series.push({
-      //     name: `${s.name} - Confidence bounds`,
-      //     type: 'custom',
-      //     data: [s.min, s.max],
-      //     renderItem: RenderItem,
-      //     // symbol: 'none',
-      //     // silent: true,
-      //     // color: s.color,
-      //     // lineStyle: { width: 0 },
-      //     // itemStyle: { color: s.color },
-      //     // emphasis: { areaStyle: { color: s.color }, lineStyle: { width: 0 } },
-      //     xAxisIndex: xAxis.length - 1,
-      //     yAxisIndex: 0
-      //   });
-      // }
+      if (!IsNull(s.bounds)) {
+        series.push({
+          name: `${s.name} - Confidence bounds`,
+          type: 'custom',
+          data: s.bounds,
+          renderItem: RenderItem,
+          // symbol: 'none',
+          // silent: true,
+          // color: s.color,
+          // lineStyle: { width: 0 },
+          // itemStyle: { color: s.color },
+          // emphasis: { areaStyle: { color: s.color }, lineStyle: { width: 0 } },
+          // xAxisIndex: xAxis.length - 1,
+          // yAxisIndex: 0
+        });
+      }
     }
   }
 

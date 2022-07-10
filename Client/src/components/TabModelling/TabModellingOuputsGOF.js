@@ -25,13 +25,27 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData ={appMgr.modelMgr.gofTable1Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_HIV_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_HIV_Obs_M}
-          min={appMgr.modelMgr.plotData.N_HIV_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_HIV_Obs_M_Range}
+        <HIVChart2
+          data={[
+            {
+              name: 'Data used',
+              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_HIV_D[i]
+              ])
+            },
+            {
+              data: [],
+              name: 'Data NOT used'
+            },
+            {
+              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_HIV_Obs_M[i]
+              ]),
+              name: 'Model'
+            }
+          ]}
         />
       </Grid>
 

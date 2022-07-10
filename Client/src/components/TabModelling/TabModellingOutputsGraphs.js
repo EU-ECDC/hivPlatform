@@ -27,18 +27,18 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <HIVChart2
           data={[
             {
+              name: 'HIV Diagnoses',
               data: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_Inf_M[i]
-              ]),
-              name: 'HIV Diagnoses'
+              ])
             },
             {
+              name: 'New arrivals of infected migrants',
               data: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.NewMigrantDiagnoses[i]
-              ]),
-              name: 'New arrivals of infected migrants'
+              ])
             }
           ]}
         />

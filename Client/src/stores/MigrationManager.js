@@ -116,7 +116,12 @@ export default class MigrationManager {
     if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.ArrivalPlotData)) {
       res = this.outputPlots.ArrivalPlotData.map(
         el => ({
-          data: el.PlotData.YearOfArrival.map((year, i) => [year, el.PlotData.PostProp[i]]),
+          value: el.PlotData.YearOfArrival.map((year, i) => [year, el.PlotData.PostProp[i]]),
+          bounds: el.PlotData.YearOfArrival.map((year, i) => [
+            year,
+            el.PlotData.PostPropLB[i],
+            el.PlotData.PostPropUB[i]
+          ]),
           name: el.GroupedRegionOfOrigin
         })
       );
@@ -129,7 +134,7 @@ export default class MigrationManager {
     if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.DiagnosisPlotData)) {
       res = this.outputPlots.DiagnosisPlotData.map(
         el => ({
-          data: el.PlotData.YearOfHIVDiagnosis.map((year, i) => [year, el.PlotData.PostProp[i]]),
+          value: el.PlotData.YearOfHIVDiagnosis.map((year, i) => [year, el.PlotData.PostProp[i]]),
           name: el.GroupedRegionOfOrigin
         })
       );
