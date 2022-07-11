@@ -120,6 +120,7 @@ export default class MigrationManager {
           bounds: el.PlotData.YearOfArrival.map((year, i) => [
             year,
             el.PlotData.PostPropLB[i],
+            el.PlotData.PostProp[i],
             el.PlotData.PostPropUB[i]
           ]),
           name: el.GroupedRegionOfOrigin

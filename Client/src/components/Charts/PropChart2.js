@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import ReactEchartsCore from 'echarts-for-react/lib/core';
 import * as echarts from 'echarts/core';
-import ClipperLib from 'clipper-lib';
+// import ClipperLib from 'clipper-lib';
 import {
   LineChart,
   CustomChart
@@ -38,51 +38,49 @@ const PropChart2 = ({
 
   const chartRef = React.useRef(null);
 
-  // https://stackoverflow.com/questions/61724715/echarts-plot-the-variance-of-signals
-  const CalcContourCoords = (seriesData, ctx) => {
-    console.log(seriesData);
-    const pixelCoords = []
+  const CalcLineCoords = (seriesData, api) => {
+    const pixelCoords = [];
 
     for (let i = 0; i < seriesData.length; i++) {
-      pixelCoords.push([
-        ctx.convertToPixel({ xAxisIndex: 0 }, i),
-        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][2])
-      ]);
+      pixelCoords.push(api.coord([i, seriesData[i][2]]));
+    }
+    return pixelCoords;
+  };
+
+  // https://stackoverflow.com/questions/61724715/echarts-plot-the-variance-of-signals
+  const CalcBoundsContourCoords = (seriesData, api) => {
+    const pixelCoords = [];
+
+    for (let i = 0; i < seriesData.length; i++) {
+      const value = isFinite(seriesData[i][3]) ? seriesData[i][3] : seriesData[i][2];
+      pixelCoords.push(api.coord([i, value]));
     }
 
     for (let i = seriesData.length - 1; i >= 0; i--) {
-      pixelCoords.push([
-        ctx.convertToPixel({ xAxisIndex: 0 }, i),
-        ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][1])
-      ]);
+      const value = isFinite(seriesData[i][1]) ? seriesData[i][1] : seriesData[i][2];
+      pixelCoords.push(api.coord([i, value]));
 
-      if (i == 0) {
-        pixelCoords.push([
-          ctx.convertToPixel({ xAxisIndex: 0 }, i),
-          ctx.convertToPixel({ yAxisIndex: 0 }, seriesData[i][2])
-        ]);
+      if (i === 0) {
+        const value = isFinite(seriesData[i][3]) ? seriesData[i][3] : seriesData[i][2]
+        pixelCoords.push(api.coord([i, value]));
       }
     }
-    console.log(pixelCoords);
+    return pixelCoords;
 
-    var linePath = new ClipperLib.Path();
+    // let linePath = new ClipperLib.Path();
 
-    var delta = 10;
-    var scale = 1;
+    // for (let i = 0; i < pixelCoords.length; i++) {
+    //   let point = new ClipperLib.IntPoint(...pixelCoords[i]);
+    //   linePath.push(point);
+    // }
 
-    for (let i = 0; i < pixelCoords.length; i++) {
-      let point = new ClipperLib.IntPoint(...pixelCoords[i]);
-      linePath.push(point);
-    }
+    // let co = new ClipperLib.ClipperOffset(1.0, 0.25);
+    // co.AddPath(linePath, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
+    // co.Execute(linePath, 1);
 
-    let co = new ClipperLib.ClipperOffset(1.0, 0.25);
-    co.AddPath(linePath, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
-    co.Execute(linePath, delta * scale);
+    // return co.m_destPoly.map(c => [c.X, c.Y])
+  };
 
-    return co.m_destPoly.map(c => [c.X, c.Y])
-  }
-
-  // Render visual by calculated coords
   const RenderItem = (params, api) => {
     if (params.context.rendered) {
       return;
@@ -90,32 +88,38 @@ const PropChart2 = ({
     params.context.rendered = true;
 
     const myChart = chartRef.current.getEchartsInstance();
-
-    // Get stored in series data for band
     const series = myChart.getModel().getSeriesByName(params.seriesName)[0];
     const seriesData = series.get('data');
+    const linePoints = CalcLineCoords(seriesData, api);
+    const boundPoints = CalcBoundsContourCoords(seriesData, api);
 
-    // Calculate band coordinates for series
-    let bandCoords = CalcContourCoords(seriesData, myChart);
-
-    // Draw band
     return {
-      type: 'polygon',
-      shape: {
-        points: echarts.graphic.clipPointsByRect(bandCoords, {
-          x: params.coordSys.x,
-          y: params.coordSys.y,
-          width: params.coordSys.width,
-          height: params.coordSys.height
-        })
-      },
-      style: {
-        fill: api.visual('color')
-      }
+      type: 'group',
+      children: [
+        {
+          type: 'polygon',
+          shape: {
+            points: echarts.graphic.clipPointsByRect(boundPoints, params.coordSys)
+          },
+          style: {
+            fill: api.visual('color')
+          }
+        },
+        {
+          type: 'polyline',
+          shape: {
+            points: echarts.graphic.clipPointsByRect(linePoints, params.coordSys)
+          },
+          style: {
+            stroke: '#ff0000',
+            fill: 'none'
+          }
+        }
+      ]
     };
-  }
+  };
 
-  const onChartLegendselectchanged = e => {
+  const OnChartLegendselectchanged = e => {
     console.log(e);
   };
 
@@ -125,20 +129,20 @@ const PropChart2 = ({
 
   const AddSeries = s => {
     if (!IsNull(s)) {
-      if (!IsNull(s.value)) {
-        series.push({
-          name: s.name,
-          data: s.value,
-          type: 'line',
-          smooth: false,
-          symbol: 'circle',
-          symbolSize: 4,
-        });
-        legendData.push({
-          name: s.name
-        });
-        selected[s.name] = series.length === 1
-      }
+      // if (!IsNull(s.value)) {
+      //   series.push({
+      //     name: s.name,
+      //     data: s.value,
+      //     type: 'line',
+      //     smooth: false,
+      //     symbol: 'circle',
+      //     symbolSize: 4,
+      //   });
+      //   legendData.push({
+      //     name: s.name
+      //   });
+      //   selected[s.name] = series.length === 1
+      // }
 
       if (!IsNull(s.bounds)) {
         series.push({
@@ -159,7 +163,8 @@ const PropChart2 = ({
     }
   }
 
-  data.forEach(s => AddSeries(s));
+  //data.forEach(s => AddSeries(s));
+  AddSeries(data[0]);
 
   const options = {
     textStyle: {
