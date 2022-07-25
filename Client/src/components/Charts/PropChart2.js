@@ -111,7 +111,7 @@ const PropChart2 = ({
             points: echarts.graphic.clipPointsByRect(linePoints, params.coordSys)
           },
           style: {
-            stroke: '#ff0000',
+            stroke: 'red',
             fill: 'none'
           }
         }
