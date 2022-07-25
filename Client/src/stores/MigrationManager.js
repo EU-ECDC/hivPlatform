@@ -116,8 +116,7 @@ export default class MigrationManager {
     if (!IsNull(this.outputPlots) && !IsNull(this.outputPlots.ArrivalPlotData)) {
       res = this.outputPlots.ArrivalPlotData.map(
         el => ({
-          value: el.PlotData.YearOfArrival.map((year, i) => [year, el.PlotData.PostProp[i]]),
-          bounds: el.PlotData.YearOfArrival.map((year, i) => [
+          values: el.PlotData.YearOfArrival.map((year, i) => [
             year,
             el.PlotData.PostPropLB[i],
             el.PlotData.PostProp[i],

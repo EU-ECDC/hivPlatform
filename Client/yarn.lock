@@ -3356,13 +3356,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clipper-lib@npm:^6.4.2":
-  version: 6.4.2
-  resolution: "clipper-lib@npm:6.4.2"
-  checksum: fd3a44b002aa76039054b636c084f957877cf90eb5358f625121405d23fcf5a1fbe360ee6fde2cae881dbf8406c963c875bea9456fe555ba45220d407f691783
-  languageName: node
-  linkType: hard
-
 "clone-deep@npm:^4.0.1":
   version: 4.0.1
   resolution: "clone-deep@npm:4.0.1"
@@ -4614,7 +4607,6 @@ fsevents@~2.3.2:
     "@types/webpack-merge": 5.0.0
     babel-loader: 8.2.5
     clean-webpack-plugin: 4.0.0
-    clipper-lib: ^6.4.2
     cross-env: 7.0.3
     echarts: ^5.3.3
     echarts-for-react: ^3.0.2

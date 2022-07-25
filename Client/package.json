@@ -31,7 +31,6 @@
     "@mui/lab": "5.0.0-alpha.91",
     "@mui/material": "^5.9.1",
     "@mui/system": "5.9.1",
-    "clipper-lib": "^6.4.2",
     "echarts": "^5.3.3",
     "echarts-for-react": "^3.0.2",
     "file-saver": "^2.0.5",

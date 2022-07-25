@@ -36,62 +36,51 @@ const PropChart2 = ({
   data
 }) => {
 
-  const chartRef = React.useRef(null);
+  const SanitizeData = (seriesData) => {
+    let sanitizedData = null;
+    if (!IsNull(seriesData)) {
+      sanitizedData = seriesData.map(el => {
+        if (!isFinite(el[1])) {
+          el[1] = el[2]
+        }
+        if (!isFinite(el[3])) {
+          el[3] = el[2]
+        }
 
-  const CalcLineCoords = (seriesData, api) => {
-    const pixelCoords = [];
-
-    for (let i = 0; i < seriesData.length; i++) {
-      pixelCoords.push(api.coord([i, seriesData[i][2]]));
-    }
-    return pixelCoords;
-  };
-
-  // https://stackoverflow.com/questions/61724715/echarts-plot-the-variance-of-signals
-  const CalcBoundsContourCoords = (seriesData, api) => {
-    const pixelCoords = [];
-
-    for (let i = 0; i < seriesData.length; i++) {
-      const value = isFinite(seriesData[i][3]) ? seriesData[i][3] : seriesData[i][2];
-      pixelCoords.push(api.coord([i, value]));
+        return (el)
+      });
     }
 
-    for (let i = seriesData.length - 1; i >= 0; i--) {
-      const value = isFinite(seriesData[i][1]) ? seriesData[i][1] : seriesData[i][2];
-      pixelCoords.push(api.coord([i, value]));
-
-      if (i === 0) {
-        const value = isFinite(seriesData[i][3]) ? seriesData[i][3] : seriesData[i][2]
-        pixelCoords.push(api.coord([i, value]));
-      }
-    }
-    return pixelCoords;
-
-    // let linePath = new ClipperLib.Path();
-
-    // for (let i = 0; i < pixelCoords.length; i++) {
-    //   let point = new ClipperLib.IntPoint(...pixelCoords[i]);
-    //   linePath.push(point);
-    // }
-
-    // let co = new ClipperLib.ClipperOffset(1.0, 0.25);
-    // co.AddPath(linePath, ClipperLib.JoinType.jtRound, ClipperLib.EndType.etClosedPolygon);
-    // co.Execute(linePath, 1);
-
-    // return co.m_destPoly.map(c => [c.X, c.Y])
+    return sanitizedData;
   };
 
   const RenderItem = (params, api) => {
     if (params.context.rendered) {
       return;
     }
-    params.context.rendered = true;
 
-    const myChart = chartRef.current.getEchartsInstance();
-    const series = myChart.getModel().getSeriesByName(params.seriesName)[0];
-    const seriesData = series.get('data');
-    const linePoints = CalcLineCoords(seriesData, api);
-    const boundPoints = CalcBoundsContourCoords(seriesData, api);
+    const firstCategoryIndex = api.value(0, params.dataIndexInside);
+    const secondCategoryIndex = api.value(0, params.dataIndexInside + 1);
+    const firstValue = api.value(2, params.dataIndexInside);
+    const secondValue = api.value(2, params.dataIndexInside + 1);
+    const coord1 = api.coord([firstCategoryIndex, firstValue]);
+    const coord2 = api.coord([secondCategoryIndex, secondValue]);
+    const linePoints = {
+      x1: coord1[0],
+      y1: coord1[1],
+      x2: coord2[0],
+      y2: coord2[1],
+    }
+
+    const coordLeftBottom = api.coord([firstCategoryIndex, api.value(1, params.dataIndexInside)]);
+    const coordLeftTop = api.coord([firstCategoryIndex, api.value(3, params.dataIndexInside)]);
+    const coordRightTop = api.coord([firstCategoryIndex + 1, api.value(3, params.dataIndexInside + 1)]);
+    const coordRightBottom = api.coord([firstCategoryIndex + 1, api.value(1, params.dataIndexInside + 1)]);
+    const boundPoints = [
+      coordLeftBottom, coordLeftTop, coordRightTop, coordRightBottom
+    ]
+
+    const color = api.visual('color');
 
     return {
       type: 'group',
@@ -99,28 +88,23 @@ const PropChart2 = ({
         {
           type: 'polygon',
           shape: {
-            points: echarts.graphic.clipPointsByRect(boundPoints, params.coordSys)
+            points: boundPoints
           },
           style: {
-            fill: api.visual('color')
+            fill: color,
+            opacity: 0.3
           }
         },
         {
-          type: 'polyline',
-          shape: {
-            points: echarts.graphic.clipPointsByRect(linePoints, params.coordSys)
-          },
+          type: 'line',
+          shape: linePoints,
           style: {
-            stroke: 'red',
+            stroke: color,
             fill: 'none'
           }
-        }
+        },
       ]
     };
-  };
-
-  const OnChartLegendselectchanged = e => {
-    console.log(e);
   };
 
   let legendData = [];
@@ -129,42 +113,22 @@ const PropChart2 = ({
 
   const AddSeries = s => {
     if (!IsNull(s)) {
-      // if (!IsNull(s.value)) {
-      //   series.push({
-      //     name: s.name,
-      //     data: s.value,
-      //     type: 'line',
-      //     smooth: false,
-      //     symbol: 'circle',
-      //     symbolSize: 4,
-      //   });
-      //   legendData.push({
-      //     name: s.name
-      //   });
-      //   selected[s.name] = series.length === 1
-      // }
+      legendData.push({
+        name: s.name
+      });
 
-      if (!IsNull(s.bounds)) {
-        series.push({
-          name: `${s.name} - Confidence bounds`,
-          type: 'custom',
-          data: s.bounds,
-          renderItem: RenderItem,
-          // symbol: 'none',
-          // silent: true,
-          // color: s.color,
-          // lineStyle: { width: 0 },
-          // itemStyle: { color: s.color },
-          // emphasis: { areaStyle: { color: s.color }, lineStyle: { width: 0 } },
-          // xAxisIndex: xAxis.length - 1,
-          // yAxisIndex: 0
-        });
-      }
+      series.push({
+        name: s.name,
+        type: 'custom',
+        data: SanitizeData(s.values),
+        renderItem: RenderItem,
+      });
+
+      selected[s.name] = series.length === 1
     }
   }
 
-  //data.forEach(s => AddSeries(s));
-  AddSeries(data[0]);
+  data.forEach(s => AddSeries(s));
 
   const options = {
     textStyle: {
@@ -193,16 +157,18 @@ const PropChart2 = ({
       nameGap: 50,
       axisLabel: {
         formatter: val => FormatPercentage(val, 0)
-      }
+      },
+      min: 0,
+      max: 1
     },
     series: series,
     tooltip: {
       trigger: 'axis',
       formatter: params =>
-        `
+        (`
           Year: ${params[0].axisValue}<br/ >
-          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[1], 0)}`).join('<br />')}
-        `
+          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[2], 0)} (${FormatPercentage(el.value[1], 0)} - ${FormatPercentage(el.value[3], 0)})`).join('<br />')}
+        `)
     },
     toolbox: {
       show: true,
@@ -237,10 +203,6 @@ const PropChart2 = ({
       notMerge={true}
       lazyUpdate={true}
       opts={{}}
-      // onEvents={{
-      //   'legendselectchanged': onChartLegendselectchanged
-      // }}
-      ref={chartRef}
     />
   );
 };
