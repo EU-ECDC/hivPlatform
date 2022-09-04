@@ -8,7 +8,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import MissChart from '../Charts/MissChart';
-import LineChart from '../Charts/LineChart';
+import LineChart from '../Charts/LineChart_v1';
 
 const TabSummaryMissingness = (props) => {
   const { appMgr } = props;

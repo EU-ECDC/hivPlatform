@@ -118,8 +118,8 @@ export default class MigrationManager {
         el => ({
           values: el.PlotData.YearOfArrival.map((year, i) => [
             year,
-            el.PlotData.PostPropLB[i],
             el.PlotData.PostProp[i],
+            el.PlotData.PostPropLB[i],
             el.PlotData.PostPropUB[i]
           ]),
           name: el.GroupedRegionOfOrigin

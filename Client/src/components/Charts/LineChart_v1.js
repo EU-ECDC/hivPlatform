@@ -23,7 +23,7 @@ echarts.use([
   SVGRenderer
 ]);
 
-const AreaChart = props => {
+const LineChart_v1 = props => {
 
   const { yLabelName, xCategories, data, options } = props;
 
@@ -109,4 +109,4 @@ const AreaChart = props => {
   );
 };
 
-export default observer(AreaChart);
+export default observer(LineChart_v1);

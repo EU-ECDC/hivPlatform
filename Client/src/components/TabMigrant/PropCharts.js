@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import Title from '../Title';
 // import PropChart from '../Charts/PropChart';
-import PropChart2 from '../Charts/PropChart2';
+import LineCategoryChart from '../Charts/LineCategoryChart';
 import IsNull from '../../utilities/IsNull';
 
 const PropCharts = ({migrMgr}) => {
@@ -13,7 +13,7 @@ const PropCharts = ({migrMgr}) => {
     arrivalPlot = <div>No plot data available</div>
   } else {
     arrivalPlot =
-      <PropChart2
+      <LineCategoryChart
         xAxisTitle='Year of Arrival'
         data={arrivalPlotData}
       />
@@ -24,7 +24,7 @@ const PropCharts = ({migrMgr}) => {
     diagnosisPlot = <div>No plot data available</div>
   } else {
     diagnosisPlot =
-     <PropChart2
+     <LineCategoryChart
         xAxisTitle='Year of Diagnosis'
         data={diagnosisPlotData}
       />
