@@ -64,51 +64,71 @@ const LineCategoryChart = ({
       return;
     }
 
-    const firstCategoryIndex = api.value(0, params.dataIndexInside);
-    const secondCategoryIndex = api.value(0, params.dataIndexInside + 1);
-    const firstValue = api.value(1, params.dataIndexInside);
-    const secondValue = api.value(1, params.dataIndexInside + 1);
-    const coord1 = api.coord([firstCategoryIndex, firstValue]);
-    const coord2 = api.coord([secondCategoryIndex, secondValue]);
+    const color = api.visual('color');
+
+    const dataIdx = params.dataIndexInside;
+    const firstCategoryIndex = api.value(0, dataIdx);
+    const firstValue = api.value(1, dataIdx);
+    const coordStart = api.coord([firstCategoryIndex, firstValue]);
+    const secondCategoryIndex = api.value(0, dataIdx + 1);
+    const secondValue = api.value(1, dataIdx + 1);
+    const coordEnd = api.coord([secondCategoryIndex, secondValue]);
+
     const linePoints = {
-      x1: coord1[0],
-      y1: coord1[1],
-      x2: coord2[0],
-      y2: coord2[1],
+      x1: coordStart[0],
+      y1: coordStart[1],
+      x2: coordEnd[0],
+      y2: coordEnd[1],
     }
 
-    const coordLeftBottom = api.coord([firstCategoryIndex, api.value(2, params.dataIndexInside)]);
-    const coordLeftTop = api.coord([firstCategoryIndex, api.value(3, params.dataIndexInside)]);
-    const coordRightTop = api.coord([firstCategoryIndex + 1, api.value(3, params.dataIndexInside + 1)]);
-    const coordRightBottom = api.coord([firstCategoryIndex + 1, api.value(2, params.dataIndexInside + 1)]);
+    const coordLeftBottom = api.coord([firstCategoryIndex, api.value(2, dataIdx)]);
+    const coordLeftTop = api.coord([firstCategoryIndex, api.value(3, dataIdx)]);
+    const coordRightTop = api.coord([secondCategoryIndex, api.value(3, dataIdx + 1)]);
+    const coordRightBottom = api.coord([secondCategoryIndex, api.value(2, dataIdx + 1)]);
     const boundPoints = [
       coordLeftBottom, coordLeftTop, coordRightTop, coordRightBottom
     ]
 
-    const color = api.visual('color');
+    let children = [];
+    // Add confidence bound as first elements at the bottom of the stack
+    if (coordLeftBottom !== coordLeftTop && coordRightBottom !== coordRightTop) {
+      children.push({
+        type: 'polygon',
+        shape: {
+          points: boundPoints
+        },
+        style: {
+          fill: color,
+          opacity: 0.3
+        }
+      })
+    }
+    // Add main value line
+    children.push({
+      type: 'line',
+      shape: linePoints,
+      style: {
+        stroke: color,
+        fill: 'none',
+        lineDash: api.value(4, dataIdx) === 'dotted' ? [2] : null
+      }
+    })
+    // Add main value circle
+    children.push({
+      type: 'circle',
+      shape: {
+        cx: coordStart[0],
+        cy: coordStart[1],
+        r: 2
+      },
+      style: {
+        fill: color
+      }
+    })
 
     return {
       type: 'group',
-      children: [
-        {
-          type: 'polygon',
-          shape: {
-            points: boundPoints
-          },
-          style: {
-            fill: color,
-            opacity: 0.3
-          }
-        },
-        {
-          type: 'line',
-          shape: linePoints,
-          style: {
-            stroke: color,
-            fill: 'none'
-          }
-        },
-      ]
+      children: children
     };
   };
 
@@ -118,15 +138,15 @@ const LineCategoryChart = ({
 
   const AddSeries = s => {
     if (!IsNull(s)) {
-      legendData.push({
-        name: s.name
-      });
-
       series.push({
         name: s.name,
         type: 'custom',
         data: SanitizeData(s.values),
         renderItem: RenderItem,
+      });
+
+      legendData.push({
+        name: s.name
       });
 
       selected[s.name] = series.length === 1
@@ -153,7 +173,11 @@ const LineCategoryChart = ({
       axisTick: {
         alignWithLabel: true
       },
-      boundaryGap: false
+      boundaryGap: false,
+      axisPointer: {
+        type: 'shadow',
+        snap: true
+      }
     },
     yAxis: {
       type: 'value',
@@ -172,7 +196,7 @@ const LineCategoryChart = ({
       formatter: params =>
         (`
           Year: ${params[0].axisValue}<br/ >
-          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[2], 0)} (${FormatPercentage(el.value[1], 0)} - ${FormatPercentage(el.value[3], 0)})`).join('<br />')}
+          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[1], 0)} (${FormatPercentage(el.value[2], 0)} - ${FormatPercentage(el.value[3], 0)})`).join('<br />')}
         `)
     },
     toolbox: {

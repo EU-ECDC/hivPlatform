@@ -1,3 +1,4 @@
+#' @export
 GetMigrantOutputStats <- function(
   data
 ) {

@@ -181,7 +181,7 @@ Task <- R6::R6Class(
               private$Catalogs$Status == 'FAIL' && is.function(private$FailCallback)
             ) {
               failMsg <- private$Catalogs$FailMessage
-              errorMsg <- CollapseTexts('Adjustment task failed:', failMsg, collapse = '\n')
+              errorMsg <- CollapseTexts('Background task failed:', failMsg, collapse = '\n')
               private$AddToRunLog(errorMsg)
               private$FailCallback(failMsg)
             }
@@ -212,7 +212,7 @@ Task <- R6::R6Class(
         status == 'FAIL' && is.function(private$FailCallback)
       ) {
         failMsg <- private$Catalogs$FailMessage
-        errorMsg <- CollapseTexts('Adjustment task failed:', failMsg, collapse = '\n')
+        errorMsg <- CollapseTexts("Background task failed:", failMsg, collapse = "\n")
         private$AddToRunLog(errorMsg)
         private$FailCallback(failMsg)
       }

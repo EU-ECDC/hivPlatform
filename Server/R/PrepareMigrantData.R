@@ -1,3 +1,4 @@
+#' @export
 PrepareMigrantData <- function(
   data,
   seed = NULL

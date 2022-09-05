@@ -1,8 +1,9 @@
 ## 2.0.8
 
-###### _August 14 2022_
+###### _September 5 2022_
 
 - Implement custom charts series for plotting confidence bounds
+- Fix order of categories in diagnositic plots of migrant module
 - UNDER DEVELOPMENT
 
 

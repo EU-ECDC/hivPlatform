@@ -1,29 +1,31 @@
+#' @export
 GetMigrantOutputPlots <- function(
-  data
+  data,
+  ...
 ) {
   regions <- union('ALL', data[, unique(GroupedRegionOfOrigin)])
 
   plotsArrival <- lapply(regions, function(region) {
-    plotData <- GetMigrantConfBounds(data, strat = 'YearOfArrival', region, 'GroupedRegionOfOrigin')
+    plotData <- GetMigrantConfBounds(data, 'YearOfArrival', region, 'GroupedRegionOfOrigin', ...)
     if (is.null(plotData)) {
       return(null)
     } else {
       return(list(
         GroupedRegionOfOrigin = region,
-        PlotData = plotData
+        PlotData = plotData[, .(YearOfArrival, PostProp, PostPropLB, PostPropUB)]
       ))
     }
   })
   plotsArrival <- Filter(Negate(is.null), plotsArrival)
 
   plotsDiagnosis <- lapply(regions, function(region) {
-    plotData <- GetMigrantConfBounds(data, strat = 'YearOfHIVDiagnosis', region, 'GroupedRegionOfOrigin')
+    plotData <- GetMigrantConfBounds(data, 'YearOfHIVDiagnosis', region, 'GroupedRegionOfOrigin', ...)
     if (is.null(plotData)) {
       return(null)
     } else {
       return(list(
         GroupedRegionOfOrigin = region,
-        PlotData = plotData
+        PlotData = plotData[, .(YearOfHIVDiagnosis, PostProp, PostPropLB, PostPropUB)]
       ))
     }
   })

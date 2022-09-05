@@ -1,3 +1,4 @@
+#' @export
 GetMigrantConfBounds <- function(
   data,
   strat = c(),
@@ -94,7 +95,6 @@ GetMigrantConfBounds <- function(
   ]
 
   if (any(result$Algorithm == 'GLM')) {
-
     dataList <- mitools::imputationList(split(
       data[StrataId %in% result[Algorithm == 'GLM', sort(unique(StrataId))]],
       by = c('Imputation', 'Sample')

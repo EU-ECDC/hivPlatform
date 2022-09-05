@@ -2,7 +2,7 @@ Package: hivPlatform
 Type: Package
 Title: Improves Accuracy of HIV Estimates in EU/EEA Countries
 Version: 2.0.8
-Date: 2022-08-14
+Date: 2022-09-05
 Authors@R: c(person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl',
     role = c('aut', 'cph')), person('Nikos', 'Pantazis', email =
     'npantaz@med.uoa.gr', role = c('aut')), person('Ard', 'van Sighem',
@@ -42,7 +42,7 @@ Imports:
     xml2 (>= 1.3.2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Suggests: testthat
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppNumerical
 SystemRequirements: C++11

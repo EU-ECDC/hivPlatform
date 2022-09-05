@@ -29,7 +29,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
+# appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # nolint end
 
 # library(data.table)
@@ -60,18 +60,20 @@ appMgr$CaseMgr$SetFilters(filters = list(
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <-
-  hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
+  hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
+adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
+adjustmentSpecs[[1]]$Parameters$nit$value <- 20
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
 
 # adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-adjName <- 'Reporting Delays with trend'
-adjustmentSpecs <- GetAdjustmentSpecs(adjName)
-adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1980
-adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2022
-adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 1
+# adjName <- 'Reporting Delays with trend'
+# adjustmentSpecs <- GetAdjustmentSpecs(adjName)
+# adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1980
+# adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2022
+# adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 1
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
 appMgr$CaseMgr$AdjustmentResult
@@ -101,6 +103,10 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
 appMgr$CaseMgr$RunMigration()
+names(appMgr$CaseMgr$MigrationResult$Artifacts$InputStats)
+appMgr$CaseMgr$MigrationResult$Artifacts$OutputStats$TableDistr
+appMgr$CaseMgr$MigrationResult$Artifacts$OutputPlots$ArrivalPlotData[[1]]
+appMgr$CaseMgr$MigrationResult$Artifacts$ConfBounds
 
 params <- GetMigrantParams()
 data <- copy(appMgr$CaseMgr$Data)
@@ -152,7 +158,7 @@ outputPlots <- hivPlatform::GetMigrantOutputPlots(data = copy(output))
 outputStats <- hivPlatform::GetMigrantOutputStats(output)
 confBounds <- GetMigrantConfBounds(
   data = output,
-  strat = c('Transmission', 'AgeGroup'),
+  strat = c('AgeGroup'),
   region = 'ALL'
 )
 json <- lapply(outputPlots, ConvertObjToJSON, dataframe = 'cols')

@@ -23,6 +23,7 @@ const PropCharts = ({migrMgr}) => {
   if (IsNull(diagnosisPlotData)) {
     diagnosisPlot = <div>No plot data available</div>
   } else {
+    console.log(diagnosisPlotData);
     diagnosisPlot =
      <LineCategoryChart
         xAxisTitle='Year of Diagnosis'

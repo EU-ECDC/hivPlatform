@@ -494,9 +494,9 @@ CaseDataManager <- R6::R6Class( # nolint
               data[
                 input$Data$Input,
                 ':='(
-                  DateOfArrival = i.DateOfArrival,
                   Excluded = i.Excluded,
-                  KnownPrePost = i.KnownPrePost
+                  KnownPrePost = i.KnownPrePost,
+                  DateOfArrival = i.DateOfArrival
                 ),
                 on = .(UniqueId)
               ]
@@ -508,22 +508,22 @@ CaseDataManager <- R6::R6Class( # nolint
                   Imputation = i.Imputation,
                   YearOfArrival = year(i.DateOfArrival),
                   YearOfHIVDiagnosis = i.YearOfHIVDiagnosis,
-                  MigrantRegionOfOrigin = as.character(i.MigrantRegionOfOrigin),
-                  Gender = as.character(i.Gender),
-                  Transmission = as.character(i.Transmission),
+                  MigrantRegionOfOrigin = i.MigrantRegionOfOrigin,
+                  Gender = i.Gender,
+                  Transmission = i.Transmission,
                   Age = i.Age,
-                  GroupedRegionOfOrigin = as.character(i.GroupedRegionOfOrigin)
+                  GroupedRegionOfOrigin = i.GroupedRegionOfOrigin
                 ),
                 on = .(UniqueId)
               ]
               output[, ':='(
                 Total = 'Total',
-                AgeGroup = as.character(cut(
+                AgeGroup = cut(
                   Age,
                   breaks = c(-Inf, 25, 40, 55, Inf),
                   labels = c('< 25', '25 - 39', '40 - 54', '55+'),
                   right = FALSE
-                ))
+                )
               )]
               output[
                 MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
@@ -533,7 +533,7 @@ CaseDataManager <- R6::R6Class( # nolint
               PrintH2('Preparing diagnostic statistics and plots')
               outputStats <- hivPlatform::GetMigrantOutputStats(output)
               confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
-              outputPlots <- hivPlatform::GetMigrantOutputPlots(output)
+              outputPlots <- hivPlatform::GetMigrantOutputPlots(output, minPresentRatio = 1)
 
               result <- list(
                 Input = input$Data,
