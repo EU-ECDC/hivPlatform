@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import Title from '../Title';
-// import PropChart from '../Charts/PropChart';
 import LineCategoryChart from '../Charts/LineCategoryChart';
 import IsNull from '../../utilities/IsNull';
 
@@ -16,6 +15,7 @@ const PropCharts = ({migrMgr}) => {
       <LineCategoryChart
         xAxisTitle='Year of Arrival'
         data={arrivalPlotData}
+        format='percentage'
       />
   }
 
@@ -23,11 +23,11 @@ const PropCharts = ({migrMgr}) => {
   if (IsNull(diagnosisPlotData)) {
     diagnosisPlot = <div>No plot data available</div>
   } else {
-    console.log(diagnosisPlotData);
     diagnosisPlot =
      <LineCategoryChart
         xAxisTitle='Year of Diagnosis'
         data={diagnosisPlotData}
+        format='percentage'
       />
   }
 

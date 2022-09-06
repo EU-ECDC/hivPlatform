@@ -3,6 +3,7 @@ import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 import IsNull from '../utilities/IsNull';
 import FormatNumber from '../utilities/FormatNumber';
+import SelectObjectProperties from '../utilities/SelectObjectProperties';
 
 export default class ModelsManager {
   id = 'ModelsManager';
@@ -269,6 +270,7 @@ export default class ModelsManager {
     return (this.getTableData(['Year', 'N_CD4_3_D', 'N_CD4_3_Obs_M', 'N_CD4_3_Obs_M_LB', 'N_CD4_3_Obs_M_UB']));
   };
 
+
   get gofTable5Data() {
     return (this.getTableData(['Year', 'N_CD4_4_D', 'N_CD4_4_Obs_M', 'N_CD4_4_Obs_M_LB', 'N_CD4_4_Obs_M_UB']));
   };
@@ -335,5 +337,23 @@ export default class ModelsManager {
         Data: []
       });
     }
+  };
+
+  getPlotSeries = colNamesMap => {
+    if (!IsNull(this.plotData)) {
+      const sourceColNames = Object.keys(colNamesMap).filter(colName => !IsNull(this.plotData[colName]));
+      const destColNames = Object.values(SelectObjectProperties(colNamesMap, sourceColNames));
+
+      const data = this.plotData.Year.map((year, i) => {
+        let result = {};
+        sourceColNames.forEach((colName, j) => result[destColNames[j]] = this.plotData[colName][i]);
+        return (result);
+      })
+
+      return (data);
+    } else {
+      return (null);
+    }
   }
+
 }

@@ -92,7 +92,7 @@ export default class MigrationManager {
 
   get yodDistr() {
     let res = null;
-    if (this.yodRegion != '' && !IsNull(this.inputStats) && !IsNull(this.inputStats.YODDistr)) {
+    if (this.yodRegion !== '' && !IsNull(this.inputStats) && !IsNull(this.inputStats.YODDistr)) {
       res = this.inputStats.YODDistr[this.yodRegion];
     }
     return res;
@@ -101,7 +101,7 @@ export default class MigrationManager {
   get tableDistr() {
     let res = null;
     if (
-      this.tableRegion != '' &&
+      this.tableRegion !== '' &&
       !IsNull(this.outputStats) &&
       !IsNull(this.outputStats.TableDistr) &&
       !IsNull(this.outputStats.TableDistr[this.tableRegion])
@@ -123,7 +123,8 @@ export default class MigrationManager {
             el.PlotData.PostPropLB[i],
             el.PlotData.PostPropUB[i],
             // year < 1991 ? 'dotted': 'solid'
-          ])
+          ]),
+          selected: el.GroupedRegionOfOrigin === 'ALL'
         })
       );
     }
@@ -141,7 +142,8 @@ export default class MigrationManager {
             el.PlotData.PostProp[i],
             el.PlotData.PostPropLB[i],
             el.PlotData.PostPropUB[i]
-          ])
+          ]),
+          selected: el.GroupedRegionOfOrigin === 'ALL'
         })
       );
 

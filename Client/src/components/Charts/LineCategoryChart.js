@@ -16,6 +16,7 @@ import {
   CanvasRenderer
 } from 'echarts/renderers';
 import IsNull from '../../utilities/IsNull';
+import FormatNumber from '../../utilities/FormatNumber';
 import FormatPercentage from '../../utilities/FormatPercentage';
 
 echarts.use([
@@ -32,16 +33,23 @@ const LineCategoryChart = ({
   title,
   xAxisTitle = 'Year',
   yAxisTitle = 'Proportion',
-  data
+  data,
+  legendOptions = {
+    orient: 'vertical',
+    right: 0,
+    top: 'center',
+    selector: true
+  },
+  color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce'],
+  format = 'number'
 }) => {
-
   const SanitizeData = (seriesData) => {
     let sanitizedData = null;
     if (!IsNull(seriesData)) {
       sanitizedData = seriesData.map(el => {
         // If main value is not finite then no confidence bounds
         if (!isFinite(el[1])) {
-          return([el[0], null, null, null])
+          return ([el[0], null, null, null])
         }
         // If lower bound is not finite, then main value is the lower bound
         if (!isFinite(el[2])) {
@@ -110,7 +118,7 @@ const LineCategoryChart = ({
       style: {
         stroke: color,
         fill: 'none',
-        lineDash: api.value(4, dataIdx) === 'dotted' ? [2] : null
+        lineDash: api.value(4, dataIdx) === 'dotted' || api.value(4, dataIdx + 1) === 'dotted' ? [2] : null
       }
     })
     // Add main value circle
@@ -135,31 +143,51 @@ const LineCategoryChart = ({
   let legendData = [];
   let series = [];
   let selected = {};
+  let dataset = [];
 
-  const AddSeries = s => {
+  const AddSeries = (s, idx) => {
     if (!IsNull(s)) {
       series.push({
         name: s.name,
         type: 'custom',
-        data: SanitizeData(s.values),
+        // data: SanitizeData(s.values),
         renderItem: RenderItem,
+        encode: {
+          x: 'x',
+          y: ['y', 'lb', 'ub'],
+          tooltip: ['x', 'y', 'lb', 'ub']
+        },
+        dimensions: ['x', 'y', 'lb', 'ub', 'used'],
+        datasetIndex: idx
       });
 
       legendData.push({
         name: s.name
       });
 
-      selected[s.name] = series.length === 1
+      selected[s.name] = !IsNull(s.selected) && s.selected;
+
+      dataset.push({
+        source: SanitizeData(s.values)
+      })
     }
   }
 
-  data.forEach(s => AddSeries(s));
+  data.forEach((s, idx) => AddSeries(s, idx));
+
+
+  const FormatFunc = format === 'number' ? FormatNumber : FormatPercentage;
 
   const options = {
     textStyle: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
     },
-    grid: { top: 40, right: 240, bottom: 40, left: 65 },
+    grid: {
+      top: 40,
+      right: legendOptions.orient === 'horizontal' ? 30 : 240,
+      bottom: 40,
+      left: 65
+    },
     title: {
       text: title
     },
@@ -185,19 +213,34 @@ const LineCategoryChart = ({
       nameLocation: 'center',
       nameGap: 50,
       axisLabel: {
-        formatter: val => FormatPercentage(val, 0)
+        formatter: val => FormatFunc(val, 0)
       },
-      min: 0,
-      max: 1
+      // min: 0,
+      // max: 1
     },
     series: series,
+    color: color,
+    dataset: dataset,
     tooltip: {
       trigger: 'axis',
-      formatter: params =>
-        (`
+      formatter: params => {
+        const test = params.map(el => {
+          console.log(el)
+          let confBounds = '';
+          if (!IsNull(el.value[2]) && !IsNull(el.value[3])) {
+            confBounds = ` (${FormatFunc(el.value[2], 0)} - ${FormatFunc(el.value[3], 0)})`;
+          }
+
+          return (
+            `${el.marker} ${el.seriesName}: ${FormatFunc(el.value[1], 0)}${confBounds}`
+            )
+        }).join('<br />');
+
+        return (`
           Year: ${params[0].axisValue}<br/ >
-          ${params.map(el => `${el.marker} ${el.seriesName}: ${FormatPercentage(el.value[1], 0)} (${FormatPercentage(el.value[2], 0)} - ${FormatPercentage(el.value[3], 0)})`).join('<br />')}
+          ${test}
         `)
+      }
     },
     toolbox: {
       show: true,
@@ -212,15 +255,18 @@ const LineCategoryChart = ({
       }
     },
     legend: {
-      data: legendData,
-      orient: 'vertical',
-      right: 0,
-      top: 'center',
-      selector: true,
-      selected: selected,
-      textStyle: {
-        fontSize: 11
-      }
+      ...{
+        data: legendData,
+        selected: selected,
+        orient: 'vertical',
+        right: 0,
+        top: 'center',
+        selector: true,
+        textStyle: {
+          fontSize: 11
+        },
+      },
+      ...legendOptions
     }
   };
 

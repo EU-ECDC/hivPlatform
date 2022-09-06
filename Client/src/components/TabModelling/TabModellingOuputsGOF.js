@@ -2,8 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import HIVChart from '../Charts/HIVChart';
-import HIVChart2 from '../Charts/HIVChart2';
+import LineCategoryChart from '../Charts/LineCategoryChart';
 import IsNull from '../../utilities/IsNull';
 import SmallTable from './SmallTable';
 
@@ -14,6 +13,9 @@ const TabModellingOutputsGOF = props => {
     return (null);
   }
 
+  const color = ['#69b023', '#c7c7c7'];
+  const legendOptions = { orient: 'horizontal', left: 'center', top: 0, selector: false };
+
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
       <Grid item xs={12}>
@@ -22,30 +24,38 @@ const TabModellingOutputsGOF = props => {
         </Typography>
       </Grid>
       <Grid item xs={5}>
-        <SmallTable tableData ={appMgr.modelMgr.gofTable1Data} />
+        <SmallTable tableData={appMgr.modelMgr.gofTable1Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart2
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
           data={[
             {
-              name: 'Data used',
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_HIV_D[i]
-              ])
-            },
-            {
-              data: [],
-              name: 'Data NOT used'
-            },
-            {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
-                year,
-                appMgr.modelMgr.plotData.N_HIV_Obs_M[i]
+                appMgr.modelMgr.plotData.N_HIV_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_HIV_D_Used[i] ? 'solid' : 'dotted'
               ]),
-              name: 'Model'
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_HIV_Obs_M[i],
+                !IsNull(appMgr.modelMgr.plotData.N_HIV_Obs_M_LB) ? appMgr.modelMgr.plotData.N_HIV_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_HIV_Obs_M_UB) ? appMgr.modelMgr.plotData.N_HIV_Obs_M_UB[i] : null,
+                'solid'
+              ]),
+              selected: true
             }
           ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -58,13 +68,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable2Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_CD4_1_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_CD4_1_Obs_M}
-          min={appMgr.modelMgr.plotData.N_CD4_1_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_CD4_1_Obs_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_1_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_CD4_1_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_1_Obs_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -77,13 +109,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable3Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_CD4_2_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_CD4_2_Obs_M}
-          min={appMgr.modelMgr.plotData.N_CD4_2_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_CD4_2_Obs_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_2_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_CD4_2_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_2_Obs_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -96,13 +150,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable4Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_CD4_3_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_CD4_3_Obs_M}
-          min={appMgr.modelMgr.plotData.N_CD4_3_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_CD4_3_Obs_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_3_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_CD4_3_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_3_Obs_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -115,13 +191,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable5Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_CD4_4_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_CD4_4_Obs_M}
-          min={appMgr.modelMgr.plotData.N_CD4_4_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_CD4_4_Obs_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_4_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_CD4_4_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_CD4_4_Obs_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -134,13 +232,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable6Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_HIVAIDS_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M}
-          min={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_LB}
-          range={appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_HIVAIDS_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_HIVAIDS_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
 
@@ -153,13 +273,35 @@ const TabModellingOutputsGOF = props => {
         <SmallTable tableData={appMgr.modelMgr.gofTable7Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart
-          year={appMgr.modelMgr.plotData.Year}
-          data={appMgr.modelMgr.plotData.N_AIDS_D}
-          dataNotUsed={null}
-          model={appMgr.modelMgr.plotData.N_AIDS_M}
-          min={appMgr.modelMgr.plotData.N_AIDS_M_LB}
-          range={appMgr.modelMgr.plotData.N_AIDS_M_Range}
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
+          data={[
+            {
+              name: 'Data',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_AIDS_D[i],
+                null,
+                null,
+                appMgr.modelMgr.plotData.N_AIDS_D_Used[i] ? 'solid' : 'dotted'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_AIDS_M[i],
+                null,
+                null,
+                null
+              ]),
+              selected: true
+            }
+          ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
     </Grid>

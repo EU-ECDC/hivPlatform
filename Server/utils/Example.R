@@ -10,7 +10,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -20,16 +20,16 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
-# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
-# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
-# appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
-# appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
-# appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
+appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
+# appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
+# appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
+# appMgr$AggrMgr$ReadData(fileName = 'D:/VirtualBox_Shared/DATA_PL.ZIP')
 # nolint end
 
 # library(data.table)
@@ -176,6 +176,46 @@ test <- GetMigrantConfBounds(
 
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
+parameters <- list(
+  ModelMinYear = 1980,
+  ModelMaxYear = 2016,
+  FitPosMinYear = 1979,
+  FitPosMaxYear = 1979,
+  FitPosCD4MinYear = 1984,
+  FitPosCD4MaxYear = 2016,
+  FitAIDSPosMinYear = 1996,
+  FitAIDSPosMaxYear = 2016,
+  FitAIDSMinYear = 1984,
+  FitAIDSMaxYear = 1995,
+  FullData = FALSE,
+  ModelNoKnots = 6,
+  StartIncZero = TRUE,
+  MaxIncCorr = TRUE,
+  FitDistribution = 'NEGATIVE_BINOMIAL',
+  Delta4Fac = 0,
+  Country = 'NL',
+  Intervals = data.table(
+    StartYear = c(1980, 1984, 1996, 2000, 2005, 2010),
+    EndYear = c(1984, 1996, 2000, 2005, 2010, 2016),
+    Jump = c(FALSE, TRUE, FALSE, FALSE, FALSE, FALSE),
+    DiffByCD4 = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+    ChangeInInterval = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
+  )
+)
+caseData <- NULL
+aggrData <- appMgr$AggrMgr$Data
+aggrDataSelection <- NULL
+migrConnFlag <- FALSE
+
+appMgr$HIVModelMgr$RunMainFit(
+  settings = list(Verbose = FALSE),
+  parameters = parameters,
+  popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
+)
+
+json <- ConvertObjToJSON(plotData, dataframe = 'columns')
+writeLines(json, 'json.txt')
+
 aggrDataSelection <- data.table(
   Name = c('Dead', 'AIDS', 'HIV', 'HIVAIDS', 'HIV_CD4_1', 'HIV_CD4_2', 'HIV_CD4_3', 'HIV_CD4_4'),
   Use = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),

@@ -232,9 +232,11 @@ HIVModelManager <- R6::R6Class( # nolint
             PrintAlert('Country-specific settings                            : {parameters$Country}')
             # nolint end
 
-            caseData <- caseData[FinalData == TRUE]
-            if (!('Weight' %in% colnames(caseData))) {
-              caseData[, Weight := 1]
+            if (!is.null(caseData)) {
+              caseData <- caseData[FinalData == TRUE]
+              if (!('Weight' %in% colnames(caseData))) {
+                caseData[, Weight := 1]
+              }
             }
             dataAfterMigr <- 'ProbPre' %in% colnames(caseData)
 
@@ -307,11 +309,10 @@ HIVModelManager <- R6::R6Class( # nolint
               )
               runTime <- Sys.time() - startTime
 
+              model <- fitResults$MainOutputs
+              model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
+
               if (migrConnFlag && dataAfterMigr) {
-                model <- fitResults$MainOutputs
-
-                model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
-
                 # Prepare data for pre-migration infected cases
                 preMigrArrY <- caseData[
                   Imputation == as.integer(imp) &
@@ -362,7 +363,11 @@ HIVModelManager <- R6::R6Class( # nolint
             }
 
             # First set is used only!
-            plotData <- GetHIVPlotData(impResult[[1]]$Results$MainOutputs)
+            plotData <- GetHIVPlotData(
+              mainFitResult = impResult[[1]]$Results$MainOutputs,
+              parameters = parameters,
+              migrConnFlag = migrConnFlag && dataAfterMigr
+            )
 
             result <- list(
               MainFitResult = impResult,

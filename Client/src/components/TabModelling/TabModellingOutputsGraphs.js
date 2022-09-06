@@ -2,8 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import HIVChart from '../Charts/HIVChart';
-import HIVChart2 from '../Charts/HIVChart2';
+import LineCategoryChart from '../Charts/LineCategoryChart';
 import IsNull from '../../utilities/IsNull';
 import SmallTable from './SmallTable';
 
@@ -12,6 +11,9 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
   if (IsNull(appMgr.modelMgr.plotData)) {
     return (null);
   }
+
+  const color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce'];
+  const legendOptions = { orient: 'horizontal', left: 'center', top: 0, selector: false };
 
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
@@ -24,23 +26,34 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <SmallTable tableData={appMgr.modelMgr.outputTable1Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart2
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
           data={[
             {
               name: 'HIV Diagnoses',
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Inf_M[i]
-              ])
+                appMgr.modelMgr.plotData.N_Inf_M[i],
+                null,
+                null,
+                'solid'
+              ]),
+              selected: true
             },
-            {
-              name: 'New arrivals of infected migrants',
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
-                year,
-                appMgr.modelMgr.plotData.NewMigrantDiagnoses[i]
-              ])
-            }
+            // {
+            //   name: 'New arrivals of infected migrants',
+            //   values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+            //     year,
+            //     appMgr.modelMgr.plotData.NewMigrantDiagnoses[i],
+            //     null,
+            //     null,
+            //     'solid'
+            //   ])
+            // }
           ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
       <Grid item xs={12}>
@@ -52,16 +65,24 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <SmallTable tableData={appMgr.modelMgr.outputTable2Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart2
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Years'
           data={[
             {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Time to diagnosis',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.t_diag[i]
+                appMgr.modelMgr.plotData.t_diag[i],
+                null,
+                null,
+                'solid'
               ]),
-              name: 'Time to diagnosis'
+              selected: true
             },
           ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
       <Grid item xs={12}>
@@ -73,30 +94,46 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <SmallTable tableData={appMgr.modelMgr.outputTable3Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart2
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Count'
           data={[
             {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Alive',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Alive[i]
+                appMgr.modelMgr.plotData.N_Alive[i],
+                null,
+                null,
+                'solid'
               ]),
-              name: 'Alive'
+              selected: true
             },
             {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Undiagnosed from model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Alive_Diag_M[i]
+                appMgr.modelMgr.plotData.N_Und[i],
+                null,
+                null,
+                'solid'
               ]),
-              name: 'Diagnosed'
+              selected: true
             },
             {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Diagnosed from model',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Und[i]
+                appMgr.modelMgr.plotData.N_Alive_Diag_M[i],
+                null,
+                null,
+                'solid'
               ]),
-              name: 'Undiagnosed'
+              selected: true
             }
           ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
       <Grid item xs={12}>
@@ -108,16 +145,24 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <SmallTable tableData={appMgr.modelMgr.outputTable4Data} />
       </Grid>
       <Grid item xs={7}>
-        <HIVChart2
+        <LineCategoryChart
+          xAxisTitle='Year'
+          yAxisTitle='Proportion'
           data={[
             {
-              data: appMgr.modelMgr.plotData.Year.map((year, i) => [
+              name: 'Proportion of undiagnosed',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Und_Alive_p[i]
+                appMgr.modelMgr.plotData.N_Und_Alive_p[i],
+                null,
+                null,
+                'solid'
               ]),
-              name: 'Proportion of undiagnosed'
+              selected: true
             },
           ]}
+          legendOptions={legendOptions}
+          color={color}
         />
       </Grid>
     </Grid>
