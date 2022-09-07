@@ -12,7 +12,7 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
     return (null);
   }
 
-  const color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce'];
+  const color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce', '#c7c7c7'];
   const legendOptions = { orient: 'horizontal', left: 'center', top: 0, selector: false };
 
   return (
@@ -31,12 +31,12 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           yAxisTitle='Count'
           data={[
             {
-              name: 'HIV Diagnoses',
+              name: 'New incident infections',
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_Inf_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_Inf_M_LB) ? appMgr.modelMgr.plotData.N_Inf_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Inf_M_UB) ? appMgr.modelMgr.plotData.N_Inf_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -46,11 +46,22 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
             //   values: appMgr.modelMgr.plotData.Year.map((year, i) => [
             //     year,
             //     appMgr.modelMgr.plotData.NewMigrantDiagnoses[i],
-            //     null,
-            //     null,
+            //     !IsNull(appMgr.modelMgr.plotData.NewMigrantDiagnoses_LB) ? appMgr.modelMgr.plotData.NewMigrantDiagnoses_LB[i] : null,
+            //     !IsNull(appMgr.modelMgr.plotData.NewMigrantDiagnoses_UB) ? appMgr.modelMgr.plotData.NewMigrantDiagnoses_UB[i] : null,
             //     'solid'
             //   ])
-            // }
+            // },
+            {
+              name: 'Total',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                appMgr.modelMgr.plotData.N_Inf_M[i],
+                !IsNull(appMgr.modelMgr.plotData.N_Inf_M_LB) ? appMgr.modelMgr.plotData.N_Inf_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Inf_M_UB) ? appMgr.modelMgr.plotData.N_Inf_M_UB[i] : null,
+                'solid'
+              ]),
+              selected: true
+            }
           ]}
           legendOptions={legendOptions}
           color={color}
@@ -74,8 +85,8 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.t_diag[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.t_diag_LB) ? appMgr.modelMgr.plotData.t_diag_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.t_diag_UB) ? appMgr.modelMgr.plotData.t_diag_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -99,10 +110,21 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           yAxisTitle='Count'
           data={[
             {
-              name: 'Alive',
+              name: 'Diagnosed from model',
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Alive[i],
+                appMgr.modelMgr.plotData.N_Alive_Diag_M[i],
+                !IsNull(appMgr.modelMgr.plotData.N_Alive_Diag_M_LB) ? appMgr.modelMgr.plotData.N_Alive_Diag_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Alive_Diag_M_UB) ? appMgr.modelMgr.plotData.N_Alive_Diag_M_UB[i] : null,
+                'solid'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Diagnosed migrants',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                null,
                 null,
                 null,
                 'solid'
@@ -114,6 +136,17 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_Und[i],
+                !IsNull(appMgr.modelMgr.plotData.N_Und_LB) ? appMgr.modelMgr.plotData.N_Und_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Und_UB) ? appMgr.modelMgr.plotData.N_Und_UB[i] : null,
+                'solid'
+              ]),
+              selected: true
+            },
+            {
+              name: 'Undiagnosed migrants',
+              values: appMgr.modelMgr.plotData.Year.map((year, i) => [
+                year,
+                null,
                 null,
                 null,
                 'solid'
@@ -121,16 +154,17 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
               selected: true
             },
             {
-              name: 'Diagnosed from model',
+              name: 'Alive',
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
-                appMgr.modelMgr.plotData.N_Alive_Diag_M[i],
-                null,
-                null,
+                appMgr.modelMgr.plotData.N_Alive[i],
+                !IsNull(appMgr.modelMgr.plotData.N_Alive_LB) ? appMgr.modelMgr.plotData.N_Alive_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Alive_UB) ? appMgr.modelMgr.plotData.N_Alive_UB[i] : null,
                 'solid'
               ]),
               selected: true
-            }
+            },
+
           ]}
           legendOptions={legendOptions}
           color={color}
@@ -154,8 +188,8 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_Und_Alive_p[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_Und_Alive_p_LB) ? appMgr.modelMgr.plotData.N_Und_Alive_p_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_Und_Alive_p_UB) ? appMgr.modelMgr.plotData.N_Und_Alive_p_UB[i] : null,
                 'solid'
               ]),
               selected: true

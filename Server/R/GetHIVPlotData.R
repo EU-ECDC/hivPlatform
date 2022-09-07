@@ -2,7 +2,7 @@
 #'
 #' Get HIV plot data
 #'
-#' @param mainFitResult mainFitResult
+#' @param mainFitOutputs mainFitOutputs
 #' @param bootstrapFitStats bootstrapFitStats
 #' @param parameters parameters
 #' @param migrConnFlag migrConnFlag
@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #' GetHIVPlotData(
-#'   mainFitResult,
+#'   mainFitOutputs,
 #'   bootstrapFitStats,
 #'   parameters,
 #'   migrConnFlag
@@ -21,7 +21,7 @@
 #'
 #' @export
 GetHIVPlotData <- function(
-  mainFitResult,
+  mainFitOutputs,
   bootstrapFitStats = NULL,
   parameters = NULL,
   migrConnFlag = FALSE
@@ -52,7 +52,7 @@ GetHIVPlotData <- function(
       )
     )
   }
-  dt <- mainFitResult[, ..colNames]
+  dt <- mainFitOutputs[, ..colNames]
   dt[, ':='(
     N_HIV_D_Used = between(Year, parameters$FitPosMinYear, parameters$FitPosMaxYear),
     N_CD4_1_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
@@ -63,8 +63,8 @@ GetHIVPlotData <- function(
     N_AIDS_D_Used = between(Year, parameters$FitAIDSMinYear, parameters$FitAIDSMaxYear)
   )]
 
-  confColNames <- colnames(bootstrapFitStats$MainOutputsStats)
   if (!is.null(bootstrapFitStats)) {
+    confColNames <- names(bootstrapFitStats$MainOutputsStats)
     for (colName in colNames) {
       if (colName %in% confColNames) {
         confBounds <- bootstrapFitStats$MainOutputsStats[[colName]]

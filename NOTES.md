@@ -71,3 +71,8 @@ Colors of curves:
 
     if migrant module: UndiagnosedFrac
     else N_Und_Alive_p
+
+1. Enable reporting after adjustments.
+2. Allow hiding confidence bounds in charts (establish count criteria for default setting).
+3. Add count of observations in chart tooltip (per point).
+4. Check how mortality is integrated with non-parametric main model fit.

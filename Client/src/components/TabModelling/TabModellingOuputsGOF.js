@@ -18,6 +18,13 @@ const TabModellingOutputsGOF = props => {
 
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
+      <Grid item xs={5}>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography variant='body2'>
+          Dotted curves represent data not used in the modelling (see tab "Advanced").
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <Typography variant='h6'>
           A. HIV diagnoses, total
@@ -88,8 +95,8 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_CD4_1_Obs_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_1_Obs_M_LB) ? appMgr.modelMgr.plotData.N_CD4_1_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_1_Obs_M_UB) ? appMgr.modelMgr.plotData.N_CD4_1_Obs_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -129,8 +136,8 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_CD4_2_Obs_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_2_Obs_M_LB) ? appMgr.modelMgr.plotData.N_CD4_2_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_2_Obs_M_UB) ? appMgr.modelMgr.plotData.N_CD4_2_Obs_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -170,8 +177,8 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_CD4_3_Obs_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_3_Obs_M_LB) ? appMgr.modelMgr.plotData.N_CD4_3_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_3_Obs_M_UB) ? appMgr.modelMgr.plotData.N_CD4_3_Obs_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -211,8 +218,8 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_CD4_4_Obs_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_4_Obs_M_LB) ? appMgr.modelMgr.plotData.N_CD4_4_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_CD4_4_Obs_M_UB) ? appMgr.modelMgr.plotData.N_CD4_4_Obs_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -252,8 +259,8 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M[i],
-                null,
-                null,
+                !IsNull(appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_LB) ? appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_UB) ? appMgr.modelMgr.plotData.N_HIVAIDS_Obs_M_UB[i] : null,
                 'solid'
               ]),
               selected: true
@@ -293,9 +300,9 @@ const TabModellingOutputsGOF = props => {
               values: appMgr.modelMgr.plotData.Year.map((year, i) => [
                 year,
                 appMgr.modelMgr.plotData.N_AIDS_M[i],
-                null,
-                null,
-                null
+                !IsNull(appMgr.modelMgr.plotData.N_AIDS_M_LB) ? appMgr.modelMgr.plotData.N_AIDS_M_LB[i] : null,
+                !IsNull(appMgr.modelMgr.plotData.N_AIDS_M_UB) ? appMgr.modelMgr.plotData.N_AIDS_M_UB[i] : null,
+                'solid'
               ]),
               selected: true
             }

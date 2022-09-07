@@ -364,7 +364,7 @@ HIVModelManager <- R6::R6Class( # nolint
 
             # First set is used only!
             plotData <- GetHIVPlotData(
-              mainFitResult = impResult[[1]]$Results$MainOutputs,
+              mainFitOutputs = impResult[[1]]$Results$MainOutputs,
               parameters = parameters,
               migrConnFlag = migrConnFlag && dataAfterMigr
             )
@@ -595,7 +595,11 @@ HIVModelManager <- R6::R6Class( # nolint
 
             stats <- GetBootstrapFitStats(fits)
 
-            plotData <- GetHIVPlotData(mainFitResult, stats)
+            plotData <- GetHIVPlotData(
+              mainFitOutputs = mainFitResult[[1]]$Results$MainOutputs,
+              bootstrapFitStats = stats,
+              migrConnFlag = FALSE
+            )
 
             result <- list(
               Fits = fits,
@@ -630,7 +634,7 @@ HIVModelManager <- R6::R6Class( # nolint
               payload = list(
                 ActionStatus = 'SUCCESS',
                 ActionMessage = 'Running HIV Model bootstrap fit task finished',
-                PlotData = result$PlotData
+                PlotData = ConvertObjToJSON(result$PlotData, dataframe = 'columns')
               )
             )
           },

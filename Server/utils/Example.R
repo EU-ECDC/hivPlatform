@@ -213,6 +213,7 @@ appMgr$HIVModelMgr$RunMainFit(
   popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
 )
 
+ConvertObjToJSON(result$PlotData, dataframe = 'columns')
 json <- ConvertObjToJSON(plotData, dataframe = 'columns')
 writeLines(json, 'json.txt')
 
@@ -223,12 +224,6 @@ aggrDataSelection <- data.table(
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
 appMgr$HIVModelMgr$SetAggrFilters(aggrDataSelection)
-
-appMgr$HIVModelMgr$SetMigrConnFlag(TRUE)
-appMgr$HIVModelMgr$MigrConnFlag
-appMgr$HIVModelMgr$RunMainFit(
-  settings = list(Verbose = FALSE)
-)
 
 # popCombination <- list(
 #   Case = NULL,
@@ -308,6 +303,18 @@ data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter)
 # STEP 8 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
+
+
+        avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
+        maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
+            mainFitResult = isolate(appMgr$HIVModelMgr$MainFitResult)
+            caseData = isolate(appMgr$CaseMgr$Data)
+            aggrData = isolate(appMgr$AggrMgr$Data)
+            popCombination = isolate(appMgr$HIVModelMgr$PopCombination)
+            aggrDataSelection = isolate(appMgr$HIVModelMgr$AggrDataSelection)
+            randomSeed = .Random.seed
+
+
 
 # 3. Detailed HIV Model bootstrap results (rds)
 appMgr$HIVModelMgr$BootstrapFitResult
