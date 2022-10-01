@@ -1,3 +1,28 @@
+#' GetMigrantConfBounds
+#'
+#' Compute confidence bounds for migrant related statistics.
+#'
+#' @param data data
+#' @param strat strat
+#' @param region region
+#' @param regionColumn regionColumn
+#' @param minPresentRatio minPresentRatio
+#' @param detailed detailed
+#'
+#' @return object (data.table or list)
+#'
+#' @examples
+#' \dontrun{
+#' GetMigrantConfBounds(
+#'   data,
+#'   strat = c(),
+#'   region = 'ALL',
+#'   regionColumn = 'MigrantRegionOfOrigin',
+#'   minPresentRatio = 0.9,
+#'   detailed = FALSE
+#' )
+#' }
+#'
 #' @export
 GetMigrantConfBounds <- function(
   data,

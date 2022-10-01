@@ -4,12 +4,21 @@
 \alias{GetHIVPlotData}
 \title{GetHIVPlotData}
 \usage{
-GetHIVPlotData(mainFitResult, bootstrapFitStats = NULL)
+GetHIVPlotData(
+  mainFitOutputs,
+  bootstrapFitStats = NULL,
+  parameters = NULL,
+  migrConnFlag = FALSE
+)
 }
 \arguments{
-\item{mainFitResult}{mainFitResult}
+\item{mainFitOutputs}{mainFitOutputs}
 
 \item{bootstrapFitStats}{bootstrapFitStats}
+
+\item{parameters}{parameters}
+
+\item{migrConnFlag}{migrConnFlag}
 }
 \value{
 data.table
@@ -20,8 +29,10 @@ Get HIV plot data
 \examples{
 \dontrun{
 GetHIVPlotData(
-  mainFitResult,
-  bootstrapFitStats
+  mainFitOutputs,
+  bootstrapFitStats,
+  parameters,
+  migrConnFlag
 )
 }
 

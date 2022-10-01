@@ -1,3 +1,17 @@
+#' PrepareMigrantData
+#'
+#' Pre-processes data as input for migrant module
+#'
+#' @param data data
+#' @param seed sees
+#'
+#' @return list
+#'
+#' @examples
+#' \dontrun{
+#' PrepareMigrantData(data, seed)
+#' }
+#'
 #' @export
 PrepareMigrantData <- function(
   data,

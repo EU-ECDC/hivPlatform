@@ -1,3 +1,16 @@
+#' GetMigrantOutputStats
+#'
+#' Get statistics for migrant module output
+#'
+#' @param data data
+#'
+#' @return list
+#'
+#' @examples
+#' \dontrun{
+#' GetMigrantOutputStats(data)
+#' }
+#'
 #' @export
 GetMigrantOutputStats <- function(
   data

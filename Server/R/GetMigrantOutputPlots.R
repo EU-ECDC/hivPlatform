@@ -1,3 +1,24 @@
+#' GetMigrantOutputPlots
+#'
+#' Get migrant output plots data
+#'
+#' @param data data
+#' @param ... Additional arugmnents passed to \code{\link{GetMigrantConfBounds}}
+#'
+#' @return list
+#'
+#' @examples
+#' \dontrun{
+#' GetMigrantOutputPlots(
+#'   data,
+#'   strat = c(),
+#'   region = 'ALL',
+#'   regionColumn = 'MigrantRegionOfOrigin',
+#'   minPresentRatio = 0.9,
+#'   detailed = FALSE
+#' )
+#' }
+#'
 #' @export
 GetMigrantOutputPlots <- function(
   data,
