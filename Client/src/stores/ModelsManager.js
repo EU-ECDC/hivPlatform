@@ -46,6 +46,7 @@ export default class ModelsManager {
       bootstrapType: observable,
       plotData: observable,
       migrConnFlag: observable,
+      showConfBounds: observable,
       setModelsParamFile: action,
       setModelsParamFileName: action,
       setMinYear: action,
@@ -76,6 +77,7 @@ export default class ModelsManager {
       runBootstrap: action,
       cancelBootstrap: action,
       setMigrConnFlag: action,
+      setShowConfBounds: action,
       modelsRunInProgress: computed,
       bootstrapRunInProgress: computed,
       gofTable1Data: computed,
@@ -85,10 +87,21 @@ export default class ModelsManager {
       gofTable5Data: computed,
       gofTable6Data: computed,
       gofTable7Data: computed,
+      gofPlot1Data: computed,
+      gofPlot2Data: computed,
+      gofPlot3Data: computed,
+      gofPlot4Data: computed,
+      gofPlot5Data: computed,
+      gofPlot6Data: computed,
+      gofPlot7Data: computed,
       outputTable1Data: computed,
       outputTable2Data: computed,
       outputTable3Data: computed,
       outputTable4Data: computed,
+      outputPlot1Data: computed,
+      outputPlot2Data: computed,
+      outputPlot3Data: computed,
+      outputPlot4Data: computed,
       mainOutputTableData: computed
     });
 
@@ -144,7 +157,38 @@ export default class ModelsManager {
   // Migration connection
   migrConnFlag = false;
 
+  // Show confidence bounds in outputs
+  showConfBounds = true;
+
   plotData = null;
+
+  colsDescriptions = {
+    N_HIV_D: 'Data',
+    N_HIV_Obs_M: 'Model',
+    N_CD4_1_D: 'Data',
+    N_CD4_1_Obs_M: 'Model',
+    N_CD4_2_D: 'Data',
+    N_CD4_2_Obs_M: 'Model',
+    N_CD4_3_D: 'Data',
+    N_CD4_3_Obs_M: 'Model',
+    N_CD4_4_D: 'Data',
+    N_CD4_4_Obs_M: 'Model',
+    N_HIVAIDS_D: 'Data',
+    N_HIVAIDS_Obs_M: 'Model',
+    N_AIDS_D: 'Data',
+    N_AIDS_M: 'Model',
+    N_Inf_M: 'New incident infections',
+    NewMigrantDiagnosesPerArrYear: 'New arrivals of infected migrants',
+    InfectionsTotal: 'Total',
+    t_diag: 'Time to diagnosis',
+    N_Alive_Diag_M: 'Diagnosed from model',
+    CumDiagnosedCasesInclMigr: 'Diagnosed migrants',
+    N_Und: 'Undiagnosed from model',
+    CumUndiagnosedCasesInclMigr: 'Undiagnosed migrants',
+    N_Alive: 'Alive',
+    N_Und_Alive_p: 'Proportion of undiagnosed',
+    UndiagnosedFrac: 'Proportion of undiagnosed'
+  };
 
   setModelsParamFile = paramFile => {
     if (paramFile) {
@@ -246,6 +290,8 @@ export default class ModelsManager {
 
   setMigrConnFlag = flag => this.migrConnFlag = flag;
 
+  setShowConfBounds = show => this.showConfBounds = show;
+
   get modelsRunInProgress() {
     return this.modelsRunProgress !== null;
   };
@@ -255,52 +301,118 @@ export default class ModelsManager {
   };
 
   get gofTable1Data() {
-    return (this.getTableData(['Year', 'N_HIV_D', 'N_HIV_Obs_M', 'N_HIV_Obs_M_LB', 'N_HIV_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_HIV_D', 'N_HIV_Obs_M']);
+  };
+
+  get gofPlot1Data() {
+    return [this.getPlotSeries('N_HIV_D'), this.getPlotSeries('N_HIV_Obs_M')];
   };
 
   get gofTable2Data() {
-    return (this.getTableData(['Year', 'N_CD4_1_D', 'N_CD4_1_Obs_M', 'N_CD4_1_Obs_M_LB', 'N_CD4_1_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_CD4_1_D', 'N_CD4_1_Obs_M']);
+  };
+
+  get gofPlot2Data() {
+    return [this.getPlotSeries('N_CD4_1_D'), this.getPlotSeries('N_CD4_1_Obs_M')];
   };
 
   get gofTable3Data() {
-    return (this.getTableData(['Year', 'N_CD4_2_D', 'N_CD4_2_Obs_M', 'N_CD4_2_Obs_M_LB', 'N_CD4_2_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_CD4_2_D', 'N_CD4_2_Obs_M']);
+  };
+
+  get gofPlot3Data() {
+    return [this.getPlotSeries('N_CD4_2_D'), this.getPlotSeries('N_CD4_2_Obs_M')];
   };
 
   get gofTable4Data() {
-    return (this.getTableData(['Year', 'N_CD4_3_D', 'N_CD4_3_Obs_M', 'N_CD4_3_Obs_M_LB', 'N_CD4_3_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_CD4_3_D', 'N_CD4_3_Obs_M']);
   };
 
+  get gofPlot4Data() {
+    return [this.getPlotSeries('N_CD4_3_D'), this.getPlotSeries('N_CD4_3_Obs_M')];
+  };
 
   get gofTable5Data() {
-    return (this.getTableData(['Year', 'N_CD4_4_D', 'N_CD4_4_Obs_M', 'N_CD4_4_Obs_M_LB', 'N_CD4_4_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_CD4_4_D', 'N_CD4_4_Obs_M']);
+  };
+
+  get gofPlot5Data() {
+    return [this.getPlotSeries('N_CD4_4_D'), this.getPlotSeries('N_CD4_4_Obs_M')];
   };
 
   get gofTable6Data() {
-    return (this.getTableData(['Year', 'N_HIVAIDS_D', 'N_HIVAIDS_Obs_M', 'N_HIVAIDS_Obs_M_LB', 'N_HIVAIDS_Obs_M_UB']));
+    return this.getTableData(['Year', 'N_HIVAIDS_D', 'N_HIVAIDS_Obs_M']);
+  };
+
+  get gofPlot6Data() {
+    return [this.getPlotSeries('N_HIVAIDS_D'), this.getPlotSeries('N_HIVAIDS_Obs_M')];
   };
 
   get gofTable7Data() {
-    return (this.getTableData(['Year', 'N_AIDS_D', 'N_AIDS_M', 'N_AIDS_M_LB', 'N_AIDS_M_UB']));
+    return this.getTableData(['Year', 'N_AIDS_D', 'N_AIDS_M']);
+  };
+
+  get gofPlot7Data() {
+    return [this.getPlotSeries('N_AIDS_D'), this.getPlotSeries('N_AIDS_M')];
   };
 
   get outputTable1Data() {
-    return (this.getTableData(['Year', 'N_Inf_M', 'N_Inf_M_LB', 'N_Inf_M_UB']));
+    return this.getTableData([
+      'Year', 'N_Inf_M', 'NewMigrantDiagnosesPerArrYear', 'InfectionsTotal']
+    );
+  };
+
+  get outputPlot1Data() {
+    return [
+      this.getPlotSeries('N_Inf_M'),
+      this.getPlotSeries('NewMigrantDiagnosesPerArrYear'),
+      this.getPlotSeries('InfectionsTotal')
+    ];
   };
 
   get outputTable2Data() {
-    return (this.getTableData(['Year', 't_diag', 't_diag_LB', 't_diag_UB']));
+    return this.getTableData(['Year', 't_diag']);
+  };
+
+  get outputPlot2Data() {
+    return [this.getPlotSeries('t_diag')];
   };
 
   get outputTable3Data() {
-    return (this.getTableData(['Year', 'N_Alive', 'N_Alive_Diag_M', 'N_Und']));
+    return this.getTableData([
+      'Year', 'N_Alive_Diag_M', 'CumDiagnosedCasesInclMigr', 'N_Und', 'CumUndiagnosedCasesInclMigr',
+      'N_Alive'
+    ]);
+  };
+
+  get outputPlot3Data() {
+    return [
+      this.getPlotSeries('N_Alive_Diag_M'),
+      this.getPlotSeries('CumDiagnosedCasesInclMigr'),
+      this.getPlotSeries('N_Und'),
+      this.getPlotSeries('CumUndiagnosedCasesInclMigr'),
+      this.getPlotSeries('N_Alive')
+    ];
   };
 
   get outputTable4Data() {
-    return (this.getTableData(['Year', 'N_Und_Alive_p', 'N_Und_Alive_p_LB', 'N_Und_Alive_p_UB']));
+    if (this.migrConnFlag) {
+      return this.getTableData(['Year', 'UndiagnosedFrac']);
+    } else {
+      return this.getTableData(['Year', 'N_Und_Alive_p']);
+    }
+  };
+
+  get outputPlot4Data() {
+    if (this.migrConnFlag) {
+      return [this.getPlotSeries('UndiagnosedFrac')];
+    } else {
+      return [this.getPlotSeries('N_Und_Alive_p')];
+    }
   };
 
   get mainOutputTableData() {
-    return (this.getTableData([
+    return this.getTableData([
       'Year',
       'N_HIV_D', 'N_HIV_Obs_M',
       'N_CD4_1_D', 'N_CD4_2_D', 'N_CD4_3_D', 'N_CD4_4_D',
@@ -312,48 +424,62 @@ export default class ModelsManager {
       'N_Alive', 'N_Alive_Diag_M',
       'N_Und', 'N_Und_Alive_p',
       'N_Und_CD4_3_M', 'N_Und_CD4_4_M'
-    ]));
+    ]);
   };
 
   getTableData = colNames => {
     if (!IsNull(this.plotData)) {
-      let finalColNames = colNames.filter(colName => !IsNull(this.plotData[colName]));
-
-      const data = finalColNames.map(colName => {
-        if (colName === 'Year') {
-          return (this.plotData.Year);
-        } else {
-          return (this.plotData[colName].map(val => FormatNumber(val)));
-        }
-      })
+      const values = this.plotData.Year.map((year, i) =>
+        colNames.map(colName => this.getTableEntry(colName, i))
+      );
 
       return ({
-        ColNames: finalColNames,
-        Data: data
+        colNames: colNames,
+        values: values
       });
     } else {
-      return ({
-        ColNames: [],
-        Data: []
-      });
+      return null;
     }
   };
 
-  getPlotSeries = colNamesMap => {
+  getTableEntry = (colName, i) => {
+    if (colName === 'Year') {
+      return this.plotData.Year[i];
+    }
+    const val = this.plotData[colName] ? this.plotData[colName][i] : null;
+    if (IsNull(val) || !isFinite(val)) {
+      return '';
+    }
+    if (!this.showConfBounds || !this.plotData[colName + '_LB'] || !this.plotData[colName + '_UB']) {
+      return FormatNumber(val);
+    }
+    let lb = this.plotData[colName + '_LB'] ? this.plotData[colName + '_LB'][i] : null;
+    let ub = this.plotData[colName + '_UB'] ? this.plotData[colName + '_UB'][i] : null;
+    if (!isFinite(lb) || IsNull(lb)) {
+      lb = val;
+    }
+    if (!isFinite(ub) || IsNull(ub)) {
+      ub = val;
+    }
+    return `${FormatNumber(val)} (${FormatNumber(lb)} - ${FormatNumber(ub)})`;
+  };
+
+  getPlotSeries = colName => {
     if (!IsNull(this.plotData)) {
-      const sourceColNames = Object.keys(colNamesMap).filter(colName => !IsNull(this.plotData[colName]));
-      const destColNames = Object.values(SelectObjectProperties(colNamesMap, sourceColNames));
-
-      const data = this.plotData.Year.map((year, i) => {
-        let result = {};
-        sourceColNames.forEach((colName, j) => result[destColNames[j]] = this.plotData[colName][i]);
-        return (result);
+      const values = this.plotData.Year.map((year, i) => [
+        year,
+        this.plotData[colName] ? this.plotData[colName][i] : null,
+        this.plotData[colName + '_LB'] ? this.plotData[colName + '_LB'][i] : null,
+        this.plotData[colName + '_UB'] ? this.plotData[colName + '_UB'][i] : null,
+        this.plotData[colName + '_Used'] ? this.plotData[colName + '_Used'][i] : true
+      ])
+      return ({
+        name: this.colsDescriptions[colName],
+        values: values,
+        selected: true
       })
-
-      return (data);
     } else {
-      return (null);
+      return null;
     }
   }
-
 }

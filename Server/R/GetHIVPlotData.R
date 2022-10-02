@@ -5,7 +5,6 @@
 #' @param mainFitOutputs mainFitOutputs
 #' @param bootstrapFitStats bootstrapFitStats
 #' @param parameters parameters
-#' @param migrConnFlag migrConnFlag
 #'
 #' @return data.table
 #'
@@ -23,8 +22,7 @@
 GetHIVPlotData <- function(
   mainFitOutputs,
   bootstrapFitStats = NULL,
-  parameters = NULL,
-  migrConnFlag = FALSE
+  parameters = NULL
 ) {
   colNames <- c(
     'Year',
@@ -41,35 +39,44 @@ GetHIVPlotData <- function(
     'N_Alive', 'N_Alive_Diag_M', 'N_Und',
     'N_Und_Alive_p',
     'N_Und_CD4_3_M', 'N_Und_CD4_4_M',
-    'DeadsUndiagnosed'
+    'DeadsUndiagnosed',
+    'DiagPriorArrival', 'InfCountryOfOriginPerArrYear', 'InfCountryOfOriginPerDiagYear',
+    'NewMigrantDiagnosesPerArrYear', 'NewMigrantDiagnosesPerDiagYear', 'CumInfectionsInclMigr',
+    'CumDiagnosedCasesInclMigr', 'CumUndiagnosedCasesInclMigr', 'UndiagnosedFrac', 'InfectionsTotal'
   )
-  if (migrConnFlag) {
-    colNames <- union(
-      colNames,
-      c(
-        'DiagPriorArrival', 'InfCountryOfOrigin', 'NewMigrantDiagnoses', 'CumInfectionsInclMigr',
-        'CumDiagnosedCasesInclMigr', 'UndiagnosedFrac'
-      )
-    )
-  }
+  dataColNames <- c(
+    'N_HIV_D', 'N_CD4_1_D', 'N_CD4_2_D', 'N_CD4_3_D', 'N_CD4_4_D', 'N_HIVAIDS_D', 'N_AIDS_D'
+  )
   dt <- mainFitOutputs[, ..colNames]
-  dt[, ':='(
-    N_HIV_D_Used = between(Year, parameters$FitPosMinYear, parameters$FitPosMaxYear),
-    N_CD4_1_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
-    N_CD4_2_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
-    N_CD4_3_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
-    N_CD4_4_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
-    N_HIVAIDS_D_Used = between(Year, parameters$FitAIDSPosMinYear, parameters$FitAIDSPosMaxYear),
-    N_AIDS_D_Used = between(Year, parameters$FitAIDSMinYear, parameters$FitAIDSMaxYear)
-  )]
+  if (!is.null(parameters)) {
+    dt[, ':='(
+      N_HIV_D_Used = between(Year, parameters$FitPosMinYear, parameters$FitPosMaxYear),
+      N_CD4_1_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
+      N_CD4_2_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
+      N_CD4_3_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
+      N_CD4_4_D_Used = between(Year, parameters$FitPosCD4MinYear, parameters$FitPosCD4MaxYear),
+      N_HIVAIDS_D_Used = between(Year, parameters$FitAIDSPosMinYear, parameters$FitAIDSPosMaxYear),
+      N_AIDS_D_Used = between(Year, parameters$FitAIDSMinYear, parameters$FitAIDSMaxYear)
+    )]
+  } else {
+    dt[, ':='(
+      N_HIV_D_Used = TRUE,
+      N_CD4_1_D_Used = TRUE,
+      N_CD4_2_D_Used = TRUE,
+      N_CD4_3_D_Used = TRUE,
+      N_CD4_4_D_Used = TRUE,
+      N_HIVAIDS_D_Used = TRUE,
+      N_AIDS_D_Used = TRUE
+    )]
+  }
 
   if (!is.null(bootstrapFitStats)) {
     confColNames <- names(bootstrapFitStats$MainOutputsStats)
-    for (colName in colNames) {
+    for (colName in setdiff(colNames, dataColNames)) {
       if (colName %in% confColNames) {
         confBounds <- bootstrapFitStats$MainOutputsStats[[colName]]
-        colNames <- paste(colName, c('LB', 'UB', 'Range'), sep = '_')
-        dt[confBounds, (colNames) := .(i.LB, i.UB, i.UB - i.LB), on = .(Year)]
+        colNames <- paste(colName, c('LB', 'UB', 'Count'), sep = '_')
+        dt[confBounds, (colNames) := .(i.LB, i.UB, i.Count), on = .(Year)]
       }
     }
   }

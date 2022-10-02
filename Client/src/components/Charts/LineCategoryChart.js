@@ -41,7 +41,8 @@ const LineCategoryChart = ({
     selector: true
   },
   color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce'],
-  format = 'number'
+  format = 'number',
+  showConfBounds = true
 }) => {
   const SanitizeData = (seriesData) => {
     let sanitizedData = null;
@@ -49,18 +50,22 @@ const LineCategoryChart = ({
       sanitizedData = seriesData.map(el => {
         // If main value is not finite then no confidence bounds
         if (!isFinite(el[1])) {
-          return ([el[0], null, null, null])
+          return ([el[0], null, null, null, null, null])
+        }
+        // Do not show confidence bounds if not requested
+        if (!showConfBounds) {
+          return ([el[0], el[1], null, null, el[4], null])
         }
         // If lower bound is not finite, then main value is the lower bound
-        if (!isFinite(el[2])) {
-          el[2] = el[1]
+        if (!isFinite(el[2]) || IsNull(el[2])) {
+          el[2] = el[1];
         }
         // If upper bound is not finite, then main value is the uper bound
-        if (!isFinite(el[3])) {
-          el[3] = el[1]
+        if (!isFinite(el[3]) || IsNull(el[3])) {
+          el[3] = el[1];
         }
 
-        return (el)
+        return el;
       });
     }
 
@@ -118,7 +123,7 @@ const LineCategoryChart = ({
       style: {
         stroke: color,
         fill: 'none',
-        lineDash: api.value(4, dataIdx) === 'dotted' || api.value(4, dataIdx + 1) === 'dotted' ? [2] : null
+        lineDash: !api.value(4, dataIdx) || !api.value(4, dataIdx + 1) ? [2] : null
       }
     })
     // Add main value circle
@@ -150,7 +155,6 @@ const LineCategoryChart = ({
       series.push({
         name: s.name,
         type: 'custom',
-        // data: SanitizeData(s.values),
         renderItem: RenderItem,
         encode: {
           x: 'x',
@@ -225,10 +229,14 @@ const LineCategoryChart = ({
       trigger: 'axis',
       formatter: params => {
         const test = params.map(el => {
-          console.log(el)
+          console.log(el);
           let confBounds = '';
           if (!IsNull(el.value[2]) && !IsNull(el.value[3])) {
-            confBounds = ` (${FormatFunc(el.value[2], 0)} - ${FormatFunc(el.value[3], 0)})`;
+            let countStr = '';
+            if (!IsNull(el.value[5])) {
+              countStr = `, Count: ${FormatNumber(el.value[5])}`;
+            }
+            confBounds = ` (${FormatFunc(el.value[2], 0)} - ${FormatFunc(el.value[3], 0)})${countStr}`;
           }
 
           return (
@@ -240,6 +248,9 @@ const LineCategoryChart = ({
           Year: ${params[0].axisValue}<br/ >
           ${test}
         `)
+      },
+      textStyle: {
+        fontSize: 12
       }
     },
     toolbox: {

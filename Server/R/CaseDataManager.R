@@ -530,7 +530,7 @@ CaseDataManager <- R6::R6Class( # nolint
                 MigrantRegionOfOrigin := 'OTHER'
               ]
 
-              PrintH2('Preparing diagnostic statistics and plots')
+              PrintH1('Preparing diagnostic statistics and plots')
               outputStats <- hivPlatform::GetMigrantOutputStats(output)
               confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
               outputPlots <- hivPlatform::GetMigrantOutputPlots(output, minPresentRatio = 1)
@@ -547,7 +547,7 @@ CaseDataManager <- R6::R6Class( # nolint
                 )
               )
 
-              PrintH2('Done')
+              PrintH1('Done')
 
               return(result)
             },

@@ -341,8 +341,10 @@ HIVModelManager <- R6::R6Class( # nolint
                 model[is.na(InfCountryOfOriginPerArrYear), InfCountryOfOriginPerArrYear := 0]
                 model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
                 model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
-                model[, NewMigrantDiagnosesPerArrYear := DiagPriorArrival + InfCountryOfOriginPerArrYear]
-                model[, NewMigrantDiagnosesPerDiagYear := DiagPriorArrival + InfCountryOfOriginPerDiagYear]
+                model[, ':='(
+                  NewMigrantDiagnosesPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
+                  NewMigrantDiagnosesPerDiagYear = DiagPriorArrival + InfCountryOfOriginPerDiagYear
+                )]
                 model[, ':='(
                   CumInfectionsInclMigr =
                     cumsum(N_Inf_M) + cumsum(NewMigrantDiagnosesPerArrYear) - cumsum(N_Dead_D) -
@@ -350,8 +352,24 @@ HIVModelManager <- R6::R6Class( # nolint
                   CumDiagnosedCasesInclMigr =
                     cumsum(N_HIV_M) + cumsum(NewMigrantDiagnosesPerDiagYear) - cumsum(N_Dead_D)
                 )]
-                model[, UndiagnosedFrac := 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr]
+                model[, ':='(
+                  CumUndiagnosedCasesInclMigr = CumInfectionsInclMigr - CumDiagnosedCasesInclMigr,
+                  UndiagnosedFrac = 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr
+                )]
+              } else {
+                model[, ':='(
+                  DiagPriorArrival = NA_real_,
+                  InfCountryOfOriginPerArrYear = NA_real_,
+                  InfCountryOfOriginPerDiagYear = NA_real_,
+                  NewMigrantDiagnosesPerArrYear = NA_real_,
+                  NewMigrantDiagnosesPerDiagYear = NA_real_,
+                  CumInfectionsInclMigr = NA_real_,
+                  CumDiagnosedCasesInclMigr = NA_real_,
+                  CumUndiagnosedCasesInclMigr = NA_real_,
+                  UndiagnosedFrac = NA_real_
+                )]
               }
+              model[, InfectionsTotal := N_Inf_M + na.zero(NewMigrantDiagnosesPerArrYear)]
 
               impResult[[imp]] <- list(
                 Context = context,
@@ -365,8 +383,7 @@ HIVModelManager <- R6::R6Class( # nolint
             # First set is used only!
             plotData <- GetHIVPlotData(
               mainFitOutputs = impResult[[1]]$Results$MainOutputs,
-              parameters = parameters,
-              migrConnFlag = migrConnFlag && dataAfterMigr
+              parameters = parameters
             )
 
             result <- list(
@@ -567,6 +584,21 @@ HIVModelManager <- R6::R6Class( # nolint
                 )
                 runTime <- Sys.time() - startTime
 
+                model <- bootResult$MainOutputs
+                model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
+                model[, ':='(
+                  DiagPriorArrival = NA_real_,
+                  InfCountryOfOriginPerArrYear = NA_real_,
+                  InfCountryOfOriginPerDiagYear = NA_real_,
+                  NewMigrantDiagnosesPerArrYear = NA_real_,
+                  NewMigrantDiagnosesPerDiagYear = NA_real_,
+                  CumInfectionsInclMigr = NA_real_,
+                  CumDiagnosedCasesInclMigr = NA_real_,
+                  CumUndiagnosedCasesInclMigr = NA_real_,
+                  UndiagnosedFrac = NA_real_
+                )]
+                model[, InfectionsTotal := N_Inf_M + na.zero(NewMigrantDiagnosesPerArrYear)]
+
                 msgType <- ifelse(bootResult$Converged, 'success', 'danger')
 
                 PrintAlert(
@@ -598,7 +630,7 @@ HIVModelManager <- R6::R6Class( # nolint
             plotData <- GetHIVPlotData(
               mainFitOutputs = mainFitResult[[1]]$Results$MainOutputs,
               bootstrapFitStats = stats,
-              migrConnFlag = FALSE
+              parameters = info
             )
 
             result <- list(

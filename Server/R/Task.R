@@ -229,7 +229,7 @@ Task <- R6::R6Class(
         },
         error = function(e) {
           private$Catalogs$Status <- 'FAIL'
-          private$Catalogs$FailMessage <- gsub('callr subprocess failed: ', '', e$message)
+          private$Catalogs$FailMessage <- gsub('callr subprocess failed: ', '', e$parent)
         })
         private$Catalogs$Result <- result
       }

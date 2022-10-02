@@ -30,7 +30,7 @@ PrepareMigrantData <- function(
   )
   data <- data[FinalData == TRUE, ..colNames]
 
-  PrintH2('Checking data structure validity')
+  PrintH1('Checking data structure validity')
   columnSpecs <- GetListObject(
     GetSystemFile('referenceData/requiredColumns.R'),
     includeFileName = FALSE

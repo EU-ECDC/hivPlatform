@@ -6,9 +6,14 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import IsNull from '../../utilities/IsNull';
 
 const SmallTable = props => {
   const { tableData, maxHeight } = props;
+
+  if (IsNull(tableData)) {
+    return null;
+  }
 
   return (
     <TableContainer style={{ maxHeight: maxHeight || 300 }}>
@@ -22,7 +27,8 @@ const SmallTable = props => {
                 padding: '5px',
                 fontSize: '0.6rem',
                 backgroundColor: 'white',
-                textAlign: 'right'
+                textAlign: 'right',
+                whiteSpace: 'nowrap'
               }
             }
           },
@@ -32,7 +38,8 @@ const SmallTable = props => {
                 padding: '5px',
                 fontSize: '0.6rem',
                 backgroundColor: 'transparent',
-                textAlign: 'right'
+                textAlign: 'right',
+                whiteSpace: 'nowrap'
               }
             }
           }
@@ -42,7 +49,7 @@ const SmallTable = props => {
         <TableHead>
           <TableRow>
             {
-              tableData.ColNames.map((el, i) => (
+              tableData.colNames.map((el, i) => (
                 <TableCell key={i}>{el}</TableCell>
               ))
             }
@@ -50,11 +57,11 @@ const SmallTable = props => {
         </TableHead>
         <TableBody>
           {
-            tableData.Data[0].map((el, i) => (
+            tableData.values.map((el, i) => (
               <TableRow hover key={i}>
                 {
-                  tableData.ColNames.map((colName, j) => (
-                    <TableCell key={j}>{tableData.Data[j][i]}</TableCell>
+                  tableData.colNames.map((colName, j) => (
+                    <TableCell key={j}>{tableData.values[i][j]}</TableCell>
                   ))
                 }
               </TableRow>

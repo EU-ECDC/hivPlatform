@@ -22,7 +22,7 @@ GetBootstrapFitStats <- function(
   succFlatList <- Filter(function(item) item$Results$Converged, flatList)
   succResultsList <- lapply(succFlatList, '[[', 'Results')
 
-  info <- lapply(succResultsList, '[[', 'Info')[[1]]
+  info <- succResultsList[[1]]$Info
   years <- info$ModelMinYear:(info$ModelMaxYear - 1)
 
   mainOutputList <- lapply(succResultsList, '[[', 'MainOutputs')
@@ -35,7 +35,8 @@ GetBootstrapFitStats <- function(
     result <- cbind(
       t(apply(resultSample, 1, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),
       Mean = apply(resultSample, 1, mean, na.rm = TRUE),
-      Std = apply(resultSample, 1, sd, na.rm = TRUE)
+      Std = apply(resultSample, 1, sd, na.rm = TRUE),
+      Count = ncol(resultSample)
     )
     result <- as.data.table(result)
     setnames(result, old = 1:3, new = c('LB', 'Median', 'UB'))

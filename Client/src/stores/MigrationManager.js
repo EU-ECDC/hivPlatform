@@ -25,6 +25,8 @@ export default class MigrationManager {
 
   propTableStrat = [];
 
+  showConfBounds = true;
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
@@ -38,6 +40,7 @@ export default class MigrationManager {
       tableRegion: observable,
       propTableStrat: observable,
       dataCompatibleFlag: observable,
+      showConfBounds: observable,
       runInProgress: computed,
       missingness: computed,
       regionDistr: computed,
@@ -55,6 +58,7 @@ export default class MigrationManager {
       setTableRegion: action,
       setDataCompatibleFlag: action,
       setPropTableStrat: action,
+      setShowConfBounds: action,
       run: action,
       cancel: action
     });
@@ -122,7 +126,8 @@ export default class MigrationManager {
             el.PlotData.PostProp[i],
             el.PlotData.PostPropLB[i],
             el.PlotData.PostPropUB[i],
-            // year < 1991 ? 'dotted': 'solid'
+            true,
+            el.PlotData.Count[i]
           ]),
           selected: el.GroupedRegionOfOrigin === 'ALL'
         })
@@ -141,7 +146,9 @@ export default class MigrationManager {
             year,
             el.PlotData.PostProp[i],
             el.PlotData.PostPropLB[i],
-            el.PlotData.PostPropUB[i]
+            el.PlotData.PostPropUB[i],
+            true,
+            el.PlotData.Count[i]
           ]),
           selected: el.GroupedRegionOfOrigin === 'ALL'
         })
@@ -169,9 +176,9 @@ export default class MigrationManager {
 
   setDataCompatibleFlag = flag => this.dataCompatibleFlag = flag;
 
-  setPropTableStrat = (strat) => {
-    this.propTableStrat = strat;
-  };
+  setPropTableStrat = strat => this.propTableStrat = strat;
+
+  setShowConfBounds = show => this.showConfBounds = show;
 
   run = () => this.rootMgr.btnClicked('runMigrantBtn');
 

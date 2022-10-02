@@ -10,7 +10,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -25,7 +25,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
-appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
+# appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL - Copy.zip')
 # appMgr$AggrMgr$ReadData(filePath = 'D:/Downloads/Dead.csv')
 # appMgr$AggrMgr$ReadData('D:/Downloads/AggregatedData.zip')
@@ -103,9 +103,10 @@ browseURL(fileName)
 # STEP 5 - Migration -------------------------------------------------------------------------------
 
 appMgr$CaseMgr$RunMigration()
-names(appMgr$CaseMgr$MigrationResult$Artifacts$InputStats)
+appMgr$CaseMgr$MigrationResult$Artifacts$InputStats
 appMgr$CaseMgr$MigrationResult$Artifacts$OutputStats$TableDistr
-appMgr$CaseMgr$MigrationResult$Artifacts$OutputPlots$ArrivalPlotData[[1]]
+json <- ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Artifacts$OutputPlots, dataframe = 'columns')
+writeLines(json, 'json.txt')
 appMgr$CaseMgr$MigrationResult$Artifacts$ConfBounds
 
 params <- GetMigrantParams()
@@ -155,7 +156,7 @@ output[
 ]
 
 outputPlots <- hivPlatform::GetMigrantOutputPlots(data = copy(output))
-outputStats <- hivPlatform::GetMigrantOutputStats(output)
+outputStats <- hivPlatform::GetMigrantOutputStats(data = output)
 confBounds <- GetMigrantConfBounds(
   data = output,
   strat = c('AgeGroup'),
@@ -212,9 +213,12 @@ appMgr$HIVModelMgr$RunMainFit(
   parameters = parameters,
   popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
 )
+appMgr$HIVModelMgr$PlotData
+appMgr$HIVModelMgr$MainFitResult[[1]]$Results$MainOutputs
+names(appMgr$HIVModelMgr$MainFitResult[[1]]$Results)
 
-ConvertObjToJSON(result$PlotData, dataframe = 'columns')
-json <- ConvertObjToJSON(plotData, dataframe = 'columns')
+
+json <- ConvertObjToJSON(appMgr$HIVModelMgr$PlotData, dataframe = 'columns')
 writeLines(json, 'json.txt')
 
 aggrDataSelection <- data.table(
@@ -301,20 +305,21 @@ data <- rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), function(iter)
 }))
 
 # STEP 8 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 100, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
+fits <- appMgr$HIVModelMgr$BootstrapFitResult
 
-        avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
-        maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
-            mainFitResult = isolate(appMgr$HIVModelMgr$MainFitResult)
-            caseData = isolate(appMgr$CaseMgr$Data)
-            aggrData = isolate(appMgr$AggrMgr$Data)
-            popCombination = isolate(appMgr$HIVModelMgr$PopCombination)
-            aggrDataSelection = isolate(appMgr$HIVModelMgr$AggrDataSelection)
-            randomSeed = .Random.seed
-
-
+avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
+maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
+prettyunits::pretty_dt(maxRunTime)
+mainFitResult <- isolate(appMgr$HIVModelMgr$MainFitResult)
+caseData <- isolate(appMgr$CaseMgr$Data)
+aggrData <- isolate(appMgr$AggrMgr$Data)
+popCombination <- isolate(appMgr$HIVModelMgr$PopCombination)
+aggrDataSelection <- isolate(appMgr$HIVModelMgr$AggrDataSelection)
+randomSeed <- .Random.seed
 
 # 3. Detailed HIV Model bootstrap results (rds)
 appMgr$HIVModelMgr$BootstrapFitResult

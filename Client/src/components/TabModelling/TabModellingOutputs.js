@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import TabPanel from '../TabPanel';
 import TabModellingOutputsGOF from './TabModellingOuputsGOF';
 import TabModellingOutputsTables from './TabModellingOutputsTables';
@@ -20,6 +22,8 @@ const TabModellingOutputs = props => {
   const handleNextpageBtnClick = () => appMgr.uiStateMgr.setActivePageId(6);
 
   const handleTabChange = (e, tabId) => setTabId(tabId);
+
+  const handleShowConfBoundsChange = e => appMgr.modelMgr.setShowConfBounds(e.target.checked);
 
   return (
     <TabPanel>
@@ -40,7 +44,25 @@ const TabModellingOutputs = props => {
             HIV Modelling results
           </Typography>
         </Grid>
-        <Grid item xs={2} />
+        <Grid item xs={2}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={appMgr.modelMgr.showConfBounds}
+                onChange={handleShowConfBoundsChange}
+                color='primary'
+                size='small'
+              />
+            }
+            label='Show confidence bounds'
+          />
+          <Typography variant='body2' color='textSecondary' sx={{ mt: 1 }}>
+            Enable plotting confidence bounds in the output plots if available.
+          </Typography>
+          <Typography variant='body2' color='textSecondary' sx={{ mt: 1 }}>
+            Dotted curves represent data not used in the modelling (see year ranges in tab "Advanced").
+          </Typography>
+        </Grid>
         <Grid item xs={10}>
           <Paper style={{ padding: 10 }}>
             <Tabs

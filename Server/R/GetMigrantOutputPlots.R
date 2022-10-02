@@ -33,7 +33,7 @@ GetMigrantOutputPlots <- function(
     } else {
       return(list(
         GroupedRegionOfOrigin = region,
-        PlotData = plotData[, .(YearOfArrival, PostProp, PostPropLB, PostPropUB)]
+        PlotData = plotData[, .(YearOfArrival, PostProp, PostPropLB, PostPropUB, Count)]
       ))
     }
   })
@@ -46,7 +46,7 @@ GetMigrantOutputPlots <- function(
     } else {
       return(list(
         GroupedRegionOfOrigin = region,
-        PlotData = plotData[, .(YearOfHIVDiagnosis, PostProp, PostPropLB, PostPropUB)]
+        PlotData = plotData[, .(YearOfHIVDiagnosis, PostProp, PostPropLB, PostPropUB, Count)]
       ))
     }
   })
