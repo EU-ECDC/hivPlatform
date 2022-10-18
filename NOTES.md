@@ -76,3 +76,5 @@ Colors of curves:
 2. Allow hiding confidence bounds in charts (establish count criteria for default setting).
 3. Add count of observations in chart tooltip (per point).
 4. Check how mortality is integrated with non-parametric main model fit.
+
+// 2022/10/03

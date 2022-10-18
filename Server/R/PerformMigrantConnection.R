@@ -85,8 +85,6 @@ PerformMigrantConnection <- function(
     if (migrConnFlag && dataAfterMigr) {
       model <- fitResults$MainOutputs
 
-      model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
-
       # Prepare data for pre-migration infected cases
       preMigrArrY <- caseData[
         Imputation == as.integer(imp) &
@@ -110,8 +108,7 @@ PerformMigrantConnection <- function(
       model[, NewMigrantDiagnoses := DiagPriorArrival + InfCountryOfOrigin]
       model[, ':='(
         CumInfectionsInclMigr =
-          cumsum(N_Inf_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D) -
-            cumsum(DeadsUndiagnosed),
+          cumsum(N_Inf_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D) - Cum_Und_Dead_M,
         CumDiagnosedCasesInclMigr =
           cumsum(N_HIV_M) + cumsum(NewMigrantDiagnoses) - cumsum(N_Dead_D)
       )]

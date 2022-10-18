@@ -48,7 +48,7 @@ const PropCharts = ({migrMgr}) => {
             size='small'
           />
         }
-        label='Show confidence bounds'
+        label='Show confidence bounds in charts below'
         sx={{ marginTop: 1, marginBottom: 1}}
       />
       <Title>

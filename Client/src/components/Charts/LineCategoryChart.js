@@ -40,7 +40,10 @@ const LineCategoryChart = ({
     top: 'center',
     selector: true
   },
-  color = ['#69b023', '#7bbcc0', '#9d8b56', '#ce80ce'],
+  color = [
+    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4',
+    '#ea7ccc'
+  ],
   format = 'number',
   showConfBounds = true
 }) => {
@@ -229,7 +232,6 @@ const LineCategoryChart = ({
       trigger: 'axis',
       formatter: params => {
         const test = params.map(el => {
-          console.log(el);
           let confBounds = '';
           if (!IsNull(el.value[2]) && !IsNull(el.value[3])) {
             let countStr = '';

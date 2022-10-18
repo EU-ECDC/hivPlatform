@@ -178,14 +178,14 @@ export default class ModelsManager {
     N_AIDS_D: 'Data',
     N_AIDS_M: 'Model',
     N_Inf_M: 'New incident infections',
-    NewMigrantDiagnosesPerArrYear: 'New arrivals of infected migrants',
+    NewMigrantInfectionsPerArrYear: 'New arrivals of infected migrants',
     InfectionsTotal: 'Total',
     t_diag: 'Time to diagnosis',
     N_Alive_Diag_M: 'Diagnosed from model',
-    CumDiagnosedCasesInclMigr: 'Diagnosed migrants',
+    CumNewMigrantDiagnosesPerDiagYear: 'Diagnosed migrants',
     N_Und: 'Undiagnosed from model',
-    CumUndiagnosedCasesInclMigr: 'Undiagnosed migrants',
-    N_Alive: 'Alive',
+    CumUndiagnosedMigrantCases: 'Undiagnosed migrants',
+    AliveTotal: 'Alive',
     N_Und_Alive_p: 'Proportion of undiagnosed',
     UndiagnosedFrac: 'Proportion of undiagnosed'
   };
@@ -380,18 +380,18 @@ export default class ModelsManager {
 
   get outputTable3Data() {
     return this.getTableData([
-      'Year', 'N_Alive_Diag_M', 'CumDiagnosedCasesInclMigr', 'N_Und', 'CumUndiagnosedCasesInclMigr',
-      'N_Alive'
+      'Year', 'N_Alive_Diag_M', 'CumNewMigrantDiagnosesPerDiagYear', 'N_Und',
+      'CumUndiagnosedMigrantCases', 'AliveTotal'
     ]);
   };
 
   get outputPlot3Data() {
     return [
       this.getPlotSeries('N_Alive_Diag_M'),
-      this.getPlotSeries('CumDiagnosedCasesInclMigr'),
+      this.getPlotSeries('CumNewMigrantDiagnosesPerDiagYear'),
       this.getPlotSeries('N_Und'),
-      this.getPlotSeries('CumUndiagnosedCasesInclMigr'),
-      this.getPlotSeries('N_Alive')
+      this.getPlotSeries('CumUndiagnosedMigrantCases'),
+      this.getPlotSeries('AliveTotal')
     ];
   };
 

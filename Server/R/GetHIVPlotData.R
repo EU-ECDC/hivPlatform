@@ -39,10 +39,13 @@ GetHIVPlotData <- function(
     'N_Alive', 'N_Alive_Diag_M', 'N_Und',
     'N_Und_Alive_p',
     'N_Und_CD4_3_M', 'N_Und_CD4_4_M',
-    'DeadsUndiagnosed',
     'DiagPriorArrival', 'InfCountryOfOriginPerArrYear', 'InfCountryOfOriginPerDiagYear',
-    'NewMigrantDiagnosesPerArrYear', 'NewMigrantDiagnosesPerDiagYear', 'CumInfectionsInclMigr',
-    'CumDiagnosedCasesInclMigr', 'CumUndiagnosedCasesInclMigr', 'UndiagnosedFrac', 'InfectionsTotal'
+    'CumNewMigrantInfectionsPerArrYear', 'NewMigrantDiagnosesPerDiagYear',
+    'CumNewMigrantInfectionsPerArrYear', 'CumNewMigrantDiagnosesPerDiagYear',
+    'CumInfectionsInclMigr', 'CumDiagnosedCasesInclMigr',
+    'CumUndiagnosedMigrantCases',
+    'CumUndiagnosedCasesInclMigr', 'UndiagnosedFrac',
+    'InfectionsTotal', 'AliveTotal'
   )
   dataColNames <- c(
     'N_HIV_D', 'N_CD4_1_D', 'N_CD4_2_D', 'N_CD4_3_D', 'N_CD4_4_D', 'N_HIVAIDS_D', 'N_AIDS_D'

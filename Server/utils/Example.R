@@ -9,8 +9,8 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -59,14 +59,16 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <-
-  hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
-adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
-adjustmentSpecs[[1]]$Parameters$nit$value <- 20
-# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend')) # nolint
-# adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
-# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
-# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
+# adjustmentSpecs <-
+#   hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
+# adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
+# adjustmentSpecs[[1]]$Parameters$nit$value <- 20
+adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
+adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
+
+data <- appMgr$CaseMgr$Data
 
 # adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 # adjName <- 'Reporting Delays with trend'
@@ -216,6 +218,16 @@ appMgr$HIVModelMgr$RunMainFit(
 appMgr$HIVModelMgr$PlotData
 appMgr$HIVModelMgr$MainFitResult[[1]]$Results$MainOutputs
 names(appMgr$HIVModelMgr$MainFitResult[[1]]$Results)
+
+caseData <- appMgr$CaseMgr$Data
+aggrData <- appMgr$AggrMgr$Data
+settings <- list()
+parameters <- list()
+popCombination <- list()
+aggrDataSelection <- appMgr$HIVModelMgr$AggrDataSelection
+appMgr$HIVModelMgr$SetMigrConnFlag(TRUE)
+migrConnFlag <- appMgr$HIVModelMgr$MigrConnFlag
+randomSeed <- .Random.seed
 
 
 json <- ConvertObjToJSON(appMgr$HIVModelMgr$PlotData, dataframe = 'columns')

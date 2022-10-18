@@ -1,3 +1,11 @@
+## 2.0.9
+
+###### _October 18 2022_
+
+- Complete migrant connection for HIV modelling main fit (pre- and post-processing)
+- Update dependencies
+
+
 ## 2.0.8
 
 ###### _October 2 2022_

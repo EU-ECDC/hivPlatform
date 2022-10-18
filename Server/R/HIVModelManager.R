@@ -262,7 +262,11 @@ HIVModelManager <- R6::R6Class( # nolint
             # Prepare data sets for the HIV model
             if (migrConnFlag && dataAfterMigr) {
               # Prepare the Dead file based on the whole population dataset
-              caseDataDead <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation', dataSets = 'Dead') # nolint
+              caseDataDead <- PrepareDataSetsForModel(
+                caseData,
+                splitBy = 'Imputation',
+                dataSets = 'Dead'
+              )
 
               # Prepare other datasets based on the subset of population
               caseDataRest <- PrepareDataSetsForModel(
@@ -310,7 +314,6 @@ HIVModelManager <- R6::R6Class( # nolint
               runTime <- Sys.time() - startTime
 
               model <- fitResults$MainOutputs
-              model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
 
               if (migrConnFlag && dataAfterMigr) {
                 # Prepare data for pre-migration infected cases
@@ -321,7 +324,6 @@ HIVModelManager <- R6::R6Class( # nolint
                   .(Count = sum(Weight)),
                   keyby = .(Year = year(DateOfArrival))
                 ]
-
                 preMigrDiagY1 <- caseData[
                   Imputation == as.integer(imp) &
                     MigrClass %chin% 'Infected in the country of origin',
@@ -342,18 +344,32 @@ HIVModelManager <- R6::R6Class( # nolint
                 model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
                 model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
                 model[, ':='(
-                  NewMigrantDiagnosesPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
+                  NewMigrantInfectionsPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
                   NewMigrantDiagnosesPerDiagYear = DiagPriorArrival + InfCountryOfOriginPerDiagYear
                 )]
                 model[, ':='(
-                  CumInfectionsInclMigr =
-                    cumsum(N_Inf_M) + cumsum(NewMigrantDiagnosesPerArrYear) - cumsum(N_Dead_D) -
-                      cumsum(DeadsUndiagnosed),
-                  CumDiagnosedCasesInclMigr =
-                    cumsum(N_HIV_M) + cumsum(NewMigrantDiagnosesPerDiagYear) - cumsum(N_Dead_D)
+                  CumNewMigrantInfectionsPerArrYear = cumsum(NewMigrantInfectionsPerArrYear),
+                  CumNewMigrantDiagnosesPerDiagYear = cumsum(NewMigrantDiagnosesPerDiagYear)
                 )]
                 model[, ':='(
+                  #             N_Alive = N_Alive_Diag_M + N_Und
+                  #                     = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M
+                  CumInfectionsInclMigr = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M + CumNewMigrantInfectionsPerArrYear,
+
+                  #          N_Alive_Diag_M = Cum_HIV_M - Cum_Dead_D
+                  CumDiagnosedCasesInclMigr = Cum_HIV_M - Cum_Dead_D + CumNewMigrantDiagnosesPerDiagYear
+                )]
+                model[, ':='(
+                  # Add a comment in the chart that this can be underestimated
+                  CumUndiagnosedMigrantCases = CumNewMigrantInfectionsPerArrYear - CumNewMigrantDiagnosesPerDiagYear,
+
+                  #                     N_Und = N_Alive               - N_Alive_Diag_M
                   CumUndiagnosedCasesInclMigr = CumInfectionsInclMigr - CumDiagnosedCasesInclMigr,
+
+                  # N_Und_Alive_p =
+                  #               = (Cum_Inf_M - Cum_Und_Dead_M - Cum_HIV_M) / (Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M)
+                  #               = (N_Alive - N_Alive_Diag_M) / N_Alive
+                  #               = 1 - N_Alive_Diag_M            / N_Alive
                   UndiagnosedFrac = 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr
                 )]
               } else {
@@ -361,15 +377,23 @@ HIVModelManager <- R6::R6Class( # nolint
                   DiagPriorArrival = NA_real_,
                   InfCountryOfOriginPerArrYear = NA_real_,
                   InfCountryOfOriginPerDiagYear = NA_real_,
-                  NewMigrantDiagnosesPerArrYear = NA_real_,
+                  NewMigrantInfectionsPerArrYear = NA_real_,
                   NewMigrantDiagnosesPerDiagYear = NA_real_,
+                  CumNewMigrantInfectionsPerArrYear = NA_real_,
+                  CumNewMigrantDiagnosesPerDiagYear = NA_real_,
                   CumInfectionsInclMigr = NA_real_,
                   CumDiagnosedCasesInclMigr = NA_real_,
+                  CumUndiagnosedMigrantCases = NA_real_,
                   CumUndiagnosedCasesInclMigr = NA_real_,
                   UndiagnosedFrac = NA_real_
                 )]
               }
-              model[, InfectionsTotal := N_Inf_M + na.zero(NewMigrantDiagnosesPerArrYear)]
+              model[, ':='(
+                InfectionsTotal = N_Inf_M + na.zero(NewMigrantInfectionsPerArrYear),
+                AliveTotal =
+                  N_Alive_Diag_M + N_Und + # Model, = N_Alive
+                  na.zero(CumNewMigrantDiagnosesPerDiagYear) + na.zero(CumUndiagnosedMigrantCases) # Migrant data module
+              )]
 
               impResult[[imp]] <- list(
                 Context = context,
@@ -379,6 +403,9 @@ HIVModelManager <- R6::R6Class( # nolint
                 Imputation = imp
               )
             }
+
+            # TODO:
+            # Combine models from multiple imputations as one main fit
 
             # First set is used only!
             plotData <- GetHIVPlotData(
@@ -504,6 +531,7 @@ HIVModelManager <- R6::R6Class( # nolint
             aggrData,
             popCombination,
             aggrDataSelection,
+            migrConnFlag,
             randomSeed
           ) {
             if (!require('hivPlatform', quietly = TRUE)) {
@@ -549,11 +577,48 @@ HIVModelManager <- R6::R6Class( # nolint
                 j <- j + 1
 
                 # Bootstrap data set
+                dataAfterMigr <- FALSE
                 if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
+                  dataAfterMigr <- 'ProbPre' %in% colnames(caseDataImp)
                   bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
+
+                  if (migrConnFlag && dataAfterMigr) {
+                    bootCaseDataImp[, MigrClass := fcase(
+                      !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
+                      !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
+                      !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
+                      default = 'Not considered migrant'
+                    )]
+                  }
+
                   res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
-                  caseDataAll <- PrepareDataSetsForModel(res$Case, splitBy = 'Imputation')
-                  bootData <- CombineData(bootCaseDataImp, res$Aggr)[[1]]
+
+                  if (migrConnFlag && dataAfterMigr) {
+                    # Prepare the Dead file based on the whole population dataset
+                    caseDataDead <- PrepareDataSetsForModel(
+                      res$caseData,
+                      splitBy = 'Imputation',
+                      dataSets = 'Dead'
+                    )
+
+                    # Prepare other datasets based on the subset of population
+                    caseDataRest <- PrepareDataSetsForModel(
+                      res$caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                      splitBy = 'Imputation',
+                      dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
+                    )
+                    caseDataAll <- modifyList(caseDataDead, caseDataRest)
+
+                    if ('Dead' %in% names(res$Aggr)) {
+                      aggrDataImp <- res$Aggr['Dead']
+                    } else {
+                      aggrDataImp <- NULL
+                    }
+                  } else {
+                    caseDataAll <- PrepareDataSetsForModel(caseDataImp, splitBy = 'Imputation')
+                  }
+
+                  bootData <- CombineData(caseDataAll, aggrDataImp)[[1]]
                 }
 
                 bootContext <- hivModelling::GetRunContext(
@@ -585,19 +650,85 @@ HIVModelManager <- R6::R6Class( # nolint
                 runTime <- Sys.time() - startTime
 
                 model <- bootResult$MainOutputs
-                model[, DeadsUndiagnosed := diff(c(0, Cum_Und_Dead_M))]
+                if (migrConnFlag && dataAfterMigr) {
+                  # Prepare data for pre-migration infected cases
+                  preMigrArrY <- caseData[
+                    Imputation == as.integer(imp) &
+                      MigrClass %chin% 'Diagnosed prior to arrival' &
+                      !is.na(DateOfArrival),
+                    .(Count = sum(Weight)),
+                    keyby = .(Year = year(DateOfArrival))
+                  ]
+                  preMigrDiagY1 <- caseData[
+                    Imputation == as.integer(imp) &
+                      MigrClass %chin% 'Infected in the country of origin',
+                    .(Count = sum(Weight)),
+                    keyby = .(Year = year(DateOfArrival))
+                  ]
+                  preMigrDiagY2 <- caseData[
+                    Imputation == as.integer(imp) &
+                      MigrClass %chin% 'Infected in the country of origin',
+                    .(Count = sum(Weight)),
+                    keyby = .(Year = YearOfHIVDiagnosis)
+                  ]
+
+                  model[preMigrArrY, DiagPriorArrival := i.Count, on = .(Year)]
+                  model[is.na(DiagPriorArrival), DiagPriorArrival := 0]
+                  model[preMigrDiagY1, InfCountryOfOriginPerArrYear := i.Count, on = .(Year)]
+                  model[is.na(InfCountryOfOriginPerArrYear), InfCountryOfOriginPerArrYear := 0]
+                  model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
+                  model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
+                  model[, ':='(
+                    NewMigrantInfectionsPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
+                    NewMigrantDiagnosesPerDiagYear = DiagPriorArrival + InfCountryOfOriginPerDiagYear
+                  )]
+                  model[, ':='(
+                    CumNewMigrantInfectionsPerArrYear = cumsum(NewMigrantInfectionsPerArrYear),
+                    CumNewMigrantDiagnosesPerDiagYear = cumsum(NewMigrantDiagnosesPerDiagYear)
+                  )]
+                  model[, ':='(
+                    #             N_Alive = N_Alive_Diag_M + N_Und
+                    #                     = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M
+                    CumInfectionsInclMigr = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M + CumNewMigrantInfectionsPerArrYear,
+
+                    #          N_Alive_Diag_M = Cum_HIV_M - Cum_Dead_D
+                    CumDiagnosedCasesInclMigr = Cum_HIV_M - Cum_Dead_D + CumNewMigrantDiagnosesPerDiagYear
+                  )]
+                  model[, ':='(
+                    # ??
+                    CumUndiagnosedMigrantCases = CumNewMigrantInfectionsPerArrYear - CumNewMigrantDiagnosesPerDiagYear,
+
+                    #                     N_Und = N_Alive               - N_Alive_Diag_M
+                    CumUndiagnosedCasesInclMigr = CumInfectionsInclMigr - CumDiagnosedCasesInclMigr,
+
+                    # N_Und_Alive_p =
+                    #               = (Cum_Inf_M - Cum_Und_Dead_M - Cum_HIV_M) / (Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M)
+                    #               = (N_Alive - N_Alive_Diag_M) / N_Alive
+                    #               = 1 - N_Alive_Diag_M            / N_Alive)
+                    UndiagnosedFrac = 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr
+                  )]
+                } else {
+                  model[, ':='(
+                    DiagPriorArrival = NA_real_,
+                    InfCountryOfOriginPerArrYear = NA_real_,
+                    InfCountryOfOriginPerDiagYear = NA_real_,
+                    NewMigrantInfectionsPerArrYear = NA_real_,
+                    NewMigrantDiagnosesPerDiagYear = NA_real_,
+                    CumNewMigrantInfectionsPerArrYear = NA_real_,
+                    CumNewMigrantDiagnosesPerDiagYear = NA_real_,
+                    CumInfectionsInclMigr = NA_real_,
+                    CumDiagnosedCasesInclMigr = NA_real_,
+                    CumUndiagnosedMigrantCases = NA_real_,
+                    CumUndiagnosedCasesInclMigr = NA_real_,
+                    UndiagnosedFrac = NA_real_
+                  )]
+                }
                 model[, ':='(
-                  DiagPriorArrival = NA_real_,
-                  InfCountryOfOriginPerArrYear = NA_real_,
-                  InfCountryOfOriginPerDiagYear = NA_real_,
-                  NewMigrantDiagnosesPerArrYear = NA_real_,
-                  NewMigrantDiagnosesPerDiagYear = NA_real_,
-                  CumInfectionsInclMigr = NA_real_,
-                  CumDiagnosedCasesInclMigr = NA_real_,
-                  CumUndiagnosedCasesInclMigr = NA_real_,
-                  UndiagnosedFrac = NA_real_
+                  InfectionsTotal = N_Inf_M + na.zero(NewMigrantInfectionsPerArrYear),
+                  AliveTotal =
+                    N_Alive_Diag_M + N_Und + # Model, = N_Alive
+                      na.zero(CumNewMigrantDiagnosesPerDiagYear) + na.zero(CumUndiagnosedMigrantCases) # Migrant data module
                 )]
-                model[, InfectionsTotal := N_Inf_M + na.zero(NewMigrantDiagnosesPerArrYear)]
 
                 msgType <- ifelse(bootResult$Converged, 'success', 'danger')
 
@@ -650,6 +781,7 @@ HIVModelManager <- R6::R6Class( # nolint
             aggrData = isolate(private$AppMgr$AggrMgr$Data),
             popCombination = isolate(private$Catalogs$PopCombination),
             aggrDataSelection = isolate(private$Catalogs$AggrDataSelection),
+            migrConnFlag = private$Catalogs$MigrConnFlag,
             randomSeed = .Random.seed
           ),
           session = private$Session,
