@@ -314,7 +314,6 @@ HIVModelManager <- R6::R6Class( # nolint
               runTime <- Sys.time() - startTime
 
               model <- fitResults$MainOutputs
-
               if (migrConnFlag && dataAfterMigr) {
                 # Prepare data for pre-migration infected cases
                 preMigrArrY <- caseData[
@@ -542,6 +541,15 @@ HIVModelManager <- R6::R6Class( # nolint
             .Random.seed <- randomSeed # nolint
 
             mainCount <- length(mainFitResult)
+
+            if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
+              bsType <- 'PARAMETRIC'
+              PrintAlert(
+                'Bootstrap type "NON-PARAMETERIC" is selected, but there is no case-based data loaded. Type is changed to "PARAMETRIC"',
+                type = 'warning'
+              )
+            }
+
             fits <- list()
             i <- 0
 
@@ -564,7 +572,7 @@ HIVModelManager <- R6::R6Class( # nolint
 
               PrintH2('Main data set {.val {imp}}')
 
-              if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
+              if (bsType == 'NON-PARAMETRIC') {
                 caseDataImp <- caseData[Imputation == as.integer(imp)]
               } else {
                 bootData <- context$Data
@@ -578,7 +586,7 @@ HIVModelManager <- R6::R6Class( # nolint
 
                 # Bootstrap data set
                 dataAfterMigr <- FALSE
-                if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
+                if (bsType == 'NON-PARAMETRIC') {
                   dataAfterMigr <- 'ProbPre' %in% colnames(caseDataImp)
                   bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
 
@@ -617,7 +625,6 @@ HIVModelManager <- R6::R6Class( # nolint
                   } else {
                     caseDataAll <- PrepareDataSetsForModel(caseDataImp, splitBy = 'Imputation')
                   }
-
                   bootData <- CombineData(caseDataAll, aggrDataImp)[[1]]
                 }
 
@@ -695,7 +702,7 @@ HIVModelManager <- R6::R6Class( # nolint
                     CumDiagnosedCasesInclMigr = Cum_HIV_M - Cum_Dead_D + CumNewMigrantDiagnosesPerDiagYear
                   )]
                   model[, ':='(
-                    # ??
+                    # Add a comment in the chart that this can be underestimated
                     CumUndiagnosedMigrantCases = CumNewMigrantInfectionsPerArrYear - CumNewMigrantDiagnosesPerDiagYear,
 
                     #                     N_Und = N_Alive               - N_Alive_Diag_M

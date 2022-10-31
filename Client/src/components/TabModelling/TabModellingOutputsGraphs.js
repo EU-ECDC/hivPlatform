@@ -58,6 +58,9 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
         <Typography variant='h6'>
           C. Total number of HIV-infected
         </Typography>
+        <Typography variant='body2' color='textSecondary' sx={{ mt: 1 }}>
+          Count of undiagnosed migrants can be underestimated
+        </Typography>
       </Grid>
       <Grid item xs={4}>
         <SmallTable tableData={appMgr.modelMgr.outputTable3Data} />

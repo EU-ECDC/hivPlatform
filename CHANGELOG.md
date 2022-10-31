@@ -1,3 +1,11 @@
+## 2.99.0
+
+###### _October 31 2022_
+
+- UNDER DEVELOPMENT
+- Update dependencies
+
+
 ## 2.0.9
 
 ###### _October 18 2022_
