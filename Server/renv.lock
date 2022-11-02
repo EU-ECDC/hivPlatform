@@ -492,15 +492,15 @@
     },
     "hivModelling": {
       "Package": "hivModelling",
-      "Version": "0.9.31",
+      "Version": "0.9.32",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "nextpagesoft",
       "RemoteRepo": "hivModelling",
       "RemoteRef": "HEAD",
-      "RemoteSha": "ec57594659938823eec46fe83fb62e86d718fd6f",
+      "RemoteSha": "49a22f69ce1c63126b926a8cd559a70f3d194389",
       "RemoteHost": "api.github.com",
-      "Hash": "65e8f43f6a878d402d235f6021180661",
+      "Hash": "04971c4529eb239299cc6e903f00ac89",
       "Requirements": [
         "Rcpp",
         "cli",
@@ -662,10 +662,10 @@
     },
     "lme4": {
       "Package": "lme4",
-      "Version": "1.1-30",
+      "Version": "1.1-31",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "d9d5f45b57f68785c350504c0329d285",
+      "Hash": "67581bdc21e3d5e6881cf47c0c3113eb",
       "Requirements": [
         "MASS",
         "Matrix",

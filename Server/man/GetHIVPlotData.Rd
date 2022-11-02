@@ -4,12 +4,7 @@
 \alias{GetHIVPlotData}
 \title{GetHIVPlotData}
 \usage{
-GetHIVPlotData(
-  mainFitOutputs,
-  bootstrapFitStats = NULL,
-  parameters = NULL,
-  migrConnFlag = FALSE
-)
+GetHIVPlotData(mainFitOutputs, bootstrapFitStats = NULL, parameters = NULL)
 }
 \arguments{
 \item{mainFitOutputs}{mainFitOutputs}
@@ -17,8 +12,6 @@ GetHIVPlotData(
 \item{bootstrapFitStats}{bootstrapFitStats}
 
 \item{parameters}{parameters}
-
-\item{migrConnFlag}{migrConnFlag}
 }
 \value{
 data.table
