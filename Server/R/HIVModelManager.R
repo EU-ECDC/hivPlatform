@@ -28,6 +28,7 @@ HIVModelManager <- R6::R6Class( # nolint
         AggrDataSelection = NULL,
         MainFitTask = NULL,
         MainFitResult = NULL,
+        AvgModelOutputs = NULL,
         Years = NULL,
         BootstrapFitTask = NULL,
         BootstrapFitResult = NULL,
@@ -292,7 +293,7 @@ HIVModelManager <- R6::R6Class( # nolint
 
             PrintH1('Performing main fit')
 
-            impResult <- list()
+            impResults <- list()
             for (imp in names(dataSets)) {
               PrintH2('Iteration {.val {imp}}')
               context <- hivModelling::GetRunContext(
@@ -313,88 +314,15 @@ HIVModelManager <- R6::R6Class( # nolint
               )
               runTime <- Sys.time() - startTime
 
-              model <- fitResults$MainOutputs
-              if (migrConnFlag && dataAfterMigr) {
-                # Prepare data for pre-migration infected cases
-                preMigrArrY <- caseData[
-                  Imputation == as.integer(imp) &
-                    MigrClass %chin% 'Diagnosed prior to arrival' &
-                    !is.na(DateOfArrival),
-                  .(Count = sum(Weight)),
-                  keyby = .(Year = year(DateOfArrival))
-                ]
-                preMigrDiagY1 <- caseData[
-                  Imputation == as.integer(imp) &
-                    MigrClass %chin% 'Infected in the country of origin',
-                  .(Count = sum(Weight)),
-                  keyby = .(Year = year(DateOfArrival))
-                ]
-                preMigrDiagY2 <- caseData[
-                  Imputation == as.integer(imp) &
-                    MigrClass %chin% 'Infected in the country of origin',
-                  .(Count = sum(Weight)),
-                  keyby = .(Year = YearOfHIVDiagnosis)
-                ]
+              preMigrCounts <- GetPreMigrCounts(caseData[Imputation == as.integer(imp)])
+              PostProcessModelOutputs(
+                fitResults$MainOutputs,
+                preMigrCounts,
+                migrConnFlag,
+                dataAfterMigr
+              )
 
-                model[preMigrArrY, DiagPriorArrival := i.Count, on = .(Year)]
-                model[is.na(DiagPriorArrival), DiagPriorArrival := 0]
-                model[preMigrDiagY1, InfCountryOfOriginPerArrYear := i.Count, on = .(Year)]
-                model[is.na(InfCountryOfOriginPerArrYear), InfCountryOfOriginPerArrYear := 0]
-                model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
-                model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
-                model[, ':='(
-                  NewMigrantInfectionsPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
-                  NewMigrantDiagnosesPerDiagYear = DiagPriorArrival + InfCountryOfOriginPerDiagYear
-                )]
-                model[, ':='(
-                  CumNewMigrantInfectionsPerArrYear = cumsum(NewMigrantInfectionsPerArrYear),
-                  CumNewMigrantDiagnosesPerDiagYear = cumsum(NewMigrantDiagnosesPerDiagYear)
-                )]
-                model[, ':='(
-                  #             N_Alive = N_Alive_Diag_M + N_Und
-                  #                     = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M
-                  CumInfectionsInclMigr = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M + CumNewMigrantInfectionsPerArrYear,
-
-                  #          N_Alive_Diag_M = Cum_HIV_M - Cum_Dead_D
-                  CumDiagnosedCasesInclMigr = Cum_HIV_M - Cum_Dead_D + CumNewMigrantDiagnosesPerDiagYear
-                )]
-                model[, ':='(
-                  # Add a comment in the chart that this can be underestimated
-                  CumUndiagnosedMigrantCases = CumNewMigrantInfectionsPerArrYear - CumNewMigrantDiagnosesPerDiagYear,
-
-                  #                     N_Und = N_Alive               - N_Alive_Diag_M
-                  CumUndiagnosedCasesInclMigr = CumInfectionsInclMigr - CumDiagnosedCasesInclMigr,
-
-                  # N_Und_Alive_p =
-                  #               = (Cum_Inf_M - Cum_Und_Dead_M - Cum_HIV_M) / (Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M)
-                  #               = (N_Alive - N_Alive_Diag_M) / N_Alive
-                  #               = 1 - N_Alive_Diag_M            / N_Alive
-                  UndiagnosedFrac = 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr
-                )]
-              } else {
-                model[, ':='(
-                  DiagPriorArrival = NA_real_,
-                  InfCountryOfOriginPerArrYear = NA_real_,
-                  InfCountryOfOriginPerDiagYear = NA_real_,
-                  NewMigrantInfectionsPerArrYear = NA_real_,
-                  NewMigrantDiagnosesPerDiagYear = NA_real_,
-                  CumNewMigrantInfectionsPerArrYear = NA_real_,
-                  CumNewMigrantDiagnosesPerDiagYear = NA_real_,
-                  CumInfectionsInclMigr = NA_real_,
-                  CumDiagnosedCasesInclMigr = NA_real_,
-                  CumUndiagnosedMigrantCases = NA_real_,
-                  CumUndiagnosedCasesInclMigr = NA_real_,
-                  UndiagnosedFrac = NA_real_
-                )]
-              }
-              model[, ':='(
-                InfectionsTotal = N_Inf_M + na.zero(NewMigrantInfectionsPerArrYear),
-                AliveTotal =
-                  N_Alive_Diag_M + N_Und + # Model, = N_Alive
-                  na.zero(CumNewMigrantDiagnosesPerDiagYear) + na.zero(CumUndiagnosedMigrantCases) # Migrant data module
-              )]
-
-              impResult[[imp]] <- list(
+              impResults[[imp]] <- list(
                 Context = context,
                 PopData = popData,
                 Results = fitResults,
@@ -403,17 +331,24 @@ HIVModelManager <- R6::R6Class( # nolint
               )
             }
 
-            # TODO:
-            # Combine models from multiple imputations as one main fit
+            # Combine models from multiple imputations as one average fit
+            avgModelOutputs <- GetAverageHIVModelOutputs(impResults)
+            preMigrCounts <- GetAveragePreMigrCounts(caseData)
+            PostProcessModelOutputs(
+              avgModelOutputs,
+              preMigrCounts,
+              migrConnFlag,
+              dataAfterMigr
+            )
 
-            # First set is used only!
             plotData <- GetHIVPlotData(
-              mainFitOutputs = impResult[[1]]$Results$MainOutputs,
+              mainFitOutputs = avgModelOutputs,
               parameters = parameters
             )
 
             result <- list(
-              MainFitResult = impResult,
+              MainFitResult = impResults,
+              AvgModelOutputs = avgModelOutputs,
               PlotData = plotData
             )
 
@@ -433,6 +368,7 @@ HIVModelManager <- R6::R6Class( # nolint
           successCallback = function(result) {
             private$Catalogs$PopCombination <- popCombination
             private$Catalogs$MainFitResult <- result$MainFitResult
+            private$Catalogs$AvgModelOutputs <- result$AvgModelOutputs
             private$Catalogs$PlotData <- result$PlotData
             private$InvalidateAfterStep('MODELLING')
             PrintAlert('Running HIV Model main fit task finished')
@@ -526,6 +462,7 @@ HIVModelManager <- R6::R6Class( # nolint
             bsType,
             maxRunTime,
             mainFitResult,
+            avgModelOutputs,
             caseData,
             aggrData,
             popCombination,
@@ -657,86 +594,13 @@ HIVModelManager <- R6::R6Class( # nolint
                 )
                 runTime <- Sys.time() - startTime
 
-                model <- bootResult$MainOutputs
-                if (migrConnFlag && dataAfterMigr) {
-                  # Prepare data for pre-migration infected cases
-                  preMigrArrY <- caseData[
-                    Imputation == as.integer(imp) &
-                      MigrClass %chin% 'Diagnosed prior to arrival' &
-                      !is.na(DateOfArrival),
-                    .(Count = sum(Weight)),
-                    keyby = .(Year = year(DateOfArrival))
-                  ]
-                  preMigrDiagY1 <- caseData[
-                    Imputation == as.integer(imp) &
-                      MigrClass %chin% 'Infected in the country of origin',
-                    .(Count = sum(Weight)),
-                    keyby = .(Year = year(DateOfArrival))
-                  ]
-                  preMigrDiagY2 <- caseData[
-                    Imputation == as.integer(imp) &
-                      MigrClass %chin% 'Infected in the country of origin',
-                    .(Count = sum(Weight)),
-                    keyby = .(Year = YearOfHIVDiagnosis)
-                  ]
-
-                  model[preMigrArrY, DiagPriorArrival := i.Count, on = .(Year)]
-                  model[is.na(DiagPriorArrival), DiagPriorArrival := 0]
-                  model[preMigrDiagY1, InfCountryOfOriginPerArrYear := i.Count, on = .(Year)]
-                  model[is.na(InfCountryOfOriginPerArrYear), InfCountryOfOriginPerArrYear := 0]
-                  model[preMigrDiagY2, InfCountryOfOriginPerDiagYear := i.Count, on = .(Year)]
-                  model[is.na(InfCountryOfOriginPerDiagYear), InfCountryOfOriginPerDiagYear := 0]
-                  model[, ':='(
-                    NewMigrantInfectionsPerArrYear = DiagPriorArrival + InfCountryOfOriginPerArrYear,
-                    NewMigrantDiagnosesPerDiagYear = DiagPriorArrival + InfCountryOfOriginPerDiagYear
-                  )]
-                  model[, ':='(
-                    CumNewMigrantInfectionsPerArrYear = cumsum(NewMigrantInfectionsPerArrYear),
-                    CumNewMigrantDiagnosesPerDiagYear = cumsum(NewMigrantDiagnosesPerDiagYear)
-                  )]
-                  model[, ':='(
-                    #             N_Alive = N_Alive_Diag_M + N_Und
-                    #                     = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M
-                    CumInfectionsInclMigr = Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M + CumNewMigrantInfectionsPerArrYear,
-
-                    #          N_Alive_Diag_M = Cum_HIV_M - Cum_Dead_D
-                    CumDiagnosedCasesInclMigr = Cum_HIV_M - Cum_Dead_D + CumNewMigrantDiagnosesPerDiagYear
-                  )]
-                  model[, ':='(
-                    # Add a comment in the chart that this can be underestimated
-                    CumUndiagnosedMigrantCases = CumNewMigrantInfectionsPerArrYear - CumNewMigrantDiagnosesPerDiagYear,
-
-                    #                     N_Und = N_Alive               - N_Alive_Diag_M
-                    CumUndiagnosedCasesInclMigr = CumInfectionsInclMigr - CumDiagnosedCasesInclMigr,
-
-                    # N_Und_Alive_p =
-                    #               = (Cum_Inf_M - Cum_Und_Dead_M - Cum_HIV_M) / (Cum_Inf_M - Cum_Dead_D - Cum_Und_Dead_M)
-                    #               = (N_Alive - N_Alive_Diag_M) / N_Alive
-                    #               = 1 - N_Alive_Diag_M            / N_Alive)
-                    UndiagnosedFrac = 1 - CumDiagnosedCasesInclMigr / CumInfectionsInclMigr
-                  )]
-                } else {
-                  model[, ':='(
-                    DiagPriorArrival = NA_real_,
-                    InfCountryOfOriginPerArrYear = NA_real_,
-                    InfCountryOfOriginPerDiagYear = NA_real_,
-                    NewMigrantInfectionsPerArrYear = NA_real_,
-                    NewMigrantDiagnosesPerDiagYear = NA_real_,
-                    CumNewMigrantInfectionsPerArrYear = NA_real_,
-                    CumNewMigrantDiagnosesPerDiagYear = NA_real_,
-                    CumInfectionsInclMigr = NA_real_,
-                    CumDiagnosedCasesInclMigr = NA_real_,
-                    CumUndiagnosedMigrantCases = NA_real_,
-                    CumUndiagnosedCasesInclMigr = NA_real_,
-                    UndiagnosedFrac = NA_real_
-                  )]
-                }
-                model[, ':='(
-                  InfectionsTotal = N_Inf_M + na.zero(NewMigrantInfectionsPerArrYear),
-                  AliveTotal =
-                    N_Alive_Diag_M + N_Und + # Model, = N_Alive
-                      na.zero(CumNewMigrantDiagnosesPerDiagYear) + na.zero(CumUndiagnosedMigrantCases) # Migrant data module
-                )]
+                preMigrCounts <- GetAveragePreMigrCounts(bootCaseDataImp)
+                PostProcessModelOutputs(
+                  bootResult$MainOutputs,
+                  preMigrCounts,
+                  migrConnFlag,
+                  dataAfterMigr
+                )
 
                 msgType <- ifelse(bootResult$Converged, 'success', 'danger')
 
@@ -767,7 +631,7 @@ HIVModelManager <- R6::R6Class( # nolint
             stats <- GetBootstrapFitStats(fits)
 
             plotData <- GetHIVPlotData(
-              mainFitOutputs = mainFitResult[[1]]$Results$MainOutputs,
+              mainFitOutputs = avgModelOutputs,
               bootstrapFitStats = stats,
               parameters = info
             )
@@ -785,6 +649,7 @@ HIVModelManager <- R6::R6Class( # nolint
             bsType = bsType,
             maxRunTime = maxRunTime,
             mainFitResult = isolate(private$Catalogs$MainFitResult),
+            avgModelOutputs = isolate(private$Catalogs$AvgModelOutputs),
             caseData = isolate(private$AppMgr$CaseMgr$Data),
             aggrData = isolate(private$AppMgr$AggrMgr$Data),
             popCombination = isolate(private$Catalogs$PopCombination),
@@ -916,6 +781,10 @@ HIVModelManager <- R6::R6Class( # nolint
 
     MainFitResult = function() {
       return(private$Catalogs$MainFitResult)
+    },
+
+    AvgModelOutputs= function() {
+      return(private$Catalogs$AvgModelOutputs)
     },
 
     BootstrapFitTask = function() {

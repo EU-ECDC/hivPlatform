@@ -53,7 +53,7 @@ export default class UIStateManager {
         { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: false }
       ],
-      activeSubPageId: 0
+      activeSubPageId: 1
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
     { title: 'Outputs', completed: false, disabled: true, subPages: []},

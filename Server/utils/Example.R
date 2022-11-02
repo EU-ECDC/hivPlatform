@@ -9,8 +9,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
-# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -23,6 +22,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
+# appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.11.01 - DataLoad/tutorial_data_full.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
@@ -45,6 +45,8 @@ appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
+originalData <- copy(appMgr$CaseMgr$OriginalData)
+
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
     ApplyInAdjustments = TRUE,
@@ -59,16 +61,14 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-# adjustmentSpecs <-
-#   hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
+adjustmentSpecs <-
+  hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
 # adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
 # adjustmentSpecs[[1]]$Parameters$nit$value <- 20
-adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
-adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
-
-data <- appMgr$CaseMgr$Data
+# adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$startYear$value <- 1980
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endYear$value <- 2021
+# adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
 
 # adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
 # adjName <- 'Reporting Delays with trend'
@@ -211,10 +211,18 @@ aggrDataSelection <- NULL
 migrConnFlag <- FALSE
 
 appMgr$HIVModelMgr$RunMainFit(
-  settings = list(Verbose = FALSE),
-  parameters = parameters,
-  popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
+  settings = list(Verbose = FALSE)
+  # parameters = parameters,
+  # popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
 )
+
+plotData <- GetHIVPlotData(
+  mainFitOutputs = impResult[[1]]$Results$MainOutputs,
+  parameters = parameters
+)
+
+
+
 appMgr$HIVModelMgr$PlotData
 appMgr$HIVModelMgr$MainFitResult[[1]]$Results$MainOutputs
 names(appMgr$HIVModelMgr$MainFitResult[[1]]$Results)
@@ -252,58 +260,14 @@ appMgr$HIVModelMgr$SetAggrFilters(aggrDataSelection)
 
 # 1. Detailed HIV Model main fit results
 hivModels <- appMgr$HIVModelMgr$MainFitResult
+
+names(hivModels)
+
 hivModel <- hivModels[[1]]
 hivModel$Results$MainOutputs
 hivModel$Results$ModelResults
 
-# Average betas
-betas <- as.data.table(lapply(hivModels, function(model) {
-  model$Results$Param$Beta
-}))
-betas[, Avg := rowMeans(betas)]
-
-# Average incidence curve
-
-numPoints <- 5000
-years <- seq(
-  hivModel$Results$Info$ModelMinYear,
-  hivModel$Results$Info$ModelMaxYear,
-  length.out = numPoints
-)
-incidenceCurves <- as.data.table(lapply(
-  hivModels,
-  function(hivModel) {
-    sapply(
-      years,
-      hivModelling:::GetBSpline,
-      theta = hivModel$Results$Param$Theta,
-      kOrder = hivModel$Results$Info$SplineOrder,
-      modelSplineN = hivModel$Results$Info$ModelSplineN,
-      myKnots = hivModel$Results$Info$MyKnots,
-      minYear = hivModel$Results$Info$ModelMinYear,
-      maxYear = hivModel$Results$Info$ModelMaxYear
-    )
-  }
-))
-incidenceCurves[, Avg := rowMeans(.SD)]
-matplot(years, incidenceCurves, type = c('l'), pch = 1, col = 1:6)
-legend('topleft', legend = 1:6, pch = 1, col = 1:6)
-
-# Average model
-avgModel <- hivModelling::FitModel(
-  beta = betas$Avg,
-  theta = rep(0, length(hivModel$Results$Param$Theta)),
-  context = hivModel$Context,
-  data = hivModel$PopData,
-  preCompBSpline = as.matrix(incidenceCurves[, .(years, Avg)])
-)
-avgModelOutputs <- hivModelling::GetModelOutputs(avgModel, hivModel$PopData)
-avgPlots <- hivModelling::CreateOutputPlots(avgModelOutputs)
-
-test <- avgModelOutputs$MainOutputs[, .(Year, N_Inf_M)]
-test[, Avg_N_Inf_M := approx(years, incidenceCurves$Avg, test$Year)$y]
-
-
+avgModelOutputs <- GetAverageHIVModelOutputs(hivModels)
 
 
 # 2. Main outputs (txt, rds, stata)
