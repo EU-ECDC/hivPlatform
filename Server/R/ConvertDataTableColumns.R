@@ -64,17 +64,23 @@ ConvertDataTableColumns <- function(
     #   a) specified,
     #   b) the transformed column exists
     if (!is.null(transFunc) && columnName %in% objectColNames) {
-      # Apply the transformation to the data.table by reference
-      # (directly on the object, no copies made)
-      if (is.character(columnDef)) {
-        if (columnDef == 'factor' && !is.null(levelsFunc)) {
-          object[,
-            eval(columnName) := transFunc(get(columnName), levels = levelsFunc(columnName, ...))
-          ]
-          next
+      tryCatch({
+        # Apply the transformation to the data.table by reference
+        # (directly on the object, no copies made)
+        if (is.character(columnDef)) {
+          if (columnDef == 'factor' && !is.null(levelsFunc)) {
+            object[
+              ,
+              eval(columnName) := transFunc(get(columnName), levels = levelsFunc(columnName, ...))
+            ]
+            next
+          }
         }
-      }
-      object[, (columnName) := eval(parse(text = sprintf('transFunc(%s)', columnName)))]
+
+        object[, (columnName) := eval(parse(text = sprintf('transFunc(%s)', columnName)))]
+      }, error = function(e) {
+        stop(sprintf('%s (column "%s")', e$message, columnName))
+      })
     }
   }
 
