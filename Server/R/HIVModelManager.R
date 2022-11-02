@@ -542,10 +542,11 @@ HIVModelManager <- R6::R6Class( # nolint
 
             mainCount <- length(mainFitResult)
 
-            if (bsType == 'NON-PARAMETRIC' & !is.null(caseData)) {
+            if (bsType == 'NON-PARAMETRIC' & is.null(caseData)) {
               bsType <- 'PARAMETRIC'
               PrintAlert(
-                'Bootstrap type "NON-PARAMETERIC" is selected, but there is no case-based data loaded. Type is changed to "PARAMETRIC"',
+                'Bootstrap type "NON-PARAMETERIC" is selected, but there is no case-based data loaded.',
+                'Bootstrap of type "PARAMETRIC" will be performed.',
                 type = 'warning'
               )
             }
