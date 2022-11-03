@@ -4,10 +4,14 @@
 \alias{GetPreMigrCounts}
 \title{GetPreMigrCounts}
 \usage{
-GetPreMigrCounts(caseData = NULL)
+GetPreMigrCounts(caseData = NULL, migrConnFlag, dataAfterMigr)
 }
 \arguments{
 \item{caseData}{caseData}
+
+\item{migrConnFlag}{migrConnFlag}
+
+\item{dataAfterMigr}{dataAfterMigr}
 }
 \value{
 list

@@ -4,10 +4,14 @@
 \alias{GetAveragePreMigrCounts}
 \title{GetAveragePreMigrCounts}
 \usage{
-GetAveragePreMigrCounts(caseData = NULL)
+GetAveragePreMigrCounts(caseData = NULL, migrConnFlag, dataAfterMigr)
 }
 \arguments{
 \item{caseData}{caseData}
+
+\item{migrConnFlag}{migrConnFlag}
+
+\item{dataAfterMigr}{dataAfterMigr}
 }
 \value{
 list

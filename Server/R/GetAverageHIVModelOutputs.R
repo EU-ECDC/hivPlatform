@@ -22,7 +22,7 @@ GetAverageHIVModelOutputs <- function(
   initModel <- hivModels[[1]]
   popData <- initModel$PopData
 
-  # Average incidence curve
+  # Average population
   popDataList <- lapply(hivModels, '[[', 'PopData')
   colNames <- colnames(popData)[-1]
   avgPopData <-

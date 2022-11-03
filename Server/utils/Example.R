@@ -287,6 +287,7 @@ appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 2, bsType = 'NON-PARAMETRIC')
 
 fits <- appMgr$HIVModelMgr$BootstrapFitResult
 
+maxRunTimeFactor <- 3
 avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
 maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
 prettyunits::pretty_dt(maxRunTime)
@@ -296,6 +297,7 @@ aggrData <- isolate(appMgr$AggrMgr$Data)
 popCombination <- isolate(appMgr$HIVModelMgr$PopCombination)
 aggrDataSelection <- isolate(appMgr$HIVModelMgr$AggrDataSelection)
 randomSeed <- .Random.seed
+migrConnFlag <- TRUE
 
 # 3. Detailed HIV Model bootstrap results (rds)
 appMgr$HIVModelMgr$BootstrapFitResult

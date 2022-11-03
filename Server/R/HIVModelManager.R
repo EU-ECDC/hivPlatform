@@ -314,7 +314,11 @@ HIVModelManager <- R6::R6Class( # nolint
               )
               runTime <- Sys.time() - startTime
 
-              preMigrCounts <- GetPreMigrCounts(caseData[Imputation == as.integer(imp)])
+              preMigrCounts <- GetPreMigrCounts(
+                caseData[Imputation == as.integer(imp)],
+                migrConnFlag,
+                dataAfterMigr
+              )
               PostProcessModelOutputs(
                 fitResults$MainOutputs,
                 preMigrCounts,
@@ -333,7 +337,11 @@ HIVModelManager <- R6::R6Class( # nolint
 
             # Combine models from multiple imputations as one average fit
             avgModelOutputs <- GetAverageHIVModelOutputs(impResults)
-            preMigrCounts <- GetAveragePreMigrCounts(caseData)
+            preMigrCounts <- GetAveragePreMigrCounts(
+              caseData,
+              migrConnFlag,
+              dataAfterMigr
+            )
             PostProcessModelOutputs(
               avgModelOutputs,
               preMigrCounts,
@@ -542,14 +550,14 @@ HIVModelManager <- R6::R6Class( # nolint
                   if (migrConnFlag && dataAfterMigr) {
                     # Prepare the Dead file based on the whole population dataset
                     caseDataDead <- PrepareDataSetsForModel(
-                      res$caseData,
+                      res$Case,
                       splitBy = 'Imputation',
                       dataSets = 'Dead'
                     )
 
                     # Prepare other datasets based on the subset of population
                     caseDataRest <- PrepareDataSetsForModel(
-                      res$caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                      res$Case[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
                       splitBy = 'Imputation',
                       dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
                     )
@@ -594,7 +602,11 @@ HIVModelManager <- R6::R6Class( # nolint
                 )
                 runTime <- Sys.time() - startTime
 
-                preMigrCounts <- GetAveragePreMigrCounts(bootCaseDataImp)
+                preMigrCounts <- GetPreMigrCounts(
+                  bootCaseDataImp,
+                  migrConnFlag,
+                  dataAfterMigr
+                )
                 PostProcessModelOutputs(
                   bootResult$MainOutputs,
                   preMigrCounts,

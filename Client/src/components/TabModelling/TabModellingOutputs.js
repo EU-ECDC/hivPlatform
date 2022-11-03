@@ -17,7 +17,7 @@ import Tab from '@mui/material/Tab';
 const TabModellingOutputs = props => {
   const { appMgr } = props;
 
-  const [tabId, setTabId] = React.useState(2);
+  const [tabId, setTabId] = React.useState(0);
 
   const handleNextpageBtnClick = () => appMgr.uiStateMgr.setActivePageId(6);
 

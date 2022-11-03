@@ -1,12 +1,16 @@
 #' GetPreMigrCounts
 #'
 #' @param caseData caseData
+#' @param migrConnFlag migrConnFlag
+#' @param dataAfterMigr dataAfterMigr
 #'
 #' @return list
 #'
 #' @export
 GetPreMigrCounts <- function(
-  caseData = NULL
+  caseData = NULL,
+  migrConnFlag,
+  dataAfterMigr
 ) {
   res <- list(
     PreMigrArrY = NULL,
@@ -14,7 +18,7 @@ GetPreMigrCounts <- function(
     PreMigrDiagY2 = NULL
   )
 
-  if (!is.null(caseData)) {
+  if (migrConnFlag && dataAfterMigr) {
     # Get imputation specific counts
     res$PreMigrArrY <- caseData[
       MigrClass %chin% 'Diagnosed prior to arrival' & !is.na(DateOfArrival),
