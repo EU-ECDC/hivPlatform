@@ -1,3 +1,12 @@
+#' PostProcessModelOutputs
+#'
+#' @param modelOutputs modelOutputs
+#' @param preMigrCounts preMigrCounts
+#' @param migrConnFlag migrConnFlag
+#' @param dataAfterMigr dataAfterMigr
+#'
+#' @return data.table
+#'
 #' @export
 PostProcessModelOutputs <- function(
   modelOutputs,

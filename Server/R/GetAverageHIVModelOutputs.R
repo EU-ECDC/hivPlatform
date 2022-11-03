@@ -1,3 +1,9 @@
+#' GetAverageHIVModelOutputs
+#'
+#' @param hivModels hivModels
+#'
+#' @return data.table
+#'
 #' @export
 GetAverageHIVModelOutputs <- function(
   hivModels
