@@ -11,7 +11,7 @@ list(
     attribute = 'ReportingCountry',
     description = 'The country reporting the record',
     type = 'character',
-    values = union('UNK', countryData$Code),
+    values = union(c('UNK', 'TEST'), countryData$Code),
     defaultValue = NA_character_,
     candidateOrigColNames = c('reportingcountry')
   ),
@@ -84,7 +84,7 @@ list(
     attribute = 'CountryOfBirth',
     description = 'Country of birth of patient',
     type = 'character',
-    values = union(c('', 'UNK'), countryData$Code),
+    values = union(c('', 'UNK', 'TEST'), countryData$Code),
     defaultValue = NA_character_,
     candidateOrigColNames = c('countryofbirth')
   ),
@@ -92,7 +92,7 @@ list(
     attribute = 'CountryOfNationality',
     description = 'Country of nationality of patient',
     type = 'character',
-    values = union(c('', 'UNK'), countryData$Code),
+    values = union(c('', 'UNK', 'TEST'), countryData$Code),
     defaultValue = NA_character_,
     candidateOrigColNames = c('countryofnationality')
   ),
