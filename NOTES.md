@@ -77,4 +77,7 @@ Colors of curves:
 3. Add count of observations in chart tooltip (per point).
 4. Check how mortality is integrated with non-parametric main model fit.
 
-// 2022/10/03
+// 2022/11/03
+
+- Allow unloading data (both case-based and aggregated)
+- Move migrant connection to "Main fit run"
