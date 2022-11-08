@@ -3,6 +3,7 @@
 #' Gets mice diagnostic plot.
 #'
 #' @param mids Object of class "mids" (output of \code{\link[mice]{mice}}) function.
+#' @param chainCount Count of chains to include in the chart
 #'
 #' @return NULL
 #'
@@ -12,7 +13,10 @@
 #' }
 #'
 #' @export
-GetMiceDiagnosticPlot <- function(mids)
+GetMiceDiagnosticPlot <- function(
+  mids,
+  chainCount = 5L
+)
 {
   colors <- c("#69b023", "#7bbcc0", "#c44f27", "#ad2251", "#5d2083")
 
@@ -20,8 +24,8 @@ GetMiceDiagnosticPlot <- function(mids)
   sm <- sqrt(mids$chainVar)
 
   # Keep only maximum 5 first imputations
-  mn <- mn[, , seq(min(5L, dim(mn)[3]))]
-  sm <- sm[, , seq(min(5L, dim(sm)[3]))]
+  mn <- mn[, , seq(min(chainCount, dim(mn)[3]))]
+  sm <- sm[, , seq(min(chainCount, dim(sm)[3]))]
 
   meanData <- as.data.table(mn)
   setnames(meanData, c("Row", "Sample", "Imputation", "Value"))

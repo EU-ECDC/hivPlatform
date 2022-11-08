@@ -4,10 +4,12 @@
 \alias{GetMiceDiagnosticPlot}
 \title{GetMiceDiagnosticPlot}
 \usage{
-GetMiceDiagnosticPlot(mids)
+GetMiceDiagnosticPlot(mids, chainCount = 5L)
 }
 \arguments{
 \item{mids}{Object of class "mids" (output of \code{\link[mice]{mice}}) function.}
+
+\item{chainCount}{Count of chains to include in the chart}
 }
 \description{
 Gets mice diagnostic plot.
