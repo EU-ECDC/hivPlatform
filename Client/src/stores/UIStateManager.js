@@ -45,7 +45,6 @@ export default class UIStateManager {
       completed: false,
       disabled: true,
       subPages: [
-        { title: 'Migrant Connection', disabled: false},
         { title: 'Populations', disabled: false },
         { title: 'Inputs', disabled: false },
         { title: 'Advanced', disabled: false },
@@ -53,7 +52,7 @@ export default class UIStateManager {
         { title: 'Run Bootstrap', disabled: false },
         { title: 'Tables and charts', disabled: false }
       ],
-      activeSubPageId: 1
+      activeSubPageId: 0
     },
     { title: 'Reports', completed: false, disabled: true, subPages: [] },
     { title: 'Outputs', completed: false, disabled: true, subPages: []},
@@ -140,9 +139,8 @@ export default class UIStateManager {
     this.pages[6].disabled = !this.reportsPageEnabled;
     this.pages[7].disabled = !this.outputsPageEnabled;
 
-    this.setSubPageDisabledStatus(5, 0, !this.migrConnEnabled);
-    this.setSubPageDisabledStatus(5, 5, !this.bootstrapEnabled);
-    this.setSubPageDisabledStatus(5, 6, !this.modellingOutputsEnabled);
+    this.setSubPageDisabledStatus(5, 4, !this.bootstrapEnabled);
+    this.setSubPageDisabledStatus(5, 5, !this.modellingOutputsEnabled);
   };
 
   get uploadPageEnabled() {

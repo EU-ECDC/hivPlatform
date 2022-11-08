@@ -9,6 +9,9 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
 import TabPanel from '../TabPanel';
 import Btn from '../Btn';
 import ProgressBar from '../ProgressBar';
@@ -17,6 +20,8 @@ const TabModellingRunMain = props => {
   const { appMgr } = props;
 
   const handleNextpageBtnClick = e => appMgr.uiStateMgr.setActivePageId(4, 4);
+
+  const handleMigrConnFlagChange = e => appMgr.modelMgr.setMigrConnFlag(e.target.value === 'true');
 
   const handleRunModelsBtnClick = () => {
     appMgr.modelMgr.runModels();
@@ -55,7 +60,24 @@ const TabModellingRunMain = props => {
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <FormControl style={{ width: '100%', marginTop: 20 }}>
+          <Typography variant='body2' color='textSecondary'>
+            1. Migrant connection
+          </Typography>
+          <RadioGroup
+            row
+            value={appMgr.modelMgr.migrConnFlag}
+            onChange={handleMigrConnFlagChange}
+          >
+            <FormControlLabel value={true} control={<Radio color='primary' size='small' />} label='Yes' />
+            <FormControlLabel value={false} control={<Radio color='primary' size='small' />} label='No' />
+          </RadioGroup>
+          <FormHelperText>
+            Enable alternative HIV modelling processing with migrant status information used.
+          </FormHelperText>
+          <Typography variant='body2' color='textSecondary' style={{ marginTop: 20 }}>
+            2. Population
+          </Typography>
+          <FormControl style={{ width: '100%'}}>
             <Select
               value={appMgr.popCombMgr.selectedCombination.id}
               onChange={handleSelectedPopCombId}
@@ -67,7 +89,10 @@ const TabModellingRunMain = props => {
             </Select>
             <FormHelperText>Select population</FormHelperText>
           </FormControl>
-          <FormControl style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
+          <Typography variant='body2' color='textSecondary' style={{ width: '100%', marginTop: 20 }}>
+            3. Time intervals and diagnosis rates
+          </Typography>
+          <FormControl style={{ marginBottom: 20 }}>
             <Select
               value={appMgr.modelMgr.timeIntCollMgr.selectedRunCollectionId}
               onChange={handleSelectedCollectionId}
