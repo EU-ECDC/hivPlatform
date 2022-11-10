@@ -110,6 +110,11 @@ CaseDataManager <- R6::R6Class( # nolint
       return(invisible(self))
     },
 
+    UnloadData = function() {
+      print('Unloading data')
+      private$SendMessage('CASE_BASED_DATA_UNLOADED', list())
+    },
+
     # 2. Apply attributes mapping ------------------------------------------------------------------
     ApplyAttributesMapping = function(
       attrMapping

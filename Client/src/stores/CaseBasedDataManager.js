@@ -36,6 +36,7 @@ export default class CaseBasedDataManager {
       setColumnNames: action,
       setColumnNames: action,
       uploadData: action,
+      unloadData: action,
       setUploadProgress: action,
       setActionStatus: action,
       setActionMessage: action,
@@ -66,6 +67,10 @@ export default class CaseBasedDataManager {
       )
     );
   };
+
+  unloadData = () => {
+    this.rootMgr.btnClicked('unloadCaseBasedData');
+  }
 
   get columnNamesString() {
     if (this.columnNames === null) {

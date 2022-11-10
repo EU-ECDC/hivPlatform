@@ -34,6 +34,7 @@ const CaseUpload = (props) => {
 
   const handleUploadBtnClick = e => appMgr.caseBasedDataMgr.uploadData(e.target);
   const handleNextPageBtnClick = () => appMgr.uiStateMgr.setActivePageId(2);
+  const handleUnloadCaseBasedDataClick = () => appMgr.caseBasedDataMgr.unloadData();
 
   return (
     <Grid container spacing={2}>
@@ -71,8 +72,8 @@ const CaseUpload = (props) => {
           <Button
             sx={{ marginBottom: '6px', marginLeft: '20px' }}
             color='primary'
-            // disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
-            disabled={true}
+            disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
+            onClick={handleUnloadCaseBasedDataClick}
           >
             Unload data
           </Button>

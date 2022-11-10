@@ -210,6 +210,10 @@ Events <- function(
     )
   })
 
+  observeEvent(input$unloadCaseBasedData, {
+    appMgr$CaseMgr$UnloadData()
+  })
+
   observeEvent(input$aggrUploadBtn, {
     fileInfo <- input$aggrUploadBtn
     appMgr$SendMessage(

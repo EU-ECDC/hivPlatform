@@ -1,9 +1,10 @@
-## 2.99.0
+## 3.0.0
 
-###### _October 31 2022_
+###### _November 10 2022_
 
 - UNDER DEVELOPMENT
 - Update dependencies
+- Move migrant connection to "Run Main Fit" tab
 
 
 ## 2.0.9
