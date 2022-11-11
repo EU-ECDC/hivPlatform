@@ -81,3 +81,13 @@ Colors of curves:
 
 - Allow unloading data (both case-based and aggregated)
 - Move migrant connection to "Main fit run"
+
+
+
+1. Prepare version 3.0.0 (done)
+2. Build R packages and move to ftp server (done)
+3. Build Windows deployment package with R 4.2.2 (in progress)
+4. Record a video:
+	- Describe technology used - R (server) and JavaScript (UI)
+  - Describe core R packages (hivModelling, hivPlatform)
+  - Describe ways of accessing the tool: ECDC server; run Windows deployment tool; install and run R package

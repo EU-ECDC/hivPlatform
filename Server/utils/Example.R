@@ -9,7 +9,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
-appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
+# appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/PLtest.csv')
@@ -17,6 +17,7 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss2.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
+appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
@@ -38,6 +39,8 @@ appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 #   dt[sample(seq_len(nrow(dt)), size = 500, replace = FALSE)],
 #   'D:/VirtualBox_Shared/BE_sample500.csv'
 # )
+originalData <- appMgr$CaseMgr$OriginalData
+
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
@@ -45,7 +48,7 @@ appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
-originalData <- copy(appMgr$CaseMgr$OriginalData)
+appMgr$CaseMgr$PreProcessedData
 
 appMgr$CaseMgr$SetFilters(filters = list(
   DiagYear = list(
