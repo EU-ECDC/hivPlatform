@@ -17,7 +17,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss2.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
-appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
+appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
@@ -40,7 +40,6 @@ appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_d
 #   'D:/VirtualBox_Shared/BE_sample500.csv'
 # )
 originalData <- appMgr$CaseMgr$OriginalData
-
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
@@ -223,6 +222,15 @@ plotData <- GetHIVPlotData(
   mainFitOutputs = impResult[[1]]$Results$MainOutputs,
   parameters = parameters
 )
+
+
+dataSets <- PrepareDataSetsForModel(appMgr$CaseMgr$Data)
+for (dataName in names(dataSets)) {
+  fwrite(
+    dataSets[[dataName]],
+    file.path('G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1/', sprintf('%s.csv', dataName))
+  )
+}
 
 
 

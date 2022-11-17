@@ -2,7 +2,7 @@ Package: hivPlatform
 Type: Package
 Title: Improves Accuracy of HIV Estimates in EU/EEA Countries
 Version: 3.0.0
-Date: 2022-11-10
+Date: 2022-11-17
 Authors@R: c(person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl',
     role = c('aut', 'cph')), person('Nikos', 'Pantazis', email =
     'npantaz@med.uoa.gr', role = c('aut')), person('Ard', 'van Sighem',

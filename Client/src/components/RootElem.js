@@ -59,11 +59,11 @@ const RootElem = props => {
       }}
     >
       <Toolbar variant='dense' disableGutters>
-        <Typography variant='h6' sx={{ color: 'white', ml: '10px'}}>
+        <Typography variant='h4' sx={{ color: 'white', ml: '10px'}}>
           {NAME}
         </Typography>
-        <Typography variant='subtitle1' sx={{ color: 'white' }}>
-          &nbsp;| version {VERSION}
+        <Typography variant='subtitle2' sx={{ color: 'white', ml: '10px' }}>
+          Version: {VERSION} <br />Build date: 2022-11-17
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' sx={{ color: 'white' }}>
