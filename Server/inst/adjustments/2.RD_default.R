@@ -99,8 +99,8 @@ list(
     ]
 
     # Create dimensions to match the weights later
+    compData[, VarT := 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime)]
     outputData <- copy(compData)
-    outputData[, VarT := 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1]
 
     # Filter
     compData <- compData[!is.na(VarX)]
@@ -114,8 +114,7 @@ list(
     ]
 
     compData[, ':='(
-      VarT = 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1,
-      Tf = 4 * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear)) + 1, # nolint
+      Tf = 4 * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear)), # nolint
       ReportingDelay = 1L
     )]
     compData[, ':='(

@@ -17,7 +17,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss2.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
-appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1.csv')
+appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_small.csv')
@@ -63,8 +63,8 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-adjustmentSpecs <-
-  hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
+# adjustmentSpecs <-
+#   hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
 # adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
 # adjustmentSpecs[[1]]$Parameters$nit$value <- 20
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
@@ -73,12 +73,15 @@ adjustmentSpecs <-
 # adjustmentSpecs$`Reporting Delays with trend`$Parameters$endQrt$value <- 2
 
 # adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c('Multiple Imputation using Chained Equations - MICE'))
-# adjName <- 'Reporting Delays with trend'
-# adjustmentSpecs <- GetAdjustmentSpecs(adjName)
-# adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1980
-# adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2022
-# adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 1
-appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+adjName <- 'Reporting Delays'
+adjustmentSpecs <- GetAdjustmentSpecs(adjName)
+adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1983
+adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2019
+adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 4
+# appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+
+data <- appMgr$CaseMgr$Data
+
 
 appMgr$CaseMgr$AdjustmentResult
 

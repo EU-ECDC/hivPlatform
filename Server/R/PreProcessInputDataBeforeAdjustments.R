@@ -38,7 +38,7 @@ PreProcessInputDataBeforeAdjustments <- function(
   inputData[, c('VarX', 'TweakedVarX', 'MaxPossibleDelay', 'TweakedMaxPossibleDelay') := {
     # Compute VarX
     varX <- 4 * (NotificationTime - DiagnosisTime)
-    varX[varX < 0] <- NA
+    varX[varX < 0] <- NA_integer_
 
     # Compute MaxPossibleDelay
     maxPossibleDelay <- ifelse(

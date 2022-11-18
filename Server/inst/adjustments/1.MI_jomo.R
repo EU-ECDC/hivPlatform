@@ -71,19 +71,6 @@ list(
         yColNamesAll <- union(yColNamesAll, c('VarX'))
       }
 
-      # if (imputeRD) {
-      #   # Create logit transform of VarX
-      #   dataSet[, c('LogitVarX', 'LogTweakedMaxPossibleDelay') := {
-      #     p <- TweakedVarX / TweakedMaxPossibleDelay
-      #     logitVarX <- log(p / (1 - p))
-      #     logTweakedMaxPossibleDelay <- log(TweakedMaxPossibleDelay)
-      #     list(logitVarX, logTweakedMaxPossibleDelay)
-      #   }]
-
-      #   xColNamesAll <- union(xColNamesAll, c('LogTweakedMaxPossibleDelay'))
-      #   yColNamesAll <- union(yColNamesAll, c('LogitVarX'))
-      # }
-
       # Determine which columns to pass to the jomo package
 
       # At least 2 distinct values present
@@ -156,14 +143,6 @@ list(
       )
 
       mi <- cbind(imp[, ..impColNames], dataSet[, ..dataSetColNames])
-
-      # Convert LogitVarX back to VarX
-      if ('LogitVarX' %in% colnames(mi)) {
-        mi[
-          Imputation != 0 & is.na(VarX),
-          VarX := MaxPossibleDelay * round(exp(LogitVarX) / (1 + LogitVarX))
-        ]
-      }
 
       setcolorder(mi, union(indexColNames, dataSetColNames))
 
