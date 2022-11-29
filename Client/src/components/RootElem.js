@@ -63,7 +63,7 @@ const RootElem = props => {
           {NAME}
         </Typography>
         <Typography variant='subtitle2' sx={{ color: 'white', ml: '10px' }}>
-          Version: {VERSION} <br />Build date: 2022-11-17
+          Version: {VERSION} <br />Build date: 2022-11-29
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' sx={{ color: 'white' }}>
