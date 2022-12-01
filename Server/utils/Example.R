@@ -17,7 +17,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy_miss2.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'D:/VirtualBox_Shared/PLtest.csv')
-appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/HIV Baza for HIV tool 2022-11-04.xlsx')
+# appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/HIV Baza for HIV tool 2022-11-04.xlsx')
 # appMgr$CaseMgr$ReadData(filePath = 'G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
 # appMgr$AggrMgr$ReadData(GetSystemFile('testData', 'test_-_2_populations.zip'))
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/HEAT_202102_1_no_prevpos_random_id.csv')
@@ -25,6 +25,7 @@ appMgr$CaseMgr$ReadData(filePath = 'D:/Downloads/HIV Baza for HIV tool 2022-11-0
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.11.01 - DataLoad/tutorial_data_full.csv')
+appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
@@ -61,8 +62,6 @@ ApplyGrouping(
   to = 'MigrantRegionOfOrigin',
   asFactor = TRUE
 )
-
-
 
 appMgr$CaseMgr$Data
 
@@ -474,3 +473,9 @@ test <- list(
   Migration = FALSE
 )
 names(test)[unlist(test)]
+
+dt[,
+  ':='(
+    Imputation = iter, Run = NULL
+  )
+]

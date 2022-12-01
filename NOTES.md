@@ -86,8 +86,17 @@ Colors of curves:
 
 1. Prepare version 3.0.0 (done)
 2. Build R packages and move to ftp server (done)
-3. Build Windows deployment package with R 4.2.2 (in progress)
-4. Record a video:
+3. Build Windows deployment package with R 4.2.2 (done)
+4. Create a presentation with technical details of the tool (done)
+5. Record a video:
 	- Describe technology used - R (server) and JavaScript (UI)
   - Describe core R packages (hivModelling, hivPlatform)
   - Describe ways of accessing the tool: ECDC server; run Windows deployment tool; install and run R package
+6. Check all steps of calculations, most notably reporting delays with trend (in progress)
+7. Implement unloading data
+8. Implement saving/loading state of the entire application
+9. Align styling of logs printed
+10. Check behaviour of the tool when run as installed package, not as loaded with `pkgload`.
+11. Change deployment on ECDC server to use installed package, not code loaded with `pkgload`.
+12. Create CLI example to showcase the tool when running from console.
+13. Fix github action in hivModelling repo.

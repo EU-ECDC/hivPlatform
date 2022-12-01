@@ -17,7 +17,7 @@ import TabModelling from './TabModelling/TabModelling';
 import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';
 import MessageBar from './MessageBar';
-import { NAME, VERSION, DEBUG } from '../settings';
+import { NAME, VERSION, BUILD_DATE, DEBUG } from '../settings';
 
 const Page = ({ pageId, activePageId, children, ...other }) => (
   <Typography
@@ -63,7 +63,7 @@ const RootElem = props => {
           {NAME}
         </Typography>
         <Typography variant='subtitle2' sx={{ color: 'white', ml: '10px' }}>
-          Version: {VERSION} <br />Build date: 2022-11-29
+          Version: {VERSION} <br />Build date: {BUILD_DATE}
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='subtitle1' sx={{ color: 'white' }}>
