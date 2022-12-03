@@ -84,10 +84,10 @@ Colors of curves:
 
 
 
-1. Prepare version 3.0.0 (done)
-2. Build R packages and move to ftp server (done)
-3. Build Windows deployment package with R 4.2.2 (done)
-4. Create a presentation with technical details of the tool (done)
+1. Prepare version 3.0.0 (DONE)
+2. Build R packages and move to ftp server (DONE)
+3. Build Windows deployment package with R 4.2.2 (DONE)
+4. Create a presentation with technical details of the tool (DONE)
 5. Record a video:
 	- Describe technology used - R (server) and JavaScript (UI)
   - Describe core R packages (hivModelling, hivPlatform)
@@ -99,4 +99,4 @@ Colors of curves:
 10. Check behaviour of the tool when run as installed package, not as loaded with `pkgload`.
 11. Change deployment on ECDC server to use installed package, not code loaded with `pkgload`.
 12. Create CLI example to showcase the tool when running from console.
-13. Fix github action in hivModelling repo.
+13. Fix github action in hivModelling repo. (DONE)
