@@ -40,6 +40,7 @@ jobs:
         working-directory: Server
 
       - name: Cache R production packages
+        path: Server/library
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-pak-${{ hashFiles('**/prod.lock') }}
