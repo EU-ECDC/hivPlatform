@@ -10,4 +10,7 @@
 ^appWindows\.R$
 ^rsconnect$
 ^utils$
+^library$
 ^data-raw$
+^prod\.lock$
+^dev\.lock$
