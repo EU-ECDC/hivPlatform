@@ -1,6 +1,6 @@
 ## 3.0.0
 
-###### _December 1 2022_
+###### _December 4 2022_
 
 - Update dependencies
 

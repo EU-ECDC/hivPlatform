@@ -19,7 +19,7 @@ jobs:
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
+      R_KEEP_PKG_SOURCE: no
 
     steps:
       - uses: actions/checkout@v2
@@ -31,43 +31,19 @@ jobs:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
 
-      - name: Install R deployment packages
-        run: |
-          install.packages('rcmdcheck')
-          install.packages('testthat')
-          install.packages('pak')
-        shell: Rscript {0}
-        working-directory: Server
-
-      - name: Cache R production packages
-        path: Server/library
-        uses: actions/cache@v3
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          key: ${{ runner.os }}-pak-${{ hashFiles('**/prod.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pak-
+          dependencies: '"hard"'
+          extra-packages: any::rcmdcheck
+          working-directory: Server
 
-      - name: Install R production packages
-        run: |
-          pak::lockfile_install('./prod.lock')
-        shell: Rscript {0}
-        working-directory: Server
-
-      - name: Check
+      - uses: r-lib/actions/check-r-package@v2
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_FORCE_SUGGESTS_: false
           _R_CHECK_LICENSE_: false
           _R_CHECK_CODETOOLS_PROFILE_: 'suppressUndefined=TRUE'
-        run: |
-          rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'warning', check_dir = 'check')
-          testthat::test_package('hivPlatform')
-        shell: Rscript {0}
-        working-directory: Server
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@main
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
+          args: 'c("--no-manual")'
+          upload-snapshots: true
+          workking-directory: Server

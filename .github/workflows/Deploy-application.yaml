@@ -8,25 +8,21 @@ name: Deploy to ShinyApps
 
 jobs:
   Deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     name: Deploy to ShinyApps
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      RENV_PATHS_ROOT: ~/.local/share/renv
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - run: echo 'Print all environment variables'
-      - run: env
-
-      - name: Set up Node 19
-        uses: actions/setup-node@v2
+      - name: Set up Node 19.2.0
+        uses: actions/setup-node@v3
         with:
-          node-version: '19.1.0'
+          node-version: '19.2.0'
           architecture: 'x64'
           cache: 'yarn'
           cache-dependency-path: 'Client/yarn.lock'
@@ -43,34 +39,21 @@ jobs:
           yarn build
         working-directory: Client
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: '4.2.2'
-
       - name: Install R system dependencies
         run: |
           sudo apt-get install -y libcurl4-openssl-dev
 
-      - name: Install R deployment packages
-        run: |
-          install.packages('rsconnect')
-          install.packages('pak')
-          install.packages('testthat')
-        shell: Rscript {0}
-        working-directory: Server
-
-      - name: Cache production R packages
-        uses: actions/cache@v2
+      - uses: r-lib/actions/setup-r@v2
         with:
-          key: ${{ runner.os }}-pak-${{ hashFiles('**/prod.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pak-
+          r-version: '4.2.2'
 
-      - name: Install R production packages
-        run: |
-          pak::lockfile_install('./prod.lock')
-        shell: Rscript {0}
-        working-directory: Server
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: |
+            any::rsconnect
+            any::pak
+          working-directory: Server
 
       - name: Deploy
         env:

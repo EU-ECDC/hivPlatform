@@ -176,3 +176,6 @@ renv::restore(
   library = file.path(serverDeployPath, 'renv', 'library', 'R-4.1', 'x86_64-w64-mingw32'),
   prompt = FALSE
 )
+
+# 5. DEPLOYMENT ------------------------------------------------------------------------------------
+pak::pak('.', depedendencies = 'hard')
