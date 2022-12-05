@@ -49,8 +49,13 @@ jobs:
             any::pkgbuild
             any::rcmdcheck
             github::nextpagesoft/hivModelling
-            github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant
           working-directory: Server
+
+      - name: Install hivPlatform package
+        run: |
+          pak::pkg_install('github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant')
+        shell: Rscript {0}
+        working-directory: Server
 
       - name: Deploy
         env:
