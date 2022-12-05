@@ -48,8 +48,8 @@ jobs:
             any::rsconnect
             any::pkgbuild
             any::rcmdcheck
-            pak::pkg_install('github::nextpagesoft/hivModelling')
-            pak::pkg_install('github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant')
+            github::nextpagesoft/hivModelling
+            github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant
           working-directory: Server
 
       - name: Deploy
