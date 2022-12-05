@@ -48,7 +48,6 @@ jobs:
             any::rsconnect
             any::pkgbuild
             any::rcmdcheck
-            github::nextpagesoft/hivModelling
           working-directory: Server
 
       - name: Install hivPlatform package
