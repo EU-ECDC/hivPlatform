@@ -96,7 +96,8 @@ Colors of curves:
 7. Implement unloading data
 8. Implement saving/loading state of the entire application
 9. Align styling of logs printed
-10. Check behaviour of the tool when run as installed package, not as loaded with `pkgload`.
-11. Change deployment on ECDC server to use installed package, not code loaded with `pkgload`.
+10. Check behaviour of the tool when run as installed package, not as loaded with `pkgload`. (DONE)
+11. Change deployment on ECDC server to use installed package, not code loaded with `pkgload`. (DONE)
 12. Create CLI example to showcase the tool when running from console.
 13. Fix github action in hivModelling repo. (DONE)
+14. Move package dependencies management from renv to pak (DONE)

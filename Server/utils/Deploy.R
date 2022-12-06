@@ -5,7 +5,7 @@ rVersion <- '4.2'
 deployDate <- format(Sys.Date(), '%Y%m%d')
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s_%s', pkgVersion, deployDate))
-repoCRAN <- 'https://cloud.r-project.org'
+repoCRAN <- getOption('repos')[['CRAN']]
 args <- c('--preclean')
 
 # 1. REPOSITORY ------------------------------------------------------------------------------------
@@ -55,69 +55,44 @@ miniCRAN::addLocalPackage(pkgName, buildPath, repoPath, type = 'win.binary', Rve
 # 3. WINDOWS BINARY DEPLOYMENT ---------------------------------------------------------------------
 
 winDeployPath <- file.path(rootPath, 'deployment/windowsBinary/app/')
+unlink(winDeployPath, recursive = TRUE)
 dir.create(winDeployPath, showWarnings = FALSE, recursive = TRUE)
 
 # Copy files and folders
 sapply(
-  c('appWindows.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', 'renv.lock'),
+  c('appWindows.R', '.Rprofile'),
   fs::file_copy,
   new_path = winDeployPath,
   overwrite = TRUE
 )
-
-fs::dir_create(file.path(winDeployPath, 'renv'))
-fs::file_copy('renv/activate.R', file.path(winDeployPath, 'renv/'), overwrite = TRUE)
-fs::file_copy('renv/settings.dcf', file.path(winDeployPath, 'renv/'), overwrite = TRUE)
-fs::dir_copy('man/', file.path(winDeployPath, 'man/'), overwrite = TRUE)
-fs::dir_copy('inst/', file.path(winDeployPath, 'inst/'), overwrite = TRUE)
-fs::dir_copy('data-raw/', file.path(winDeployPath, 'data-raw/'), overwrite = TRUE)
-fs::dir_copy('R/', file.path(winDeployPath, 'R/'), overwrite = TRUE)
-
-rProfileFile <- file(file.path(winDeployPath, '.Rprofile'))
-rProfileContent <- 'source("renv/activate.R")'
-writeLines(rProfileContent, rProfileFile)
-close(rProfileFile)
-
-renvSettingsFile <- file(file.path(winDeployPath, 'renv', 'settings.dcf'))
-renvSettingsContent <- readLines(renvSettingsFile)
-extLibLine <- which(grepl('^external.libraries', renvSettingsContent))[1]
-renvSettingsContent[extLibLine] <- 'external.libraries:'
-writeLines(renvSettingsContent, renvSettingsFile)
-close(renvSettingsFile)
-
-appServerFile <- file(file.path(winDeployPath, 'R', 'AppServer.R'))
-appServerContent <- readLines(appServerFile)
-sessionEndFound <- any(grepl('session\\$onSessionEnded\\(stopApp\\)', appServerContent))
-if (!sessionEndFound) {
-  returnLine <- which(grepl('return\\(invisible\\(NULL\\)\\)', appServerContent))[1]
-
-  appServerContent <- c(
-    appServerContent[1:returnLine - 1],
-    '  session$onSessionEnded(stopApp)',
-    appServerContent[returnLine:length(appServerContent)]
-  )
-  writeLines(appServerContent, appServerFile)
-  close(appServerFile)
-}
-
-unlink(
-  file.path(winDeployPath, 'library'),
-  recursive = TRUE
+fs::dir_create(file.path(winDeployPath, 'library'))
+pak::pkg_install(
+  'github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant',
+  dependencies = 'hard',
+  lib = file.path(winDeployPath, 'library')
 )
-renv::restore(
-  project = winDeployPath,
-  library = file.path(winDeployPath, 'library', 'R-4.2', 'x86_64-w64-mingw32'),
-  prompt = FALSE,
-  clean = TRUE
+pak::pkg_install(
+  'local::.',
+  dependencies = FALSE,
+  ask = FALSE,
+  lib = file.path(winDeployPath, 'library')
 )
+fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 
+# appServerFile <- file(file.path(winDeployPath, 'R', 'AppServer.R'))
+# appServerContent <- readLines(appServerFile)
+# sessionEndFound <- any(grepl('session\\$onSessionEnded\\(stopApp\\)', appServerContent))
+# if (!sessionEndFound) {
+#   returnLine <- which(grepl('return\\(invisible\\(NULL\\)\\)', appServerContent))[1]
 
-file.copy(
-  file.path(serverDeployPath, 'renv/library/'),
-  file.path(winDeployPath, 'renv'),
-  overwrite = TRUE,
-  recursive = TRUE
-)
+#   appServerContent <- c(
+#     appServerContent[1:returnLine - 1],
+#     '  session$onSessionEnded(stopApp)',
+#     appServerContent[returnLine:length(appServerContent)]
+#   )
+#   writeLines(appServerContent, appServerFile)
+#   close(appServerFile)
+# }
 
 redundantFolders <- fs::dir_ls(
   file.path(winDeployPath, 'library'),

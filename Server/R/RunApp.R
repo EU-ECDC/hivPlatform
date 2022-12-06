@@ -3,6 +3,8 @@
 #' Run the application.
 #'
 #' @param port Port
+#' @param launchBrowser launchBrowser
+#' @param stopOnSessionEnded stopOnSessionEnded
 #'
 #' @return NULL (invisibly)
 #'
@@ -13,10 +15,13 @@
 #'
 #' @export
 RunApp <- function(
-  port
+  port = NULL,
+  launchBrowser = FALSE,
+  stopOnSessionEnded = FALSE
 ) {
   options(shiny.maxRequestSize = 100 * 1024^2)
   options(shiny.trace = FALSE)
+  options(hivPlatform.stopOnSessionEnded = stopOnSessionEnded)
 
   app <- shiny::shinyApp(
     AppUI,
@@ -24,11 +29,11 @@ RunApp <- function(
     options = c(
       display.mode = 'normal',
       test.mode = FALSE,
-      launch.browser = FALSE
+      launch.browser = launchBrowser
     )
   )
-  if (!missing(port)) {
+  if (launchBrowser) {
     shiny::runApp(app, port = port)
   }
-  return(app)
+  return(invisible(app))
 }

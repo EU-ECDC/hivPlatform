@@ -19,5 +19,9 @@ AppServer <- function(
   # Respond to events
   Events(input, output, session, appMgr)
 
+  if (getOption('hivPlatform.stopOnSessionEnded', FALSE)) {
+    session$onSessionEnded(stopApp)
+  }
+
   return(invisible(NULL))
 }

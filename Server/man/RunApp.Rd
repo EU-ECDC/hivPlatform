@@ -4,10 +4,14 @@
 \alias{RunApp}
 \title{RunApp}
 \usage{
-RunApp(port)
+RunApp(port = NULL, launchBrowser = FALSE, stopOnSessionEnded = FALSE)
 }
 \arguments{
 \item{port}{Port}
+
+\item{launchBrowser}{launchBrowser}
+
+\item{stopOnSessionEnded}{stopOnSessionEnded}
 }
 \value{
 NULL (invisibly)
