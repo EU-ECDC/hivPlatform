@@ -30,5 +30,5 @@ RunApp <- function(
   if (!missing(port)) {
     shiny::runApp(app, port = port)
   }
-  return(invisible(app))
+  return(app)
 }
