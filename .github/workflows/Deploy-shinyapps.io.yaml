@@ -50,7 +50,7 @@ jobs:
             any::rcmdcheck
           working-directory: Server
 
-      - name: Install hivPlatform package
+      - name: Install hivPlatform R package
         run: |
           pak::pkg_install('github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant')
         shell: Rscript {0}
