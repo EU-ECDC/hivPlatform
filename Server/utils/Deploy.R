@@ -71,12 +71,6 @@ pak::pkg_install(
   dependencies = 'hard',
   lib = file.path(winDeployPath, 'library')
 )
-pak::pkg_install(
-  'local::.',
-  dependencies = FALSE,
-  ask = FALSE,
-  lib = file.path(winDeployPath, 'library')
-)
 fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 
 # appServerFile <- file(file.path(winDeployPath, 'R', 'AppServer.R'))

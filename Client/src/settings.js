@@ -11,7 +11,7 @@ export const NAME = 'HIV Platform';
 export const VERSION = packageInfo.version;
 
 // Application build date
-export const BUILD_DATE = '2022-12-04';
+export const BUILD_DATE = '2022-12-14';
 
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;
