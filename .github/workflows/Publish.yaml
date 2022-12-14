@@ -14,5 +14,5 @@ jobs:
           username: nextpagesoft
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: nextpagesoft/publish-packages/hivPlatform
+          repository: nextpagesoft/hivPlatform
           tag_with_sha: true
