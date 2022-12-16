@@ -1,3 +1,7 @@
+# 1. Update local packages -------------------------------------------------------------------------
+pak::local_install_deps(root = '.', dependencies = 'hard')
+
+
 pkgName <- 'hivPlatform'
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgVersion <- pkgDescr$Version

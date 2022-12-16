@@ -59,14 +59,14 @@ const RootElem = props => {
       }}
     >
       <Toolbar variant='dense' disableGutters>
-        <Typography variant='h4' sx={{ color: 'white', ml: '10px'}}>
+        <Typography variant='h4' sx={{ fontWeight: 'bold', color: 'white', ml: '10px' }}>
           {NAME}
         </Typography>
-        <Typography variant='subtitle2' sx={{ color: 'white', ml: '10px' }}>
+        <Typography variant='overline' sx={{ color: 'white', ml: '20px', lineHeight: 1.5 }}>
           Version: {VERSION} <br />Build date: {BUILD_DATE}
         </Typography>
         <Box flexGrow={1}/>
-        <Typography variant='subtitle1' sx={{ color: 'white' }}>
+        <Typography variant='overline' sx={{ color: 'white' }}>
           Engine state: {appMgr.shinyStateHuman}
         </Typography>
         <IconButton

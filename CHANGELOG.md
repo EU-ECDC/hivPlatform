@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _December 16 2022_
+
+- Correct data passed to RD adjustment after MI adjustment
+
+
+## 3.0.0
+
 ###### _December 4 2022_
 
 - Update dependencies

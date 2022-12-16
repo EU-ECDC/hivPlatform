@@ -112,6 +112,8 @@ RunAdjustments <- function(
     PrintH2('Done')
     PrintAlert('End time: {format(endTime)}')
     PrintAlert('Elapsed time: {.timestamp {prettyunits::pretty_dt(endTime - startTime)}}')
+
+    data <- output$Data
   }
 
   return(results)

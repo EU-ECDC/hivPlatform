@@ -101,3 +101,6 @@ Colors of curves:
 12. Create CLI example to showcase the tool when running from console.
 13. Fix github action in hivModelling repo. (DONE)
 14. Move package dependencies management from renv to pak (DONE)
+15. Number of mice iterations: 10 (DONE)
+16. Fix reporting with MI and RD adjustments (DONE)
+17. Rotate labels in MI diagnostic plots

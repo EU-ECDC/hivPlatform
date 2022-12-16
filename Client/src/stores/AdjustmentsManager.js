@@ -16,7 +16,7 @@ export default class AdjustmentsManager {
 
   miMiceSettings = {
     nimp: 5,
-    nit: 5,
+    nit: 10,
     nsdf: 4,
     imputeRD: false
   };

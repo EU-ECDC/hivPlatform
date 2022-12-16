@@ -79,8 +79,19 @@ appMgr$CaseMgr$SetFilters(filters = list(
 ))
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
-# adjustmentSpecs <-
-#   hivPlatform::GetAdjustmentSpecs(c("Multiple Imputation using Chained Equations - MICE"))
+adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
+  "Multiple Imputation using Chained Equations - MICE",
+  "Reporting Delays"
+))
+
+result <- hivPlatform::RunAdjustments(
+  data = copy(appMgr$CaseMgr$PreProcessedData),
+  adjustmentSpecs = adjustmentSpecs,
+  diagYearRange = NULL,
+  notifQuarterRange = NULL,
+  seed = NULL
+)
+
 # adjustmentSpecs[[1]]$Parameters$nimp$value <- 20
 # adjustmentSpecs[[1]]$Parameters$nit$value <- 20
 # adjustmentSpecs <- GetAdjustmentSpecs(c('Reporting Delays with trend'))
@@ -94,9 +105,16 @@ adjustmentSpecs <- GetAdjustmentSpecs(adjName)
 adjustmentSpecs[[adjName]]$Parameters$startYear$value <- 1983
 adjustmentSpecs[[adjName]]$Parameters$endYear$value <- 2019
 adjustmentSpecs[[adjName]]$Parameters$endQrt$value <- 4
-# appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-data <- appMgr$CaseMgr$Data
+appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
+
+adjustedData <- appMgr$CaseMgr$AdjustmentResult
+appMgr$CaseMgr$OriginalData
+appMgr$CaseMgr$PreProcessedData
+appMgr$CaseMgr$AdjustedData
+appMgr$CaseMgr$AdjustmentResult[[1]]$Data
+appMgr$CaseMgr$AdjustmentResult[[2]]$Data
+
 
 
 appMgr$CaseMgr$AdjustmentResult

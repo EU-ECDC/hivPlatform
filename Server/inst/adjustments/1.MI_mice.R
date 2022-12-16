@@ -19,7 +19,7 @@ list(
     # Parameter 2
     nit = list(
       label = 'Number of mice iterations',
-      value = 5L,
+      value = 10L,
       input = 'numeric'
     ),
     # Parameter 3
@@ -39,11 +39,6 @@ list(
       value = FALSE,
       input = 'checkbox'
     )
-    # Parameter 5
-    # runInParallel = list(
-    #   label = 'Run in parallel',
-    #   value = FALSE,
-    #   input = 'checkbox')
   ),
 
   # Adjustment function ----
