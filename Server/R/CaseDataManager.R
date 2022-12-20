@@ -511,7 +511,7 @@ CaseDataManager <- R6::R6Class( # nolint
                 data,
                 ':='(
                   Imputation = i.Imputation,
-                  YearOfArrival = year(i.DateOfArrival),
+                  YearOfArrival = data.table::year(i.DateOfArrival),
                   YearOfHIVDiagnosis = i.YearOfHIVDiagnosis,
                   MigrantRegionOfOrigin = i.MigrantRegionOfOrigin,
                   Gender = i.Gender,
