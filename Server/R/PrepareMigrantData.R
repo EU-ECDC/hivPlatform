@@ -248,7 +248,7 @@ PrepareMigrantData <- function(
   # Years from migration to HIV diagosis
   data[, Mig := as.numeric(DateOfHIVDiagnosis - DateOfArrival) / 365.25]
 
-  data[is.na(Excluded), KnownPrePost := fcase(
+  data[is.na(Excluded), KnownPrePost := data.table::fcase(
     Mig < 0 | HIVStatus == 'PREVPOS', 'Pre',
     Mig >= U, 'Post',
     default = 'Unknown'
@@ -326,7 +326,7 @@ PrepareMigrantData <- function(
     Consr = as.integer(Indi == 'RNA')
   )]
   baseCD4VL[,
-    Only := fcase(
+    Only := data.table::fcase(
       any(Indi == 'CD4') & any(Indi == 'RNA'), 'Both',
       any(Indi == 'CD4') & !any(Indi == 'RNA'), 'CD4 only',
       !any(Indi == 'CD4') & any(Indi == 'RNA'), 'VL only'

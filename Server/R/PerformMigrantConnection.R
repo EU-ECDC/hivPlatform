@@ -23,7 +23,7 @@ PerformMigrantConnection <- function(
     stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Pre', unique(ProbPre) == 1])
     stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Post', unique(ProbPre) == 0])
 
-    caseData[, MigrClass := fcase(
+    caseData[, MigrClass := data.table::fcase(
       !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival',
       !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
       !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
