@@ -1,5 +1,14 @@
 ## 3.0.0
 
+###### _December 21 2022_
+
+- Fix running the package when installed
+- Read details of the tool from R package DESCRIPTION
+- Update dependencies
+
+
+## 3.0.0
+
 ###### _December 16 2022_
 
 - Correct data passed to RD adjustment after MI adjustment

@@ -17,7 +17,7 @@ import TabModelling from './TabModelling/TabModelling';
 import TabReports from './TabReports';
 import TabOutputs from './TabOutputs';
 import MessageBar from './MessageBar';
-import { NAME, VERSION, BUILD_DATE, DEBUG } from '../settings';
+import { DEBUG } from '../settings';
 
 const Page = ({ pageId, activePageId, children, ...other }) => (
   <Typography
@@ -60,10 +60,10 @@ const RootElem = props => {
     >
       <Toolbar variant='dense' disableGutters>
         <Typography variant='h4' sx={{ fontWeight: 'bold', color: 'white', ml: '10px' }}>
-          {NAME}
+          {appMgr.packageDetails.Title}
         </Typography>
         <Typography variant='overline' sx={{ color: 'white', ml: '20px', lineHeight: 1.5 }}>
-          Version: {VERSION} <br />Build date: {BUILD_DATE}
+          Version: {appMgr.packageDetails.Version} <br />Build date: {appMgr.packageDetails.Date}
         </Typography>
         <Box flexGrow={1}/>
         <Typography variant='overline' sx={{ color: 'white' }}>

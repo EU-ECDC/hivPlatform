@@ -9,6 +9,20 @@ export default appMgr => {
   appMgr.setShinyState('DEBUGGING');
 
   appMgr.onShinyEvent({
+    type: 'PACKAGE_DETAILS_SENT',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      PackageDetails: {
+        Name: 'hivPlatform',
+        Title: 'HIV Platform',
+        Version: '3.0.0',
+        Date: '2022-12-22',
+        Description: 'Improves the accuracy of HIV estimates in EU/EEA countries.'
+      }
+    }
+  });
+
+  appMgr.onShinyEvent({
     type: 'COMPLETED_STEPS_SET',
     payload: {
       ActionStatus: 'SUCCESS',

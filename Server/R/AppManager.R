@@ -20,8 +20,19 @@ AppManager <- R6::R6Class(
     ) {
       PrintAlert('Temporary directory: {.val {tempdir()}}')
 
+      packageName <- methods::getPackageName()
+      packageDescr <- utils::packageDescription(
+        pkg = packageName,
+        fields = c('Package', 'Title', 'Version', 'Date', 'Description')
+      )
+      private$PackageDetails_ <- list(
+        Name = packageName,
+        Title = packageDescr$Title,
+        Version = packageDescr$Version,
+        Date = packageDescr$Date,
+        Description = packageDescr$Description
+      )
       private$Session <- session
-
       private$CaseMgrPriv <- CaseDataManager$new(session, self)
       private$AggrMgrPriv <- AggrDataManager$new(session, self)
       private$HIVModelMgrPriv <- HIVModelManager$new(session, self)
@@ -259,6 +270,9 @@ AppManager <- R6::R6Class(
   ),
 
   private = list(
+    # Package details
+    PackageDetails_ = list(),
+
     # Shiny session
     Session = NULL,
 
@@ -279,6 +293,10 @@ AppManager <- R6::R6Class(
   ),
 
   active = list(
+    PackageDetails = function() {
+      return(private$PackageDetails_)
+    },
+
     UIState = function() {
       return(private$UIStatePriv)
     },

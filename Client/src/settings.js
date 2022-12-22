@@ -4,15 +4,6 @@ import packageInfo from '../package.json';
 // DEBUG mode
 export const DEBUG = process.env.NODE_ENV === 'development';
 
-// Application name
-export const NAME = 'HIV Platform';
-
-// Application version
-export const VERSION = packageInfo.version;
-
-// Application build date
-export const BUILD_DATE = '2022-12-16';
-
 // Duration of the notification displayed at the bottom of the screen [in milliseconds]
 export const NOTIFICATION_DURATION = 5000;
 

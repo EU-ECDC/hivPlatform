@@ -1,6 +1,7 @@
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
 
 appMgr <- hivPlatform::AppManager$new()
+appMgr$PackageDetails
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start

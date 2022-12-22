@@ -28,6 +28,7 @@ export default class AppManager {
 
   id = 'AppManager';
 
+  packageDetails = {};
   uiStateMgr = null;
   notificationsMgr = null;
   attrMappingMgr = null;
@@ -52,6 +53,11 @@ export default class AppManager {
   onShinyEvent = e => {
     console.log('onShinyEvent', e.type, e);
     switch (e.type) {
+      case 'PACKAGE_DETAILS_SENT':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.setPackageDetails(e.payload.PackageDetails);
+        }
+        break;
       case 'COMPLETED_STEPS_SET':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.uiStateMgr.setCompletedSteps(e.payload.CompletedSteps);
@@ -370,12 +376,14 @@ export default class AppManager {
     this.migrMgr = new MigrationManager(this);
 
     makeObservable(this, {
+      packageDetails: observable,
       shinyState: observable,
       shinyMessage: observable,
       seed: observable,
       seedText: computed,
       shinyReady: computed,
       jsonShinyMessage: computed,
+      setPackageDetails: action,
       setShinyState: action,
       btnClicked: action,
       inputValueSet: action,
@@ -434,6 +442,8 @@ export default class AppManager {
   };
 
   // Actions
+  setPackageDetails = packageDetails => this.packageDetails = packageDetails;
+
   setShinyState = state => {
     this.shinyState = state;
     if (state === 'SESSION_INITIALIZED') {

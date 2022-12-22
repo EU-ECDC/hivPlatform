@@ -185,6 +185,14 @@ Events <- function(
   session,
   appMgr
 ) {
+  appMgr$SendMessage(
+    'PACKAGE_DETAILS_SENT',
+    list(
+      ActionStatus = 'SUCCESS',
+      PackageDetails = appMgr$PackageDetails
+    )
+  )
+
   observeEvent(input$saveStateBtn, {
     appMgr$SetUIState(input$saveStateBtn)
     appMgr$SaveState()
