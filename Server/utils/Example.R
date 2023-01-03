@@ -1,7 +1,6 @@
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
 
 appMgr <- hivPlatform::AppManager$new()
-appMgr$PackageDetails
 # STEP 1 - Load data -------------------------------------------------------------------------------
 
 # nolint start
@@ -261,6 +260,21 @@ plotData <- GetHIVPlotData(
   parameters = parameters
 )
 
+caseData <- copy(appMgr$CaseMgr$Data)
+aggrData <- NULL
+aggrDataSelection <- NULL
+popCombination <- list(
+  Case = list(list(Values = c('M', 'MSM'), Variables = c('Gender', 'Transmission'))),
+  Aggr = NULL
+)
+
+popCombination <- list(
+  Case = list(
+    list(Values = c('M', 'HETERO'), Variables = c('Gender', 'Transmission')),
+    list(Values = c('M', 'MSM'), Variables = c('Gender', 'Transmission'))
+  ),
+  Aggr = NULL
+)
 
 dataSets <- PrepareDataSetsForModel(appMgr$CaseMgr$Data)
 for (dataName in names(dataSets)) {

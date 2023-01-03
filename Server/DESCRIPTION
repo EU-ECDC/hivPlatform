@@ -2,7 +2,7 @@ Package: hivPlatform
 Type: Package
 Title: HIV Platform
 Version: 3.0.0
-Date: 2022-12-21
+Date: 2023-01-03
 Authors@R: c(person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl',
     role = c('aut', 'cph')), person('Nikos', 'Pantazis', email =
     'npantaz@med.uoa.gr', role = c('aut')), person('Ard', 'van Sighem',
@@ -23,6 +23,7 @@ Imports:
     jomo (>= 2.6-10),
     jsonlite (>= 1.7.2),
     knitr (>= 1.28),
+    logger (>= 0.2.2),
     mice (>= 3.8.0),
     mitools (>= 2.4),
     openxlsx (>= 4.2.3),

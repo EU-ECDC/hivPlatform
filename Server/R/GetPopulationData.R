@@ -23,7 +23,7 @@
 #'   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
 #'   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 #' )
-#' GetPopulationData(casedData, aggrData, popCombination, aggrDataSelection)
+#' GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
 #' }
 #'
 #' @export
@@ -42,13 +42,10 @@ GetPopulationData <- function(
     dt1 <- list()
     for (i in seq_along(popCombination$Case)) {
       combination <- popCombination$Case[[i]]
-      dt1[[i]] <- list()
-      for (j in seq_along(combination$Variables)) {
-        dt1[[i]][[j]] <-
-          caseData[as.character(get(combination$Variables[j])) %chin% combination$Values[j]]
-      }
+      setkeyv(caseData, combination$Variables)
+      dt1[[i]] <- caseData[as.list(combination$Values), mult = 'all']
     }
-    dt1 <- rbindlist(lapply(dt1, rbindlist))
+    dt1 <- rbindlist(dt1)
   } else {
     dt1 <- copy(caseData)
   }

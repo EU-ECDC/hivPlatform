@@ -1,5 +1,13 @@
 ## 3.0.0
 
+###### _January 3 2023_
+
+- Fix combining case based data populations (use "and" instead of "or")
+- Update dependencies
+
+
+## 3.0.0
+
 ###### _December 21 2022_
 
 - Fix running the package when installed
