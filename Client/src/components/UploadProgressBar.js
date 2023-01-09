@@ -2,8 +2,7 @@ import React from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
 import IsNull from '../utilities/IsNull';
 
-const UploadProgressBar = (props) => {
-  const { progress } = props;
+const UploadProgressBar = ({progress}) => {
   if (IsNull(progress)) return null;
 
   return <LinearProgress

@@ -124,6 +124,26 @@ AggrDataManager <- R6::R6Class(
       private$SendMessage('AGGR_DATA_READ', payload)
 
       return(invisible(self))
+    },
+
+    GetState = function() {
+      state <- list(
+        Catalogs = list(
+          FileName = private$Catalogs$FileName,
+          Data = private$Catalogs$Data,
+          PopulationNames = private$Catalogs$PopulationNames
+        )
+      )
+
+      return(state)
+    },
+
+    SetState = function(state) {
+      private$Catalogs$FileName <- state$Catalogs$FileName
+      private$Catalogs$Data <- state$Catalogs$Data
+      private$Catalogs$PopulationNames <- state$Catalogs$PopulationNames
+
+      return(invisible(self))
     }
   ),
 

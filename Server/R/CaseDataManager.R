@@ -680,6 +680,52 @@ CaseDataManager <- R6::R6Class( # nolint
           )
         )
       }
+    },
+
+    GetState = function() {
+      state <- list(
+        Catalogs = list(
+          FilePath = private$Catalogs$FilePath,
+          FileName = private$Catalogs$FileName,
+          OriginalData = private$Catalogs$OriginalData,
+          AttrMapping = private$Catalogs$AttrMapping,
+          AttrMappingStatus = private$Catalogs$AttrMappingStatus,
+          OriginDistribution = private$Catalogs$OriginDistribution,
+          OriginGrouping = private$Catalogs$OriginGrouping,
+          PreProcessArtifacts = private$Catalogs$PreProcessArtifacts,
+          Filters = private$Catalogs$Filters,
+          PreProcessedData = private$Catalogs$PreProcessedData,
+          PreProcessedDataStatus = private$Catalogs$PreProcessedDataStatus,
+          AdjustedData = private$Catalogs$AdjustedData,
+          AdjustmentResult = private$Catalogs$AdjustmentResult,
+          MigrationRegion = private$Catalogs$MigrationRegion,
+          MigrationPropStrat = private$Catalogs$MigrationPropStrat,
+          MigrationResult = private$Catalogs$MigrationResult
+        )
+      )
+
+      return(state)
+    },
+
+    SetState = function(state) {
+      private$Catalogs$FilePath <- state$Catalogs$FilePath
+      private$Catalogs$FileName <- state$Catalogs$FileName
+      private$Catalogs$OriginalData <- state$Catalogs$OriginalData
+      private$Catalogs$AttrMapping <- state$Catalogs$AttrMapping
+      private$Catalogs$AttrMappingStatus <- state$Catalogs$AttrMappingStatus
+      private$Catalogs$OriginDistribution <- state$Catalogs$OriginDistribution
+      private$Catalogs$OriginGrouping <- state$Catalogs$OriginGrouping
+      private$Catalogs$PreProcessArtifacts <- state$Catalogs$PreProcessArtifacts
+      private$Catalogs$Filters <- state$Catalogs$Filters
+      private$Catalogs$PreProcessedData <- state$Catalogs$PreProcessedData
+      private$Catalogs$PreProcessedDataStatus <- state$Catalogs$PreProcessedDataStatus
+      private$Catalogs$AdjustedData <- state$Catalogs$AdjustedData
+      private$Catalogs$AdjustmentResult <- state$Catalogs$AdjustmentResult
+      private$Catalogs$MigrationRegion <- state$Catalogs$MigrationRegion
+      private$Catalogs$MigrationPropStrat <- state$Catalogs$MigrationPropStrat
+      private$Catalogs$MigrationResult <- state$Catalogs$MigrationResult
+
+      return(invisible(self))
     }
   ),
 

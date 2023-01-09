@@ -198,6 +198,14 @@ Events <- function(
     appMgr$SaveState()
   })
 
+  observeEvent(input$loadStateBtn, {
+    fileInfo <- input$loadStateBtn
+    appMgr$LoadState(
+      fileInfo$datapath,
+      fileInfo$name[1]
+    )
+  })
+
   # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn

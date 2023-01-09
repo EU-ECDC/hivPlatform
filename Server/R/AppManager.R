@@ -18,8 +18,6 @@ AppManager <- R6::R6Class(
     initialize = function(
       session = NULL
     ) {
-      PrintAlert('Temporary directory: {.val {tempdir()}}')
-
       packageName <- methods::getPackageName()
       packageDescr <- utils::packageDescription(
         pkg = packageName,
@@ -121,23 +119,79 @@ AppManager <- R6::R6Class(
 
     SetUIState = function(uiState) {
       private$UIStatePriv <- uiState
+      return(invisible(self))
     },
 
     SaveState = function() {
-      rc <- rawConnection(raw(0), 'r+')
-      saveRDS(self, rc)
-      rcData <- rawConnectionValue(rc)
-      close(rc)
-      self$SendMessage(
-        'SAVE_STATE',
-        payload = list(
-          ActionStatus = 'SUCCESS',
-          ActionMessage = 'Application state available for saving',
-          Data = rcData,
-          FileName = sprintf('HIVPlatformState_%s.rds', GetTimeStamp())
+      state <- private$GetState()
+      fileName <- sprintf('HIVPlatformState_%s.rds', GetTimeStamp())
+      if (is.null(private$Session)) {
+        saveRDS(state, fileName)
+      } else {
+        rc <- rawConnection(raw(0), 'r+')
+        saveRDS(state, rc)
+        rcData <- rawConnectionValue(rc)
+        close(rc)
+        self$SendMessage(
+          'SAVE_STATE',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            ActionMessage = 'Application state available for saving',
+            Data = rcData,
+            FileName = fileName
+          )
         )
+      }
+      PrintAlert('State file {.file {fileName}} saved')
+      return(invisible(self))
+    },
+
+    LoadState = function(
+      filePath,
+      fileName = NULL
+    ) {
+      if (!is.element(self$Steps['SESSION_INITIALIZED'], self$CompletedSteps)) {
+        PrintAlert(
+          'AppManager is not initialized properly before loading the state',
+          type = 'danger'
+        )
+        return(invisible(self))
+      }
+
+      if (is.null(fileName)) {
+        fileName <- basename(filePath)
+      }
+      status <- 'SUCCESS'
+      msg <- 'State file read correctly'
+      tryCatch(
+        {
+          state <- readRDS(filePath)
+          private$SetState(state)
+        },
+        error = function(e) {
+          status <<- 'FAIL'
+          msg <<- e$message
+        }
       )
-      PrintAlert('Saving state to file')
+
+      if (status == 'SUCCESS') {
+        PrintAlert('State file {.file {fileName}} loaded')
+        payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg,
+          UIState = self$UIState
+        )
+      } else {
+        PrintAlert('Loading state file {.file {fileName}} failed', type = 'danger')
+        payload <- list(
+          ActionStatus = status,
+          ActionMessage = msg
+        )
+      }
+
+      self$SendMessage('STATE_LOADED', payload)
+
+      return(invisible(self))
     },
 
     # USER ACTIONS =================================================================================
@@ -289,7 +343,37 @@ AppManager <- R6::R6Class(
     HIVModelMgrPriv = NULL,
 
     # Storage
-    Catalogs = NULL
+    Catalogs = NULL,
+
+    GetState = function() {
+      state <- list(
+        UIState = self$UIState,
+        Catalogs = list(
+          Seed = private$Catalogs$Seed,
+          CompletedSteps = private$Catalogs$CompletedSteps,
+          ReportArtifacts = private$Catalogs$ReportArtifacts,
+          Report = private$Catalogs$Report
+        ),
+        CaseMgr = self$CaseMgr$GetState(),
+        AggrMgr = self$AggrMgr$GetState(),
+        HIVModelMgr = self$HIVModelMgr$GetState()
+      )
+
+      return(state)
+    },
+
+    SetState = function(state) {
+      private$UIStatePriv <- state$UIState
+      private$Catalogs$Seed <- state$Catalogs$Seed
+      private$Catalogs$CompletedSteps <- state$Catalogs$CompletedSteps
+      private$Catalogs$ReportArtifacts <- state$Catalogs$ReportArtifacts
+      private$Catalogs$Report <- state$Catalogs$Report
+      self$CaseMgr$SetState(state$CaseMgr)
+      self$AggrMgr$SetState(state$AggrMgr)
+      self$HIVModelMgr$SetState(state$HIVModelMgr)
+
+      return(invisible(self))
+    }
   ),
 
   active = list(

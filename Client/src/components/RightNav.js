@@ -2,10 +2,13 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListSubheader from '@mui/material/ListSubheader';
+import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import UploadProgressBar from './UploadProgressBar';
 
 const RightNav = (props) => {
   const { appMgr, open, onClose } = props;
@@ -14,6 +17,8 @@ const RightNav = (props) => {
 
   const handleSaveStateBtnClick = () => appMgr.saveState();
 
+  const handleLoadStateBtnClick = e => appMgr.loadState(e.target);
+
   const handleSeedChange = e => setSeed(parseInt(e.target.value));
 
   const handleSeedApply = () => appMgr.btnClicked('seed', seed);
@@ -21,63 +26,78 @@ const RightNav = (props) => {
   return (
     <Drawer anchor='right' open={open} onClose={onClose}>
       <Box width={300} p={2}>
-        <Typography variant='h6'>Application</Typography>
-        <ul>
-          <li>
-            <Link
-              href='#'
-              id='saveState'
-              variant='button'
+        <List dense>
+          <ListSubheader>
+            <Typography variant='button'>Application</Typography>
+          </ListSubheader>
+          <ListItem>
+            <Button
+              color='primary'
+              size='small'
+              component='label'
               onClick={handleSaveStateBtnClick}
-              // style={{ pointerEvents: 'none' }}
             >
-              Save state [DISABLED]
-            </Link>
-          </li>
-          <li>
-            <Link
-              href='#'
-              variant='button'
-              style={{ pointerEvents: 'none' }
-            }>
-              Load state [DISABLED]
-            </Link>
-          </li>
-          <li>
-            <Link
+              Save state
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button
+              color='primary'
+              size='small'
+              component='label'
+            >
+              Load state
+              <input
+                hidden
+                type='file'
+                onChange={handleLoadStateBtnClick}
+                id='loadStateBtn'
+              />
+            </Button>
+          </ListItem>
+          <UploadProgressBar progress={appMgr.loadStateProgress} />
+          <ListItem>
+            <Button
+              color='primary'
+              size='small'
+              component='a'
               href='./'
               target='_blank'
-              variant='button'
             >
               Open another instance
-            </Link>
-          </li>
-        </ul>
-
-        <Typography variant='h6'>Documentation</Typography>
-        <ul>
-          <li>
-            <Link
-              href='./www/docs/HIVPlatform_2.0.0_manual.pdf'
-              target='_blank'
-              variant='button'
-            >
-              Open manual [PDF]
-            </Link>
-          </li>
-        </ul>
-
-        <Typography variant='h6'>Options</Typography>
-        <TextField
-          label='Random seed'
-          helperText='Give empty value to remove fixed seed'
-          variant='filled'
-          type='number'
-          fullWidth
-          defaultValue={appMgr.seedText}
-          onChange={handleSeedChange}
-        />
-        <Button color='primary' size='small' onClick={handleSeedApply}>Apply</Button>
+            </Button>
+          </ListItem>
+        </List>
+        <ListSubheader>
+          <Typography variant='button'>Documentation</Typography>
+        </ListSubheader>
+        <ListItem>
+          <Button
+            color='primary'
+            size='small'
+            component='a'
+            href='./www/docs/HIVPlatform_2.0.0_manual.pdf'
+            target='_blank'
+          >
+            Open manual pdf
+          </Button>
+        </ListItem>
+        <ListSubheader>
+          <Typography variant='button'>Options</Typography>
+        </ListSubheader>
+        <ListItem>
+          <TextField
+            label='Seed value'
+            helperText='Leave empty value to enable random seed'
+            type='number'
+            fullWidth
+            defaultValue={appMgr.seedText}
+            onChange={handleSeedChange}
+          />
+        </ListItem>
+        <ListItem>
+          <Button color='primary' size='small' onClick={handleSeedApply}>Apply</Button>
+        </ListItem>
       </Box>
     </Drawer>
   )

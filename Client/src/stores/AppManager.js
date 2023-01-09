@@ -1,5 +1,16 @@
 import { observable, action, configure, computed, toJS, makeObservable } from 'mobx';
-import { createModelSchema, serialize, identifier, primitive, reference, list, raw, map, object } from 'serializr';
+import {
+  createModelSchema,
+  serialize,
+  deserialize,
+  identifier,
+  primitive,
+  reference,
+  list,
+  raw,
+  map,
+  object
+} from 'serializr';
 import UIStateManager from './UIStateManager'
 import NotificationsManager from './NotificationsManager';
 import AttrMappingManager from './AttrMappingManager';
@@ -17,6 +28,7 @@ import IsNull from '../utilities/IsNull';
 import EnsureArray from '../utilities/EnsureArray';
 import FloatToQuarter from '../utilities/FloatToQuarter';
 import SaveDataLocally from '../utilities/SaveDataLocally';
+import ReactFileUploader from '../utilities/Uploader';
 import runInit from '../init';
 
 configure({
@@ -47,6 +59,7 @@ export default class AppManager {
 
   shinyMessage = {};
 
+  loadStateProgress = null;
   seed = null;
 
   // Shiny custom event handlers
@@ -57,6 +70,12 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.setPackageDetails(e.payload.PackageDetails);
         }
+        break;
+      case 'STATE_LOADED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.setState(e.payload.UIState);
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
       case 'COMPLETED_STEPS_SET':
         if (e.payload.ActionStatus === 'SUCCESS') {
@@ -379,6 +398,7 @@ export default class AppManager {
       packageDetails: observable,
       shinyState: observable,
       shinyMessage: observable,
+      loadStateProgress: observable,
       seed: observable,
       seedText: computed,
       shinyReady: computed,
@@ -391,6 +411,9 @@ export default class AppManager {
       unbindShiny: action,
       bindShiny: action,
       saveState: action,
+      loadState: action,
+      setUIState: action,
+      setLoadStateProgress: action,
       setSeed: action
     });
 
@@ -470,7 +493,6 @@ export default class AppManager {
   setShinyMessage = msg => this.shinyMessage = msg;
 
   setSeed = seed => {
-    console.log(seed);
     if (seed === '') {
       this.seed = null;
     } else {
@@ -499,7 +521,27 @@ export default class AppManager {
     const js = serialize(this);
     const json = JSON.stringify(js, {}, 2);
     this.btnClicked('saveStateBtn', json);
-  }
+  };
+
+  loadState = el => {
+    var $el = $(el);
+
+    $el.data(
+      'currentUploader',
+      new ReactFileUploader(
+        Shiny.shinyapp,
+        el,
+        this.setLoadStateProgress
+      )
+    );
+  };
+
+  setState = state => {
+    this.shinyState = state.shinyState;
+    this.uiStateMgr.setState(state.uiStateMgr);
+  };
+
+  setLoadStateProgress = progress => this.loadStateProgress = progress;
 };
 
 class TimeIntervalsCollectionManager { };
@@ -670,6 +712,11 @@ createModelSchema(UIStateManager, {
   activePageId: primitive()
 });
 
+createModelSchema(MigrationManager, {
+  rootMgr: reference(AppManager),
+  runLog: primitive()
+})
+
 createModelSchema(AppManager, {
   id: identifier(),
   shinyState: primitive(),
@@ -684,5 +731,6 @@ createModelSchema(AppManager, {
   popMgr: object(PopulationsManager),
   popCombMgr: object(PopCombinationsManager),
   modelMgr: object(ModelsManager),
-  reportMgr: object(ReportManager)
+  reportMgr: object(ReportManager),
+  migrMgr: object(MigrationManager)
 });

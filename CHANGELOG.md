@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _January 8 2023_
+
+- UNDER DEVELOPMENT
+
+
+## 3.0.0
+
 ###### _January 3 2023_
 
 - Fix combining case based data populations (use "and" instead of "or")

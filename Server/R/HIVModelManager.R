@@ -736,6 +736,38 @@ HIVModelManager <- R6::R6Class( # nolint
         )
       }
       return(invisible(self))
+    },
+
+    GetState = function() {
+      state <- list(
+        Catalogs = list(
+          MigrConnFlag = private$Catalogs$MigrConnFlag,
+          PopCombination = private$Catalogs$PopCombination,
+          AggrDataSelection = private$Catalogs$AggrDataSelection,
+          MainFitResult = private$Catalogs$MainFitResult,
+          AvgModelOutputs = private$Catalogs$AvgModelOutputs,
+          Years = private$Catalogs$Years,
+          BootstrapFitResult = private$Catalogs$BootstrapFitResult,
+          BootstrapFitStats = private$Catalogs$BootstrapFitStats,
+          PlotData = private$Catalogs$PlotData
+        )
+      )
+
+      return(state)
+    },
+
+    SetState = function(state) {
+      private$Catalogs$MigrConnFlag <- state$Catalogs$MigrConnFlag
+      private$Catalogs$PopCombination <- state$Catalogs$PopCombination
+      private$Catalogs$AggrDataSelection <- state$Catalogs$AggrDataSelection
+      private$Catalogs$MainFitResult <- state$Catalogs$MainFitResult
+      private$Catalogs$AvgModelOutputs <- state$Catalogs$AvgModelOutputs
+      private$Catalogs$Years <- state$Catalogs$Years
+      private$Catalogs$BootstrapFitResult <- state$Catalogs$BootstrapFitResult
+      private$Catalogs$BootstrapFitStats <- state$Catalogs$BootstrapFitStats
+      private$Catalogs$PlotData <- state$Catalogs$PlotData
+
+      return(invisible(self))
     }
   ),
 

@@ -64,14 +64,10 @@ export default class UIStateManager {
     this.rootMgr = mgr;
     makeObservable(this, {
       completedSteps: observable,
-      setCompletedSteps: action,
       pages: observable,
-      pagesTitles: computed,
       activePageId: observable,
-      setActivePageId: action,
-      setSubPageDisabledStatus: action,
       lastEventType: observable,
-      setLastEventType: action,
+      pagesTitles: computed,
       uploadPageEnabled: computed,
       summaryPageEnabled: computed,
       adjustmentsPageEnabled: computed,
@@ -89,7 +85,12 @@ export default class UIStateManager {
       modellingOutputsEnabled: computed,
       bootstrapOutputsEnabled: computed,
       caseBasedDataUnloadEnabled: computed,
-      aggrDataUnloadEnabled: computed
+      aggrDataUnloadEnabled: computed,
+      setCompletedSteps: action,
+      setActivePageId: action,
+      setLastEventType: action,
+      setSubPageDisabledStatus: action,
+      setState: action
     });
   };
 
@@ -99,48 +100,6 @@ export default class UIStateManager {
 
   get activeSubPageId() {
     return this.pages[this.activePageId].activeSubPageId;
-  };
-
-  setCompletedSteps = steps => {
-    this.completedSteps = EnsureArray(steps);
-    this.refreshPagesStatus();
-  }
-
-  setActivePageId = (pageId, subPageId = -1) => {
-    if (!this.pages[pageId].disabled) {
-      this.activePageId = pageId;
-      if (subPageId !== -1 && subPageId < this.pages[pageId].subPages.length) {
-        this.pages[pageId].activeSubPageId = subPageId;
-      }
-      this.refreshPagesStatus();
-    } else {
-      this.rootMgr.notificationsMgr.setMsg('Page this link refers to is not enabled');
-    }
-  };
-
-  setSubPageDisabledStatus = (pageId, subPageId, status) => {
-    this.pages[pageId].subPages[subPageId].disabled = status;
-  };
-
-  setLastEventType = eventType => this.lastEventType = eventType;
-
-  refreshPagesStatus = () => {
-    this.pages[0].completed = this.activePageId > 0;
-    this.pages[1].completed = this.activePageId > 1;
-    this.pages[2].completed = this.activePageId > 2;
-    this.pages[3].completed = this.activePageId > 3;
-    this.pages[4].completed = this.activePageId > 4;
-
-    this.pages[1].disabled = !this.uploadPageEnabled;
-    this.pages[2].disabled = !this.summaryPageEnabled;
-    this.pages[3].disabled = !this.adjustmentsPageEnabled;
-    this.pages[4].disabled = !this.migrantPageEnabled;
-    this.pages[5].disabled = !this.modellingPageEnabled;
-    this.pages[6].disabled = !this.reportsPageEnabled;
-    this.pages[7].disabled = !this.outputsPageEnabled;
-
-    this.setSubPageDisabledStatus(5, 4, !this.bootstrapEnabled);
-    this.setSubPageDisabledStatus(5, 5, !this.modellingOutputsEnabled);
   };
 
   get uploadPageEnabled() {
@@ -233,4 +192,53 @@ export default class UIStateManager {
   get bootstrapOutputsEnabled() {
     return InArray('BOOTSTRAP', this.completedSteps);
   };
+
+  setCompletedSteps = steps => {
+    this.completedSteps = EnsureArray(steps);
+    this.refreshPagesStatus();
+  }
+
+  setActivePageId = (pageId, subPageId = -1) => {
+    if (!this.pages[pageId].disabled) {
+      this.activePageId = pageId;
+      if (subPageId !== -1 && subPageId < this.pages[pageId].subPages.length) {
+        this.pages[pageId].activeSubPageId = subPageId;
+      }
+      this.refreshPagesStatus();
+    } else {
+      this.rootMgr.notificationsMgr.setMsg('Page this link refers to is not enabled');
+    }
+  };
+
+  setSubPageDisabledStatus = (pageId, subPageId, status) => {
+    this.pages[pageId].subPages[subPageId].disabled = status;
+  };
+
+  setLastEventType = eventType => this.lastEventType = eventType;
+
+  refreshPagesStatus = () => {
+    this.pages[0].completed = this.activePageId > 0;
+    this.pages[1].completed = this.activePageId > 1;
+    this.pages[2].completed = this.activePageId > 2;
+    this.pages[3].completed = this.activePageId > 3;
+    this.pages[4].completed = this.activePageId > 4;
+
+    this.pages[1].disabled = !this.uploadPageEnabled;
+    this.pages[2].disabled = !this.summaryPageEnabled;
+    this.pages[3].disabled = !this.adjustmentsPageEnabled;
+    this.pages[4].disabled = !this.migrantPageEnabled;
+    this.pages[5].disabled = !this.modellingPageEnabled;
+    this.pages[6].disabled = !this.reportsPageEnabled;
+    this.pages[7].disabled = !this.outputsPageEnabled;
+
+    this.setSubPageDisabledStatus(5, 4, !this.bootstrapEnabled);
+    this.setSubPageDisabledStatus(5, 5, !this.modellingOutputsEnabled);
+  };
+
+  setState = state => {
+    this.lastEventType = state.lastEventType;
+    this.completedSteps = state.completedSteps;
+    this.pages = state.pages;
+    this.activePageId = state.activePageId;
+  }
 }

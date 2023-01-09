@@ -48,6 +48,22 @@ appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
+# STEP 10 - Save and load --------------------------------------------------------------------------
+appMgr$SaveState()
+file.exists('D:/_REPOSITORIES/hivEstimatesAccuracy2/HIVPlatformState_20230108_134753.rds')
+
+
+appMgr$LoadState(
+  'D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/HIVPlatformState_20230108_134753.rds'
+)
+appMgr$CaseMgr$Data
+
+saveRDS(appMgr, file = sprintf('HIVPlatformState_%s.rds', GetTimeStamp()))
+appMgr2 <- readRDS(file = 'D:/_REPOSITORIES/hivEstimatesAccuracy2/HIVPlatformState_20230108_134753.rds')
+appMgr2 <- readRDS(file = 'D:/Downloads/HIVPlatformState_20230108_134753.rds')
+isolate(appMgr2$CaseMgr$Data)
+
+
 originDistribution <- appMgr$CaseMgr$OriginDistribution
 preProcessedData <- ApplyGrouping(
   copy(appMgr$CaseMgr$PreProcessedData),
@@ -402,12 +418,6 @@ appMgr$HIVModelMgr$BootstrapFitStats$BetaStats
 appMgr$HIVModelMgr$BootstrapFitStats$Theta
 pairs(appMgr$HIVModelMgr$BootstrapFitStats$Theta)
 appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
-
-
-# STEP 10 - Save and load --------------------------------------------------------------------------
-
-saveRDS(appMgr, file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr_large.rds')
-appMgr <- readRDS(file = 'D:/_DEPLOYMENT/hivEstimatesAccuracy2/appMgr.rds')
 
 
 # Migration ----------------------------------------------------------------------------------------
