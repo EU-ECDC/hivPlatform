@@ -6,6 +6,12 @@ import KeepValuesInArray from '../utilities/KeepValuesInArray';
 export default class PopulationsManager {
   rootMgr = null;
 
+  availableVariables = [];
+
+  availableStrata = {};
+
+  populations = [];
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
@@ -22,12 +28,6 @@ export default class PopulationsManager {
       definedPopulations: computed,
     });
   }
-
-  availableVariables = [];
-
-  availableStrata = {};
-
-  populations = [];
 
   addEmptyPopulation = () => {
     this.populations.push({
@@ -75,4 +75,10 @@ export default class PopulationsManager {
   get definedPopulations() {
     return [...new Set(this.populations.map(el => el.strata.map(el2 => el2.Combination)).flat())];
   };
+
+  setUIState = uiState => {
+    this.availableVariables = uiState.availableVariables;
+    this.availableStrata = uiState.availableStrata;
+    this.populations = uiState.populations;
+  }
 }

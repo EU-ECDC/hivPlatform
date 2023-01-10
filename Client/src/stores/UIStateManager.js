@@ -90,7 +90,7 @@ export default class UIStateManager {
       setActivePageId: action,
       setLastEventType: action,
       setSubPageDisabledStatus: action,
-      setState: action
+      setUIState: action
     });
   };
 
@@ -235,10 +235,10 @@ export default class UIStateManager {
     this.setSubPageDisabledStatus(5, 5, !this.modellingOutputsEnabled);
   };
 
-  setState = state => {
-    this.lastEventType = state.lastEventType;
-    this.completedSteps = state.completedSteps;
-    this.pages = state.pages;
-    this.activePageId = state.activePageId;
-  }
+  setUIState = uiState => {
+    this.lastEventType = uiState.lastEventType;
+    this.completedSteps = uiState.completedSteps;
+    this.pages = uiState.pages;
+    this.activePageId = uiState.activePageId;
+  };
 }

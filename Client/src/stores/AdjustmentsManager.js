@@ -104,7 +104,8 @@ export default class AdjustmentsManager {
       setAdjustmentsRunProgress: action,
       setAdjustmentsRunLog: action,
       setAdjustmentsReport: action,
-      setDataBounds: action
+      setDataBounds: action,
+      setUIState: action
     });
 
     autorun(() => {
@@ -225,4 +226,16 @@ export default class AdjustmentsManager {
 
   setAdjustmentsReport = report => this.adjustmentsReport = report;
 
+  setUIState = uiState => {
+    this.miAdjustType = uiState.miAdjustType;
+    this.miJomoSettings = uiState.miJomoSettings;
+    this.miMiceSettings = uiState.miMiceSettings;
+    this.rdAdjustType = uiState.rdAdjustType;
+    this.dataBounds = uiState.dataBounds;
+    this.rdWithoutTrendSettings = uiState.rdWithoutTrendSettings;
+    this.rdWithTrendSettings = uiState.rdWithTrendSettings;
+    this.adjustmentsRunProgress = uiState.adjustmentsRunProgress;
+    this.adjustmentsRunLog = uiState.adjustmentsRunLog;
+    this.adjustmentsReport = uiState.adjustmentsReport;
+  }
 }

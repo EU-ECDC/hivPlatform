@@ -3,6 +3,9 @@ import IsNull from '../utilities/IsNull';
 
 export default class AttrMappingManager {
   rootMgr = null;
+  mapping = [];
+  actionStatus = null;
+  actionMessage = null;
 
   constructor(mgr) {
     this.rootMgr = mgr;
@@ -16,13 +19,10 @@ export default class AttrMappingManager {
       applyMapping: action,
       setActionStatus: action,
       setActionMessage: action,
-      actionValid: computed
+      actionValid: computed,
+      setUIState: action
     });
   }
-
-  mapping = [];
-  actionStatus = null;
-  actionMessage = null;
 
   setMapping = mapping => {
     this.mapping = mapping;
@@ -88,4 +88,10 @@ export default class AttrMappingManager {
       return this.actionStatus === 'SUCCESS';
     }
   };
+
+  setUIState = uiState => {
+    this.mapping = uiState.mapping;
+    this.actionStatus = uiState.actionStatus;
+    this.actionMessage = uiState.actionMessage
+  }
 }

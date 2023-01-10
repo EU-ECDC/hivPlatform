@@ -41,7 +41,8 @@ export default class CaseBasedDataManager {
       setActionStatus: action,
       setActionMessage: action,
       columnNamesString: computed,
-      actionValid: computed
+      actionValid: computed,
+      setUIState: action
     });
   };
 
@@ -86,4 +87,16 @@ export default class CaseBasedDataManager {
       return this.actionStatus === 'SUCCESS';
     }
   };
+
+  setUIState = uiState => {
+    this.fileName = uiState.fileName;
+    this.fileSize = uiState.fileSize;
+    this.fileType = uiState.fileType;
+    this.filePath = uiState.filePath;
+    this.columnNames = uiState.columnNames;
+    this.recordCount = uiState.recordCount;
+    this.uploadProgress = uiState.uploadProgress;
+    this.actionStatus = uiState.actionStatus;
+    this.actionMessage = uiState.actionMessage;
+  }
 }

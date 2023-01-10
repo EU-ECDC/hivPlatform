@@ -7,6 +7,22 @@ import GetNextId from '../utilities/GetNextId';
 export default class OriginGroupingsManager {
   rootMgr = null;
 
+  distribution = {
+    FullRegionOfOrigin: [],
+    Count: []
+  };
+
+  groupings = [];
+
+  preset = 'REPCOUNTRY + UNK + OTHER';
+
+  repCountryGroupingIdx = null;
+
+  actionStatus = null;
+  actionMessage = null;
+  migrantCompatibleStatus = null;
+  migrantCompatibleMessage = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
@@ -34,29 +50,14 @@ export default class OriginGroupingsManager {
       applyGroupings: action,
       setActionStatus: action,
       setActionMessage: action,
-      actionValid: computed
+      actionValid: computed,
+      setUIState: action
     });
 
     autorun(() => {
       this.rootMgr.inputValueSet('checkOriginGrouping:OriginGroupingArray', this.groupingsJS);
     })
   }
-
-  distribution = {
-    FullRegionOfOrigin: [],
-    Count: []
-  };
-
-  groupings = [];
-
-  preset = 'REPCOUNTRY + UNK + OTHER';
-
-  repCountryGroupingIdx = null;
-
-  actionStatus = null;
-  actionMessage = null;
-  migrantCompatibleStatus = null;
-  migrantCompatibleMessage = null;
 
   get distributionArray() {
     const origins = this.distribution.FullRegionOfOrigin;
@@ -171,4 +172,14 @@ export default class OriginGroupingsManager {
       return this.actionStatus === 'SUCCESS';
     }
   };
+
+  setUIState = uiState => {
+    this.distribution = uiState.distribution;
+    this.groupings = uiState.groupings;
+    this.preset = uiState.preset;
+    this.actionStatus = uiState.actionStatus;
+    this.actionMessage = uiState.actionMessage;
+    this.migrantCompatibleStatus = uiState.migrantCompatibleStatus;
+    this.migrantCompatibleMessage = uiState.migrantCompatibleMessage;
+  }
 }

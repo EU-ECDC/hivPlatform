@@ -55,4 +55,10 @@ export default class ReportManager {
       cd4ConfInt: false,
     }
   };
+
+  setUIState = uiState => {
+    this.report = uiState.report;
+    this.adjustReportParams = uiState.adjustReportParams;
+    this.creatingReportInProgress = uiState.creatingReportInProgress;
+  }
 }

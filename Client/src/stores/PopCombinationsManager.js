@@ -1,4 +1,4 @@
-import { observable, computed, action, makeObservable, autorun } from 'mobx';
+import { observable, computed, action, makeObservable, autorun, toJS } from 'mobx';
 import GetNextId from '../utilities/GetNextId';
 import GenerateId from '../utilities/GenerateId';
 import IsNull from '../utilities/IsNull';
@@ -126,4 +126,12 @@ export default class PopCombinationsManager {
     return this.combinationsArray.map(el => el.name);
   };
 
+  setUIState = uiState => {
+    this.combinations = new Map();
+    for (const [key, value] of Object.entries(uiState.combinations)) {
+      this.combinations.set(key, value);
+    }
+    this.setSelectedCombination(uiState.selectedCombination);
+    this.combinationAllId = uiState.combinationAllId;
+  };
 }

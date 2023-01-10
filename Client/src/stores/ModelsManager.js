@@ -481,5 +481,45 @@ export default class ModelsManager {
     } else {
       return null;
     }
+  };
+
+  setUIState = uiState => {
+    this.id = uiState.id;
+    this.modelsParamFile = uiState.modelsParamFile;
+    this.modelsParamFileName = uiState.modelsParamFileName;
+    this.rangeYears = uiState.rangeYears;
+    this.optimalYears = uiState.optimalYears;
+    this.minYear = uiState.minYear;
+    this.maxYear = uiState.maxYear;
+    this.minFitPos = uiState.minFitPos;
+    this.maxFitPos = uiState.maxFitPos;
+    this.minFitCD4 = uiState.minFitCD4;
+    this.maxFitCD4 = uiState.maxFitCD4;
+    this.minFitAIDS = uiState.minFitAIDS;
+    this.maxFitAIDS = uiState.maxFitAIDS;
+    this.minFitHIVAIDS = uiState.minFitHIVAIDS;
+    this.maxFitHIVAIDS = uiState.maxFitHIVAIDS;
+    this.fullData = uiState.fullData;
+    this.knotsCount = uiState.knotsCount;
+    this.startIncZero = uiState.startIncZero;
+    this.maxIncCorr = uiState.maxIncCorr;
+    this.distributionFit = uiState.distributionFit;
+    this.delta4Fac = uiState.delta4Fac;
+    this.country = uiState.country;
+    this.bootstrapCount = uiState.bootstrapCount;
+    this.bootstrapType = uiState.bootstrapType;
+    this.modelsRunProgress = uiState.modelsRunProgress;
+    this.modelsRunLog = uiState.modelsRunLog;
+    this.bootstrapRunProgress = uiState.bootstrapRunProgress;
+    this.bootstrapRunLog = uiState.bootstrapRunLog;
+    this.plotData = uiState.plotData;
+
+    const timeIntCollMgr = new TimeIntervalsCollectionManager(this);
+    timeIntCollMgr.setCollections(uiState.timeIntCollMgr.collections);
+    timeIntCollMgr.setMinYear(uiState.timeIntCollMgr.minYear);
+    timeIntCollMgr.setMaxYear(uiState.timeIntCollMgr.maxYear);
+    timeIntCollMgr.setSelectedEditCollectionId(uiState.timeIntCollMgr.selectedEditCollectionId);
+    timeIntCollMgr.setSelectedRunCollectionId(uiState.timeIntCollMgr.selectedRunCollectionId);
+    this.timeIntCollMgr = timeIntCollMgr;
   }
 }

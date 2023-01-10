@@ -113,6 +113,7 @@ export default class SummaryDataManager {
       missPlot3Categories: computed,
       missPlot4Categories: computed,
       filters: computed,
+      setUIState: action
     });
 
     autorun(
@@ -298,4 +299,15 @@ export default class SummaryDataManager {
     this.repDelPlotSelection = 'all';
     this.rootMgr.inputValueSet('summaryFilters', this.filters);
   };
+
+  setUIState = uiState => {
+    this.selectedCount = uiState.selectedCount;
+    this.totalCount = uiState.totalCount;
+    this.diagYearPlotData = uiState.diagYearPlotData;
+    this.notifQuarterPlotData = uiState.notifQuarterPlotData;
+    this.missPlotData = uiState.missPlotData;
+    this.missPlotSelection = uiState.missPlotSelection;
+    this.repDelPlotData = uiState.repDelPlotData;
+    this.repDelPlotSelection = uiState.repDelPlotSelection;
+  }
 }

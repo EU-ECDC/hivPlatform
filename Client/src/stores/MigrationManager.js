@@ -182,4 +182,18 @@ export default class MigrationManager {
   run = () => this.rootMgr.btnClicked('runMigrantBtn');
 
   cancel = () => this.rootMgr.btnClicked('cancelMigrantBtn');
+
+  setUIState = uiState => {
+    this.runProgress = uiState.runProgress;
+    this.runLog = uiState.runLog;
+    this.inputStats = uiState.inputStats;
+    this.outputStats = uiState.outputStats;
+    this.outputPlots = uiState.outputPlots;
+    this.confBounds = uiState.confBounds;
+    this.dataCompatibleFlag = uiState.dataCompatibleFlag;
+    this.yodRegion = uiState.yodRegion;
+    this.tableRegion = uiState.tableRegion;
+    this.propTableStrat = uiState.propTableStrat;
+    this.showConfBounds  = uiState.showConfBounds ;
+  }
 }

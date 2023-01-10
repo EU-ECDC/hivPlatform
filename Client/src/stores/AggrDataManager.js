@@ -2,6 +2,7 @@ import { observable, action, computed, makeObservable, autorun, toJS } from 'mob
 import ReactFileUploader from '../utilities/Uploader';
 import EnsureArray from '../utilities/EnsureArray';
 import IsNull from '../utilities/IsNull';
+import { UIState } from '../initData';
 
 export default class AggrDataManager {
 
@@ -49,7 +50,8 @@ export default class AggrDataManager {
       setActionStatus: action,
       setActionMessage: action,
       setRangeYears: action,
-      actionValid: computed
+      actionValid: computed,
+      setUIState: action
     });
 
     autorun(
@@ -117,4 +119,19 @@ export default class AggrDataManager {
       return this.actionStatus === 'SUCCESS';
     }
   };
+
+  setUIState = uiState => {
+    this.fileName = uiState.fileName;
+    this.fileSize = uiState.fileSize;
+    this.fileType = uiState.fileType;
+    this.filePath = uiState.filePath;
+    this.dataFiles = uiState.dataFiles;
+    this.origDataFiles = uiState.origDataFiles;
+    this.rangeYears = uiState.rangeYears;
+    this.dataFileNameToIdxMap = uiState.dataFileNameToIdxMap;
+    this.populationNames = uiState.populationNames;
+    this.fileUploadProgress = uiState.fileUploadProgress;
+    this.actionStatus = uiState.actionStatus;
+    this.actionMessage = uiState.actionMessage;
+  }
 }

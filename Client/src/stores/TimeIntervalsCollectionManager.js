@@ -33,6 +33,7 @@ export default class TimeIntervalsCollectionManager {
       collectionsArray: computed,
       defaultEditCollectionSelected: computed,
       collectionsNames: computed,
+      setParentMgr: action
     });
 
     autorun(() => {
@@ -121,4 +122,19 @@ export default class TimeIntervalsCollectionManager {
     return this.collectionsArray.map(el => el.name);
   };
 
+  setParentMgr = mgr => this.parentMgr = mgr;
+
+  setCollections = collections => {
+    this.collections = new Map();
+    for (const [key, value] of Object.entries(collections)) {
+      const collection = new TimeIntervalsManager(this, value.name, value.intervals);
+      collection.setId(value.id);
+      collection.setMinYear(value.minYear);
+      collection.setMaxYear(value.maxYear);
+      this.collections.set(
+        collection.id,
+        collection
+      );
+    }
+  }
 };

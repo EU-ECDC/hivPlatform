@@ -4,20 +4,25 @@ import GenerateId from '../utilities/GenerateId';
 export default class NotificationsManager {
   rootMgr = null;
 
-  constructor(mgr) {
-    this.rootMgr = mgr;
-    makeObservable(this, {
-      msgInfo: observable,
-      setMsg: action,
-      clearMsg: action,
-      hasMsg: computed,
-    });
-  }
-
   msgInfo = {
     key: null,
     msg: null,
   };
+
+  constructor(mgr) {
+    this.rootMgr = mgr;
+    makeObservable(this, {
+      msgInfo: observable,
+      hasMsg: computed,
+      setMsg: action,
+      clearMsg: action,
+      setUIState: action
+    });
+  }
+
+  get hasMsg() {
+    return this.msgInfo.msg !== null;
+  }
 
   setMsg = msg => {
     this.msgInfo = {
@@ -33,7 +38,7 @@ export default class NotificationsManager {
     };
   };
 
-  get hasMsg() {
-    return this.msgInfo.msg !== null;
-  }
+  setUIState = uiState => {
+    this.msgInfo = uiState.msgInfo;
+  };
 }

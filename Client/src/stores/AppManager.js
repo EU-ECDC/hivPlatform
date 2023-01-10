@@ -73,7 +73,7 @@ export default class AppManager {
         break;
       case 'STATE_LOADED':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.setState(e.payload.UIState);
+          this.setUIState(e.payload.UIState);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
@@ -536,9 +536,22 @@ export default class AppManager {
     );
   };
 
-  setState = state => {
-    this.shinyState = state.shinyState;
-    this.uiStateMgr.setState(state.uiStateMgr);
+  setUIState = uiState => {
+    this.shinyState = uiState.shinyState;
+    this.uiStateMgr.setUIState(uiState.uiStateMgr);
+    this.notificationsMgr.setUIState(uiState.notificationsMgr);
+    this.attrMappingMgr.setUIState(uiState.attrMappingMgr);
+    this.origGroupMgr.setUIState(uiState.origGroupMgr);
+    this.caseBasedDataMgr.setUIState(uiState.caseBasedDataMgr);
+    this.aggrDataMgr.setUIState(uiState.aggrDataMgr);
+    this.summaryDataMgr.setUIState(uiState.summaryDataMgr);
+    this.adjustMgr.setUIState(uiState.adjustMgr);
+    this.popMgr.setUIState(uiState.popMgr);
+    this.popCombMgr.setUIState(uiState.popCombMgr);
+    this.modelMgr.setUIState(uiState.modelMgr);
+    this.reportMgr.setUIState(uiState.reportMgr);
+    // this.migrMgr.setUIState(uiState.migrMgr);
+    console.log(this.migrMgr);
   };
 
   setLoadStateProgress = progress => this.loadStateProgress = progress;
@@ -557,7 +570,7 @@ createModelSchema(TimeIntervalsManager, {
 
 createModelSchema(TimeIntervalsCollectionManager, {
   id: identifier(),
-  parentMgr: reference(ModelsManager),
+  // parentMgr: reference(ModelsManager),
   collections: map(object(TimeIntervalsManager)),
   minYear: primitive(),
   maxYear: primitive(),
@@ -567,8 +580,6 @@ createModelSchema(TimeIntervalsCollectionManager, {
 
 createModelSchema(ModelsManager, {
   id: identifier(),
-  parentMgr: reference(AppManager),
-  timeIntCollMgr: object(TimeIntervalsCollectionManager),
   modelsParamFile: primitive(),
   modelsParamFileName: primitive(),
   rangeYears: raw(),
@@ -596,7 +607,9 @@ createModelSchema(ModelsManager, {
   modelsRunLog: primitive(),
   bootstrapRunProgress: primitive(),
   bootstrapRunLog: primitive(),
-  plotData: raw(),
+  migrConnFlag: primitive(),
+  showConfBounds: primitive(),
+  plotData: raw()
 });
 
 createModelSchema(ReportManager, {
@@ -615,7 +628,7 @@ createModelSchema(PopCombinationsManagerCombination, {
 });
 
 createModelSchema(PopCombinationsManager, {
-  rootMgr: reference(AppManager),
+  // rootMgr: reference(AppManager),
   combinations: map(object(PopCombinationsManagerCombination)),
   selectedCombination: reference(PopCombinationsManagerCombination),
   combinationAllId: primitive()
@@ -639,7 +652,8 @@ createModelSchema(AdjustmentsManager, {
   rdWithTrendSettings: raw(),
   adjustmentsRunProgress: primitive(),
   adjustmentsRunLog: primitive(),
-  adjustmentsReport: primitive()
+  adjustmentsReport: primitive(),
+  runAdjustmentsTypes: list(primitive())
 });
 
 createModelSchema(SummaryDataManager, {
@@ -687,9 +701,11 @@ createModelSchema(OriginGroupingsManager, {
   rootMgr: reference(AppManager),
   distribution: raw(),
   groupings: list(raw()),
-  type: primitive(),
+  preset: primitive(),
   actionStatus: primitive(),
-  actionMessage: primitive()
+  actionMessage: primitive(),
+  migrantCompatibleStatus: primitive(),
+  migrantCompatibleMessage: primitive()
 });
 
 createModelSchema(AttrMappingManager, {
@@ -705,7 +721,7 @@ createModelSchema(NotificationsManager, {
 });
 
 createModelSchema(UIStateManager, {
-  rootMgr: reference(AppManager),
+  // rootMgr: reference(AppManager),
   lastEventType: primitive(),
   completedSteps: list(primitive()),
   pages: list(raw()),
@@ -713,8 +729,17 @@ createModelSchema(UIStateManager, {
 });
 
 createModelSchema(MigrationManager, {
-  rootMgr: reference(AppManager),
-  runLog: primitive()
+  runLog: primitive(),
+  runProgress: primitive(),
+  inputStats: raw(),
+  outputStats: raw(),
+  outputPlots: raw(),
+  confBounds: raw(),
+  yodRegion: primitive(),
+  tableRegion: primitive(),
+  propTableStrat: raw(),
+  dataCompatibleFlag: raw(),
+  showConfBounds: raw()
 })
 
 createModelSchema(AppManager, {
