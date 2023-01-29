@@ -2,7 +2,7 @@ import { observable, action, configure, computed, toJS, makeObservable } from 'm
 import {
   createModelSchema,
   serialize,
-  deserialize,
+  // deserialize,
   identifier,
   primitive,
   reference,
@@ -73,7 +73,7 @@ export default class AppManager {
         break;
       case 'STATE_LOADED':
         if (e.payload.ActionStatus === 'SUCCESS') {
-          this.setUIState(e.payload.UIState);
+          this.setUIState(JSON.parse(e.payload.UIState));
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
@@ -537,6 +537,7 @@ export default class AppManager {
   };
 
   setUIState = uiState => {
+    // console.log(uiState);
     this.shinyState = uiState.shinyState;
     this.uiStateMgr.setUIState(uiState.uiStateMgr);
     this.notificationsMgr.setUIState(uiState.notificationsMgr);
@@ -550,8 +551,7 @@ export default class AppManager {
     this.popCombMgr.setUIState(uiState.popCombMgr);
     this.modelMgr.setUIState(uiState.modelMgr);
     this.reportMgr.setUIState(uiState.reportMgr);
-    // this.migrMgr.setUIState(uiState.migrMgr);
-    console.log(this.migrMgr);
+    this.migrMgr.setUIState(uiState.migrMgr);
   };
 
   setLoadStateProgress = progress => this.loadStateProgress = progress;
@@ -570,7 +570,7 @@ createModelSchema(TimeIntervalsManager, {
 
 createModelSchema(TimeIntervalsCollectionManager, {
   id: identifier(),
-  // parentMgr: reference(ModelsManager),
+  parentMgr: reference(ModelsManager),
   collections: map(object(TimeIntervalsManager)),
   minYear: primitive(),
   maxYear: primitive(),
@@ -628,7 +628,7 @@ createModelSchema(PopCombinationsManagerCombination, {
 });
 
 createModelSchema(PopCombinationsManager, {
-  // rootMgr: reference(AppManager),
+  rootMgr: reference(AppManager),
   combinations: map(object(PopCombinationsManagerCombination)),
   selectedCombination: reference(PopCombinationsManagerCombination),
   combinationAllId: primitive()
@@ -721,7 +721,7 @@ createModelSchema(NotificationsManager, {
 });
 
 createModelSchema(UIStateManager, {
-  // rootMgr: reference(AppManager),
+  rootMgr: reference(AppManager),
   lastEventType: primitive(),
   completedSteps: list(primitive()),
   pages: list(raw()),

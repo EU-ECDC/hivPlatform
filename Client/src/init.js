@@ -1,6 +1,6 @@
 import { DEBUG } from './settings';
 import {
-  AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData, MigrantStats,
+  // AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData, MigrantStats,
   UIState
 } from './initData';
 
@@ -20,6 +20,14 @@ export default appMgr => {
         Date: '2022-12-22',
         Description: 'Improves the accuracy of HIV estimates in EU/EEA countries.'
       }
+    }
+  });
+
+  appMgr.onShinyEvent({
+    type: 'STATE_LOADED',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      UIState: UIState
     }
   });
 
@@ -654,11 +662,4 @@ export default appMgr => {
   // appMgr.modelMgr.setBootstrapRunProgress(true);
   // appMgr.reportMgr.setCreatingReportInProgress(true);
 
-  appMgr.onShinyEvent({
-    type: 'STATE_LOADED',
-    payload: {
-      ActionStatus: 'SUCCESS',
-      UIState: UIState
-    }
-  });
 };
