@@ -1,8 +1,8 @@
 ## 3.0.0
 
-###### _January 8 2023_
+###### _January 29 2023_
 
-- UNDER DEVELOPMENT
+- Implement saving and loading state
 
 
 ## 3.0.0
