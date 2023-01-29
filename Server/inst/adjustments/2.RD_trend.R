@@ -83,8 +83,8 @@ list(
     stratVarNamesTrend <- union(c('YearOfHIVDiagnosis'), stratVarNames)
 
     # Create dimensions to match the weights later
+    compData[, VarT := as.integer(4L * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime))]
     outputData <- copy(compData)
-    outputData[, VarT := 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1]
 
     # Filter
     compData <- compData[!is.na(VarX)]
@@ -92,14 +92,13 @@ list(
     compData[is.na(NotificationTime), NotificationTime := DiagnosisTime + VarX / 4]
 
     compData <- compData[
-      VarX >= 0 &
+      VarX >= 0L &
         DiagnosisTime >= startYear &
         NotificationTime <= endQrt
     ]
 
     compData[, ':='(
-      VarT = 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime) + 1,
-      Tf = 4 * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear)) + 1, # nolint
+      Tf = as.integer(4L * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear))), # nolint
       ReportingDelay = 1L
     )]
     compData[, ':='(
@@ -198,7 +197,7 @@ list(
 
       # Define parameters
       lastYear <- compData[, max(YearOfHIVDiagnosis)]
-      years <- (lastYear - 4):lastYear
+      years <- (lastYear - 4L):lastYear
       tGroups <- 1:3
       imputations <- compData[, sort(unique(Imputation))]
       formula <- as.formula(
@@ -207,23 +206,23 @@ list(
           paste(stratVarNamesTrend, collapse = ' + ')
         )
       )
-      cuts <- compData[, c(max(VarXs) - 10, max(VarXs) - 3, max(VarXs))]
+      cuts <- compData[, c(max(VarXs) - 10L, max(VarXs) - 3L, max(VarXs))]
 
       # Run fitting per imputation separately
       fitStratum <- list()
       for (imputation in imputations) {
-        compDataSplit <- setDT(survSplit(
+        compDataSplit <- data.table::setDT(survival::survSplit(
           formula = Surv(time = VarTs, time2 = VarXs, event = ReportingDelay) ~ .,
           data = compData[Imputation == imputation],
           cut = cuts,
           episode = 'tgroup'
         ))
-        fitCox <- coxph(formula, data = compDataSplit)
-        estFrame <- CJ(YearOfHIVDiagnosis = years, tgroup = tGroups)
+        fitCox <- survival::coxph(formula, data = compDataSplit)
+        estFrame <- data.table::CJ(YearOfHIVDiagnosis = years, tgroup = tGroups)
         estCov <- na.omit(unique(compData[, ..stratVarNames]))
         if (nrow(estCov) > 0) {
-          estFrame[, MergeDummy := 1]
-          estCov[, MergeDummy := 1]
+          estFrame[, MergeDummy := 1L]
+          estCov[, MergeDummy := 1L]
           estFrame <- estFrame[estCov, on = .(MergeDummy), allow.cartesian = TRUE]
           estFrame[, MergeDummy := NULL]
         }
@@ -235,7 +234,7 @@ list(
         )]
 
         fit <- try({
-            survfit(fitCox, newdata = estFrame, id = Id)
+            survival::survfit(fitCox, newdata = estFrame, id = Id)
           },
           silent = TRUE
         )
@@ -243,7 +242,7 @@ list(
         if (IsError(fit)) {
           fitStratumImp <- data.table(
             Imputation = imputation,
-            Delay = 0,
+            Delay = 0L,
             P = 1,
             Weight = 1,
             Var = 0,
@@ -270,7 +269,7 @@ list(
       mergeVars <- union(stratVarNamesTrend, c('VarT', 'Imputation'))
       outputData[, ':='(
         YearOfHIVDiagnosisOrig = YearOfHIVDiagnosis,
-        YearOfHIVDiagnosis = pmax.int(lastYear - 4, YearOfHIVDiagnosis)
+        YearOfHIVDiagnosis = pmax.int(lastYear - 4L, YearOfHIVDiagnosis)
       )]
       outputData[
         fitStratum[, c(..mergeVars, 'Weight', 'P', 'Var')],
@@ -286,14 +285,14 @@ list(
         YearOfHIVDiagnosisOrig = NULL
       )]
       outputData[, ':='(
-        Source = ifelse(Imputation == 0, 'Reported', 'Imputed'),
-        MissingData = is.na(Weight) | is.infinite(Weight)
+        Source = ifelse(Imputation == 0L, 'Reported', 'Imputed'),
+        MissingData = is.na(Var) | is.infinite(Var)
       )]
       outputData[MissingData == TRUE, ':='(
         Weight = 1,
-        P = 1
+        P = 1,
+        Var = 0
       )]
-      outputData[is.na(Var) | is.infinite(Var), Var := 0]
 
       # --------------------------------------------------------------------------------------------
 

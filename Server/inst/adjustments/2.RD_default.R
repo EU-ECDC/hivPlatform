@@ -16,7 +16,7 @@ list(
       input = 'numeric'),
     endYear = list(
       label = 'Notification end year',
-      value = 2017,
+      value = 2017L,
       input = 'numeric'),
     endQrt = list(
       label = 'Notification end quarter (integer between 1 and 4)',
@@ -99,7 +99,7 @@ list(
     ]
 
     # Create dimensions to match the weights later
-    compData[, VarT := 4 * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime)]
+    compData[, VarT := as.integer(4L * (pmin.int(MaxNotificationTime, endQrt) - DiagnosisTime))]
     outputData <- copy(compData)
 
     # Filter
@@ -108,13 +108,13 @@ list(
     compData[is.na(NotificationTime), NotificationTime := DiagnosisTime + VarX / 4]
 
     compData <- compData[
-      VarX >= 0 &
+      VarX >= 0L &
         DiagnosisTime >= startYear &
         NotificationTime <= endQrt
     ]
 
     compData[, ':='(
-      Tf = 4 * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear)), # nolint
+      Tf = as.integer(4L * (pmin.int(MaxNotificationTime, endQrt) - pmax.int(min(DiagnosisTime), startYear))), # nolint
       ReportingDelay = 1L
     )]
     compData[, ':='(
@@ -244,17 +244,17 @@ list(
           P = i.P,
           Var = i.Var
         ),
-        on = .(VarT, Stratum)
+        on = .(Stratum, VarT)
       ]
       outputData[, ':='(
-        Source = ifelse(Imputation == 0, 'Reported', 'Imputed'),
-        MissingData = is.na(Weight) | is.infinite(Weight)
+        Source = ifelse(Imputation == 0L, 'Reported', 'Imputed'),
+        MissingData = is.na(Var) | is.infinite(Var)
       )]
       outputData[MissingData == TRUE, ':='(
         Weight = 1,
-        P = 1
+        P = 1,
+        Var = 0
       )]
-      outputData[is.na(Var) | is.infinite(Var), Var := 0]
 
       # --------------------------------------------------------------------------------------------
 
@@ -275,7 +275,7 @@ list(
           Weight = mean(Weight),
           Var = mean(Var)
         ),
-        by = eval(union(stratVarNamesImp, c('Source', 'MissingData', 'YearOfHIVDiagnosis')))
+        keyby = eval(union(stratVarNamesImp, c('Source', 'MissingData', 'YearOfHIVDiagnosis')))
       ]
 
       # Compute estimated count and its variance
