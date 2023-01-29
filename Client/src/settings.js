@@ -1,6 +1,3 @@
-//const { version } = require('../package.json');
-import packageInfo from '../package.json';
-
 // DEBUG mode
 export const DEBUG = process.env.NODE_ENV === 'development';
 
