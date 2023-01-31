@@ -63,20 +63,23 @@ const CaseUpload = (props) => {
           type='file'
           onChange={handleUploadBtnClick}
         />
-        <Tooltip title='Select case-based data file'>
+        <Tooltip title='Select case-based data file' arrow>
           <label htmlFor='caseUploadBtn'>
             <Btn sx={{ marginBottom: '6px', color: 'white' }} ><CloudUploadIcon />&nbsp;Upload data</Btn>
           </label>
         </Tooltip>
-        <Tooltip title='Remove case-based data from analysis'>
-          <Button
-            sx={{ marginBottom: '6px', marginLeft: '20px' }}
-            color='primary'
-            disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
-            onClick={handleUnloadCaseBasedDataClick}
-          >
-            Unload data
-          </Button>
+        <Tooltip title='Remove case-based data from analysis (UNDER DEVELOPMENT)' arrow>
+          <span>
+            <Button
+              sx={{ marginBottom: '6px', marginLeft: '20px' }}
+              color='primary'
+              // disabled={!appMgr.uiStateMgr.caseBasedDataUnloadEnabled}
+              disabled={true}
+              onClick={handleUnloadCaseBasedDataClick}
+            >
+              Unload data
+            </Button>
+          </span>
         </Tooltip>
         <Typography variant='body2' color='textSecondary'>
           Maximum file size: 100MB<br />

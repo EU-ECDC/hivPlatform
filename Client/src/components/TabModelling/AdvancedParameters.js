@@ -70,7 +70,10 @@ const AdvancedParameters = (props) => {
 
   const handleFullDataChange = e => appMgr.modelMgr.setFullData(e.target.value === 'true');
 
-  const handleKnotsCountChange = e => appMgr.modelMgr.setKnotsCount(e.target.value);
+  const handleKnotsCountChange = e => {
+    const count = parseInt(e.target.value);
+    appMgr.modelMgr.setKnotsCount(count);
+  }
 
   const handleStartIncZeroChange = e => appMgr.modelMgr.setStartIncZero(e.target.value === 'true');
 
@@ -177,7 +180,7 @@ const AdvancedParameters = (props) => {
                 onChange={handleKnotsCountChange}
                 type='number'
                 inputProps={{
-                  min: 2, max: 10
+                  min: 1, max: 10
                 }}
               />
             </TableCell>

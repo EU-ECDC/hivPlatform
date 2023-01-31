@@ -64,22 +64,24 @@ const TabUploadAggregated = props => {
             type='file'
             onChange={handleUploadBtnClick}
           />
-          <Tooltip title='Select aggregated data file'>
+          <Tooltip title='Select aggregated data file' arrow>
             <label htmlFor='aggrUploadBtn'>
               <Btn sx={{ marginBottom: '6px', color: 'white' }}>
                 <CloudUploadIcon />&nbsp;Upload data
               </Btn>
             </label>
           </Tooltip>
-          <Tooltip title='Remove aggregated data from analysis'>
-            <Button
-              sx={{ marginBottom: '6px', marginLeft: '20px' }}
-              color='primary'
-              // disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
-              disabled={true}
-            >
-              Unload data
-            </Button>
+          <Tooltip title='Remove aggregated data from analysis (UNDER DEVELOPMENT)' arrow>
+            <span>
+              <Button
+                sx={{ marginBottom: '6px', marginLeft: '20px' }}
+                color='primary'
+                // disabled={!appMgr.uiStateMgr.aggrDataUnloadEnabled}
+                disabled={true}
+              >
+                Unload data
+              </Button>
+            </span>
           </Tooltip>
           <Typography variant='body2' color='textSecondary'>
             Maximum file size: 100MB<br />

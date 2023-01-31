@@ -48,20 +48,14 @@ appMgr$CaseMgr$ApplyOriginGrouping(
   originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
 )
 
-# STEP 10 - Save and load --------------------------------------------------------------------------
-appMgr$SaveState()
-file.exists('D:/_REPOSITORIES/hivEstimatesAccuracy2/HIVPlatformState_20230108_134753.rds')
+library(data.table)
+inputData <- copy(appMgr$CaseMgr$PreProcessedData)
+data[, unique(DiagnosisTime)]
+data[, unique(MaxNotificationTime)]
+data[, unique(MinNotificationTime)]
+data[, class(MaxPossibleDelay)]
+data[, class(VarX)]
 
-
-appMgr$LoadState(
-  'D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/HIVPlatformState_20230108_134753.rds'
-)
-appMgr$CaseMgr$Data
-
-saveRDS(appMgr, file = sprintf('HIVPlatformState_%s.rds', GetTimeStamp()))
-appMgr2 <- readRDS(file = 'D:/_REPOSITORIES/hivEstimatesAccuracy2/HIVPlatformState_20230108_134753.rds')
-appMgr2 <- readRDS(file = 'D:/Downloads/HIVPlatformState_20230108_134753.rds')
-isolate(appMgr2$CaseMgr$Data)
 
 
 originDistribution <- appMgr$CaseMgr$OriginDistribution
@@ -96,8 +90,8 @@ appMgr$CaseMgr$SetFilters(filters = list(
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
-  "Multiple Imputation using Chained Equations - MICE",
-  "Reporting Delays"
+  # "Multiple Imputation using Chained Equations - MICE",
+  "Reporting Delays with trend"
 ))
 
 result <- hivPlatform::RunAdjustments(

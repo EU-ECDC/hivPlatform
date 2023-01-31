@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _January 31 2023_
+
+- Add draft HIV model saving
+
+
+## 3.0.0
+
 ###### _January 29 2023_
 
 - Implement saving and loading state

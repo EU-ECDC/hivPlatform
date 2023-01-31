@@ -3,7 +3,8 @@ import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 import IsNull from '../utilities/IsNull';
 import FormatNumber from '../utilities/FormatNumber';
-import SelectObjectProperties from '../utilities/SelectObjectProperties';
+import FileSaver from 'file-saver';
+// import SelectObjectProperties from '../utilities/SelectObjectProperties';
 
 export default class ModelsManager {
   id = 'ModelsManager';
@@ -48,6 +49,7 @@ export default class ModelsManager {
       migrConnFlag: observable,
       showConfBounds: observable,
       setModelsParamFile: action,
+      saveModelsParamFile: action,
       setModelsParamFileName: action,
       setMinYear: action,
       setMaxYear: action,
@@ -202,6 +204,10 @@ export default class ModelsManager {
       );
     }
   };
+  saveModelsParamFile = () => {
+    const blob = new Blob(['<root>Content</root>'], { type: 'text/xml' });
+    FileSaver.saveAs(blob, 'Model.xml')
+  };
   setModelsParamFileName = fileName => this.modelsParamFileName = fileName;
   setRangeYears = rangeYears => this.rangeYears = rangeYears;
   setOptimalYears = optimalYears => {
@@ -238,7 +244,7 @@ export default class ModelsManager {
   setMaxFitHIVAIDS = maxFitHIVAIDS =>
     this.maxFitHIVAIDS = Math.min(Math.max(this.optimalYears.All[0] - 1, parseInt(maxFitHIVAIDS)), this.optimalYears.All[1]);
   setFullData = fullData => this.fullData = fullData;
-  setKnotsCount = knotsCount => this.knotsCount = parseInt(knotsCount);
+  setKnotsCount = knotsCount => this.knotsCount = knotsCount;
   setStartIncZero = startIncZero => this.startIncZero = startIncZero;
   setMaxIncCorr = maxIncCorr => this.maxIncCorr = maxIncCorr;
   setDistributionFit = distributionFit => this.distributionFit = distributionFit;
