@@ -61,12 +61,11 @@ const TabModellingInputs = props => {
               <Btn><CloudUploadIcon />&nbsp;Load model</Btn>
             </label>
           </Tooltip>
-          <Tooltip title='Save XML model file (UNDER DEVELOPMENT)' arrow>
+          <Tooltip title='Save XML model file' arrow>
             <span>
               <Button
-                sx={{ marginBottom: '6px', marginLeft: '20px' }}
+                sx={{ marginTop: '6px', marginBottom: '6px', marginLeft: '20px' }}
                 color='primary'
-                // disabled={true}
                 onClick={handleModelSaveClick}
               >
                 Save model

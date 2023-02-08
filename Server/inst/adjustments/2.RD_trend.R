@@ -76,7 +76,7 @@ list(
     # B) PROCESS DATA ------------------------------------------------------------------------------
 
     # Is this only original data?
-    isOriginalData <- compData[, all(Imputation == 0)]
+    isOriginalData <- compData[, all(Imputation == 0L)]
 
     # Make sure the strata columns exist in the data
     stratVarNames <- stratVarNames[stratVarNames %in% colnames(compData)]
@@ -198,7 +198,6 @@ list(
       # Define parameters
       lastYear <- compData[, max(YearOfHIVDiagnosis)]
       years <- (lastYear - 4L):lastYear
-      tGroups <- 1:3
       imputations <- compData[, sort(unique(Imputation))]
       formula <- as.formula(
         sprintf(
@@ -206,7 +205,8 @@ list(
           paste(stratVarNamesTrend, collapse = ' + ')
         )
       )
-      cuts <- compData[, c(max(VarXs) - 10L, max(VarXs) - 3L, max(VarXs))]
+      cuts <- compData[, c(max(VarXs) - 7L, max(VarXs) - 3L, max(VarXs))]
+      tGroups <- seq_along(cuts)
 
       # Run fitting per imputation separately
       fitStratum <- list()
@@ -217,6 +217,12 @@ list(
           cut = cuts,
           episode = 'tgroup'
         ))
+        compDataSplit[, ':='(
+          VarTs = as.integer(VarTs),
+          VarXs = as.integer(VarXs),
+          ReportingDelay = as.integer(ReportingDelay),
+          tgroup = as.integer(tgroup)
+        )]
         fitCox <- survival::coxph(formula, data = compDataSplit)
         estFrame <- data.table::CJ(YearOfHIVDiagnosis = years, tgroup = tGroups)
         estCov <- na.omit(unique(compData[, ..stratVarNames]))
@@ -227,14 +233,14 @@ list(
           estFrame[, MergeDummy := NULL]
         }
         estFrame[, ':='(
-          Id = rep(seq_len(.N / length(tGroups)), each = length(tGroups)),
+          Id = rleid(YearOfHIVDiagnosis),
           VarTs = c(0, cuts)[tgroup],
           VarXs = cuts[tgroup],
-          ReportingDelay = 0
+          ReportingDelay = 0L
         )]
 
         fit <- try({
-            survival::survfit(fitCox, newdata = estFrame, id = Id)
+            survival::survfit(formula = fitCox, newdata = estFrame, id = Id)
           },
           silent = TRUE
         )

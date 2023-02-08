@@ -3,6 +3,9 @@ import TimeIntervalsCollectionManager from './TimeIntervalsCollectionManager';
 import LoadTxtFile from '../utilities/LoadTxtFile';
 import IsNull from '../utilities/IsNull';
 import FormatNumber from '../utilities/FormatNumber';
+import AddXMLNode from '../utilities/AddXMLNode';
+import FormatXML from '../utilities/FormatXML';
+import FormatTimeDate from '../utilities/FormatTimeDate';
 import FileSaver from 'file-saver';
 // import SelectObjectProperties from '../utilities/SelectObjectProperties';
 
@@ -205,8 +208,84 @@ export default class ModelsManager {
     }
   };
   saveModelsParamFile = () => {
-    const blob = new Blob(['<root>Content</root>'], { type: 'text/xml' });
-    FileSaver.saveAs(blob, 'Model.xml')
+    const parser = new DOMParser();
+    let xmlDoc = parser.parseFromString('<Model></Model>', 'text/xml');
+    let modelElem = xmlDoc.getElementsByTagName('Model')[0];
+    AddXMLNode(xmlDoc, modelElem, 'FileVersion', 2);
+
+    let metaNode = AddXMLNode(xmlDoc, modelElem, 'Meta');
+    AddXMLNode(xmlDoc, metaNode, 'Name', 'HIVModel');
+    AddXMLNode(xmlDoc, metaNode, 'Author', 'HIV Platform');
+    AddXMLNode(xmlDoc, metaNode, 'Description', 'Model file exported by HIV Platform');
+    AddXMLNode(xmlDoc, metaNode, 'InputDataPath', './');
+    AddXMLNode(xmlDoc, metaNode, 'OutputResultsPath', './');
+    let riskGroupsNode = AddXMLNode(xmlDoc, metaNode, 'RiskGroups');
+    let riskGroupNode = AddXMLNode(xmlDoc, riskGroupsNode, 'RiskGroup');
+    AddXMLNode(xmlDoc, riskGroupNode, 'Name', 'Default');
+    AddXMLNode(xmlDoc, riskGroupNode, 'CreatedByDefault', true);
+    AddXMLNode(xmlDoc, riskGroupNode, 'FitMinYear', this.minYear);
+    let riskCatagoriesNode = AddXMLNode(xmlDoc, riskGroupNode, 'RiskCategories');
+    const popNames = toJS(this.parentMgr.aggrDataMgr.populationNames);
+    popNames.forEach(popName => {
+      let riskCategoryNode = AddXMLNode(xmlDoc, riskCatagoriesNode, 'RiskCategory');
+      AddXMLNode(xmlDoc, riskCategoryNode, 'Name', popName);
+      AddXMLNode(xmlDoc, riskCategoryNode, 'IsSelected', true);
+    })
+
+    let incidenceModelNode = AddXMLNode(xmlDoc, modelElem, 'IncidenceModel');
+    AddXMLNode(xmlDoc, incidenceModelNode, 'Run', 'True');
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MinYear', this.minYear);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxYear', this.maxYear);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MinFitPos', this.minFitPos);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxFitPos', this.maxFitPos);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MinFitCD4', this.minFitCD4);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxFitCD4', this.maxFitCD4);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MinFitAIDS', this.minFitAIDS);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxFitAIDS', this.maxFitAIDS);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MinFitHIVAIDS', this.minFitHIVAIDS);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxFitHIVAIDS', this.maxFitHIVAIDS);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'Country', this.country);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'KnotsCount', this.knotsCount);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'StartIncZer', this.startIncZero);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'DistributionFit', this.distributionFit);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'RDisp', 50);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'Delta4Fac', this.delta4Fac);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'MaxIncCorr', this.maxIncCorr);
+    AddXMLNode(xmlDoc, incidenceModelNode, 'SplineType', 'B-splines');
+    AddXMLNode(xmlDoc, incidenceModelNode, 'FullData', this.fullData);
+    let bootstrapNode = AddXMLNode(xmlDoc, incidenceModelNode, 'Bootstrap');
+    AddXMLNode(xmlDoc, bootstrapNode, 'StartIter', 0);
+    AddXMLNode(xmlDoc, bootstrapNode, 'IterCount', this.bootstrapCount);
+    let diagnosisRatesNode = AddXMLNode(xmlDoc, incidenceModelNode, 'DiagnosisRates');
+    const intervals = toJS(this.timeIntCollMgr.selectedRunCollection.intervals);
+    intervals.forEach(
+      interval => {
+        let intervalNode = AddXMLNode(xmlDoc, diagnosisRatesNode, 'Interval');
+        AddXMLNode(xmlDoc, intervalNode, 'Description', 'Test');
+        AddXMLNode(xmlDoc, intervalNode, 'StartYear', interval.startYear);
+        AddXMLNode(xmlDoc, intervalNode, 'Jump', interval.jump);
+        AddXMLNode(xmlDoc, intervalNode, 'ChangingInInterval', interval.changeInInterval);
+        AddXMLNode(xmlDoc, intervalNode, 'DifferentByCD4', interval.diffByCD4);
+      }
+    );
+
+    let londonModelNode = AddXMLNode(xmlDoc, modelElem, 'LondonModel');
+    AddXMLNode(xmlDoc, londonModelNode, 'Run', false);
+    AddXMLNode(xmlDoc, londonModelNode, 'RunType1', true);
+    AddXMLNode(xmlDoc, londonModelNode, 'RunType2', true);
+    AddXMLNode(xmlDoc, londonModelNode, 'MinYear', this.minYear);
+    AddXMLNode(xmlDoc, londonModelNode, 'MaxYear', this.maxYear);
+    AddXMLNode(xmlDoc, londonModelNode, 'BootstrapIterCount', 50000);
+    AddXMLNode(xmlDoc, londonModelNode, 'RateW', 2);
+
+    const serializer = new XMLSerializer();
+    const modelStr = serializer.serializeToString(xmlDoc);
+    const blob = new Blob(
+      [['<?xml version="1.0" encoding="utf-8"?>', FormatXML(modelStr)].join('\n')],
+      { type: 'text/xml' }
+    );
+    const timeDateStr = FormatTimeDate(new Date(), 'yyyyMMdd_hhmmss');
+    FileSaver.saveAs(blob, `HIVModel_${timeDateStr}.xml`)
   };
   setModelsParamFileName = fileName => this.modelsParamFileName = fileName;
   setRangeYears = rangeYears => this.rangeYears = rangeYears;

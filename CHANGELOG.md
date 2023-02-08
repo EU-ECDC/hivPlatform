@@ -1,5 +1,13 @@
 ## 3.0.0
 
+###### _February 8 2023_
+
+- Fix fitting Cox model in RD with trend adjustment
+- Support exporting HIV modelling XML files
+
+
+## 3.0.0
+
 ###### _January 31 2023_
 
 - Add draft HIV model saving
