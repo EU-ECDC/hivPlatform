@@ -600,11 +600,11 @@ export default class ModelsManager {
     this.plotData = uiState.plotData;
 
     const timeIntCollMgr = new TimeIntervalsCollectionManager(this);
-    timeIntCollMgr.setCollections(uiState.timeIntCollMgr.collections);
-    timeIntCollMgr.setMinYear(uiState.timeIntCollMgr.minYear);
-    timeIntCollMgr.setMaxYear(uiState.timeIntCollMgr.maxYear);
-    timeIntCollMgr.setSelectedEditCollectionId(uiState.timeIntCollMgr.selectedEditCollectionId);
-    timeIntCollMgr.setSelectedRunCollectionId(uiState.timeIntCollMgr.selectedRunCollectionId);
-    this.timeIntCollMgr = timeIntCollMgr;
+    // timeIntCollMgr.setCollections(uiState.timeIntCollMgr.collections);
+    // timeIntCollMgr.setMinYear(uiState.timeIntCollMgr.minYear);
+    // timeIntCollMgr.setMaxYear(uiState.timeIntCollMgr.maxYear);
+    // timeIntCollMgr.setSelectedEditCollectionId(uiState.timeIntCollMgr.selectedEditCollectionId);
+    // timeIntCollMgr.setSelectedRunCollectionId(uiState.timeIntCollMgr.selectedRunCollectionId);
+    // this.timeIntCollMgr = timeIntCollMgr;
   }
 }

@@ -150,6 +150,7 @@ AppManager <- R6::R6Class(
       filePath,
       fileName = NULL
     ) {
+      print('here')
       if (!is.element(self$Steps['SESSION_INITIALIZED'], self$CompletedSteps)) {
         PrintAlert(
           'AppManager is not initialized properly before loading the state',
@@ -189,7 +190,7 @@ AppManager <- R6::R6Class(
         )
       }
 
-      self$SendMessage('STATE_LOADED', payload)
+      self$SendMessage('UI_STATE_READY_FOR_LOAD', payload)
 
       return(invisible(self))
     },

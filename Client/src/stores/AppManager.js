@@ -55,6 +55,8 @@ export default class AppManager {
   reportMgr = null;
   migrMgr = null;
 
+  loadingUIState = false;
+
   shinyState = 'DISCONNECTED';
 
   shinyMessage = {};
@@ -65,15 +67,26 @@ export default class AppManager {
   // Shiny custom event handlers
   onShinyEvent = e => {
     console.log('onShinyEvent', e.type, e);
+    if (this.loadingUIState && e.type !== 'UI_STATE_LOADED') {
+      console.log('Loading UI state - ignoring events');
+      return;
+    }
     switch (e.type) {
       case 'PACKAGE_DETAILS_SENT':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.setPackageDetails(e.payload.PackageDetails);
         }
         break;
-      case 'STATE_LOADED':
+      case 'UI_STATE_READY_FOR_LOAD':
         if (e.payload.ActionStatus === 'SUCCESS') {
+          this.loadingUIState = true;
           this.setUIState(JSON.parse(e.payload.UIState));
+        }
+        this.notificationsMgr.setMsg(e.payload.ActionMessage);
+        break;
+      case 'UI_STATE_LOADED':
+        if (e.payload.ActionStatus === 'SUCCESS') {
+          this.loadingUIState = false;
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
@@ -396,6 +409,7 @@ export default class AppManager {
 
     makeObservable(this, {
       packageDetails: observable,
+      loadingUIState: observable,
       shinyState: observable,
       shinyMessage: observable,
       loadStateProgress: observable,
@@ -537,7 +551,8 @@ export default class AppManager {
   };
 
   setUIState = uiState => {
-    // console.log(uiState);
+    console.log(uiState);
+    this.loadingUIState = true;
     this.shinyState = uiState.shinyState;
     this.uiStateMgr.setUIState(uiState.uiStateMgr);
     this.notificationsMgr.setUIState(uiState.notificationsMgr);
@@ -552,6 +567,7 @@ export default class AppManager {
     this.modelMgr.setUIState(uiState.modelMgr);
     this.reportMgr.setUIState(uiState.reportMgr);
     this.migrMgr.setUIState(uiState.migrMgr);
+    this.inputValueSet('loadingUIStateDone', true);
   };
 
   setLoadStateProgress = progress => this.loadStateProgress = progress;
@@ -580,6 +596,7 @@ createModelSchema(TimeIntervalsCollectionManager, {
 
 createModelSchema(ModelsManager, {
   id: identifier(),
+  timeIntCollMgr: object(TimeIntervalsCollectionManager),
   modelsParamFile: primitive(),
   modelsParamFileName: primitive(),
   rangeYears: raw(),

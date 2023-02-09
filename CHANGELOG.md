@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _February 9 2023_
+
+- Fix loading state
+
+
+## 3.0.0
+
 ###### _February 8 2023_
 
 - Fix fitting Cox model in RD with trend adjustment

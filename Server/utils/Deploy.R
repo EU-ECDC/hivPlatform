@@ -151,4 +151,8 @@ renv::restore(
 
 # 5. DEPLOYMENT ------------------------------------------------------------------------------------
 install.packages('pak', repos = 'https://r-lib.github.io/p/pak/devel/')
-pak::pkg_install('github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant', dependencies = 'hard')
+pak::pkg_install(
+  'github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant',
+  dependencies = 'hard',
+  ask = FALSE
+)

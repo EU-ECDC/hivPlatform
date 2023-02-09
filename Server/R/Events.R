@@ -206,6 +206,21 @@ Events <- function(
     )
   })
 
+  observeEvent(input$loadingUIStateDone, {
+    status <- input$loadingUIStateDone
+    appMgr$SendMessage(
+      'UI_STATE_LOADED',
+      list(
+        ActionStatus = 'SUCCESS',
+        ActionMessage = 'State has been set correctly'
+      )
+    )
+  })
+
+  observeEvent(input$cancelBootstrapBtn, {
+    appMgr$HIVModelMgr$CancelBootstrapFit()
+  })
+
   # Case-based data upload event
   observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn

@@ -50,6 +50,7 @@ const RightNav = (props) => {
               <input
                 hidden
                 type='file'
+                accept='.rds'
                 onChange={handleLoadStateBtnClick}
                 id='loadStateBtn'
               />
