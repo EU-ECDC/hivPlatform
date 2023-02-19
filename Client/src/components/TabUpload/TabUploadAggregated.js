@@ -62,6 +62,7 @@ const TabUploadAggregated = props => {
             id='aggrUploadBtn'
             className='uploadBtn'
             type='file'
+            accept='.csv, .zip'
             onChange={handleUploadBtnClick}
           />
           <Tooltip title='Select aggregated data file' arrow>
@@ -71,7 +72,7 @@ const TabUploadAggregated = props => {
               </Btn>
             </label>
           </Tooltip>
-          <Tooltip title='Remove aggregated data from analysis (UNDER DEVELOPMENT)' arrow>
+          {/* <Tooltip title='Remove aggregated data from analysis (UNDER DEVELOPMENT)' arrow>
             <span>
               <Button
                 sx={{ marginBottom: '6px', marginLeft: '20px' }}
@@ -82,7 +83,7 @@ const TabUploadAggregated = props => {
                 Unload data
               </Button>
             </span>
-          </Tooltip>
+          </Tooltip> */}
           <Typography variant='body2' color='textSecondary'>
             Maximum file size: 100MB<br />
             Supported files types: csv (zip archives)

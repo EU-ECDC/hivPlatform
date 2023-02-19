@@ -61,6 +61,7 @@ const CaseUpload = (props) => {
           id='caseUploadBtn'
           className='uploadBtn'
           type='file'
+          accept='.csv, .rds, .txt, .xls, .xlsx, .zip'
           onChange={handleUploadBtnClick}
         />
         <Tooltip title='Select case-based data file' arrow>
@@ -68,7 +69,7 @@ const CaseUpload = (props) => {
             <Btn sx={{ marginBottom: '6px', color: 'white' }} ><CloudUploadIcon />&nbsp;Upload data</Btn>
           </label>
         </Tooltip>
-        <Tooltip title='Remove case-based data from analysis (UNDER DEVELOPMENT)' arrow>
+        {/* <Tooltip title='Remove case-based data from analysis (UNDER DEVELOPMENT)' arrow>
           <span>
             <Button
               sx={{ marginBottom: '6px', marginLeft: '20px' }}
@@ -80,7 +81,7 @@ const CaseUpload = (props) => {
               Unload data
             </Button>
           </span>
-        </Tooltip>
+        </Tooltip> */}
         <Typography variant='body2' color='textSecondary'>
           Maximum file size: 100MB<br />
           Supported files types: rds, txt, csv, xls, xlsx (uncompressed and zip archives)

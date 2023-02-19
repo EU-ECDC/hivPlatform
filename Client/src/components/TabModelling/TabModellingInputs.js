@@ -54,6 +54,7 @@ const TabModellingInputs = props => {
             style={{ display: 'none' }}
             id='modelUploadBtn'
             type='file'
+            accept='.xml, .zip'
             onChange={handleModelUploadChange}
           />
           <Tooltip title='Select XML model file' arrow>
