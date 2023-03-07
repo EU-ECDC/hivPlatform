@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _March 7 2023_
+
+- Update dependencies
+
+
+## 3.0.0
+
 ###### _February 9 2023_
 
 - Fix loading state

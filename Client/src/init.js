@@ -17,7 +17,7 @@ export default appMgr => {
         Name: 'hivPlatform',
         Title: 'HIV Platform',
         Version: '3.0.0',
-        Date: '2022-12-22',
+        Date: '2023-02-19',
         Description: 'Improves the accuracy of HIV estimates in EU/EEA countries.'
       }
     }
@@ -654,7 +654,7 @@ export default appMgr => {
     }
   });
 
-  appMgr.uiStateMgr.setActivePageId(5, 1);
+  appMgr.uiStateMgr.setActivePageId(0, 0);
   appMgr.caseBasedDataMgr.setUploadProgress(0.6);
   appMgr.aggrDataMgr.setFileUploadProgress(0.6);
   appMgr.adjustMgr.setAdjustmentsRunProgress(true);
