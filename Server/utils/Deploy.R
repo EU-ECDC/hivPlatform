@@ -1,5 +1,5 @@
 # 1. Update local packages -------------------------------------------------------------------------
-pak::local_install_deps(root = '.', dependencies = 'hard')
+pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 
 pkgName <- 'hivPlatform'
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
@@ -76,21 +76,6 @@ pak::pkg_install(
 )
 fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 
-# appServerFile <- file(file.path(winDeployPath, 'R', 'AppServer.R'))
-# appServerContent <- readLines(appServerFile)
-# sessionEndFound <- any(grepl('session\\$onSessionEnded\\(stopApp\\)', appServerContent))
-# if (!sessionEndFound) {
-#   returnLine <- which(grepl('return\\(invisible\\(NULL\\)\\)', appServerContent))[1]
-
-#   appServerContent <- c(
-#     appServerContent[1:returnLine - 1],
-#     '  session$onSessionEnded(stopApp)',
-#     appServerContent[returnLine:length(appServerContent)]
-#   )
-#   writeLines(appServerContent, appServerFile)
-#   close(appServerFile)
-# }
-
 redundantFolders <- fs::dir_ls(
   file.path(winDeployPath, 'library'),
   type = 'directory',
@@ -107,52 +92,11 @@ redundantFolders <- fs::dir_ls(
 )
 sapply(redundantFolders, unlink, recursive = TRUE)
 
-
 # 4. ECDC SHINY SERVER DEPLOYMENT ------------------------------------------------------------------
-
-serverDeployPath <- file.path(rootPath, 'deployment/ecdcServer/')
-
-# Copy files and folders
-sapply(
-  c(
-    'app.R', 'DESCRIPTION', 'LICENSE', 'NAMESPACE', 'README.md', '.Rprofile', 'renv.lock',
-    '../.gitattributes'
-  ),
-  fs::file_copy,
-  new_path = serverDeployPath,
-  overwrite = TRUE
-)
-
-fs::dir_create(file.path(serverDeployPath, 'renv'))
-fs::file_copy('renv/activate.R', file.path(serverDeployPath, 'renv/'), overwrite = TRUE)
-fs::file_copy('renv/settings.dcf', file.path(serverDeployPath, 'renv/'), overwrite = TRUE)
-fs::dir_copy('man/', file.path(serverDeployPath, 'man/'), overwrite = TRUE)
-fs::dir_copy('inst/', file.path(serverDeployPath, 'inst/'), overwrite = TRUE)
-fs::dir_copy('data-raw/', file.path(serverDeployPath, 'data-raw/'), overwrite = TRUE)
-fs::dir_copy('R/', file.path(serverDeployPath, 'R/'), overwrite = TRUE)
-
-rProfileFile <- file(file.path(serverDeployPath, '.Rprofile'))
-rProfileContent <- 'source("renv/activate.R")'
-writeLines(rProfileContent, rProfileFile)
-close(rProfileFile)
-
-renvSettingsFile <- file(file.path(serverDeployPath, 'renv', 'settings.dcf'))
-renvSettingsContent <- readLines(renvSettingsFile)
-extLibLine <- which(grepl('^external.libraries', renvSettingsContent))[1]
-renvSettingsContent[extLibLine] <- 'external.libraries:'
-writeLines(renvSettingsContent, renvSettingsFile)
-close(renvSettingsFile)
-
-renv::restore(
-  project = serverDeployPath,
-  library = file.path(serverDeployPath, 'renv', 'library', 'R-4.1', 'x86_64-w64-mingw32'),
-  prompt = FALSE
-)
-
-# 5. DEPLOYMENT ------------------------------------------------------------------------------------
 install.packages('pak', repos = 'https://r-lib.github.io/p/pak/devel/')
 pak::pkg_install(
   'github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant',
   dependencies = 'hard',
+  upgrade = TRUE,
   ask = FALSE
 )
