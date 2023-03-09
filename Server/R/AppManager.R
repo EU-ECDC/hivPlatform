@@ -35,6 +35,7 @@ AppManager <- R6::R6Class(
       private$AggrMgrPriv <- AggrDataManager$new(session, self)
       private$HIVModelMgrPriv <- HIVModelManager$new(session, self)
       private$UIStatePriv <- NULL
+      private$Observers <- NULL
 
       catalogStorage <- ifelse(!is.null(session), shiny::reactiveValues, list)
       private$Catalogs <- catalogStorage(
@@ -43,6 +44,14 @@ AppManager <- R6::R6Class(
         ReportTask = NULL,
         ReportArtifacts = NULL,
         Report = NULL
+      )
+
+      self$SendMessage(
+        'PACKAGE_DETAILS_SENT',
+        list(
+          ActionStatus = 'SUCCESS',
+          PackageDetails = self$PackageDetails
+        )
       )
 
       self$SetCompletedStep('SESSION_INITIALIZED')
@@ -150,7 +159,6 @@ AppManager <- R6::R6Class(
       filePath,
       fileName = NULL
     ) {
-      print('here')
       if (!is.element(self$Steps['SESSION_INITIALIZED'], self$CompletedSteps)) {
         PrintAlert(
           'AppManager is not initialized properly before loading the state',
@@ -321,6 +329,24 @@ AppManager <- R6::R6Class(
       }
 
       return(invisible(self))
+    },
+
+    SetObservers = function(observers) {
+      private$Observers <- observers
+      return(invisible(self))
+    },
+    SuspendObservers = function() {
+      sapply(private$Observers, \(o) o$suspend())
+      private$ObserversSuspended_ <- TRUE
+      PrintAlert('Observers suspended:', self$ObserversSuspended)
+      return(invisible(self))
+    },
+
+    ResumeObservers = function() {
+      sapply(private$Observers, \(o) o$resume())
+      private$ObserversSuspended_ <- FALSE
+      PrintAlert('Observers suspended:', self$ObserversSuspended)
+      return(invisible(self))
     }
   ),
 
@@ -342,6 +368,11 @@ AppManager <- R6::R6Class(
 
     # HIV Model manager
     HIVModelMgrPriv = NULL,
+
+    # Observers
+    Observers = NULL,
+
+    ObserversSuspended_ = FALSE,
 
     # Storage
     Catalogs = NULL,
@@ -372,7 +403,6 @@ AppManager <- R6::R6Class(
       self$CaseMgr$SetState(state$CaseMgr)
       self$AggrMgr$SetState(state$AggrMgr)
       self$HIVModelMgr$SetState(state$HIVModelMgr)
-
       return(invisible(self))
     }
   ),
@@ -416,6 +446,10 @@ AppManager <- R6::R6Class(
 
     Report = function() {
       return(private$Catalogs$Report)
+    },
+
+    ObserversSuspended = function() {
+      return(private$ObserversSuspended_)
     }
   )
 )

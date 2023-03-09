@@ -77,6 +77,8 @@ export default class SummaryDataManager {
 
   repDelPlotSelection = 'all';
 
+  dispose = null;
+
   constructor(mgr) {
     this.rootMgr = mgr;
     makeObservable(this, {
@@ -116,7 +118,7 @@ export default class SummaryDataManager {
       setUIState: action
     });
 
-    autorun(
+    this.dipose = autorun(
       () => this.rootMgr.inputValueSet('summaryFilters', this.filters),
       { delay: 1000 }
     );
@@ -301,6 +303,7 @@ export default class SummaryDataManager {
   };
 
   setUIState = uiState => {
+    this.dipose();
     this.selectedCount = uiState.selectedCount;
     this.totalCount = uiState.totalCount;
     this.diagYearPlotData = uiState.diagYearPlotData;
@@ -309,5 +312,9 @@ export default class SummaryDataManager {
     this.missPlotSelection = uiState.missPlotSelection;
     this.repDelPlotData = uiState.repDelPlotData;
     this.repDelPlotSelection = uiState.repDelPlotSelection;
+    // this.dipose = autorun(
+    //   () => this.rootMgr.inputValueSet('summaryFilters', this.filters),
+    //   { delay: 1000 }
+    // );
   }
 }

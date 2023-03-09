@@ -40,7 +40,7 @@ aggrDataSelection <- data.table(
   MinYear = c(1990, 1991, 1992, 1992, 1992, 1992, 1992, 1992),
   MaxYear = c(2015, 2019, 2013, 2013, 2013, 2013, 2013, 2013)
 )
-GetPopulationData(casedData, aggrData, popCombination, aggrDataSelection)
+GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
 }
 
 }

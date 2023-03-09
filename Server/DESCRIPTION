@@ -2,7 +2,7 @@ Package: hivPlatform
 Type: Package
 Title: HIV Platform
 Version: 3.0.0
-Date: 2023-03-07
+Date: 2023-03-09
 Authors@R: c(person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl',
     role = c('aut', 'cph')), person('Nikos', 'Pantazis', email =
     'npantaz@med.uoa.gr', role = c('aut')), person('Ard', 'van Sighem',
@@ -26,6 +26,7 @@ Imports:
     logger (>= 0.2.2),
     mice (>= 3.8.0),
     mitools (>= 2.4),
+    magrittr (>= 2.0.3),
     openxlsx (>= 4.2.3),
     quantreg (>= 5.54),
     prettyunits (>= 1.1.1),
@@ -43,7 +44,7 @@ Imports:
 Remotes: nextpagesoft/hivModelling
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Suggests: testthat, rcmdcheck, pak
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen, RcppNumerical
 SystemRequirements: C++11

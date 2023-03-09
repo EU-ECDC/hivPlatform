@@ -185,20 +185,15 @@ Events <- function(
   session,
   appMgr
 ) {
-  appMgr$SendMessage(
-    'PACKAGE_DETAILS_SENT',
-    list(
-      ActionStatus = 'SUCCESS',
-      PackageDetails = appMgr$PackageDetails
-    )
-  )
+  observers <- list()
 
-  observeEvent(input$saveStateBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$saveStateBtn, {
     appMgr$SetUIState(input$saveStateBtn)
     appMgr$SaveState()
   })
 
-  observeEvent(input$loadStateBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$loadStateBtn, {
+    appMgr$SuspendObservers()
     fileInfo <- input$loadStateBtn
     appMgr$LoadState(
       fileInfo$datapath,
@@ -215,14 +210,19 @@ Events <- function(
         ActionMessage = 'State has been set correctly'
       )
     )
+    # appMgr$ResumeObservers()
   })
 
-  observeEvent(input$cancelBootstrapBtn, {
+  observeEvent(input$test, {
+    appMgr$ResumeObservers()
+  })
+
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelBootstrapBtn, {
     appMgr$HIVModelMgr$CancelBootstrapFit()
   })
 
   # Case-based data upload event
-  observeEvent(input$caseUploadBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$caseUploadBtn, {
     fileInfo <- input$caseUploadBtn
     appMgr$SendMessage(
       'CASE_BASED_DATA_UPLOADED',
@@ -241,11 +241,11 @@ Events <- function(
     )
   })
 
-  observeEvent(input$unloadCaseBasedData, {
+  observers[[length(observers) + 1]] <- observeEvent(input$unloadCaseBasedData, {
     appMgr$CaseMgr$UnloadData()
   })
 
-  observeEvent(input$aggrUploadBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$aggrUploadBtn, {
     fileInfo <- input$aggrUploadBtn
     appMgr$SendMessage(
       'AGGR_DATA_UPLOADED',
@@ -261,11 +261,11 @@ Events <- function(
     appMgr$AggrMgr$ReadData(fileInfo$datapath[1], fileInfo$name[1])
   })
 
-  observeEvent(input$attrMapping, {
+  observers[[length(observers) + 1]] <- observeEvent(input$attrMapping, {
     appMgr$CaseMgr$ApplyAttributesMapping(input$attrMapping)
   })
 
-  observeEvent(input$groupingPresetSelect, {
+  observers[[length(observers) + 1]] <- observeEvent(input$groupingPresetSelect, {
     preset <- input$groupingPresetSelect
     distr <- appMgr$CaseMgr$OriginDistribution
     originGrouping <- GetOriginGroupingPreset(preset, distr)
@@ -281,11 +281,11 @@ Events <- function(
     )
   })
 
-  observeEvent(input$originGrouping, {
+  observers[[length(observers) + 1]] <- observeEvent(input$originGrouping, {
     appMgr$CaseMgr$ApplyOriginGrouping(input$originGrouping)
   })
 
-  observeEvent(input$checkOriginGrouping, {
+  observers[[length(observers) + 1]] <- observeEvent(input$checkOriginGrouping, {
     migrantCompatible <- CheckOriginGroupingForMigrant(input$checkOriginGrouping)
 
     appMgr$SendMessage(
@@ -297,24 +297,24 @@ Events <- function(
     )
   })
 
-  observeEvent(input$summaryFilters, {
+  observers[[length(observers) + 1]] <- observeEvent(input$summaryFilters, {
     filters <- input$summaryFilters
     if (!(all(sapply(filters$DiagYear, is.null)) || all(sapply(filters$NotifQuarter, is.null)))) {
       appMgr$CaseMgr$SetFilters(input$summaryFilters)
     }
   }, ignoreInit = TRUE)
 
-  observeEvent(input$runAdjustBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$runAdjustBtn, {
     params <- input$runAdjustBtn
     adjustmentSpecs <- GetAdjustmentSpecsWithParams(params)
     appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
   })
 
-  observeEvent(input$cancelAdjustBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelAdjustBtn, {
     appMgr$CaseMgr$CancelAdjustments()
   })
 
-  observeEvent(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$CaseMgr$AdjustmentTask$HTMLRunLog, {
     appMgr$SendMessage(
       'ADJUSTMENTS_RUN_LOG_SET',
       payload = list(
@@ -324,15 +324,15 @@ Events <- function(
     )
   })
 
-  observeEvent(input$runMigrantBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$runMigrantBtn, {
     appMgr$CaseMgr$RunMigration()
   })
 
-  observeEvent(input$cancelMigrantBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelMigrantBtn, {
     appMgr$CaseMgr$CancelMigration()
   })
 
-  observeEvent(appMgr$CaseMgr$MigrationTask$HTMLRunLog, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$CaseMgr$MigrationTask$HTMLRunLog, {
     appMgr$SendMessage(
       'MIGRATION_RUN_LOG_SET',
       payload = list(
@@ -342,76 +342,58 @@ Events <- function(
     )
   })
 
-  observeEvent(input$migrConnFlag, {
+  observers[[length(observers) + 1]] <- observeEvent(input$migrConnFlag, {
     appMgr$HIVModelMgr$SetMigrConnFlag(input$migrConnFlag)
   })
 
-  observeEvent(input$migrRegion, {
+  observers[[length(observers) + 1]] <- observeEvent(input$migrRegion, {
     appMgr$CaseMgr$SetMigrationRegion(input$migrRegion)
   })
 
-  observeEvent(input$propTableStrat, {
+  observers[[length(observers) + 1]] <- observeEvent(input$propTableStrat, {
     appMgr$CaseMgr$SetMigrationPropStrat(input$propTableStrat)
   }, ignoreNULL = FALSE)
 
-  observeEvent(input$aggrFilters, {
+  observers[[length(observers) + 1]] <- observeEvent(input$aggrFilters, {
       appMgr$HIVModelMgr$SetAggrFilters(input$aggrFilters)
     },
     ignoreInit = TRUE
   )
 
-  observeEvent(appMgr$CaseMgr$LastAdjustmentResult, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$CaseMgr$LastAdjustmentResult, {
     CreateDownload('ADJUSTED_DATA', 'csv', output, appMgr)
     CreateDownload('ADJUSTED_DATA', 'rds', output, appMgr)
     CreateDownload('ADJUSTED_DATA', 'dta', output, appMgr)
   })
 
-  observeEvent(appMgr$CaseMgr$LastAdjustmentResult$Artifacts$RdDistribution, {
+  observers[[length(observers) + 1]] <- observeEvent(
+    appMgr$CaseMgr$LastAdjustmentResult$Artifacts$RdDistribution, {
     CreateDownload('REP_DEL_DATA', 'csv', output, appMgr)
     CreateDownload('REP_DEL_DATA', 'rds', output, appMgr)
     CreateDownload('REP_DEL_DATA', 'dta', output, appMgr)
   })
 
-  observeEvent(input$createReportBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$createReportBtn, {
     reportSpec <- input$createReportBtn
     appMgr$CreateReport(reportSpec)
   })
 
-  observeEvent(input$cancelCreatingReportBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelCreatingReportBtn, {
     appMgr$CancelReport()
   })
 
-  observeEvent(appMgr$ReportArtifacts, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$ReportArtifacts, {
     CreateDownload('MAIN_REPORT', 'html', output, appMgr)
     CreateDownload('MAIN_REPORT', 'pdf', output, appMgr)
     CreateDownload('MAIN_REPORT', 'latex', output, appMgr)
     CreateDownload('MAIN_REPORT', 'word', output, appMgr)
   })
 
-  observeEvent(appMgr$CaseMgr$Data, {
-    result <- GetAvailableStrata(appMgr$CaseMgr$Data)
-    variables <- lapply(names(result$Variables), function(varName) {
-      list(
-        Name = varName,
-        Code = unname(result$Variables[[varName]])
-      )
-    })
-
-    appMgr$SendMessage(
-      'AVAILABLE_STRATA_SET',
-      payload = list(
-        ActionStatus = 'SUCCESS',
-        AvailableVariables = variables,
-        AvailableStrata = jsonlite::toJSON(result$Strata)
-      )
-    )
-  })
-
-  observeEvent(input$xmlModel, {
+  observers[[length(observers) + 1]] <- observeEvent(input$xmlModel, {
     appMgr$HIVModelMgr$LoadParameters(input$xmlModel)
   })
 
-  observeEvent(input$runModelBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$runModelBtn, {
     runSettings <- input$runModelBtn
     params <- runSettings$Params
     popCombination <- runSettings$PopCombination
@@ -423,11 +405,11 @@ Events <- function(
     )
   })
 
-  observeEvent(input$cancelModelBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelModelBtn, {
     appMgr$HIVModelMgr$CancelMainFit()
   })
 
-  observeEvent(appMgr$HIVModelMgr$MainFitTask$HTMLRunLog, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$HIVModelMgr$MainFitTask$HTMLRunLog, {
     appMgr$SendMessage(
       'MODELS_RUN_LOG_SET',
       payload = list(
@@ -437,7 +419,7 @@ Events <- function(
     )
   })
 
-  observeEvent(appMgr$HIVModelMgr$MainFitResult, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$HIVModelMgr$MainFitResult, {
     CreateDownload('HIV_MAIN_FIT_DETAILED', 'rds', output, appMgr)
     CreateDownload('HIV_MAIN_FIT', 'csv', output, appMgr)
     CreateDownload('HIV_MAIN_FIT', 'rds', output, appMgr)
@@ -446,7 +428,7 @@ Events <- function(
     CreateDownload('HIV_MAIN_FIT_EXCEL', 'xlsx', output, appMgr)
   })
 
-  observeEvent(input$runBootstrapBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$runBootstrapBtn, {
     params <- input$runBootstrapBtn
     appMgr$HIVModelMgr$RunBootstrapFit(
       bsCount = as.integer(params$count),
@@ -454,7 +436,8 @@ Events <- function(
     )
   })
 
-  observeEvent(appMgr$HIVModelMgr$BootstrapFitTask$HTMLRunLog, {
+  observers[[length(observers) + 1]] <- observeEvent(
+    appMgr$HIVModelMgr$BootstrapFitTask$HTMLRunLog, {
     appMgr$SendMessage(
       'BOOTSTRAP_RUN_LOG_SET',
       payload = list(
@@ -464,11 +447,11 @@ Events <- function(
     )
   })
 
-  observeEvent(input$cancelBootstrapBtn, {
+  observers[[length(observers) + 1]] <- observeEvent(input$cancelBootstrapBtn, {
     appMgr$HIVModelMgr$CancelBootstrapFit()
   })
 
-  observeEvent(appMgr$HIVModelMgr$BootstrapFitResult, {
+  observers[[length(observers) + 1]] <- observeEvent(appMgr$HIVModelMgr$BootstrapFitResult, {
     CreateDownload('HIV_BOOT_FIT_DETAILED', 'rds', output, appMgr)
     CreateDownload('HIV_BOOT_FIT', 'csv', output, appMgr)
     CreateDownload('HIV_BOOT_FIT', 'rds', output, appMgr)
@@ -481,7 +464,14 @@ Events <- function(
 
   CreateDownload('APP_MANAGER', 'rds', output, appMgr)
 
-  observeEvent(input$seed, {
-    appMgr$SetSeed(input$seed)
-  }, ignoreNULL = FALSE, ignoreInit = TRUE)
+  observers[[length(observers) + 1]] <- observeEvent(
+    input$seed,
+    {
+      appMgr$SetSeed(input$seed)
+    },
+    ignoreNULL = FALSE,
+    ignoreInit = TRUE
+  )
+
+  return(observers)
 }

@@ -24,6 +24,7 @@
 #' @import shiny
 #' @import data.table
 #' @import ggplot2
+#' @import magrittr
 #'
 #' @useDynLib hivPlatform, .registration = TRUE
 NULL

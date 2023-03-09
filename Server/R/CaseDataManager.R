@@ -42,6 +42,8 @@ CaseDataManager <- R6::R6Class( # nolint
         MigrationTask = NULL,
         MigrationResult = NULL
       )
+      private$Observers <- NULL
+      private$CreateObservers()
     },
 
     print = function() {
@@ -694,9 +696,9 @@ CaseDataManager <- R6::R6Class( # nolint
           OriginGrouping = private$Catalogs$OriginGrouping,
           PreProcessArtifacts = private$Catalogs$PreProcessArtifacts,
           Filters = private$Catalogs$Filters,
-          PreProcessedData = private$Catalogs$PreProcessedData,
+          PreProcessedData = isolate(private$Catalogs$PreProcessedData),
           PreProcessedDataStatus = private$Catalogs$PreProcessedDataStatus,
-          AdjustedData = private$Catalogs$AdjustedData,
+          AdjustedData = isolate(private$Catalogs$AdjustedData),
           AdjustmentResult = private$Catalogs$AdjustmentResult,
           MigrationRegion = private$Catalogs$MigrationRegion,
           MigrationPropStrat = private$Catalogs$MigrationPropStrat,
@@ -708,6 +710,7 @@ CaseDataManager <- R6::R6Class( # nolint
     },
 
     SetState = function(state) {
+      private$DestroyObservers()
       private$Catalogs$FilePath <- state$Catalogs$FilePath
       private$Catalogs$FileName <- state$Catalogs$FileName
       private$Catalogs$OriginalData <- state$Catalogs$OriginalData
@@ -717,14 +720,14 @@ CaseDataManager <- R6::R6Class( # nolint
       private$Catalogs$OriginGrouping <- state$Catalogs$OriginGrouping
       private$Catalogs$PreProcessArtifacts <- state$Catalogs$PreProcessArtifacts
       private$Catalogs$Filters <- state$Catalogs$Filters
-      private$Catalogs$PreProcessedData <- state$Catalogs$PreProcessedData
+      private$Catalogs$PreProcessedData <- isolate(state$Catalogs$PreProcessedData)
       private$Catalogs$PreProcessedDataStatus <- state$Catalogs$PreProcessedDataStatus
-      private$Catalogs$AdjustedData <- state$Catalogs$AdjustedData
+      private$Catalogs$AdjustedData <- isolate(state$Catalogs$AdjustedData)
       private$Catalogs$AdjustmentResult <- state$Catalogs$AdjustmentResult
       private$Catalogs$MigrationRegion <- state$Catalogs$MigrationRegion
       private$Catalogs$MigrationPropStrat <- state$Catalogs$MigrationPropStrat
       private$Catalogs$MigrationResult <- state$Catalogs$MigrationResult
-
+      private$CreateObservers()
       return(invisible(self))
     }
   ),
@@ -738,6 +741,9 @@ CaseDataManager <- R6::R6Class( # nolint
 
     # Storage
     Catalogs = NULL,
+
+    # Observers
+    Observers = NULL,
 
     SendMessage = function(...) {
       if (is.function(private$AppMgr$SendMessage)) {
@@ -789,6 +795,38 @@ CaseDataManager <- R6::R6Class( # nolint
         private$AppMgr$SetCompletedStep(step)
       }
 
+      return(invisible(self))
+    },
+
+    DestroyObservers = function() {
+      sapply(private$Observers, \(o) o$destroy())
+      private$Observers <- list()
+      PrintAlert('CaseDataManager observers destroyed')
+    },
+
+    CreateObservers = function() {
+      private$Observers[[length(private$Observers) + 1]] <- observeEvent(self$Data, {
+        PrintAlert('Change in appMgr$CaseMgr$Data detected')
+        result <- GetAvailableStrata(self$Data)
+        variables <- lapply(names(result$Variables), function(varName) {
+          list(
+            Name = varName,
+            Code = unname(result$Variables[[varName]])
+          )
+        })
+
+        private$SendMessage(
+          'AVAILABLE_STRATA_SET',
+          payload = list(
+            ActionStatus = 'SUCCESS',
+            AvailableVariables = variables,
+            AvailableStrata = jsonlite::toJSON(result$Strata)
+          )
+        )
+      }, ignoreInit = TRUE)
+
+
+      PrintAlert('CaseDataManager observers created')
       return(invisible(self))
     }
   ),

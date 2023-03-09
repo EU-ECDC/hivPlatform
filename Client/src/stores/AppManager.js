@@ -54,7 +54,6 @@ export default class AppManager {
   modelMgr = null;
   reportMgr = null;
   migrMgr = null;
-
   loadingUIState = false;
 
   shinyState = 'DISCONNECTED';
@@ -87,6 +86,7 @@ export default class AppManager {
       case 'UI_STATE_LOADED':
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.loadingUIState = false;
+          this.inputValueSet('test', true);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
@@ -489,15 +489,15 @@ export default class AppManager {
   };
 
   btnClicked = (btnId, value = '') => {
-    if (!IsNull(window.Shiny) && this.shinyReady) {
+    if (!IsNull(window.Shiny) && this.shinyReady && !this.loadingUIState) {
       Shiny.setInputValue(btnId, value, { priority: 'event' });
     } else {
       console.log('btnClicked: Shiny is not available', btnId, toJS(value));
     }
   };
 
-  inputValueSet = (inputId, value) => {
-    if (!IsNull(window.Shiny) && this.shinyReady) {
+  inputValueSet = (inputId, value, force = false) => {
+    if (!IsNull(window.Shiny) && this.shinyReady && (!this.loadingUIState || force)) {
       Shiny.setInputValue(inputId, value);
     } else {
       console.log('inputValueSet: Shiny is not available', inputId, toJS(value));
@@ -551,7 +551,6 @@ export default class AppManager {
   };
 
   setUIState = uiState => {
-    console.log(uiState);
     this.loadingUIState = true;
     this.shinyState = uiState.shinyState;
     this.uiStateMgr.setUIState(uiState.uiStateMgr);
@@ -567,7 +566,7 @@ export default class AppManager {
     this.modelMgr.setUIState(uiState.modelMgr);
     this.reportMgr.setUIState(uiState.reportMgr);
     this.migrMgr.setUIState(uiState.migrMgr);
-    this.inputValueSet('loadingUIStateDone', true);
+    this.inputValueSet('loadingUIStateDone', true, true);
   };
 
   setLoadStateProgress = progress => this.loadStateProgress = progress;
