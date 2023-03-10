@@ -1,4 +1,4 @@
-import { observable, action, computed, toJS, makeObservable, autorun } from 'mobx';
+import { observable, action, computed, toJS, makeObservable, reaction } from 'mobx';
 import QuarterToString from '../utilities/QuarterToString';
 import FormatPercentage from '../utilities/FormatPercentage';
 export default class SummaryDataManager {
@@ -118,8 +118,12 @@ export default class SummaryDataManager {
       setUIState: action
     });
 
-    this.dipose = autorun(
-      () => this.rootMgr.inputValueSet('summaryFilters', this.filters),
+    this.dispose = reaction(
+      () => this.filters,
+      filters => {
+        console.log('Filters changed');
+        this.rootMgr.inputValueSet('summaryFilters', filters);
+      },
       { delay: 1000 }
     );
   };
@@ -299,11 +303,11 @@ export default class SummaryDataManager {
     };
 
     this.repDelPlotSelection = 'all';
-    this.rootMgr.inputValueSet('summaryFilters', this.filters);
+    // this.rootMgr.inputValueSet('summaryFilters', this.filters);
   };
 
   setUIState = uiState => {
-    this.dipose();
+    this.dispose();
     this.selectedCount = uiState.selectedCount;
     this.totalCount = uiState.totalCount;
     this.diagYearPlotData = uiState.diagYearPlotData;
@@ -312,9 +316,13 @@ export default class SummaryDataManager {
     this.missPlotSelection = uiState.missPlotSelection;
     this.repDelPlotData = uiState.repDelPlotData;
     this.repDelPlotSelection = uiState.repDelPlotSelection;
-    // this.dipose = autorun(
-    //   () => this.rootMgr.inputValueSet('summaryFilters', this.filters),
-    //   { delay: 1000 }
-    // );
+    this.dispose = reaction(
+      () => this.filters,
+      filters => {
+        console.log('Filters changed');
+        this.rootMgr.inputValueSet('summaryFilters', filters);
+      },
+      { delay: 1000, fireImmediately: false}
+    );
   }
 }

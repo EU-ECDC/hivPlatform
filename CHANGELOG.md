@@ -1,5 +1,10 @@
 ## 3.0.0
 
+###### _March 10 2023_
+
+- Fix loading UI state propagating unwanted actions to server
+
+
 ###### _March 7 2023_
 
 - Update dependencies
