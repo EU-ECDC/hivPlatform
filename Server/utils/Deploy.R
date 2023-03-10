@@ -100,3 +100,5 @@ pak::pkg_install(
   upgrade = TRUE,
   ask = FALSE
 )
+
+remotes::install_github('nextpagesoft/hivEstimatesAccuracy2', subdir = 'Server', ref = 'migrant')

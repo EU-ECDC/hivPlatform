@@ -336,14 +336,14 @@ AppManager <- R6::R6Class(
       return(invisible(self))
     },
     SuspendObservers = function() {
-      sapply(private$Observers, \(o) o$suspend())
+      sapply(private$Observers, function(o) o$suspend())
       private$ObserversSuspended_ <- TRUE
       PrintAlert('Observers suspended:', self$ObserversSuspended)
       return(invisible(self))
     },
 
     ResumeObservers = function() {
-      sapply(private$Observers, \(o) o$resume())
+      sapply(private$Observers, function(o) o$resume())
       private$ObserversSuspended_ <- FALSE
       PrintAlert('Observers suspended:', self$ObserversSuspended)
       return(invisible(self))
