@@ -799,7 +799,7 @@ CaseDataManager <- R6::R6Class( # nolint
     },
 
     DestroyObservers = function() {
-      sapply(private$Observers, \(o) o$destroy())
+      sapply(private$Observers, function(o) o$destroy())
       private$Observers <- list()
       PrintAlert('CaseDataManager observers destroyed')
     },
