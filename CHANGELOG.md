@@ -1,5 +1,12 @@
 ## 3.0.0
 
+###### _March 20 2023_
+
+-  Set constraints and step in delta4Fac input
+
+
+## 3.0.0
+
 ###### _March 10 2023_
 
 - Fix loading UI state propagating unwanted actions to server
