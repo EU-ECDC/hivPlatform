@@ -241,7 +241,7 @@ HIVModelManager <- R6::R6Class( # nolint
             }
             dataAfterMigr <- 'ProbPre' %in% colnames(caseData)
 
-            if (migrConnFlag && dataAfterMigr) {
+            if (dataAfterMigr && migrConnFlag) {
               stopifnot(caseData[!is.na(Excluded), is.na(unique(ProbPre))])
               stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Pre', unique(ProbPre) == 1])
               stopifnot(caseData[is.na(Excluded) & KnownPrePost == 'Post', unique(ProbPre) == 0])
@@ -261,7 +261,7 @@ HIVModelManager <- R6::R6Class( # nolint
             aggrData <- res$Aggr
 
             # Prepare data sets for the HIV model
-            if (migrConnFlag && dataAfterMigr) {
+            if (dataAfterMigr && migrConnFlag) {
               # Prepare the Dead file based on the whole population dataset
               caseDataDead <- PrepareDataSetsForModel(
                 caseData,
@@ -490,7 +490,7 @@ HIVModelManager <- R6::R6Class( # nolint
             if (bsType == 'NON-PARAMETRIC' & is.null(caseData)) {
               bsType <- 'PARAMETRIC'
               PrintAlert(
-                'Bootstrap type "NON-PARAMETERIC" is selected, but there is no case-based data loaded.',
+                'Bootstrap type "NON-PARAMETERIC" is selected, but there is no case-based data loaded.', # nolint
                 'Bootstrap of type "PARAMETRIC" will be performed.',
                 type = 'warning'
               )
@@ -536,7 +536,7 @@ HIVModelManager <- R6::R6Class( # nolint
                   dataAfterMigr <- 'ProbPre' %in% colnames(caseDataImp)
                   bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
 
-                  if (migrConnFlag && dataAfterMigr) {
+                  if (dataAfterMigr && migrConnFlag) {
                     bootCaseDataImp[, MigrClass := data.table::fcase(
                       !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
                       !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
@@ -546,32 +546,34 @@ HIVModelManager <- R6::R6Class( # nolint
                   }
 
                   res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
+                  caseData <- res$Case
+                  aggrData <- res$Aggr
 
-                  if (migrConnFlag && dataAfterMigr) {
+                  if (dataAfterMigr && migrConnFlag) {
                     # Prepare the Dead file based on the whole population dataset
                     caseDataDead <- PrepareDataSetsForModel(
-                      res$Case,
+                      caseData,
                       splitBy = 'Imputation',
                       dataSets = 'Dead'
                     )
 
                     # Prepare other datasets based on the subset of population
                     caseDataRest <- PrepareDataSetsForModel(
-                      res$Case[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                      caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
                       splitBy = 'Imputation',
                       dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
                     )
                     caseDataAll <- modifyList(caseDataDead, caseDataRest)
 
                     if ('Dead' %in% names(res$Aggr)) {
-                      aggrDataImp <- res$Aggr['Dead']
+                      aggrData <- res$Aggr['Dead']
                     } else {
-                      aggrDataImp <- NULL
+                      aggrData <- NULL
                     }
                   } else {
                     caseDataAll <- PrepareDataSetsForModel(caseDataImp, splitBy = 'Imputation')
                   }
-                  bootData <- CombineData(caseDataAll, aggrDataImp)[[1]]
+                  bootData <- CombineData(caseDataAll, aggrData)[[1]]
                 }
 
                 bootContext <- hivModelling::GetRunContext(
