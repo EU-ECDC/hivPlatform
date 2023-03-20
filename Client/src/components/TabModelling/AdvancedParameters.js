@@ -224,6 +224,9 @@ const AdvancedParameters = (props) => {
                 value={appMgr.modelMgr.delta4Fac}
                 onChange={handleDelta4FacChange}
                 type='number'
+                inputProps={{
+                  min: 0, max: 10, step: 0.01
+                }}
               />
             </TableCell>
           </TableRow>
