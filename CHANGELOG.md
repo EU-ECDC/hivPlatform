@@ -1,8 +1,9 @@
 ## 3.0.0
 
-###### _March 20 2023_
+###### _March 26 2023_
 
--  Set constraints and step in delta4Fac input
+- Set constraints and step in delta4Fac input
+- Fix wrong case-based data (non-bootstrap specific) passed to modelling
 
 
 ## 3.0.0

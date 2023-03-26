@@ -498,7 +498,6 @@ HIVModelManager <- R6::R6Class( # nolint
 
             fits <- list()
             i <- 0
-
             for (imp in names(mainFitResult)) {
               i <- i + 1
               mainFit <- mainFitResult[[imp]]
@@ -518,24 +517,24 @@ HIVModelManager <- R6::R6Class( # nolint
 
               PrintH2('Main data set {.val {imp}}')
 
+              dataAfterMigr <- FALSE
               if (bsType == 'NON-PARAMETRIC') {
                 caseDataImp <- caseData[Imputation == as.integer(imp)]
+                dataAfterMigr <- 'ProbPre' %in% colnames(caseDataImp)
               } else {
                 bootData <- context$Data
               }
 
-              jSucc <- 1
+              jSucc <- 0
               j <- 0
               bootResults <- list()
-              while (jSucc <= bsCount) {
+              while (jSucc < bsCount) {
                 j <- j + 1
 
                 # Bootstrap data set
-                dataAfterMigr <- FALSE
-                if (bsType == 'NON-PARAMETRIC') {
-                  dataAfterMigr <- 'ProbPre' %in% colnames(caseDataImp)
-                  bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
 
+                if (bsType == 'NON-PARAMETRIC') {
+                  bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
                   if (dataAfterMigr && migrConnFlag) {
                     bootCaseDataImp[, MigrClass := data.table::fcase(
                       !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
@@ -571,7 +570,7 @@ HIVModelManager <- R6::R6Class( # nolint
                       aggrData <- NULL
                     }
                   } else {
-                    caseDataAll <- PrepareDataSetsForModel(caseDataImp, splitBy = 'Imputation')
+                    caseDataAll <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation')
                   }
                   bootData <- CombineData(caseDataAll, aggrData)[[1]]
                 }
@@ -616,11 +615,19 @@ HIVModelManager <- R6::R6Class( # nolint
                   dataAfterMigr
                 )
 
-                msgType <- ifelse(bootResult$Converged, 'success', 'danger')
+                if (bootResult$Converged) {
+                  msgType <- 'success'
+                  jSucc <- jSucc + 1
+                  progress <- (jSucc + (i - 1) * bsCount) / (mainCount * bsCount) * 100
+                } else {
+                  msgType <- 'danger'
+                }
+                jSuccRate <- jSucc / j
 
                 PrintAlert(
                   'Iteration {.val {jSucc}} done |',
-                  'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
+                  'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}} |',
+                  'Success rate: {.val {jSuccRate * 100}}%',
                   type = msgType
                 )
 
@@ -632,11 +639,6 @@ HIVModelManager <- R6::R6Class( # nolint
                   DataSet = imp,
                   BootIteration = jSucc
                 )
-
-                if (bootResult$Converged) {
-                  jSucc <- jSucc + 1
-                  progress <- (jSucc - 1 + (i - 1) * bsCount) / (mainCount * bsCount) * 100
-                }
               }
 
               fits[[imp]] <- bootResults

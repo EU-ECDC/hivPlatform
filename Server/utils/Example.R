@@ -91,7 +91,7 @@ appMgr$CaseMgr$SetFilters(filters = list(
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
   # "Multiple Imputation using Chained Equations - MICE",
-  "Reporting Delays with trend"
+  # "Reporting Delays with trend"
 ))
 
 result <- hivPlatform::RunAdjustments(
@@ -310,7 +310,6 @@ appMgr$HIVModelMgr$SetMigrConnFlag(TRUE)
 migrConnFlag <- appMgr$HIVModelMgr$MigrConnFlag
 randomSeed <- .Random.seed
 
-
 json <- ConvertObjToJSON(appMgr$HIVModelMgr$PlotData, dataframe = 'columns')
 writeLines(json, 'json.txt')
 
@@ -365,12 +364,13 @@ avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
 maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
 prettyunits::pretty_dt(maxRunTime)
 mainFitResult <- isolate(appMgr$HIVModelMgr$MainFitResult)
+avgModelOutputs <- isolate(appMgr$HIVModelMgr$AvgModelOutputs)
 caseData <- isolate(appMgr$CaseMgr$Data)
 aggrData <- isolate(appMgr$AggrMgr$Data)
 popCombination <- isolate(appMgr$HIVModelMgr$PopCombination)
 aggrDataSelection <- isolate(appMgr$HIVModelMgr$AggrDataSelection)
 randomSeed <- .Random.seed
-migrConnFlag <- TRUE
+migrConnFlag <- FALSE
 
 # 3. Detailed HIV Model bootstrap results (rds)
 appMgr$HIVModelMgr$BootstrapFitResult
