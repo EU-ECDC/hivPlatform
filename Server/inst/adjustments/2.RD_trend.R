@@ -205,7 +205,8 @@ list(
           paste(stratVarNamesTrend, collapse = ' + ')
         )
       )
-      cuts <- compData[, c(max(VarXs) - 7L, max(VarXs) - 3L, max(VarXs))]
+      cuts <- GetCuts(data = copy(compData), count = 3L)
+      PrintAlert('Cuts determined: {cuts}')
       tGroups <- seq_along(cuts)
 
       # Run fitting per imputation separately

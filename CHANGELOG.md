@@ -1,5 +1,19 @@
 ## 3.0.0
 
+###### _April 15 2023_
+
+- Update dependencies
+
+
+## 3.0.0
+
+###### _April 3 2023_
+
+- Dynamically compute the number of cuts for RD with trend
+
+
+## 3.0.0
+
 ###### _March 26 2023_
 
 - Set constraints and step in delta4Fac input

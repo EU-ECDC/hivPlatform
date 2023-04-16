@@ -91,7 +91,7 @@ appMgr$CaseMgr$SetFilters(filters = list(
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
   # "Multiple Imputation using Chained Equations - MICE",
-  # "Reporting Delays with trend"
+  "Reporting Delays with trend"
 ))
 
 result <- hivPlatform::RunAdjustments(
