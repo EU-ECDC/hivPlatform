@@ -1,9 +1,12 @@
 ## 3.0.0
 
-###### _April 15 2023_
+###### _April 16 2023_
 
-- Update dependencies
-
+- Update manual
+- Merge security issues fixes
+- Move Github repo to https://github.com/nextpagesoft/hivPlatform
+- Update Windows deployment package to R 4.2.3
+- Release version 3.0.0
 
 ## 3.0.0
 

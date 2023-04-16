@@ -77,7 +77,7 @@ const RightNav = (props) => {
             color='primary'
             size='small'
             component='a'
-            href='./www/docs/HIVPlatform_2.0.0_manual.pdf'
+            href='./www/docs/HIVPlatform_3.0.0_manual.pdf'
             target='_blank'
           >
             Open manual pdf

@@ -1,8 +1,8 @@
 # 1. Update local packages -------------------------------------------------------------------------
 pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 
-pkgName <- 'hivPlatform'
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
+pkgName <- pkgDescr$Package
 pkgVersion <- pkgDescr$Version
 rVersion <- '4.2'
 deployDate <- format(Sys.Date(), '%Y%m%d')
@@ -30,7 +30,7 @@ if (dir.exists(repoPath)) {
 dir.create(repoPath, showWarnings = FALSE, recursive = TRUE)
 
 miniCRAN::makeRepo(depPkgList, path = repoPath, repos = repoCRAN, type = c('source', 'win.binary'))
-miniCRAN::oldPackages(path = repoPath)
+miniCRAN::oldPackages(path = repoPath, repos = repoCRAN)
 miniCRAN::updatePackages(path = repoPath, repos = repoCRAN, type = 'win.binary', ask = FALSE)
 miniCRAN::updatePackages(path = repoPath, repos = repoCRAN, type = 'source', ask = FALSE)
 
@@ -70,7 +70,7 @@ sapply(
 )
 fs::dir_create(file.path(winDeployPath, 'library'))
 pak::pkg_install(
-  'github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant',
+  'github::nextpagesoft/hivPlatform/Server',
   dependencies = 'hard',
   lib = file.path(winDeployPath, 'library')
 )
@@ -95,10 +95,10 @@ sapply(redundantFolders, unlink, recursive = TRUE)
 # 4. ECDC SHINY SERVER DEPLOYMENT ------------------------------------------------------------------
 install.packages('pak', repos = 'https://r-lib.github.io/p/pak/devel/')
 pak::pkg_install(
-  'github::nextpagesoft/hivEstimatesAccuracy2/Server@migrant',
+  pkg = 'github::nextpagesoft/hivPlatform/Server',
   dependencies = 'hard',
   upgrade = TRUE,
   ask = FALSE
 )
 
-remotes::install_github('nextpagesoft/hivEstimatesAccuracy2', subdir = 'Server', ref = 'migrant')
+# remotes::install_github('nextpagesoft/hivEstimatesAccuracy2', subdir = 'Server', ref = 'migrant')

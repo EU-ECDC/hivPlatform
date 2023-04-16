@@ -1,8 +1,6 @@
 # Status
 
 [![R-CMD-check](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/R-CMD-check.yaml)
-[![Deploy to ShinyApps](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/Deploy-shinyapps.io.yaml/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/Deploy-shinyapps.io.yaml)
-[![Publish to Docker](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/Publish.yaml/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/Publish.yaml)
 
 # European Centre for Disease Prevention and Control
 

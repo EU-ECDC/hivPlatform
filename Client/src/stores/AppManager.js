@@ -2,7 +2,6 @@ import { observable, action, configure, computed, toJS, makeObservable } from 'm
 import {
   createModelSchema,
   serialize,
-  // deserialize,
   identifier,
   primitive,
   reference,

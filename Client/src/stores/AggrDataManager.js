@@ -2,7 +2,6 @@ import { observable, action, computed, makeObservable, autorun, toJS } from 'mob
 import ReactFileUploader from '../utilities/Uploader';
 import EnsureArray from '../utilities/EnsureArray';
 import IsNull from '../utilities/IsNull';
-import { UIState } from '../initData';
 
 export default class AggrDataManager {
 
