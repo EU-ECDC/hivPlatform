@@ -165,6 +165,15 @@ const TabWelcome = props => {
           onClick={handleCardClick}
         />
       </Grid>
+      <Grid item xs={12}>
+        <Box width='50%' m='auto' p={5}>
+          <p>
+            NOTE: This is the latest version of HIV Platform tool (v3). Previous version (v2) is
+            still available here on ECDC server: <a href='https://shinyapps.ecdc.europa.eu/shiny/hivPlatform_v2/' target='_blank'>https://shinyapps.ecdc.europa.eu/shiny/hivPlatform_v2/
+            </a>
+          </p>
+        </Box>
+      </Grid>
     </Grid>
   );
 };
