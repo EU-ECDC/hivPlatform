@@ -825,8 +825,6 @@ CaseDataManager <- R6::R6Class( # nolint
         )
       }, ignoreInit = TRUE)
 
-
-      PrintAlert('CaseDataManager observers created')
       return(invisible(self))
     }
   ),
