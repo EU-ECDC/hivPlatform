@@ -2,12 +2,13 @@ Package: hivPlatform
 Type: Package
 Title: HIV Platform
 Version: 3.0.1
-Date: 2023-04-22
-Authors@R: c(person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl',
-    role = c('aut', 'cph')), person('Nikos', 'Pantazis', email =
-    'npantaz@med.uoa.gr', role = c('aut')), person('Ard', 'van Sighem',
-    email = 'a.i.vansighem@amsterdamumc.nl', role = c('aut')), person('Daniel',
-    'Lewandowski', email = 'daniel@nextpagesoft.net', role = c('aut', 'cre')))
+Date: 2023-05-13
+Authors@R: c(
+    person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl', role = c('aut', 'cph')),
+    person('Nikos', 'Pantazis', email = 'npantaz@med.uoa.gr', role = c('aut')),
+    person('Ard', 'van Sighem', email = 'a.i.vansighem@amsterdamumc.nl', role = c('aut')),
+    person('Daniel', 'Lewandowski', email = 'daniel@nextpagesoft.net', role = c('aut', 'cre'))
+    )
 Maintainer: Daniel Lewandowski <daniel@nextpagesoft.net>
 Description: Improves the accuracy of HIV estimates in EU/EEA countries.
 License: file LICENSE
