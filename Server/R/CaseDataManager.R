@@ -466,7 +466,7 @@ CaseDataManager <- R6::R6Class( # nolint
 
     # 7. Migration ---------------------------------------------------------------------------------
     RunMigration = function(
-      params = GetMigrantParams()
+      params = HivEstInfTime::GetMigrantParams()
     ) {
       if (!is.null(private$AppMgr) && !is.element(
         private$AppMgr$Steps['CASE_BASED_ORIGIN_GROUPING'],
@@ -494,7 +494,7 @@ CaseDataManager <- R6::R6Class( # nolint
               .Random.seed <- randomSeed # nolint
 
               input <- hivPlatform::PrepareMigrantData(data)
-              output <- hivPlatform::PredictInf(input, params)
+              output <- HivEstInfTime::PredictInf(input, params)
               data[output, ProbPre := i.ProbPre, on = .(UniqueId)]
 
               # Enrich data with extra dimensions from the input preparation step
