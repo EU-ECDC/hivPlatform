@@ -94,6 +94,8 @@ adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
   "Reporting Delays with trend"
 ))
 
+PrintStopHeader()
+PrintStopHeader(startTime = Sys.time(), stopTime = Sys.time() + 100)
 result <- hivPlatform::RunAdjustments(
   data = copy(appMgr$CaseMgr$PreProcessedData),
   adjustmentSpecs = adjustmentSpecs,
@@ -516,3 +518,13 @@ dt[,
     Imputation = iter, Run = NULL
   )
 ]
+
+# --------------------------------------------------------------------------------------------------
+PrintH1('{format(Sys.time())}: Start')
+PrintH2('Processing CD4VL data')
+PrintAlert('Information')
+PrintAlert('Start time', type = 'success')
+PrintH1('{format(Sys.time())}: Stop')
+
+PrintStartHeader()
+PrintStopHeader()

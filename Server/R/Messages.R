@@ -21,6 +21,22 @@ PrintH1 <- function(
   invisible(NULL)
 }
 
+#' @export
+PrintStartHeader <- function() {
+  PrintH1('{format(Sys.time())}: Start')
+}
+
+#' @export
+PrintStopHeader <- function(startTime = NULL, stopTime = NULL) {
+  if (!is.null(startTime) && !is.null(stopTime)) {
+    elapsedMsg <- glue::glue(' | elapsed time: [{prettyunits::pretty_dt(stopTime - startTime)}]') # nolint
+  } else {
+    elapsedMsg <- character(1)
+  }
+
+  PrintH1('{format(Sys.time())}: Stop{elapsedMsg}')
+}
+
 #' PrintH2
 #'
 #' @param ... Text to be printed

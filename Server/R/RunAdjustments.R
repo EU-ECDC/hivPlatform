@@ -57,17 +57,16 @@ RunAdjustments <- function(
     }
 
     PrintH1('Adjustment {caption}')
-    cat('\n')
+    PrintStartHeader()
 
     startTime <- Sys.time()
-    PrintAlert('Start time: {format(startTime)}')
 
     # Extract parameters for better visibility.
     parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = 'value')
 
-    PrintH2('Parameters')
-    print(setNames(as.character(parameters), names(parameters)))
     cat('\n')
+    PrintAlert('Parameters:')
+    PrintBullets(paste(names(parameters), parameters, sep = ' = '))
 
     PrintH2('Executing')
 
@@ -91,7 +90,6 @@ RunAdjustments <- function(
       TimeStamp = GetTimeStamp()
     )
 
-    cat('\n')
     PrintH2('Rendering diagnostics report')
     report <- RenderReportForAdjSpec(
       adjustmentSpec,
@@ -108,10 +106,7 @@ RunAdjustments <- function(
     results[[adjustmentSpec$Key]] <- adjustResults
 
     endTime <- Sys.time()
-    cat('\n')
-    PrintH2('Done')
-    PrintAlert('End time: {format(endTime)}')
-    PrintAlert('Elapsed time: {.timestamp {prettyunits::pretty_dt(endTime - startTime)}}')
+    PrintStopHeader(startTime, endTime)
 
     data <- output$Data
   }
