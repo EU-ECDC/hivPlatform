@@ -50,9 +50,8 @@ list(
 
     # Perform imputations per data set.
     # This is the actual worker function.
-    workerFunction <- function(i, nburn, nbetween, nimp, nsdf, imputeRD) {
+    WorkerFunction <- function(i, nburn, nbetween, nimp, nsdf, imputeRD) {
 
-      cat('\n')
       cat(sprintf('Processing gender: %s\n', names(dataSets)[i]))
 
       dataSet <- dataSets[[i]]
@@ -112,13 +111,14 @@ list(
         Y <- droplevels(Y)
 
         # Run model
+        cat('\n')
         cat('Running MCMC sampler.\n\n')
         mcmc <- jomo::jomo.MCMCchain(Y = Y, X = X, nburn = nburn, output = 0)
 
         artifacts[['Beta']] <- mcmc$collectbeta
         artifacts[['Covariance']] <- mcmc$collectomega
 
-        cat('\nPerforming imputation.\n')
+        cat('\nPerforming imputation.\n\n')
         cat('Number of burn-in iterations set to 10 for the actual imputation.\n\n')
         imp <- setDT(jomo::jomo(
           Y = Y,
@@ -150,6 +150,7 @@ list(
 
       mi[, FirstCD4Count := SqCD4^2]
 
+      cat('\n')
       return(list(Data = mi, Artifacts = artifacts))
     }
 
@@ -165,7 +166,7 @@ list(
     # 4. Execute the worker function per data set
     outputData <- lapply(
       seq_along(dataSets),
-      workerFunction,
+      WorkerFunction,
       nburn = parameters$nburn,
       nbetween = parameters$nbetween,
       nimp = parameters$nimp,

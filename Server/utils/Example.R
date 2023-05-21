@@ -1,4 +1,5 @@
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
+library(data.table)
 
 appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
@@ -90,8 +91,10 @@ appMgr$CaseMgr$SetFilters(filters = list(
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
+  "Joint Modelling Multiple Imputation",
   # "Multiple Imputation using Chained Equations - MICE",
-  "Reporting Delays with trend"
+  "Reporting Delays"
+  # "Reporting Delays with trend"
 ))
 
 PrintStopHeader()

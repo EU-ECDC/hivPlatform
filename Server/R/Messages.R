@@ -23,18 +23,17 @@ PrintH1 <- function(
 
 #' @export
 PrintStartHeader <- function() {
-  PrintH1('{format(Sys.time())}: Start')
+  PrintAlert('{format(Sys.time())} - START')
 }
 
 #' @export
 PrintStopHeader <- function(startTime = NULL, stopTime = NULL) {
   if (!is.null(startTime) && !is.null(stopTime)) {
-    elapsedMsg <- glue::glue(' | elapsed time: [{prettyunits::pretty_dt(stopTime - startTime)}]') # nolint
+    elapsedMsg <- glue::glue(' - elapsed time: [{prettyunits::pretty_dt(stopTime - startTime)}]')
   } else {
     elapsedMsg <- character(1)
   }
-
-  PrintH1('{format(Sys.time())}: Stop{elapsedMsg}')
+  PrintAlert('{format(Sys.time())} - DONE{elapsedMsg}')
 }
 
 #' PrintH2

@@ -57,6 +57,7 @@ RunAdjustments <- function(
     }
 
     PrintH1('Adjustment {caption}')
+    cat('\n')
     PrintStartHeader()
 
     startTime <- Sys.time()
@@ -64,8 +65,7 @@ RunAdjustments <- function(
     # Extract parameters for better visibility.
     parameters <- GetParamInfoFromAdjustSpec(adjustmentSpec$Parameters, infoType = 'value')
 
-    cat('\n')
-    PrintAlert('Parameters:')
+    PrintH2('Parameters')
     PrintBullets(paste(names(parameters), parameters, sep = ' = '))
 
     PrintH2('Executing')

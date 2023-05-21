@@ -399,6 +399,7 @@ CaseDataManager <- R6::R6Class( # nolint
               private$Catalogs$AdjustedData <- data
 
               private$InvalidateAfterStep('CASE_BASED_ADJUSTMENTS')
+              cat('\n')
               PrintAlert('Adjustment task finished')
               private$SendMessage(
                 'ADJUSTMENTS_RUN_FINISHED',
