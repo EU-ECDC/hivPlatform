@@ -378,8 +378,6 @@ list(
       UnivAnalysis = univAnalysis
     )
 
-    cat('No adjustment specific text outputs.\n')
-
     return(list(Data = outputData, Artifacts = artifacts))
   }
 )

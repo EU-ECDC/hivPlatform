@@ -1,4 +1,5 @@
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
+library(data.table)
 
 appMgr <- hivPlatform::AppManager$new()
 # STEP 1 - Load data -------------------------------------------------------------------------------
@@ -90,10 +91,14 @@ appMgr$CaseMgr$SetFilters(filters = list(
 
 # STEP 3 - Adjust case-based data ------------------------------------------------------------------
 adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(c(
+  "Joint Modelling Multiple Imputation",
   # "Multiple Imputation using Chained Equations - MICE",
-  "Reporting Delays with trend"
+  "Reporting Delays"
+  # "Reporting Delays with trend"
 ))
 
+PrintStopHeader()
+PrintStopHeader(startTime = Sys.time(), stopTime = Sys.time() + 100)
 result <- hivPlatform::RunAdjustments(
   data = copy(appMgr$CaseMgr$PreProcessedData),
   adjustmentSpecs = adjustmentSpecs,
@@ -160,10 +165,10 @@ json <- ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Artifacts$OutputPlots, d
 writeLines(json, 'json.txt')
 appMgr$CaseMgr$MigrationResult$Artifacts$ConfBounds
 
-params <- GetMigrantParams()
+params <- HivEstInfTime::GetMigrantParams()
 data <- copy(appMgr$CaseMgr$Data)
 input <- hivPlatform::PrepareMigrantData(data)
-output <- hivPlatform::PredictInf(input, params)
+output <- HivEstInfTime::PredictInf(input, params)
 output.copy <- copy(output)
 output <- copy(output.copy)
 
@@ -415,7 +420,7 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 
 # Migration ----------------------------------------------------------------------------------------
-params <- GetMigrantParams()
+params <- HivEstInfTime::GetMigrantParams()
 
 # Recon data set
 reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
@@ -465,7 +470,7 @@ input <- list(
 )
 
 # Create test dataset
-test <- PredictInf(input, params)
+test <- HivEstInfTime::PredictInf(input, params)
 
 # Reconcile
 recon <- rbind(
@@ -516,3 +521,13 @@ dt[,
     Imputation = iter, Run = NULL
   )
 ]
+
+# --------------------------------------------------------------------------------------------------
+PrintH1('{format(Sys.time())}: Start')
+PrintH2('Processing CD4VL data')
+PrintAlert('Information')
+PrintAlert('Start time', type = 'success')
+PrintH1('{format(Sys.time())}: Stop')
+
+PrintStartHeader()
+PrintStopHeader()

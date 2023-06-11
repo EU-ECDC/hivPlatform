@@ -36,12 +36,13 @@ GetPreliminaryAttributesMapping <- function(
     keep.null = TRUE
   )
 
-  # 1. Fixed matching first
+  # 1. Fixed matching first (case-insensitive)
   for (requiredColumnName in requiredColumnNames) {
     fixedColNames <- columnSpecs[[requiredColumnName]]$candidateOrigColNames
     for (fixedColName in fixedColNames) {
-      if (fixedColName %in% origColNames) {
-        attrMapping[[requiredColumnName]]$origColName <- fixedColName
+      origColName <- origColNames[tolower(origColNames) %in% tolower(fixedColName)][1]
+      if (!is.na(origColName)) {
+        attrMapping[[requiredColumnName]]$origColName <- origColName
         requiredColumnNames <- setdiff(requiredColumnNames, requiredColumnName)
         origColNames <- setdiff(origColNames, fixedColName)
         break
@@ -49,7 +50,7 @@ GetPreliminaryAttributesMapping <- function(
     }
   }
 
-  # 2. Exact matching second
+  # 2. Exact matching second (case-insensitive)
   exactMatchIndices <- match(tolower(requiredColumnNames), tolower(origColNames))
   for (i in seq_along(requiredColumnNames)) {
     requiredColumnName <- requiredColumnNames[i]

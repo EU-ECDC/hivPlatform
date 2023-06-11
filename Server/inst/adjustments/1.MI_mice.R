@@ -50,7 +50,6 @@ list(
     # This is the actual worker function.
     WorkerFunction <- function(i, nit, nimp, nsdf, imputeRD) {
 
-      cat('\n')
       cat(sprintf('Processing gender: %s\n', names(dataSets)[i]))
 
       dataSet <- dataSets[[i]]
@@ -109,7 +108,6 @@ list(
         Y <- droplevels(Y)
 
         # Run model
-        cat('Performing imputation.\n')
         mids <- mice::mice(cbind(Y, X), m = nimp, maxit = nit)
         artifacts[['Mids']] <- mids
 
@@ -135,6 +133,7 @@ list(
 
       mi[, FirstCD4Count := SqCD4^2]
 
+      cat('\n')
       return(list(Data = mi, Artifacts = artifacts))
     }
 
