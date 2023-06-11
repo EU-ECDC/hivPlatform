@@ -92,11 +92,12 @@ GetMigrantConfBounds <- function(
     Present := TRUE
   ]
   checkDetailed <- dcast(checkDetailed, Imputation + Sample ~ StrataId, value.var = 'Present')
-  checkDetailed[,
-    ALL := all(.SD),
-    by = .(Idx = seq_len(nrow(checkDetailed))),
-    .SDcols = strataIdColNames
-  ]
+  checkDetailed[, ALL := apply(.SD, 1, any), .SDcols = strataIdColNames]
+  # checkDetailed[,
+  #   ALL := all(.SD),
+  #   by = .(Idx = seq_len(nrow(checkDetailed))),
+  #   .SDcols = strataIdColNames
+  # ]
   checkDetailed[,
     ModelId := paste(lapply(.SD, as.character), collapse = '.'),
     by = seq_len(nrow(checkDetailed)),
