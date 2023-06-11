@@ -4,7 +4,7 @@ pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgName <- pkgDescr$Package
 pkgVersion <- pkgDescr$Version
-rVersion <- '4.2'
+rVersion <- '4.3'
 deployDate <- format(Sys.Date(), '%Y%m%d')
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s_%s', pkgVersion, deployDate))
@@ -20,7 +20,7 @@ depPkgs <- unname(sapply(
 ))
 depPkgs <- setdiff(
   depPkgs,
-  c('R', 'hivModelling', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
+  c('R', 'hivModelling', 'HivEstInfTime', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
 )
 depPkgList <- miniCRAN::pkgDep(depPkgs, repos = repoCRAN, type = 'source', suggests = FALSE)
 
@@ -39,6 +39,11 @@ miniCRAN::updatePackages(path = repoPath, repos = repoCRAN, type = 'source', ask
 # Build source and binary versions
 buildPath <- file.path(rootPath, 'build')
 dir.create(buildPath, showWarnings = FALSE, recursive = TRUE)
+
+# HIV Estimate Infection Time
+hivEstInfTimePkgPath <- 'D:/_REPOSITORIES/HivEstInfTime'
+pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = FALSE)
+pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
 # HIV Modelling
 hivModelPkgPath <- 'D:/_REPOSITORIES/hivModelling'

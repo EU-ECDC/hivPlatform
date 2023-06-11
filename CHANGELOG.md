@@ -1,8 +1,10 @@
 ## 3.0.1
 
-###### _May 13 2023_
+###### _June 11 2023_
 
-- UNDER DEVELOPMENT
+- Move migrant functionality to package HivEstInfTime
+- Streamline logging of adjustments
+- Update Windows deployment package to R 4.3.0
 
 
 ## 3.0.0
@@ -14,6 +16,7 @@
 - Move Github repo to https://github.com/nextpagesoft/hivPlatform
 - Update Windows deployment package to R 4.2.3
 - Release version 3.0.0
+
 
 ## 3.0.0
 

@@ -4,7 +4,5 @@
   shiny::removeInputHandler('AggrFilters')
   shiny::removeInputHandler('HIVModelParams')
 
-  library.dynam.unload('hivPlatform', libPath)
-
   invisible(NULL)
 }
