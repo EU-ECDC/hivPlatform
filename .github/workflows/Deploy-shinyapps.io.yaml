@@ -19,10 +19,10 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      - name: Set up Node 20.1.0
+      - name: Set up Node 20.3.1
         uses: actions/setup-node@v3
         with:
-          node-version: '20.1.0'
+          node-version: '20.3.1'
           architecture: 'x64'
           cache: 'yarn'
           cache-dependency-path: 'Client/yarn.lock'

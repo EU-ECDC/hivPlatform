@@ -60,8 +60,13 @@ export default class PopulationsManager {
 
   setPopulationVariables = (i, variables) => {
     this.populations[i].variables = KeepValuesInArray(this.availableVarNames, variables);
-    this.populations[i].variablesKey = this.populations[i].variables.join(', ');
-    this.populations[i].strata = this.availableStrata[this.populations[i].variablesKey];
+    if (this.populations[i].variables.length > 0) {
+      this.populations[i].variablesKey = this.populations[i].variables.join(', ');
+      this.populations[i].strata = this.availableStrata[this.populations[i].variablesKey];
+    } else {
+      this.populations[i].variablesKey = null;
+      this.populations[i].strata = [];
+    }
   };
 
   get populationsJS() {

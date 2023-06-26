@@ -1,3 +1,10 @@
+## 3.0.2
+
+###### _June 26 2023_
+
+- Fix selecting case-based populations strata
+
+
 ## 3.0.1
 
 ###### _June 11 2023_

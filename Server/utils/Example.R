@@ -26,7 +26,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.11.01 - DataLoad/tutorial_data_full.csv')
-appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.csv')
+appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
@@ -46,7 +46,8 @@ appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_miss1.c
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
 appMgr$CaseMgr$ApplyOriginGrouping(
-  originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  # originGroupingPreset = 'REPCOUNTRY + UNK + EASTERN EUROPE + EUROPE-OTHER-NORTH AMERICA + SUB-SAHARAN AFRICA + AFRICA-OTHER + ASIA + CARIBBEAN-LATIN AMERICA + OTHER' # nolint
+  originGroupingPreset = 'REPCOUNTRY + UNK + EUROPE-NORTH AMERICA + AFRICA + ASIA + OTHER' # nolint
 )
 
 library(data.table)
@@ -231,6 +232,12 @@ test <- GetMigrantConfBounds(
   region = 'ALL'
 )
 
+
+  checkDetailed[,
+    ALL := any(.SD),
+    by = .(Idx = seq_len(nrow(checkDetailed))),
+    .SDcols = strataIdColNames
+  ]
 
 # STEP 6 - Fit the HIV model -----------------------------------------------------------------------
 parameters <- list(
