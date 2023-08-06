@@ -10,6 +10,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/_DEPLOYMENT/hivEstimatesAccuracy/PL2019.xlsx')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019_exclUK_sample200.csv')
+appMgr$CaseMgr$ReadData('D:/Downloads/HEAT_202305_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_sample500.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/dummy2019Manual.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_case_based.csv')
@@ -26,7 +27,7 @@ appMgr <- hivPlatform::AppManager$new()
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE_tiny.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.04 - RD/HEAT_202105_1_no_prevpos_random_id.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.11.01 - DataLoad/tutorial_data_full.csv')
-appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1.csv')
+# appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Data/tutorial_data_full1.csv')
 # appMgr$CaseMgr$ReadData('D:/VirtualBox_Shared/BE.csv')
 # appMgr$CaseMgr$ReadData('G:/My Drive/Projects/19. PZH/Bugs/2022.06.13 - RD/HEAT_202205_1_no_prevpos_random_id.csv')
 # appMgr$AggrMgr$ReadData('D:/VirtualBox_Shared/HIV test files/Data/Test NL.zip')
@@ -272,8 +273,10 @@ aggrDataSelection <- NULL
 migrConnFlag <- FALSE
 
 appMgr$HIVModelMgr$RunMainFit(
-  settings = list(Verbose = FALSE)
-  # parameters = parameters,
+  settings = list(Verbose = FALSE),
+  parameters = list(
+    FullData = FALSE
+  ),
   # popCombination = list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
 )
 
@@ -383,6 +386,23 @@ popCombination <- isolate(appMgr$HIVModelMgr$PopCombination)
 aggrDataSelection <- isolate(appMgr$HIVModelMgr$AggrDataSelection)
 randomSeed <- .Random.seed
 migrConnFlag <- FALSE
+
+
+saveRDS(
+  list(
+    contex = bootContext,
+    data = bootPopData,
+    param = param,
+    info = info,
+    attemptSimplify = FALSE,
+    maxRunTime = maxRunTime,
+    verbose = FALSE
+  ),
+  "D:/Ard_Test.rds"
+)
+
+
+
 
 # 3. Detailed HIV Model bootstrap results (rds)
 appMgr$HIVModelMgr$BootstrapFitResult
@@ -538,3 +558,18 @@ PrintH1('{format(Sys.time())}: Stop')
 
 PrintStartHeader()
 PrintStopHeader()
+
+
+schema <- c("A1" = "A", "B1" = "B")
+cashFlowsLocal <- structure(
+  as.data.frame(rep(list(TRUE), length(schema))),
+  .Names = schema
+)
+
+class(cashFlowsLocal)
+
+.libPaths()
+install.packages("data.table")
+library
+cashFlowsLocal <- data.table::data.table()[, (names(schema)) := TRUE]
+class(cashFlowsLocal)
