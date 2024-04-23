@@ -24,7 +24,7 @@ appMgr$CaseMgr$SetFilters(filters = list(
     MinYear = 1980,
     MaxYear = 2019
   ),
-  NotifQuarter <- list(
+  NotifQuarter = list(
     ApplyInAdjustments = FALSE,
     MinYear = 1995.375,
     MaxYear = 2020.375
