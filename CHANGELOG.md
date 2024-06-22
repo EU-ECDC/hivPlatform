@@ -1,9 +1,8 @@
 ## 3.0.3
 
-###### _August 6 2023_
+###### _June 22 2024_
 
 - Update dependencies
-- UNDER DEVELOPMENT
 
 
 ## 3.0.2

@@ -16,8 +16,8 @@ export default appMgr => {
       PackageDetails: {
         Name: 'hivPlatform',
         Title: 'HIV Platform',
-        Version: '3.0.0',
-        Date: '2023-02-19',
+        Version: '3.0.3',
+        Date: '2024-06-22',
         Description: 'Improves the accuracy of HIV estimates in EU/EEA countries.'
       }
     }

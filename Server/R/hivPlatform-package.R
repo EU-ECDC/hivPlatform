@@ -1,5 +1,3 @@
-#' @docType package
-#'
 #' @name hivPlatform
 #'
 #' @title
@@ -24,4 +22,4 @@
 #' @import data.table
 #' @import ggplot2
 #'
-NULL
+"_PACKAGE"

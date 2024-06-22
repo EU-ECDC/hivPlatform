@@ -2,7 +2,7 @@ Package: hivPlatform
 Type: Package
 Title: HIV Platform
 Version: 3.0.3
-Date: 2023-08-06
+Date: 2024-06-22
 Authors@R: c(
     person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl', role = c('aut', 'cph')),
     person('Nikos', 'Pantazis', email = 'npantaz@med.uoa.gr', role = c('aut')),
@@ -46,5 +46,5 @@ Remotes:
     nextpagesoft/HivEstInfTime
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: testthat, rcmdcheck, pak, miniCRAN

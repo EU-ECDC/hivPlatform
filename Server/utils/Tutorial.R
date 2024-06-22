@@ -1,11 +1,3 @@
-.libPaths(
-  c(
-    'D:/_REPOSITORIES/hivEstimatesAccuracy2/Server/renv/library/R-4.1/x86_64-w64-mingw32',
-    'D:/Documents/R/win-library/4.1'
-  )
-)
-devtools::install(quick = TRUE)
-
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
 
 ## A. Case-based data only =========================================================================
@@ -41,7 +33,7 @@ appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 appMgr$CreateReport(
   reportSpec = list(
     name = 'Main Report',
-    reportingDelay = TRUE,
+    reportingDelay = FALSE,
     smoothing = FALSE,
     cd4ConfInt = FALSE
   )
