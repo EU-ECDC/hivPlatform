@@ -1,3 +1,4 @@
+
 #' PrintH1
 #'
 #' @param ... Text to be printed
@@ -21,11 +22,28 @@ PrintH1 <- function(
   invisible(NULL)
 }
 
+#' PrintStartHeader
+#'
+#' @return NULL
+#'
+#' @examples
+#' PrintStartHeader()
+#'
 #' @export
 PrintStartHeader <- function() {
   PrintAlert('{format(Sys.time())} - START')
 }
 
+#' PrintStopHeader
+#'
+#' @param startTime Start time as POSIXct
+#' @param stopTime End time as POSIXct
+#'
+#' @return NULL
+#'
+#' @examples
+#' PrintStopHeader()
+#'
 #' @export
 PrintStopHeader <- function(startTime = NULL, stopTime = NULL) {
   if (!is.null(startTime) && !is.null(stopTime)) {

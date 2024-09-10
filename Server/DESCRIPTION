@@ -20,6 +20,7 @@ Imports:
     fansi (>= 0.4.1),
     foreign (>= 0.8-81),
     ggplot2 (>= 3.3.3),
+    glue (>= 1.7.0),
     hivModelling (>= 0.9.14),
     HivEstInfTime (>= 1.0.0),
     jomo (>= 2.6-10),

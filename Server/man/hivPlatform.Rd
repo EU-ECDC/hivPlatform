@@ -2,6 +2,7 @@
 % Please edit documentation in R/hivPlatform-package.R
 \docType{package}
 \name{hivPlatform}
+\alias{hivPlatform-package}
 \alias{hivPlatform}
 \title{Improving Accuracy of HIV Estimates in EU/EEA Countries}
 \description{

@@ -1,6 +1,6 @@
 # Status
 
-[![R-CMD-check](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nextpagesoft/hivEstimatesAccuracy2/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/EU-ECDC/hivPlatform/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EU-ECDC/hivPlatform/actions/workflows/R-CMD-check.yaml)
 
 # European Centre for Disease Prevention and Control
 
@@ -20,5 +20,5 @@ further analysis.
 
 # License
 
-See the [LICENSE](https://github.com/nextpagesoft/hivEstimatesAccuracy2/blob/master/LICENSE) file
+See the [LICENSE](https://github.com/EU-ECDC/hivPlatform/blob/master/LICENSE) file
 for license rights and limitations (EUPL-1.2).
