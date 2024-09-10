@@ -167,10 +167,10 @@ json <- ConvertObjToJSON(appMgr$CaseMgr$MigrationResult$Artifacts$OutputPlots, d
 writeLines(json, 'json.txt')
 appMgr$CaseMgr$MigrationResult$Artifacts$ConfBounds
 
-params <- HivEstInfTime::GetMigrantParams()
+params <- hivEstInfTime::GetMigrantParams()
 data <- copy(appMgr$CaseMgr$Data)
 input <- hivPlatform::PrepareMigrantData(data)
-output <- HivEstInfTime::PredictInf(input, params)
+output <- hivEstInfTime::PredictInf(input, params)
 output.copy <- copy(output)
 output <- copy(output.copy)
 
@@ -447,7 +447,7 @@ appMgr$HIVModelMgr$BootstrapFitStats$ThetaStats
 
 
 # Migration ----------------------------------------------------------------------------------------
-params <- HivEstInfTime::GetMigrantParams()
+params <- hivEstInfTime::GetMigrantParams()
 
 # Recon data set
 reconAIDS <- data.table::setDT(haven::read_dta('D:/VirtualBox_Shared/Migrant_test/baseAIDS.dta'))
@@ -497,7 +497,7 @@ input <- list(
 )
 
 # Create test dataset
-test <- HivEstInfTime::PredictInf(input, params)
+test <- hivEstInfTime::PredictInf(input, params)
 
 # Reconcile
 recon <- rbind(

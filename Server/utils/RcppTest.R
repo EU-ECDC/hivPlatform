@@ -1,5 +1,5 @@
 outputCD4VL <- readRDS('../../outputCD4VL.Rds')
-params <- HivEstInfTime::GetMigrantParams()
+params <- hivEstInfTime::GetMigrantParams()
 uniqueId <- 209
 dt <- outputCD4VL[UniqueId == uniqueId]
 
