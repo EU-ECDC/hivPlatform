@@ -1,4 +1,6 @@
 # 1. Update local packages -------------------------------------------------------------------------
+dir.create('library', showWarnings = FALSE)
+.libPaths('./library')
 pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
@@ -20,7 +22,7 @@ depPkgs <- unname(sapply(
 ))
 depPkgs <- setdiff(
   depPkgs,
-  c('R', 'hivModelling', 'HivEstInfTime', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
+  c('R', 'hivModelling', 'hivEstInfTime', 'grid', 'graphics', 'parallel', 'stats', 'tools', 'utils')
 )
 depPkgList <- miniCRAN::pkgDep(depPkgs, repos = repoCRAN, type = 'source', suggests = FALSE)
 
@@ -41,7 +43,7 @@ buildPath <- file.path(rootPath, 'build')
 dir.create(buildPath, showWarnings = FALSE, recursive = TRUE)
 
 # HIV Estimate Infection Time
-hivEstInfTimePkgPath <- 'D:/_REPOSITORIES/HivEstInfTime'
+hivEstInfTimePkgPath <- 'D:/_REPOSITORIES/hivEstInfTime'
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = TRUE, args = args)
 

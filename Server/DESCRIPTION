@@ -20,8 +20,9 @@ Imports:
     fansi (>= 0.4.1),
     foreign (>= 0.8-81),
     ggplot2 (>= 3.3.3),
+    glue (>= 1.7.0),
     hivModelling (>= 0.9.14),
-    HivEstInfTime (>= 1.0.0),
+    hivEstInfTime (>= 1.0.0),
     jomo (>= 2.6-10),
     jsonlite (>= 1.7.2),
     knitr (>= 1.28),
@@ -42,9 +43,9 @@ Imports:
     yaml (>= 2.2.1),
     xml2 (>= 1.3.2)
 Remotes:
-    nextpagesoft/hivModelling,
-    nextpagesoft/HivEstInfTime
+    github::EU-ECDC/hivModelling,
+    github::EU-ECDC/hivEstInfTime
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: testthat, rcmdcheck, pak, miniCRAN
