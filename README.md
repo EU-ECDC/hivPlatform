@@ -20,5 +20,4 @@ further analysis.
 
 # License
 
-See the [LICENSE](LICENSE) file
-for license rights and limitations (EUPL-1.2).
+See the [LICENSE](LICENSE) file for license rights and limitations (EUPL-1.2).
