@@ -1,3 +1,10 @@
+## 3.0.4
+
+###### _January 05 2025_
+
+- Update dependencies
+
+
 ## 3.0.3
 
 ###### _June 22 2024_
