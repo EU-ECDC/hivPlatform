@@ -6,7 +6,7 @@ pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgName <- pkgDescr$Package
 pkgVersion <- pkgDescr$Version
-rVersion <- '4.3'
+rVersion <- '4.4'
 deployDate <- format(Sys.Date(), '%Y%m%d')
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s_%s', pkgVersion, deployDate))
@@ -57,6 +57,8 @@ pkgbuild::build(dest_path = buildPath, binary = FALSE)
 pkgbuild::build(dest_path = buildPath, binary = TRUE, args = args)
 
 # Add to repository
+miniCRAN::addLocalPackage('hivEstInfTime', buildPath, repoPath, type = 'source')
+miniCRAN::addLocalPackage('hivEstInfTime', buildPath, repoPath, type = 'win.binary', Rversion = rVersion) # nolint
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'source')
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'win.binary', Rversion = rVersion) # nolint
 miniCRAN::addLocalPackage(pkgName, buildPath, repoPath, type = 'source')
