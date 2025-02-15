@@ -52,10 +52,6 @@ Task <- R6::R6Class(
       }
     },
 
-    finalize = function() {
-      self$Stop()
-    },
-
     Run = function() {
       if (self$IsRunning) {
         PrintAlert('Task is already running', type = 'warning')
@@ -120,6 +116,10 @@ Task <- R6::R6Class(
     Catalogs = NULL,
 
     CancelProcessed = FALSE,
+
+    finalize = function() {
+      self$Stop()
+    },
 
     InitializeCatalogs = function(skipRunLog = FALSE) {
       private$Catalogs$Status <- 'IDLE'
