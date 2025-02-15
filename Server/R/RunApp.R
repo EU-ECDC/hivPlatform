@@ -19,7 +19,7 @@ RunApp <- function(
   launchBrowser = FALSE,
   stopOnSessionEnded = FALSE
 ) {
-  options(shiny.maxRequestSize = 100 * 1024^2)
+  options(shiny.maxRequestSize = 500 * 1024^2)
   options(shiny.trace = FALSE)
   options(hivPlatform.stopOnSessionEnded = stopOnSessionEnded)
 

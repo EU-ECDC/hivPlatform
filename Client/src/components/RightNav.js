@@ -55,6 +55,7 @@ const RightNav = (props) => {
                 id='loadStateBtn'
               />
             </Button>
+            <Typography variant='overline'>Max file size: 500MB</Typography>
           </ListItem>
           <UploadProgressBar progress={appMgr.loadStateProgress} />
           <ListItem>
