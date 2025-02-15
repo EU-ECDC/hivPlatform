@@ -237,5 +237,6 @@ export default class AdjustmentsManager {
     this.adjustmentsRunProgress = uiState.adjustmentsRunProgress;
     this.adjustmentsRunLog = uiState.adjustmentsRunLog;
     this.adjustmentsReport = uiState.adjustmentsReport;
+    this.runAdjustmentsTypes = uiState.runAdjustmentsTypes;
   }
 }
