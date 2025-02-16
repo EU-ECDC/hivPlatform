@@ -28,7 +28,7 @@ const RightNav = (props) => {
       <Box width={300} p={2}>
         <List dense>
           <ListSubheader>
-            <Typography variant='button'>Application</Typography>
+            <Typography variant='button'>State</Typography>
           </ListSubheader>
           <ListItem>
             <Button
@@ -55,9 +55,15 @@ const RightNav = (props) => {
                 id='loadStateBtn'
               />
             </Button>
-            <Typography variant='overline'>Max file size: 500MB</Typography>
+            <Typography variant='body2' color='textSecondary'>
+              Maximum file size: 500MB<br />
+              Supported files types: rds
+            </Typography>
           </ListItem>
           <UploadProgressBar progress={appMgr.loadStateProgress} />
+          <ListSubheader>
+            <Typography variant='button'>Application</Typography>
+          </ListSubheader>
           <ListItem>
             <Button
               color='primary'

@@ -1,3 +1,13 @@
+## 3.0.5
+
+###### _February 16 2025_
+
+- Update dependencies
+- Increase the state file upload to max 500MB
+- Fix loading runAdjustmentsTypes from state
+- Format 95th quantile with 2 digits
+
+
 ## 3.0.4
 
 ###### _January 05 2025_
