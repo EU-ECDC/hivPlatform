@@ -6,9 +6,9 @@
 
 An agency of the European Union
 
-# ECDC HIV Estimates Accuracy tool
+# ECDC HIV Modelling Tool
 
-The [ECDC](https://ecdc.europa.eu/en/home) HIV Estimates Accuracy Tool is an application that uses
+The [ECDC](https://ecdc.europa.eu/en/home) HIV Modelling Tool is an application that uses
 advanced statistical methods to correct for missing values in key HIV surveillance variables as well
 as for reporting delay.
 
