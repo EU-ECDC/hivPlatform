@@ -1,7 +1,6 @@
 import { DEBUG } from './settings';
 import {
-  AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData, MigrantStats,
-  UIState
+  AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData, MigrantStats
 } from './initData';
 
 export default appMgr => {
