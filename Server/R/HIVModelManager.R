@@ -831,7 +831,7 @@ HIVModelManager <- R6::R6Class( # nolint
       return(private$Catalogs$MainFitResult)
     },
 
-    AvgModelOutputs= function() {
+    AvgModelOutputs = function() {
       return(private$Catalogs$AvgModelOutputs)
     },
 

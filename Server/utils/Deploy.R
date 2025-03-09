@@ -43,12 +43,12 @@ buildPath <- file.path(rootPath, 'build')
 dir.create(buildPath, showWarnings = FALSE, recursive = TRUE)
 
 # HIV Estimate Infection Time
-hivEstInfTimePkgPath <- 'D:/_REPOSITORIES/hivEstInfTime'
+hivEstInfTimePkgPath <- 'D:/_REPOSITORIES_ECDC/hivEstInfTime'
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
 # HIV Modelling
-hivModelPkgPath <- 'D:/_REPOSITORIES/hivModelling'
+hivModelPkgPath <- 'D:/_REPOSITORIES_ECDC/hivModelling'
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
@@ -78,11 +78,10 @@ sapply(
   overwrite = TRUE
 )
 fs::dir_create(file.path(winDeployPath, 'library'))
-pak::pkg_install(
-  'github::nextpagesoft/hivPlatform/Server',
-  dependencies = 'hard',
-  lib = file.path(winDeployPath, 'library')
-)
+pak::local_install(hivModelPkgPath, dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
+pak::local_install(hivEstInfTimePkgPath, dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
+pak::pkg_install( '.', dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
+
 fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 
 redundantFolders <- fs::dir_ls(

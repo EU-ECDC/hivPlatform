@@ -271,3 +271,78 @@ data.table::setcolorder(
 
 # Bootstrap stats
 data <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
+
+dt <- haven::read_dta("D:/Downloads/TESSY_sample_allvars_small.dta")
+
+appMgr <- hivPlatform::AppManager$new()
+appMgr$LoadState("D:/Downloads/HIVPlatformState_20250307_183639.rds")
+appMgr$HIVModelMgr$MainFitResult
+
+state <- readRDS("D:/Downloads/HIVPlatformState_20250307_183639.rds")
+jsonlite::fromJSON(state$UIState)
+
+writeLines(
+  state$UIState,
+  "D:/Downloads/HIVPlatformState_20250307_183639.json",
+  sep = ""
+)
+
+## A. Case-based data only =========================================================================
+appMgr <- hivPlatform::AppManager$new()
+
+# STEP 1 - Load data -------------------------------------------------------------------------------
+appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/TESSY_sample_allvars_small.xlsx")
+
+# STEP 2 - Pre-process case-based data -------------------------------------------------------------
+appMgr$CaseMgr$ApplyAttributesMapping()
+appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
+
+appMgr$CaseMgr$OriginalData$firstcd4count[1:11]
+appMgr$CaseMgr$PreProcessedData$SqCD4[1:11]
+appMgr$CaseMgr$PreProcessedData$CD4Category[1:11]
+
+caseData <- hivPlatform:::FilterCaseBasedData(
+  appMgr$CaseMgr$PreProcessedData,
+  appMgr$CaseMgr$Filters
+)
+aggrData <- appMgr$AggrMgr$Data
+
+# Combination 'All data'
+popCombination <- list(
+  Case = NULL,
+  Aggr = appMgr$AggrMgr$PopulationNames
+)
+
+# Aggregated data filters
+aggrDataSelection <- NULL
+
+res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
+caseDataAll <- PrepareDataSetsForModel(caseData)
+dataSets <- CombineData(caseDataAll, res$Aggr)[[1]]
+dataSets <- Filter(function(dt) nrow(dt) > 0, dataSets)
+optimalYears <- hivModelling::GetAllowedYearRanges(data = dataSets)
+rangeYears <- lapply(dataSets, function(dt) dt[, c(min(Year), max(Year))])
+
+
+
+context <- hivModelling::GetRunContext(
+  data = dataSets,
+  settings = list(),
+  parameters = list(
+    INCIDENCE = list()
+  )
+)
+popData <- hivModelling::GetPopulationData(context)
+
+startTime <- Sys.time()
+fitResults <- hivModelling::PerformMainFit(
+  context,
+  popData,
+  attemptSimplify = TRUE,
+  verbose = TRUE
+)
+
+
+for (nm in names(dataSets)) {
+  data.table::fwrite(dataSets[[nm]], file = sprintf("D:/Downloads/%s.csv", nm))
+}

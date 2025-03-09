@@ -2,6 +2,7 @@ import { DEBUG } from './settings';
 import {
   AdjustmentsReport, AdjustmentsRunLog, ReportingDelaysChartData, HIVPlotData, MigrantStats
 } from './initData';
+import { UIStateInit } from './uiStateInit';
 
 export default appMgr => {
   if (!DEBUG) return;
@@ -15,20 +16,12 @@ export default appMgr => {
       PackageDetails: {
         Name: 'hivPlatform',
         Title: 'HIV Platform',
-        Version: '3.0.3',
-        Date: '2024-06-22',
+        Version: '3.1.0',
+        Date: '2025-03-09',
         Description: 'Improves the accuracy of HIV estimates in EU/EEA countries.'
       }
     }
   });
-
-  // appMgr.onShinyEvent({
-  //   type: 'STATE_LOADED',
-  //   payload: {
-  //     ActionStatus: 'SUCCESS',
-  //     UIState: UIState
-  //   }
-  // });
 
   appMgr.onShinyEvent({
     type: 'COMPLETED_STEPS_SET',
@@ -660,5 +653,14 @@ export default appMgr => {
   appMgr.modelMgr.setModelsRunProgress(true);
   appMgr.modelMgr.setBootstrapRunProgress(true);
   appMgr.reportMgr.setCreatingReportInProgress(true);
+
+  appMgr.onShinyEvent({
+    type: 'UI_STATE_READY_FOR_LOAD',
+    payload: {
+      ActionStatus: 'SUCCESS',
+      ActionMessage: 'State file read correctly',
+      UIState: UIStateInit
+    }
+  });
 
 };

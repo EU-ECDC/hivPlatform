@@ -83,11 +83,10 @@ AppManager <- R6::R6Class(
       'CASE_BASED_SUMMARY' = 5L,
       'CASE_BASED_ADJUSTMENTS' = 6L,
       'CASE_BASED_MIGRATION' = 7L,
-      'REPORTS' = 8L,
-      'AGGR_READ' = 9L,
-      'MODELLING' = 10L,
-      'BOOTSTRAP' = 11L,
-      'OUTPUTS' = 12L
+      'AGGR_READ' = 8L,
+      'MODELLING' = 9L,
+      'BOOTSTRAP' = 10L,
+      'REPORTS' = 11L
     ),
 
     SetCompletedStep = function(step) {

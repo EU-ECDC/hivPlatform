@@ -1,3 +1,12 @@
+## 3.0.6
+
+###### _March 9 2025_
+
+- Initialize version 3.1.0
+- Update dependencies
+- Fix loading states when report is included
+
+
 ## 3.0.5
 
 ###### _February 16 2025_
