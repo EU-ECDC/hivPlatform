@@ -1,10 +1,17 @@
-## 3.0.6
+## 3.1.0
 
-###### _March 9 2025_
+###### _March 18 2025_
+
+**hivPlatform**
 
 - Initialize version 3.1.0
-- Update dependencies
+- Update dependencies, both R and JavaScript, to the latest available versions
 - Fix loading states when report is included
+- Fix missing HIV model outputs for last year of estimation
+
+**hivModelling**
+
+- Post-process final range of years, like in the Windows version
 
 
 ## 3.0.5

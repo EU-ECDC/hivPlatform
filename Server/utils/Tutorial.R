@@ -291,7 +291,7 @@ writeLines(
 appMgr <- hivPlatform::AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/TESSY_sample_allvars_small.xlsx")
+appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/ECDC_202502_0_all_random_id_1000.csv")
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
 appMgr$CaseMgr$ApplyAttributesMapping()
