@@ -462,6 +462,7 @@ HIVModelManager <- R6::R6Class( # nolint
         maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
 
         PrintAlert('Starting HIV Model bootstrap fit task')
+        PrintAlert('Number of bootstrap iterations per imputation: {.val {bsCount}}')
         PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
 
         private$Catalogs$BootstrapFitTask <- Task$new(
@@ -627,7 +628,8 @@ HIVModelManager <- R6::R6Class( # nolint
                 PrintAlert(
                   'Iteration {.val {jSucc}} done |',
                   'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}} |',
-                  'Success rate: {.val {jSuccRate * 100}}%',
+                  'Success rate: {.val {jSuccRate * 100}}% |',
+                  'Progress: {prettyunits::pretty_round(progress, digits = 2)}%',
                   type = msgType
                 )
 
@@ -694,7 +696,7 @@ HIVModelManager <- R6::R6Class( # nolint
           failCallback = function(msg = NULL) {
             PrintAlert('Running HIV Model bootstrap fit task failed', type = 'danger')
             if (!is.null(msg)) {
-              PrintAlert(msg, type = 'danger')
+              try(PrintAlert(msg, type = 'danger'))
             }
             private$SendMessage(
               'BOOTSTRAP_RUN_FINISHED',

@@ -101,8 +101,7 @@ PrintAlert <- function(
   .envir = parent.frame()
 ) {
 
-  alertFunc <- switch(
-    tolower(type),
+  alertFunc <- switch(tolower(type),
     'danger'  = cli::cli_alert_danger,
     'warning' = cli::cli_alert_warning,
     'info'    = cli::cli_alert_info,
@@ -111,7 +110,10 @@ PrintAlert <- function(
     cli::cli_alert
   )
 
-  formattedText <- capt0(alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir))
+  try(
+    formattedText <- capt0(alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir)),
+    silent = TRUE
+  )
   cat(formattedText)
 
   invisible(NULL)

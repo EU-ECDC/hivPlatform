@@ -890,7 +890,7 @@ CaseDataManager <- R6::R6Class( # nolint
     LastAdjustmentResult = function() {
       if (
         is.list(private$Catalogs$AdjustmentResult) &&
-        length(private$Catalogs$AdjustmentResult) > 0
+          length(private$Catalogs$AdjustmentResult) > 0
       ) {
         result <- private$Catalogs$AdjustmentResult[[length(private$Catalogs$AdjustmentResult)]]
       } else {

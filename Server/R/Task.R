@@ -229,7 +229,8 @@ Task <- R6::R6Class(
         },
         error = function(e) {
           private$Catalogs$Status <- 'FAIL'
-          private$Catalogs$FailMessage <- gsub('callr subprocess failed: ', '', e$parent)
+          call <- do.call(CollapseTexts, as.list(trimws(e$parent$call)))
+          private$Catalogs$FailMessage <- glue::glue('Erorr in `{call}`: {e$parent$message}')
         })
         private$Catalogs$Result <- result
       }
@@ -282,7 +283,7 @@ Task <- R6::R6Class(
         self$IsFinished &&
           (
             is.na(private$Catalogs$TaskHandle$get_exit_status()) ||
-            private$Catalogs$TaskHandle$get_exit_status() %in% c(2, -9)
+              private$Catalogs$TaskHandle$get_exit_status() %in% c(2, -9)
           )
       )
     },

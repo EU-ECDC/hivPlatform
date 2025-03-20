@@ -1,3 +1,13 @@
+## 3.1.1
+
+###### _March 20 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.1
+- Fix printing alerts with messages containing unescaped special characters
+
+
 ## 3.1.0
 
 ###### _March 18 2025_

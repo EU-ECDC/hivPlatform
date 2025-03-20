@@ -291,11 +291,42 @@ writeLines(
 appMgr <- hivPlatform::AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
-appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/ECDC_202502_0_all_random_id_1000.csv")
+appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/modelling_data_norway_fake.csv")
 
 # STEP 2 - Pre-process case-based data -------------------------------------------------------------
-appMgr$CaseMgr$ApplyAttributesMapping()
-appMgr$CaseMgr$ApplyOriginGrouping(originGrouping = list())
+
+originalData <- appMgr$CaseMgr$OriginalData
+attrMapping <- GetPreliminaryAttributesMapping(appMgr$CaseMgr$OriginalData)
+data <- ApplyAttributesMapping(originalData, attrMapping)
+
+
+attrMapping$RecordId$origColName <- "id_number"
+attrMapping$Age$origColName <- NULL
+attrMapping$Art$origColName <- NULL
+attrMapping$Gender$origColName <- "sex"
+attrMapping$FirstCD4Count$origColName <- "cd4"
+attrMapping$CountryOfBirth$origColName <- "country_of_birth_iso_modelling"
+attrMapping$DateOfNotification$origColName <- "notification_date"
+attrMapping$DateOfHIVDiagnosis$origColName <- "hiv_date"
+attrMapping$DateOfAIDSDiagnosis$origColName <- "aids_date_modelling3"
+attrMapping$DateOfDeath$origColName <- "year_dead_outmig_modelling"
+
+GetAttrMappingStatus(attrMapping)
+
+appMgr$CaseMgr$ApplyAttributesMapping(attrMapping)
+appMgr$CaseMgr$PreProcessArtifacts
+appMgr$CaseMgr$PreProcessedData
+appMgr$CaseMgr$PreProcessedDataStatus
+
+originDistribution <- appMgr$CaseMgr$OriginDistribution
+originGrouping <- GetOriginGroupingPreset('REPCOUNTRY + UNK + OTHER', originDistribution)
+originGrouping[[1]]$MigrantRegionOfOrigin <- 'REPCOUNTRY'
+originGrouping[[2]]$MigrantRegionOfOrigin <- 'UNK'
+originGrouping[[3]]$MigrantRegionOfOrigin <- 'OTHER'
+
+appMgr$CaseMgr$ApplyOriginGrouping(originGrouping)
+appMgr$CaseMgr$PreProcessedData
+
 
 appMgr$CaseMgr$OriginalData$firstcd4count[1:11]
 appMgr$CaseMgr$PreProcessedData$SqCD4[1:11]
@@ -322,7 +353,6 @@ dataSets <- CombineData(caseDataAll, res$Aggr)[[1]]
 dataSets <- Filter(function(dt) nrow(dt) > 0, dataSets)
 optimalYears <- hivModelling::GetAllowedYearRanges(data = dataSets)
 rangeYears <- lapply(dataSets, function(dt) dt[, c(min(Year), max(Year))])
-
 
 
 context <- hivModelling::GetRunContext(
