@@ -485,13 +485,13 @@ CaseDataManager <- R6::R6Class( # nolint
 
         data <- copy(self$Data)
 
-        if (nrow(data) > 0) {
+        if (nrow(data) > 0L) {
           private$Catalogs$MigrationTask <- Task$new(
             function(data, params, strat, region, randomSeed) {
               if (!requireNamespace('hivPlatform', quietly = TRUE)) {
                 suppressMessages(pkgload::load_all())
               }
-              options(width = 120)
+              options(width = 120L)
               .Random.seed <- randomSeed # nolint
 
               input <- hivPlatform::PrepareMigrantData(data)
@@ -533,15 +533,18 @@ CaseDataManager <- R6::R6Class( # nolint
                   right = FALSE
                 )
               )]
-              output[
-                MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA',
-                MigrantRegionOfOrigin := 'OTHER'
-              ]
+              output[MigrantRegionOfOrigin == 'CARIBBEAN-LATIN AMERICA', MigrantRegionOfOrigin := 'OTHER']
 
               hivPlatform::PrintH1('Preparing diagnostic statistics and plots')
-              outputStats <- hivPlatform::GetMigrantOutputStats(output)
-              confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
-              outputPlots <- hivPlatform::GetMigrantOutputPlots(output, minPresentRatio = 1)
+              if (nrow(output) > 0L) {
+                outputStats <- hivPlatform::GetMigrantOutputStats(output)
+                confBounds <- hivPlatform::GetMigrantConfBounds(output, strat, region)
+                outputPlots <- hivPlatform::GetMigrantOutputPlots(output, minPresentRatio = 1)
+              } else {
+                outputStats <- NULL
+                confBounds <- NULL
+                outputPlots <- NULL
+              }
 
               result <- list(
                 Input = input$Data,

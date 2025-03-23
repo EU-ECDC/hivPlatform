@@ -348,4 +348,7 @@ adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(
 adjustmentSpecs$`Multiple Imputation using Chained Equations - MICE`$Parameters$nimp$value <- 2L
 appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-appMgr$HIVModelMgr$RunMainFit()
+appMgr$CaseMgr$RunMigration()
+data <- appMgr$CaseMgr$Data
+strat <- appMgr$CaseMgr$MigrationPropStrat
+region <- appMgr$CaseMgr$MigrationRegion
