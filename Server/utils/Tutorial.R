@@ -1,6 +1,6 @@
 Sys.setenv(RSTUDIO_PANDOC = 'c:/SoftDevel/pandoc')
 
-## A. Case-based data only =========================================================================
+## A. Case-based data only =============================================================================================
 appMgr <- hivPlatform::AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
@@ -84,33 +84,33 @@ data <- data.table::rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), fu
   data.table::setcolorder(dt, 'Imputation')
 }))
 
-# STEP 3 - Run bootstrap to get the confidence bounds estimates ------------------------------------
+# STEP 6 - Run bootstrap to get the confidence bounds estimates ------------------------------------
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 20, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 20, bsType = 'NON-PARAMETRIC')
 
 # Bootstrap data
-data <- Filter(
+bootData <- Filter(
   function(item) item$Results$Converged,
-  Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult)
+  Reduce(c, Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult))
 )
-data <- data.table::rbindlist(lapply(data, function(res) {
+bootData <- data.table::rbindlist(lapply(bootData, function(res) {
   mainOutputs <- res$Results$MainOutputs
   mainOutputs[, ':='(
-    DataSet = res$DataSet,
-    BootIteration = res$BootIteration
+    DataSet = res$BootIteration$Imputation,
+    BootIteration = res$BootIteration$Iteration,
+    Attempt = res$BootIteration$Attempt
   )]
   return(mainOutputs)
 }))
 data.table::setcolorder(
-  data,
-  c('DataSet', 'BootIteration')
+  bootData,
+  c('DataSet', 'BootIteration', 'Attempt')
 )
 
 # Bootstrap stats
-data <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
+bootStats <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
-
-## B. Aggregated data only =========================================================================
+## B. Aggregated data only =============================================================================================
 appMgr <- hivPlatform::AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
@@ -158,28 +158,29 @@ data <- data.table::rbindlist(lapply(names(appMgr$HIVModelMgr$MainFitResult), fu
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 20, bsType = 'PARAMETRIC')
 
 # Bootstrap data
-data <- Filter(
+bootData <- Filter(
   function(item) item$Results$Converged,
-  Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult)
+  Reduce(c, Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult))
 )
-data <- data.table::rbindlist(lapply(data, function(res) {
+bootData <- data.table::rbindlist(lapply(bootData, function(res) {
   mainOutputs <- res$Results$MainOutputs
   mainOutputs[, ':='(
-    DataSet = res$DataSet,
-    BootIteration = res$BootIteration
+    DataSet = res$BootIteration$Imputation,
+    BootIteration = res$BootIteration$Iteration,
+    Attempt = res$BootIteration$Attempt
   )]
   return(mainOutputs)
 }))
 data.table::setcolorder(
-  data,
-  c('DataSet', 'BootIteration')
+  bootData,
+  c('DataSet', 'BootIteration', 'Attempt')
 )
 
 # Bootstrap stats
-data <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
+bootStats <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
 
-## C. Combined case-based and aggregated data only =================================================
+## C. Combined case-based and aggregated data ==========================================================================
 appMgr <- hivPlatform::AppManager$new()
 
 # STEP 1 - Load data -------------------------------------------------------------------------------
@@ -252,54 +253,68 @@ appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 20, bsType = 'PARAMETRIC')
 appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 20, bsType = 'NON-PARAMETRIC')
 
 # Bootstrap data
-data <- Filter(
+bootData <- Filter(
   function(item) item$Results$Converged,
-  Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult)
+  Reduce(c, Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult))
 )
-data <- data.table::rbindlist(lapply(data, function(res) {
+bootData <- data.table::rbindlist(lapply(bootData, function(res) {
   mainOutputs <- res$Results$MainOutputs
   mainOutputs[, ':='(
-    DataSet = res$DataSet,
-    BootIteration = res$BootIteration
+    DataSet = res$BootIteration$Imputation,
+    BootIteration = res$BootIteration$Iteration,
+    Attempt = res$BootIteration$Attempt
   )]
   return(mainOutputs)
 }))
 data.table::setcolorder(
-  data,
-  c('DataSet', 'BootIteration')
+  bootData,
+  c('DataSet', 'BootIteration', 'Attempt')
 )
 
 # Bootstrap stats
-data <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
+bootStats <- data.table::rbindlist(appMgr$HIVModelMgr$BootstrapFitStats$MainOutputsStats)
 
-dt <- haven::read_dta("D:/Downloads/TESSY_sample_allvars_small.dta")
 
+## D. Load state =======================================================================================================
 appMgr <- hivPlatform::AppManager$new()
-appMgr$LoadState("D:/Downloads/HIVPlatformState_20250307_183639.rds")
-appMgr$HIVModelMgr$MainFitResult
+appMgr$LoadState("D:/Downloads/HIVPlatformState_20250320_093049.rds")
 
-state <- readRDS("D:/Downloads/HIVPlatformState_20250307_183639.rds")
-jsonlite::fromJSON(state$UIState)
-
-writeLines(
-  state$UIState,
-  "D:/Downloads/HIVPlatformState_20250307_183639.json",
-  sep = ""
+parameters <- list(
+  Intervals = data.table::fread(
+    "
+    StartYear EndYear   Jump DiffByCD4 ChangeInInterval
+    1980    1984  FALSE     FALSE            FALSE
+    1984    1992   TRUE     FALSE            FALSE
+    1992    2000   TRUE     FALSE            FALSE
+    2000    2008   TRUE     FALSE            FALSE
+    2008    2023   TRUE     FALSE            FALSE
+    "
+  ),
+  ModelMinYear = 1980L,
+  ModelMaxYear = 2023L,
+  FitPosMinYear = 1987L,
+  FitPosMaxYear = 1999L,
+  FitPosCD4MinYear = 2000L,
+  FitPosCD4MaxYear = 2009L,
+  FitAIDSMinYear = 1987L,
+  FitAIDSMaxYear = 1995L,
+  FitAIDSPosMinYear = 1989L,
+  FitAIDSPosMaxYear = 2023L
 )
 
-## A. Case-based data only =========================================================================
-appMgr <- hivPlatform::AppManager$new()
+# Combination 'All data'
+popCombination <- list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
 
-# STEP 1 - Load data -------------------------------------------------------------------------------
+appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters, popCombination)
+
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 3L, bsType = 'NON-PARAMETRIC')
+
+
+# E. Provide custom attribute mapping ==================================================================================
+appMgr <- hivPlatform::AppManager$new()
 appMgr$CaseMgr$ReadData(filePath = "D:/Downloads/modelling_data_norway_fake.csv")
 
-# STEP 2 - Pre-process case-based data -------------------------------------------------------------
-
-originalData <- appMgr$CaseMgr$OriginalData
 attrMapping <- GetPreliminaryAttributesMapping(appMgr$CaseMgr$OriginalData)
-data <- ApplyAttributesMapping(originalData, attrMapping)
-
-
 attrMapping$RecordId$origColName <- "id_number"
 attrMapping$Age$origColName <- NULL
 attrMapping$Art$origColName <- NULL
@@ -327,52 +342,10 @@ originGrouping[[3]]$MigrantRegionOfOrigin <- 'OTHER'
 appMgr$CaseMgr$ApplyOriginGrouping(originGrouping)
 appMgr$CaseMgr$PreProcessedData
 
-
-appMgr$CaseMgr$OriginalData$firstcd4count[1:11]
-appMgr$CaseMgr$PreProcessedData$SqCD4[1:11]
-appMgr$CaseMgr$PreProcessedData$CD4Category[1:11]
-
-caseData <- hivPlatform:::FilterCaseBasedData(
-  appMgr$CaseMgr$PreProcessedData,
-  appMgr$CaseMgr$Filters
+adjustmentSpecs <- hivPlatform::GetAdjustmentSpecs(
+  c('Multiple Imputation using Chained Equations - MICE')
 )
-aggrData <- appMgr$AggrMgr$Data
+adjustmentSpecs$`Multiple Imputation using Chained Equations - MICE`$Parameters$nimp$value <- 2L
+appMgr$CaseMgr$RunAdjustments(adjustmentSpecs)
 
-# Combination 'All data'
-popCombination <- list(
-  Case = NULL,
-  Aggr = appMgr$AggrMgr$PopulationNames
-)
-
-# Aggregated data filters
-aggrDataSelection <- NULL
-
-res <- GetPopulationData(caseData, aggrData, popCombination, aggrDataSelection)
-caseDataAll <- PrepareDataSetsForModel(caseData)
-dataSets <- CombineData(caseDataAll, res$Aggr)[[1]]
-dataSets <- Filter(function(dt) nrow(dt) > 0, dataSets)
-optimalYears <- hivModelling::GetAllowedYearRanges(data = dataSets)
-rangeYears <- lapply(dataSets, function(dt) dt[, c(min(Year), max(Year))])
-
-
-context <- hivModelling::GetRunContext(
-  data = dataSets,
-  settings = list(),
-  parameters = list(
-    INCIDENCE = list()
-  )
-)
-popData <- hivModelling::GetPopulationData(context)
-
-startTime <- Sys.time()
-fitResults <- hivModelling::PerformMainFit(
-  context,
-  popData,
-  attemptSimplify = TRUE,
-  verbose = TRUE
-)
-
-
-for (nm in names(dataSets)) {
-  data.table::fwrite(dataSets[[nm]], file = sprintf("D:/Downloads/%s.csv", nm))
-}
+appMgr$HIVModelMgr$RunMainFit()

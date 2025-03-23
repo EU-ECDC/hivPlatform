@@ -55,19 +55,20 @@ CreateDownload <- function(type, format, output, appMgr) {
     'HIV_BOOT_FIT' = {
       data <- Filter(
         function(item) item$Results$Converged,
-        Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult)
+        Reduce(c, Reduce(c, appMgr$HIVModelMgr$BootstrapFitResult))
       )
       data <- rbindlist(lapply(data, function(res) {
         mainOutputs <- res$Results$MainOutputs
         mainOutputs[, ':='(
-          DataSet = res$DataSet,
-          BootIteration = res$BootIteration
+          DataSet = res$BootIteration$Imputation,
+          BootIteration = res$BootIteration$Iteration,
+          Attempt = res$BootIteration$Attempt
         )]
         return(mainOutputs)
       }))
       setcolorder(
         data,
-        c('DataSet', 'BootIteration')
+        c('DataSet', 'BootIteration', 'Attempt')
       )
       fileNamePrefix <- 'HIVModelBootFit'
       outputControlName <- sprintf('downBootFit%s', toupper(format))

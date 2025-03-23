@@ -1,4 +1,3 @@
-
 #' PrintH1
 #'
 #' @param ... Text to be printed
@@ -16,8 +15,41 @@ PrintH1 <- function(
   collapse = ' ',
   .envir = parent.frame()
 ) {
-  formattedText <- capt0(cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir))
-  cat(formattedText)
+  try(
+    {
+      formattedText <- capt0(cli::cli_h1(CollapseTexts(..., collapse = collapse), .envir = .envir))
+      cat(formattedText)
+    },
+    silent = TRUE
+  )
+
+  invisible(NULL)
+}
+
+#' PrintH2
+#'
+#' @param ... Text to be printed
+#' @param collapse String to be used for concatenating texts
+#' @param .envir Environment for lookup of variables referenced in the text
+#'
+#' @return NULL
+#'
+#' @examples
+#' PrintH2('Test')
+#'
+#' @export
+PrintH2 <- function(
+  ...,
+  collapse = ' ',
+  .envir = parent.frame()
+) {
+  try(
+    {
+      formattedText <- capt0(cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir))
+      cat(formattedText)
+    },
+    silent = TRUE
+  )
 
   invisible(NULL)
 }
@@ -54,29 +86,6 @@ PrintStopHeader <- function(startTime = NULL, stopTime = NULL) {
   PrintAlert('{format(Sys.time())} - DONE{elapsedMsg}')
 }
 
-#' PrintH2
-#'
-#' @param ... Text to be printed
-#' @param collapse String to be used for concatenating texts
-#' @param .envir Environment for lookup of variables referenced in the text
-#'
-#' @return NULL
-#'
-#' @examples
-#' PrintH2('Test')
-#'
-#' @export
-PrintH2 <- function(
-  ...,
-  collapse = ' ',
-  .envir = parent.frame()
-) {
-  formattedText <- capt0(cli::cli_h2(CollapseTexts(..., collapse = collapse), .envir = .envir))
-  cat(formattedText)
-
-  invisible(NULL)
-}
-
 #' PrintAlert
 #'
 #' @param ... Text to be printed
@@ -111,10 +120,12 @@ PrintAlert <- function(
   )
 
   try(
-    formattedText <- capt0(alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir)),
+    {
+      formattedText <- capt0(alertFunc(CollapseTexts(..., collapse = collapse), .envir = .envir))
+      cat(formattedText)
+    },
     silent = TRUE
   )
-  cat(formattedText)
 
   invisible(NULL)
 }
@@ -134,12 +145,17 @@ PrintBullets <- function(
   items = c(),
   .envir = parent.frame()
 ) {
-  formattedText <- capt0({
-    cli::cli_ul()
-    sapply(items, cli::cli_li, .envir = .envir)
-    cli::cli_end()
-  })
-  cat(formattedText)
+  try(
+    {
+      formattedText <- capt0({
+        cli::cli_ul()
+        sapply(items, cli::cli_li, .envir = .envir)
+        cli::cli_end()
+      })
+      cat(formattedText)
+    },
+    silent = TRUE
+  )
 
   invisible(NULL)
 }

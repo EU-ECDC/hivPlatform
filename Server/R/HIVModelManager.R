@@ -162,6 +162,14 @@ HIVModelManager <- R6::R6Class( # nolint
         return(invisible(self))
       }
 
+      defaultParameters <- GetListObject(
+        GetSystemFile('ObjectDefinitions/Parameters.R', package = 'hivModelling')
+      )$INCIDENCE
+      parameters <- append(
+        defaultParameters[!(names(defaultParameters) %in% names(parameters))],
+        parameters
+      )
+
       tryCatch({
         PrintAlert('Starting HIV Model main fit task')
 
@@ -464,13 +472,15 @@ HIVModelManager <- R6::R6Class( # nolint
 
         PrintAlert('Starting HIV Model bootstrap fit task')
         PrintAlert('Number of bootstrap iterations per imputation: {.val {bsCount}}')
-        PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
+        PrintAlert('Number of attempts per iteration: {.val {attemptsCount}}')
+        PrintAlert('Maximum allowed run time per attempt: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
 
         private$Catalogs$BootstrapFitTask <- Task$new(
           function(
             bsCount,
             bsType,
             maxRunTime,
+            attemptsCount,
             mainFitResult,
             avgModelOutputs,
             caseData,
@@ -498,7 +508,7 @@ HIVModelManager <- R6::R6Class( # nolint
               )
             }
 
-            fits <- list()
+            impResults <- list()
             # Iterate over imputations
             for (imp in names(mainFitResult)) {
               mainFit <- mainFitResult[[imp]]
@@ -551,20 +561,20 @@ HIVModelManager <- R6::R6Class( # nolint
                     }
 
                     res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
-                    caseData <- res$Case
-                    aggrData <- res$Aggr
+                    caseDataIter <- res$Case
+                    aggrDataIter <- res$Aggr
 
                     if (dataAfterMigr && migrConnFlag) {
                       # Prepare the Dead file based on the whole population dataset
                       caseDataDead <- PrepareDataSetsForModel(
-                        caseData,
+                        caseDataIter,
                         splitBy = 'Imputation',
                         dataSets = 'Dead'
                       )
 
                       # Prepare other datasets based on the subset of population
                       caseDataRest <- PrepareDataSetsForModel(
-                        caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                        caseDataIter[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
                         splitBy = 'Imputation',
                         dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
                       )
@@ -576,7 +586,7 @@ HIVModelManager <- R6::R6Class( # nolint
                         aggrData <- NULL
                       }
                     } else {
-                      caseDataAll <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation')
+                      caseDataAll <- PrepareDataSetsForModel(caseDataIter, splitBy = 'Imputation')
                     }
                     bootData <- CombineData(caseDataAll, aggrData)[[1]]
                   }
@@ -622,11 +632,11 @@ HIVModelManager <- R6::R6Class( # nolint
 
                   if (bootResult$Converged) {
                     msgType <- 'success'
-                    iterationStatus <- 'successful'
+                    iterationStatus <- 'converged'
                     attemptSuccessful <- TRUE
                   } else {
                     msgType <- 'danger'
-                    iterationStatus <- 'failed'
+                    iterationStatus <- 'NOT converged'
                     attemptSuccessful <- FALSE
                   }
 
@@ -641,7 +651,6 @@ HIVModelManager <- R6::R6Class( # nolint
                     Data = bootData,
                     Results = bootResult,
                     RunTime = runTime,
-                    DataSet = imp,
                     BootIteration = list(
                       Imputation = imp,
                       Iteration = j,
@@ -651,10 +660,10 @@ HIVModelManager <- R6::R6Class( # nolint
                 }
                 bootResults[[j]] <- attemptResults
               }
-              fits[[imp]] <- bootResults
+              impResults[[imp]] <- bootResults
             }
 
-            stats <- GetBootstrapFitStats(fits)
+            stats <- GetBootstrapFitStats(impResults)
 
             plotData <- GetHIVPlotData(
               mainFitOutputs = avgModelOutputs,
@@ -663,7 +672,7 @@ HIVModelManager <- R6::R6Class( # nolint
             )
 
             result <- list(
-              Fits = fits,
+              Fits = impResults,
               Stats = stats,
               PlotData = plotData
             )
@@ -674,6 +683,7 @@ HIVModelManager <- R6::R6Class( # nolint
             bsCount = bsCount,
             bsType = bsType,
             maxRunTime = maxRunTime,
+            attemptsCount = attemptsCount,
             mainFitResult = isolate(private$Catalogs$MainFitResult),
             avgModelOutputs = isolate(private$Catalogs$AvgModelOutputs),
             caseData = isolate(private$AppMgr$CaseMgr$Data),
