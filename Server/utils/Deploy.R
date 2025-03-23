@@ -79,10 +79,20 @@ sapply(
 )
 fs::dir_create(file.path(winDeployPath, 'library'))
 pak::pkg_install('.', dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
-pak::local_install(hivModelPkgPath, dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
-pak::local_install(hivModelPkgPath, dependencies = FALSE, lib = file.path(winDeployPath, 'library'), upgrade = FALSE)
-pak::local_install(hivEstInfTimePkgPath, dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
-devtools::install_local(hivModelPkgPath, dependencies = FALSE, lib = file.path(winDeployPath, 'library'))
+pak::local_install(
+  hivEstInfTimePkgPath,
+  dependencies = FALSE,
+  lib = file.path(winDeployPath, 'library'),
+  upgrade = FALSE,
+  ask = FALSE
+)
+pak::local_install(
+  hivModelPkgPath,
+  dependencies = FALSE,
+  lib = file.path(winDeployPath, 'library'),
+  upgrade = FALSE,
+  ask = FALSE
+)
 fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 
 redundantFolders <- fs::dir_ls(
