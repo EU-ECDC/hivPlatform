@@ -1,7 +1,7 @@
 Package: hivPlatform
 Type: Package
 Title: HIV Platform
-Version: 3.1.1
+Version: 3.1.2
 Date: 2025-03-23
 Authors@R: c(
     person('Magdalena', 'Rosinska', email = 'mrosinska@pzh.gov.pl', role = c('aut', 'cph')),

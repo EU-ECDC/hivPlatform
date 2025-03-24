@@ -1,3 +1,13 @@
+## 3.1.2
+
+###### _March 23 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.2
+- Fix creating migration module outputs when no records are subject to migrant processing
+
+
 ## 3.1.1
 
 ###### _March 23 2025_
@@ -9,6 +19,7 @@
 - Fix failures in processing second and later imputation of non-parameteric bootstrap
 - Reimplement logic for managing attempts in running bootstrap
 - Set all HIV Model parameters explicitly, rather than relying on defaults from hivModelling package
+
 
 ## 3.1.0
 

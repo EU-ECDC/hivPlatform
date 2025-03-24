@@ -352,3 +352,29 @@ appMgr$CaseMgr$RunMigration()
 data <- appMgr$CaseMgr$Data
 strat <- appMgr$CaseMgr$MigrationPropStrat
 region <- appMgr$CaseMgr$MigrationRegion
+
+## F. Test migration ===================================================================================================
+appMgr <- hivPlatform::AppManager$new()
+appMgr$LoadState("D:/Downloads/HIVPlatformState_20250324_203833.rds")
+
+data <- appMgr$CaseMgr$Data
+appMgr$CaseMgr$RunMigration()
+
+nrow(appMgr$CaseMgr$MigrationResult$Input$Input)
+nrow(appMgr$CaseMgr$MigrationResult$Input$Input[is.na(Excluded)])
+appMgr$CaseMgr$MigrationResult$Input$Input[!is.na(Excluded), table(KnownPrePost)]
+appMgr$CaseMgr$MigrationResult$Input$Input[is.na(Excluded), table(KnownPrePost)]
+
+appMgr$CaseMgr$MigrationResult$Input$AIDS[, table(KnownPrePost)]
+appMgr$CaseMgr$MigrationResult$Input$CD4VL[, table(KnownPrePost)]
+
+data <- appMgr$CaseMgr$MigrationResult$Output
+
+a <- hivPlatform::GetMigrantOutputStats(appMgr$CaseMgr$MigrationResult$Output)
+
+test <- GetMigrantConfBounds(appMgr$CaseMgr$MigrationResult$Output, strat = 'Total', region = 'ALL')
+
+data[is.na(Excluded), table(HIVStatus)]
+data[, unique(HIVStatus)]
+
+appMgr$CaseMgr$MigrationResult$Output[ProbPre == 1]
