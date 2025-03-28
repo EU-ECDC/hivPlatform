@@ -5,7 +5,16 @@ list(
       'Unique identifier for each record within and across the national surveillance system',
     type = 'character',
     defaultValue = NA_character_,
-    candidateOrigColNames = c('recordid')
+    candidateOrigColNames = c('recordid'),
+    testFuncs = list(
+      function(x) {
+        if (any(duplicated(x))) {
+          return('Column `RecordId` has non-unique values')
+        } else {
+          return(NULL)
+        }
+      }
+    )
   ),
   ReportingCountry = list(
     attribute = 'ReportingCountry',

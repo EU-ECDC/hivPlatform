@@ -328,6 +328,25 @@ attrMapping$DateOfDeath$origColName <- "year_dead_outmig_modelling"
 
 GetAttrMappingStatus(attrMapping)
 
+columnSpecs <- GetListObject(
+  GetSystemFile('referenceData/requiredColumns.R'),
+  includeFileName = FALSE
+)
+
+data <- ApplyAttributesMapping(appMgr$CaseMgr$OriginalData, attrMapping)
+dataStatus <- GetInputDataValidityStatus(data)
+dataStatus$Valid
+
+
+lapply(dataStatus$CheckStatus, '[[', 'ErrorMessages')
+
+preProcessArtifacts <- PreProcessInputDataBeforeSummary(data)
+PreProcessInputDataBeforeAdjustments(data)
+dataStatus <- GetInputDataValidityStatus(data)
+
+
+
+
 appMgr$CaseMgr$ApplyAttributesMapping(attrMapping)
 appMgr$CaseMgr$PreProcessArtifacts
 appMgr$CaseMgr$PreProcessedData
