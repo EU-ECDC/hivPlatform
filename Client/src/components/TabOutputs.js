@@ -147,15 +147,15 @@ const TabOutputs = (props) => {
   return (
     <TabPanel>
       <Grid container spacing={2} style={{ paddingTop: 43 }}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Outputs
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           Adjustments
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Table>
               <TableHead>
@@ -180,10 +180,10 @@ const TabOutputs = (props) => {
             </Table>
           </Paper>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           HIV Model
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Table>
               <TableHead>

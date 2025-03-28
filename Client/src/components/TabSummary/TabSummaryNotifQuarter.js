@@ -22,7 +22,7 @@ const TabSummaryNotifQuarter = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={2}>
+      <Grid size={2}>
         <FormControlLabel
           control={
             <Switch
@@ -35,7 +35,7 @@ const TabSummaryNotifQuarter = (props) => {
           label='Apply this data selection in adjustments'
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         <Paper style={{ padding: 10 }}>
           <Typography variant='overline'>Notification quarter</Typography>
           <div style={{ padding: '40px 105px 0 65px' }}>
@@ -70,7 +70,7 @@ const TabSummaryNotifQuarter = (props) => {
         </Paper>
       </Grid>
     </React.Fragment>
-  )
+  );
 };
 
 export default observer(TabSummaryNotifQuarter);

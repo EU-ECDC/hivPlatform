@@ -2,6 +2,8 @@
 dir.create('library', showWarnings = FALSE)
 .libPaths('./library')
 pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
+pak::local_install('D:/_REPOSITORIES_ECDC/hivEstInfTime', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
+pak::local_install('D:/_REPOSITORIES_ECDC/hivModelling', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
 
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgName <- pkgDescr$Package

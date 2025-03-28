@@ -1,3 +1,13 @@
+## 3.1.3
+
+###### _March 28 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.3
+- Update UI dependencies to latest version (material-ui, jQuery)
+
+
 ## 3.1.2
 
 ###### _March 23 2025_

@@ -16,7 +16,7 @@ const TabAdjustmentsInputs = (props) => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button
               size='small'
@@ -28,7 +28,7 @@ const TabAdjustmentsInputs = (props) => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Case-based data adjustments parameters
           </Typography>

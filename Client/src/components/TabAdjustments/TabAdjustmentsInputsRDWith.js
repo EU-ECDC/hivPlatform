@@ -33,7 +33,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
       <Typography variant='overline'>Reporting Delays - with trend parameters</Typography>
       <form noValidate autoComplete='off'>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Diagnosis start year'
               helperText='Enter the start year for diagnosis'
@@ -50,7 +50,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               style={{ marginBottom: 20 }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Notification end year'
               helperText='Enter the end year for notification'
@@ -67,7 +67,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               style={{ marginBottom: 20 }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Notification end quarter (integer between 1 and 4)'
               type='number'
@@ -83,7 +83,7 @@ const TabAdjustmentsInputsRDWith = (props) => {
               style={{ marginBottom: 20 }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             Stratify by:
             <FormGroup row>
               <FormControlLabel
@@ -121,13 +121,13 @@ const TabAdjustmentsInputsRDWith = (props) => {
               />
             </FormGroup>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Button color='primary' onClick={handleRDRestoreDefaults}>Restore defaults</Button>
           </Grid>
         </Grid>
       </form>
     </React.Fragment>
-  )
+  );
 };
 
 export default observer(TabAdjustmentsInputsRDWith);

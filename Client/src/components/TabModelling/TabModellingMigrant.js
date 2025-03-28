@@ -18,7 +18,7 @@ const TabModellingMigrant = ({ appMgr }) => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -29,12 +29,12 @@ const TabModellingMigrant = ({ appMgr }) => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Migrant connection
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <RadioGroup
             row
             value={appMgr.modelMgr.migrConnFlag}
@@ -47,7 +47,7 @@ const TabModellingMigrant = ({ appMgr }) => {
             Enable alternative HIV modelling processing with migrant status information used.
           </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper sx={{ padding: '10px' }}>
             <Typography variant='overline'>Status</Typography>
           </Paper>

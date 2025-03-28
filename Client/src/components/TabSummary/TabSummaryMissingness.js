@@ -17,12 +17,12 @@ const TabSummaryMissingness = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           Missing data summary: key variables
         </Typography>
       </Grid>
-      <Grid item xs={2}>
+      <Grid size={2}>
         <Typography variant='body2' color='textSecondary'>
           Percentages of cases for which the information was not available (missing) for one or
           more of the key variables: CD4 count, transmission category, migrant status or age.
@@ -51,10 +51,10 @@ const TabSummaryMissingness = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         <Paper style={{ padding: 10 }}>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <MissChart
                 xCategories={appMgr.summaryDataMgr.missPlotData.plot1.chartCategories}
                 data1={appMgr.summaryDataMgr.missPlot1Series}
@@ -62,7 +62,7 @@ const TabSummaryMissingness = (props) => {
                 data3={appMgr.summaryDataMgr.missPlot3Series}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <LineChart
                 yLabelName='Proportion of missing values'
                 xCategories={appMgr.summaryDataMgr.missPlot4Categories}
@@ -73,7 +73,7 @@ const TabSummaryMissingness = (props) => {
         </Paper>
       </Grid>
     </React.Fragment>
-  )
+  );
 };
 
 export default observer(TabSummaryMissingness);

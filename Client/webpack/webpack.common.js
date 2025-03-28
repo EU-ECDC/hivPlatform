@@ -39,6 +39,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['*', '.js', '.jsx'],
+    conditionNames: ['mui-modern', '...'],
   },
   externals: {
     jquery: 'jQuery',

@@ -14,12 +14,12 @@ const TabModellingOutputsTables = props => {
 
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           A. Main results
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <SmallTable
           tableData={appMgr.modelMgr.mainOutputTableData}
           maxHeight={'100%'}

@@ -29,7 +29,7 @@ const TabAdjustmentsRun = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -41,12 +41,12 @@ const TabAdjustmentsRun = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Case-based data adjustments run
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Btn
             onClick={handleRunAdjustBtnClick}
             disabled={
@@ -66,7 +66,7 @@ const TabAdjustmentsRun = props => {
           </Button>
           <ProgressBar progress={appMgr.adjustMgr.adjustmentsRunProgress} />
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Tabs
               value={tabId}

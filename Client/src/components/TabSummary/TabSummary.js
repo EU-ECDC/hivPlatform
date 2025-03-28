@@ -21,7 +21,7 @@ const TabSummary = (props) => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -33,29 +33,29 @@ const TabSummary = (props) => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Select case-based data for summary
           </Typography>
         </Grid>
         <TabSummaryDiagYear {...props} />
         <TabSummaryNotifQuarter {...props} />
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='body1'>
             Number of records in the selection: {appMgr.summaryDataMgr.selectedCount} (out of {appMgr.summaryDataMgr.totalCount}, {FormatPercentage(appMgr.summaryDataMgr.selectedCount / appMgr.summaryDataMgr.totalCount)})
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider light sx={{ margin: '30px 0px' }} />
         </Grid>
         <TabSummaryMissingness {...props} />
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider light sx={{ margin: '30px 0px' }} />
         </Grid>
         <TabSummaryReportingDelays {...props} />
       </Grid>
     </TabPanel>
-  )
+  );
 };
 
 export default observer(TabSummary);

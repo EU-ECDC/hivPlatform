@@ -18,15 +18,15 @@ const TabModellingOutputsGOF = props => {
 
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           A. HIV diagnoses, total
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable1Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -36,16 +36,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           B. HIV diagnoses, CD4 {'\u2265'} 500
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable2Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -55,15 +54,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           C. HIV diagnoses, CD4 350 - 499
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable3Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -73,16 +72,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           D. HIV diagnoses, CD4 200 - 349
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable4Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -92,16 +90,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           E. HIV diagnoses, CD4 {'<'} 200
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable5Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -111,16 +108,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           F. HIV/AIDS diagnoses
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable6Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -130,16 +126,15 @@ const TabModellingOutputsGOF = props => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           G. AIDS diagnoses, total
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.gofTable7Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'

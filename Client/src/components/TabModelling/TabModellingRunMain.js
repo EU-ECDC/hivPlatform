@@ -42,7 +42,7 @@ const TabModellingRunMain = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -54,12 +54,12 @@ const TabModellingRunMain = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Perform main fit of HIV model
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Typography variant='body2' color='textSecondary'>
             1. Migrant connection
           </Typography>
@@ -122,7 +122,7 @@ const TabModellingRunMain = props => {
           </Button>
           <ProgressBar progress={appMgr.modelMgr.modelsRunProgress} />
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre

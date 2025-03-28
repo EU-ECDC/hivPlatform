@@ -17,7 +17,7 @@ const TabAdjustmentsInputsRD = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={2}>
+      <Grid size={2}>
         Reporting Delays type:<br />
         <FormControl component='fieldset'>
           <RadioGroup
@@ -43,7 +43,7 @@ const TabAdjustmentsInputsRD = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         <Paper style={{ padding: 10, minHeight: 263 }}>
           {appMgr.adjustMgr.rdAdjustType === 'none' && <TabAdjustmentsInputsRDNone />}
           {appMgr.adjustMgr.rdAdjustType === 'withoutTrend' && <TabAdjustmentsInputsRDWithout {...props} />}

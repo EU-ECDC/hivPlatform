@@ -27,7 +27,7 @@ const TabModellingRunBootstrap = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -39,12 +39,12 @@ const TabModellingRunBootstrap = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Perform bootstrap fit of HIV model
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <FormControl style={{ width: '100%', marginTop: 20 }}>
             <Input
               style={{ width: '100%', fontSize: '0.75rem' }}
@@ -106,7 +106,7 @@ const TabModellingRunBootstrap = props => {
           </Button>
           <ProgressBar progress={appMgr.modelMgr.bootstrapRunProgress} />
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Run log</Typography>
             <pre
