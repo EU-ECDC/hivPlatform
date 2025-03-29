@@ -1,12 +1,16 @@
 ## 3.1.3
 
-###### _March 28 2025_
+###### _March 29 2025_
 
 **hivPlatform**
 
 - Initialize version 3.1.3
 - Update UI dependencies to latest version (material-ui, jQuery)
+- Catch errors in non-parametric bootstrap runs
 
+**hivModelling**
+
+- Do not run auto-theta-fix procedure if runType is 'MAIN_WITH_INIT'
 
 ## 3.1.2
 
