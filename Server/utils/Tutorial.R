@@ -397,3 +397,68 @@ data[is.na(Excluded), table(HIVStatus)]
 data[, unique(HIVStatus)]
 
 appMgr$CaseMgr$MigrationResult$Output[ProbPre == 1]
+
+## D. Load state =======================================================================================================
+appMgr <- hivPlatform::AppManager$new()
+appMgr$LoadState("D:/Downloads/HIVPlatformState_20250329_101828.rds")
+
+parameters <- list(
+  Intervals = data.table::fread(
+    "
+    StartYear EndYear   Jump DiffByCD4 ChangeInInterval
+    1980    1984  FALSE     FALSE            FALSE
+    1984    2019   TRUE     FALSE             TRUE
+    2019    2022  FALSE      TRUE             TRUE
+    2022    2023  FALSE      TRUE             TRUE
+    "
+  ),
+  ModelMinYear = 1980L,
+  ModelMaxYear = 2023L,
+  FitPosMinYear = 1987L,
+  FitPosMaxYear = 2018L,
+  FitPosCD4MinYear = 2019L,
+  FitPosCD4MaxYear = 2023L,
+  FitAIDSMinYear = 1987L,
+  FitAIDSMaxYear = 1987L,
+  FitAIDSPosMinYear = 1987L,
+  FitAIDSPosMaxYear = 2023L,
+  FullData = FALSE,
+  FitDistribution = 'NEGATIVE_BINOMIAL'
+)
+
+# Combination 'All data'
+popCombination <- list(Case = NULL, Aggr = appMgr$AggrMgr$PopulationNames)
+
+appMgr$HIVModelMgr$RunMainFit(settings = list(), parameters, popCombination)
+appMgr$HIVModelMgr$RunBootstrapFit(bsCount = 3L, bsType = 'NON-PARAMETRIC')
+
+avgRunTime <- mean(sapply(appMgr$HIVModelMgr$MainFitResult, '[[', 'RunTime'))
+maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
+bsCount <- bsCount
+bsType <- bsType
+maxRunTime <- maxRunTime
+attemptsCount <- attemptsCount
+mainFitResult <- appMgr$HIVModelMgr$MainFitResult
+avgModelOutputs <- appMgr$HIVModelMgr$AvgModelOutputs
+caseData <- appMgr$CaseMgr$Data
+aggrData <- appMgr$AggrMgr$Data
+popCombination <- appMgr$HIVModelMgr$PopCombination
+aggrDataSelection <- appMgr$HIVModelMgr$AggrDataSelection
+migrConnFlag <- appMgr$HIVModelMgr$MigrConnFlag
+randomSeed <- .Random.seed
+
+
+bootError <- list(
+  context = bootContext,
+  data = bootPopData,
+  param = param,
+  info = info
+)
+saveRDS(bootError, file = "D:/Downloads/bootError.rds")
+param <- bootError$param
+info <- bootError$info
+
+param$Theta
+param$ThetaF
+param$ThetaP
+param$NoThetaFix <- 3L

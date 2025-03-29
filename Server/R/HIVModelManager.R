@@ -452,7 +452,7 @@ HIVModelManager <- R6::R6Class( # nolint
     RunBootstrapFit = function(
       bsCount = 0L,
       bsType = 'PARAMETRIC',
-      maxRunTimeFactor = 3L,
+      maxRunTimeFactor = 20L,
       attemptsCount = 3L
     ) {
       if (!is.element(
@@ -602,35 +602,35 @@ HIVModelManager <- R6::R6Class( # nolint
                   startTime <- Sys.time()
                   switch(bsType,
                     'PARAMETRIC' = {
-                      bootResult <- hivModelling::PerformBootstrapFit(
+                      bootResult <- try(hivModelling::PerformBootstrapFit(
                         j, bootContext, bootPopData, mainFit$Results
-                      )
+                      ), silent = TRUE)
                     },
                     'NON-PARAMETRIC' = {
                       capture.output({
-                        bootResult <- hivModelling::PerformMainFit(
-                          bootContext, bootPopData,
+                        bootResult <- try(hivModelling::PerformMainFit(
+                          context = bootContext, data = bootPopData,
                           param = param, info = info, attemptSimplify = FALSE,
-                          maxRunTime = maxRunTime, verbose = FALSE
-                        )
+                          maxRunTime = maxRunTime, verbose = TRUE
+                        ), silent = TRUE)
                       })
                     }
                   )
                   runTime <- Sys.time() - startTime
 
-                  preMigrCounts <- GetPreMigrCounts(
-                    bootCaseDataImp,
-                    migrConnFlag,
-                    dataAfterMigr
-                  )
-                  PostProcessModelOutputs(
-                    bootResult$MainOutputs,
-                    preMigrCounts,
-                    migrConnFlag,
-                    dataAfterMigr
-                  )
+                  if (!inherits(bootResult, 'try-error') && bootResult$Converged) {
+                    preMigrCounts <- GetPreMigrCounts(
+                      bootCaseDataImp,
+                      migrConnFlag,
+                      dataAfterMigr
+                    )
+                    PostProcessModelOutputs(
+                      bootResult$MainOutputs,
+                      preMigrCounts,
+                      migrConnFlag,
+                      dataAfterMigr
+                    )
 
-                  if (bootResult$Converged) {
                     msgType <- 'success'
                     iterationStatus <- 'converged'
                     attemptSuccessful <- TRUE
