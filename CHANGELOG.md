@@ -1,3 +1,14 @@
+## 3.1.4
+
+###### _April 01 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.4
+- Set pre-migration infection flag to 1 for HIVStatus = PREVPOS when determining confidence bounds
+- Update UI dependencies to latest version (material-ui, React)
+
+
 ## 3.1.3
 
 ###### _March 29 2025_

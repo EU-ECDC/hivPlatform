@@ -78,7 +78,7 @@ GetMigrantConfBounds <- function(
     variable.name = 'Sample',
     value.name = 'SCtoDiag'
   )
-  data[, PreMigrInf := as.integer(SCtoDiag > Mig)]
+  data[, PreMigrInf := ifelse(ProbPre == 1, 1L, as.integer(SCtoDiag > Mig))]
   strataIdColNames <- as.character(sort(unique(data$StrataId)))
 
   checkDetailed <- CJ(
@@ -93,11 +93,6 @@ GetMigrantConfBounds <- function(
   ]
   checkDetailed <- dcast(checkDetailed, Imputation + Sample ~ StrataId, value.var = 'Present')
   checkDetailed[, ALL := apply(.SD, 1, any), .SDcols = strataIdColNames]
-  # checkDetailed[,
-  #   ALL := all(.SD),
-  #   by = .(Idx = seq_len(nrow(checkDetailed))),
-  #   .SDcols = strataIdColNames
-  # ]
   checkDetailed[,
     ModelId := paste(lapply(.SD, as.character), collapse = '.'),
     by = seq_len(nrow(checkDetailed)),

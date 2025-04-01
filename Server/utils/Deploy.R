@@ -5,10 +5,11 @@ pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
 pak::local_install('D:/_REPOSITORIES_ECDC/hivEstInfTime', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
 pak::local_install('D:/_REPOSITORIES_ECDC/hivModelling', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
 
+sessInfo <- unlist(sessionInfo())
+rVersion <- paste(sessInfo['R.version.major'], strsplit(sessInfo['R.version.minor'], "\\.")[[1]][[1]], sep = '.')
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgName <- pkgDescr$Package
 pkgVersion <- pkgDescr$Version
-rVersion <- '4.4'
 deployDate <- format(Sys.Date(), '%Y%m%d')
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s_%s', pkgVersion, deployDate))
