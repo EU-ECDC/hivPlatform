@@ -1,3 +1,13 @@
+## 3.1.5
+
+###### _April 03 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.5
+- Fix filtering case-based data for HIV model when filter value contained a space or NA
+
+
 ## 3.1.4
 
 ###### _April 01 2025_

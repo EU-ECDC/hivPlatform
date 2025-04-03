@@ -300,10 +300,11 @@ HIVModelManager <- R6::R6Class( # nolint
             }
 
             PrintH1('Performing main fit')
-
             impResults <- list()
             for (imp in names(dataSets)) {
               PrintH2('Iteration {.val {imp}}')
+
+              PrintAlert('Case-based data set size: {.val {nrow(caseData[as.character(Imputation) == imp])}}')
               context <- hivModelling::GetRunContext(
                 data = dataSets[[imp]],
                 settings = settings,

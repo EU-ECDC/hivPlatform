@@ -42,6 +42,7 @@ GetPopulationData <- function(
     dt1 <- list()
     for (i in seq_along(popCombination$Case)) {
       combination <- popCombination$Case[[i]]
+      combination$Values[combination$Values %in% c("NA")] <- NA
       setkeyv(caseData, combination$Variables)
       dt1[[i]] <- caseData[as.list(combination$Values), mult = 'all']
     }
