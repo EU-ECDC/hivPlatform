@@ -17,7 +17,7 @@ const TabAdjustmentsInputsMI = (props) => {
 
   return (
     <React.Fragment>
-      <Grid item xs={2}>
+      <Grid size={2}>
         Multiple Imputations type:<br />
         <FormControl component='fieldset'>
           <RadioGroup
@@ -43,7 +43,7 @@ const TabAdjustmentsInputsMI = (props) => {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         <Paper style={{ padding: 10, minHeight: 283 }}>
           {appMgr.adjustMgr.miAdjustType === 'none' && <TabAdjustmentsInputsMINone />}
           {appMgr.adjustMgr.miAdjustType === 'jomo' && <TabAdjustmentsInputsMIJomo {...props} />}

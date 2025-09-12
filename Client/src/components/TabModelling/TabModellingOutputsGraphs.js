@@ -18,15 +18,15 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
 
   return (
     <Grid container spacing={2} style={{ marginTop: 20 }}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           A. HIV infections per year
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.outputTable1Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -36,15 +36,15 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           B. Time to diagnosis
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.outputTable2Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Years'
@@ -54,7 +54,7 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           C. Total number of HIV-infected
         </Typography>
@@ -62,10 +62,10 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           Count of undiagnosed migrants can be underestimated
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.outputTable3Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Count'
@@ -75,15 +75,15 @@ const TabModellingOutputsGraphs = ({ appMgr })  => {
           showConfBounds={appMgr.modelMgr.showConfBounds}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           D. Proportion undiagnosed of all those alive
         </Typography>
       </Grid>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <SmallTable tableData={appMgr.modelMgr.outputTable4Data} />
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         <LineCategoryChart
           xAxisTitle='Year'
           yAxisTitle='Proportion'

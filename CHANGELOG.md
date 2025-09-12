@@ -1,3 +1,94 @@
+## 3.1.5
+
+###### _April 03 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.5
+- Fix filtering case-based data for HIV model when filter value contained a space or NA
+
+
+## 3.1.4
+
+###### _April 01 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.4
+- Set pre-migration infection flag to 1 for HIVStatus = PREVPOS when determining confidence bounds
+- Update UI dependencies to latest version (material-ui, React)
+
+
+## 3.1.3
+
+###### _March 29 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.3
+- Update UI dependencies to latest version (material-ui, jQuery)
+- Catch errors in non-parametric bootstrap runs
+
+**hivModelling**
+
+- Do not run auto-theta-fix procedure if runType is 'MAIN_WITH_INIT'
+
+## 3.1.2
+
+###### _March 23 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.2
+- Fix creating migration module outputs when no records are subject to migrant processing
+
+
+## 3.1.1
+
+###### _March 23 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.1
+- Fix printing alerts with messages containing unescaped special characters
+- Fix failures in processing second and later imputation of non-parameteric bootstrap
+- Reimplement logic for managing attempts in running bootstrap
+- Set all HIV Model parameters explicitly, rather than relying on defaults from hivModelling package
+
+
+## 3.1.0
+
+###### _March 18 2025_
+
+**hivPlatform**
+
+- Initialize version 3.1.0
+- Update dependencies, both R and JavaScript, to the latest available versions
+- Fix loading states when report is included
+- Fix missing HIV model outputs for last year of estimation
+
+**hivModelling**
+
+- Post-process final range of years, like in the Windows version
+
+
+## 3.0.5
+
+###### _February 16 2025_
+
+- Update dependencies
+- Increase the state file upload to max 500MB
+- Fix loading runAdjustmentsTypes from state
+- Format 95th quantile with 2 digits
+
+
+## 3.0.4
+
+###### _January 05 2025_
+
+- Update dependencies
+
+
 ## 3.0.3
 
 ###### _June 22 2024_

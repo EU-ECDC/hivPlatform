@@ -162,6 +162,14 @@ HIVModelManager <- R6::R6Class( # nolint
         return(invisible(self))
       }
 
+      defaultParameters <- GetListObject(
+        GetSystemFile('ObjectDefinitions/Parameters.R', package = 'hivModelling')
+      )$INCIDENCE
+      parameters <- append(
+        defaultParameters[!(names(defaultParameters) %in% names(parameters))],
+        parameters
+      )
+
       tryCatch({
         PrintAlert('Starting HIV Model main fit task')
 
@@ -292,10 +300,11 @@ HIVModelManager <- R6::R6Class( # nolint
             }
 
             PrintH1('Performing main fit')
-
             impResults <- list()
             for (imp in names(dataSets)) {
               PrintH2('Iteration {.val {imp}}')
+
+              PrintAlert('Case-based data set size: {.val {nrow(caseData[as.character(Imputation) == imp])}}')
               context <- hivModelling::GetRunContext(
                 data = dataSets[[imp]],
                 settings = settings,
@@ -442,9 +451,10 @@ HIVModelManager <- R6::R6Class( # nolint
     },
 
     RunBootstrapFit = function(
-      bsCount = 0,
+      bsCount = 0L,
       bsType = 'PARAMETRIC',
-      maxRunTimeFactor = 3
+      maxRunTimeFactor = 20L,
+      attemptsCount = 3L
     ) {
       if (!is.element(
         private$AppMgr$Steps['MODELLING'],
@@ -462,13 +472,16 @@ HIVModelManager <- R6::R6Class( # nolint
         maxRunTime <- as.difftime(avgRunTime * maxRunTimeFactor, units = 'secs')
 
         PrintAlert('Starting HIV Model bootstrap fit task')
-        PrintAlert('Maximum allowed run time: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
+        PrintAlert('Number of bootstrap iterations per imputation: {.val {bsCount}}')
+        PrintAlert('Number of attempts per iteration: {.val {attemptsCount}}')
+        PrintAlert('Maximum allowed run time per attempt: {.timestamp {prettyunits::pretty_dt(maxRunTime)}}')
 
         private$Catalogs$BootstrapFitTask <- Task$new(
           function(
             bsCount,
             bsType,
             maxRunTime,
+            attemptsCount,
             mainFitResult,
             avgModelOutputs,
             caseData,
@@ -482,7 +495,7 @@ HIVModelManager <- R6::R6Class( # nolint
               suppressMessages(pkgload::load_all())
             }
 
-            options(width = 120)
+            options(width = 120L)
             .Random.seed <- randomSeed # nolint
 
             mainCount <- length(mainFitResult)
@@ -496,10 +509,9 @@ HIVModelManager <- R6::R6Class( # nolint
               )
             }
 
-            fits <- list()
-            i <- 0
+            impResults <- list()
+            # Iterate over imputations
             for (imp in names(mainFitResult)) {
-              i <- i + 1
               mainFit <- mainFitResult[[imp]]
               context <- mainFit$Context
               param <- mainFit$Results$Param
@@ -525,126 +537,134 @@ HIVModelManager <- R6::R6Class( # nolint
                 bootData <- context$Data
               }
 
-              jSucc <- 0
-              j <- 0
               bootResults <- list()
-              while (jSucc < bsCount) {
-                j <- j + 1
+              # Iterate over bootstrap iterations
+              for (j in seq_len(bsCount)) {
 
-                # Bootstrap data set
+                attemptSuccessful <- FALSE
+                attemptCounter <- 0L
+                attemptResults <- list()
+                # Iterate over bootstrap attempts
+                while (!attemptSuccessful & attemptCounter < attemptsCount) {
+                  attemptCounter <- attemptCounter + 1L
 
-                if (bsType == 'NON-PARAMETRIC') {
-                  bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
-                  if (dataAfterMigr && migrConnFlag) {
-                    bootCaseDataImp[, MigrClass := data.table::fcase(
-                      !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
-                      !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
-                      !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
-                      default = 'Not considered migrant'
-                    )]
-                  }
+                  # Bootstrap data set
 
-                  res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
-                  caseData <- res$Case
-                  aggrData <- res$Aggr
-
-                  if (dataAfterMigr && migrConnFlag) {
-                    # Prepare the Dead file based on the whole population dataset
-                    caseDataDead <- PrepareDataSetsForModel(
-                      caseData,
-                      splitBy = 'Imputation',
-                      dataSets = 'Dead'
-                    )
-
-                    # Prepare other datasets based on the subset of population
-                    caseDataRest <- PrepareDataSetsForModel(
-                      caseData[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
-                      splitBy = 'Imputation',
-                      dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
-                    )
-                    caseDataAll <- modifyList(caseDataDead, caseDataRest)
-
-                    if ('Dead' %in% names(res$Aggr)) {
-                      aggrData <- res$Aggr['Dead']
-                    } else {
-                      aggrData <- NULL
+                  if (bsType == 'NON-PARAMETRIC') {
+                    bootCaseDataImp <- caseDataImp[sample.int(nrow(caseDataImp), replace = TRUE)]
+                    if (dataAfterMigr && migrConnFlag) {
+                      bootCaseDataImp[, MigrClass := data.table::fcase(
+                        !is.na(DateOfArrival) & DateOfHIVDiagnosis < DateOfArrival, 'Diagnosed prior to arrival', # nolint
+                        !is.na(ProbPre) & ProbPre >= 0.5, 'Infected in the country of origin',
+                        !is.na(ProbPre) & ProbPre < 0.5, 'Infected in the country of destination',
+                        default = 'Not considered migrant'
+                      )]
                     }
-                  } else {
-                    caseDataAll <- PrepareDataSetsForModel(caseData, splitBy = 'Imputation')
-                  }
-                  bootData <- CombineData(caseDataAll, aggrData)[[1]]
-                }
 
-                bootContext <- hivModelling::GetRunContext(
-                  data = bootData,
-                  parameters = context$Parameters,
-                  settings = context$Settings
-                )
+                    res <- GetPopulationData(bootCaseDataImp, aggrData, popCombination, aggrDataSelection) # nolint
+                    caseDataIter <- res$Case
+                    aggrDataIter <- res$Aggr
 
-                bootPopData <- hivModelling::GetPopulationData(bootContext)
-
-                startTime <- Sys.time()
-                switch(
-                  bsType,
-                  'PARAMETRIC' = {
-                    bootResult <- hivModelling::PerformBootstrapFit(
-                      j, bootContext, bootPopData, mainFit$Results
-                    )
-                  },
-                  'NON-PARAMETRIC' = {
-                    capture.output({
-                      bootResult <- hivModelling::PerformMainFit(
-                        bootContext, bootPopData,
-                        param = param, info = info, attemptSimplify = FALSE,
-                        maxRunTime = maxRunTime, verbose = FALSE
+                    if (dataAfterMigr && migrConnFlag) {
+                      # Prepare the Dead file based on the whole population dataset
+                      caseDataDead <- PrepareDataSetsForModel(
+                        caseDataIter,
+                        splitBy = 'Imputation',
+                        dataSets = 'Dead'
                       )
-                    })
+
+                      # Prepare other datasets based on the subset of population
+                      caseDataRest <- PrepareDataSetsForModel(
+                        caseDataIter[!(MigrClass %chin% c('Diagnosed prior to arrival', 'Infected in the country of origin'))], # nolint
+                        splitBy = 'Imputation',
+                        dataSets = c('HIV', 'AIDS', 'HIVAIDS', 'CD4')
+                      )
+                      caseDataAll <- modifyList(caseDataDead, caseDataRest)
+
+                      if ('Dead' %in% names(res$Aggr)) {
+                        aggrData <- res$Aggr['Dead']
+                      } else {
+                        aggrData <- NULL
+                      }
+                    } else {
+                      caseDataAll <- PrepareDataSetsForModel(caseDataIter, splitBy = 'Imputation')
+                    }
+                    bootData <- CombineData(caseDataAll, aggrData)[[1]]
                   }
-                )
-                runTime <- Sys.time() - startTime
 
-                preMigrCounts <- GetPreMigrCounts(
-                  bootCaseDataImp,
-                  migrConnFlag,
-                  dataAfterMigr
-                )
-                PostProcessModelOutputs(
-                  bootResult$MainOutputs,
-                  preMigrCounts,
-                  migrConnFlag,
-                  dataAfterMigr
-                )
+                  bootContext <- hivModelling::GetRunContext(
+                    data = bootData,
+                    parameters = context$Parameters,
+                    settings = context$Settings
+                  )
 
-                if (bootResult$Converged) {
-                  msgType <- 'success'
-                  jSucc <- jSucc + 1
-                  progress <- (jSucc + (i - 1) * bsCount) / (mainCount * bsCount) * 100
-                } else {
-                  msgType <- 'danger'
+                  bootPopData <- hivModelling::GetPopulationData(bootContext)
+
+                  startTime <- Sys.time()
+                  switch(bsType,
+                    'PARAMETRIC' = {
+                      bootResult <- try(hivModelling::PerformBootstrapFit(
+                        j, bootContext, bootPopData, mainFit$Results
+                      ), silent = TRUE)
+                    },
+                    'NON-PARAMETRIC' = {
+                      capture.output({
+                        bootResult <- try(hivModelling::PerformMainFit(
+                          context = bootContext, data = bootPopData,
+                          param = param, info = info, attemptSimplify = FALSE,
+                          maxRunTime = maxRunTime, verbose = TRUE
+                        ), silent = TRUE)
+                      })
+                    }
+                  )
+                  runTime <- Sys.time() - startTime
+
+                  if (!inherits(bootResult, 'try-error') && bootResult$Converged) {
+                    preMigrCounts <- GetPreMigrCounts(
+                      bootCaseDataImp,
+                      migrConnFlag,
+                      dataAfterMigr
+                    )
+                    PostProcessModelOutputs(
+                      bootResult$MainOutputs,
+                      preMigrCounts,
+                      migrConnFlag,
+                      dataAfterMigr
+                    )
+
+                    msgType <- 'success'
+                    iterationStatus <- 'converged'
+                    attemptSuccessful <- TRUE
+                  } else {
+                    msgType <- 'danger'
+                    iterationStatus <- 'NOT converged'
+                    attemptSuccessful <- FALSE
+                  }
+
+                  PrintAlert(
+                    'Iteration {.val {j}} | Attempt {.val {attemptCounter}} {iterationStatus} |',
+                    'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}}',
+                    type = msgType
+                  )
+
+                  attemptResults[[attemptCounter]] <- list(
+                    Context = bootContext,
+                    Data = bootData,
+                    Results = bootResult,
+                    RunTime = runTime,
+                    BootIteration = list(
+                      Imputation = imp,
+                      Iteration = j,
+                      Attempt = attemptCounter
+                    )
+                  )
                 }
-                jSuccRate <- jSucc / j
-
-                PrintAlert(
-                  'Iteration {.val {jSucc}} done |',
-                  'Run time: {.timestamp {prettyunits::pretty_dt(runTime)}} |',
-                  'Success rate: {.val {jSuccRate * 100}}%',
-                  type = msgType
-                )
-
-                bootResults[[j]] <- list(
-                  Context = bootContext,
-                  Data = bootData,
-                  Results = bootResult,
-                  RunTime = runTime,
-                  DataSet = imp,
-                  BootIteration = jSucc
-                )
+                bootResults[[j]] <- attemptResults
               }
-
-              fits[[imp]] <- bootResults
+              impResults[[imp]] <- bootResults
             }
 
-            stats <- GetBootstrapFitStats(fits)
+            stats <- GetBootstrapFitStats(impResults)
 
             plotData <- GetHIVPlotData(
               mainFitOutputs = avgModelOutputs,
@@ -653,7 +673,7 @@ HIVModelManager <- R6::R6Class( # nolint
             )
 
             result <- list(
-              Fits = fits,
+              Fits = impResults,
               Stats = stats,
               PlotData = plotData
             )
@@ -664,6 +684,7 @@ HIVModelManager <- R6::R6Class( # nolint
             bsCount = bsCount,
             bsType = bsType,
             maxRunTime = maxRunTime,
+            attemptsCount = attemptsCount,
             mainFitResult = isolate(private$Catalogs$MainFitResult),
             avgModelOutputs = isolate(private$Catalogs$AvgModelOutputs),
             caseData = isolate(private$AppMgr$CaseMgr$Data),
@@ -694,7 +715,7 @@ HIVModelManager <- R6::R6Class( # nolint
           failCallback = function(msg = NULL) {
             PrintAlert('Running HIV Model bootstrap fit task failed', type = 'danger')
             if (!is.null(msg)) {
-              PrintAlert(msg, type = 'danger')
+              try(PrintAlert(msg, type = 'danger'))
             }
             private$SendMessage(
               'BOOTSTRAP_RUN_FINISHED',
@@ -831,7 +852,7 @@ HIVModelManager <- R6::R6Class( # nolint
       return(private$Catalogs$MainFitResult)
     },
 
-    AvgModelOutputs= function() {
+    AvgModelOutputs = function() {
       return(private$Catalogs$AvgModelOutputs)
     },
 

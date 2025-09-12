@@ -62,7 +62,7 @@ const RepDelChart = (props) => {
         markLine: {
           data: [[
             {
-              name: `95% of cases reported by ${q95} quarters`,
+              name: `95% of cases reported by ${FormatNumber(q95, 2)} quarters`,
               xAxis: q95,
               y: 40,
             },

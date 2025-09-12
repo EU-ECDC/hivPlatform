@@ -37,6 +37,7 @@ GetInputDataValidityStatus <- function(
     columnSpec <- columnSpecs[[columnName]]
     allowedValues <- columnSpec$values
     restrictedValues <- columnSpec$restrictedValues
+    testFuncs <- columnSpec$testFuncs
 
     wrongValues <- c()
 
@@ -54,13 +55,27 @@ GetInputDataValidityStatus <- function(
       )
     }
 
-    valid <- length(wrongValues) == 0
+    errorMessages <- c()
+    if (!is.null(testFuncs)) {
+      for (testFunc in testFuncs) {
+        errMsg <- try(testFunc(inputData[[columnName]]), silent = TRUE)
+        if (!is.null(errMsg)) {
+          errorMessages <- c(errorMessages, errMsg)
+        }
+      }
+    }
 
-    checkStatus[[columnName]] <- list(Valid = valid, WrongValues = wrongValues)
+    valid <- length(wrongValues) == 0L && length(errorMessages) == 0L
+
+    checkStatus[[columnName]] <- list(
+      Valid = valid,
+      WrongValues = wrongValues,
+      ErrorMessages = errorMessages
+    )
   }
 
   return(list(
     Valid = all(sapply(checkStatus, '[[', 'Valid')),
-    CheckStatus = checkStatus)
-  )
+    CheckStatus = checkStatus
+  ))
 }

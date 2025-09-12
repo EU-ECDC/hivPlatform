@@ -39,7 +39,7 @@ const TabUploadAggregated = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -51,12 +51,12 @@ const TabUploadAggregated = props => {
           </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Upload aggregated data
         </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <input
             style={{ display: 'none' }}
             id='aggrUploadBtn'
@@ -94,7 +94,7 @@ const TabUploadAggregated = props => {
             msg={appMgr.aggrDataMgr.actionMessage}
           />
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           {!appMgr.aggrDataMgr.actionValid &&
             <TableChartIcon sx={{ color: '#eee', fontSize: '600px' }}/>
           }
@@ -102,7 +102,7 @@ const TabUploadAggregated = props => {
             <Paper sx={{ padding: '10px' }}>
               <Typography variant='overline'>Uploaded file details</Typography>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Table>
                     <TableBody>
                       <TableRow>
@@ -120,7 +120,7 @@ const TabUploadAggregated = props => {
                     </TableBody>
                   </Table>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Table>
                     <TableBody>
                       <TableRow hover={false}><HeaderCell>Data names</HeaderCell></TableRow>

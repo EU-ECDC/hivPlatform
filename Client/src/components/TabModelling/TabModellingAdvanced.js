@@ -15,7 +15,7 @@ const TabModellingAdvanced = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -26,13 +26,13 @@ const TabModellingAdvanced = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Advanced paramaters
           </Typography>
         </Grid>
-        <Grid item xs={2}></Grid>
-        <Grid item xs={10}>
+        <Grid size={2}></Grid>
+        <Grid size={10}>
           <AdvancedParameters {...props}/>
         </Grid>
       </Grid>

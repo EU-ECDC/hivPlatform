@@ -79,6 +79,7 @@ export default class AppManager {
         if (e.payload.ActionStatus === 'SUCCESS') {
           this.loadingUIState = true;
           this.setUIState(JSON.parse(e.payload.UIState));
+          // this.setUIState(e.payload.UIState);
         }
         this.notificationsMgr.setMsg(e.payload.ActionMessage);
         break;
@@ -552,7 +553,6 @@ export default class AppManager {
   setUIState = uiState => {
     this.loadingUIState = true;
     this.shinyState = uiState.shinyState;
-    this.uiStateMgr.setUIState(uiState.uiStateMgr);
     this.notificationsMgr.setUIState(uiState.notificationsMgr);
     this.attrMappingMgr.setUIState(uiState.attrMappingMgr);
     this.origGroupMgr.setUIState(uiState.origGroupMgr);
@@ -565,6 +565,7 @@ export default class AppManager {
     this.modelMgr.setUIState(uiState.modelMgr);
     this.reportMgr.setUIState(uiState.reportMgr);
     this.migrMgr.setUIState(uiState.migrMgr);
+    this.uiStateMgr.setUIState(uiState.uiStateMgr);
     this.inputValueSet('loadingUIStateDone', true, true);
   };
 

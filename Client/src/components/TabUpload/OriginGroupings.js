@@ -14,12 +14,12 @@ const OriginGroupings = (props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           Migrant variable regrouping
         </Typography>
       </Grid>
-      <Grid item xs={2}>
+      <Grid size={2}>
         <Btn
           sx={{ marginBottom: '6px', color: 'white' }}
           onClick={onApplyClick}
@@ -36,11 +36,11 @@ const OriginGroupings = (props) => {
           msg={appMgr.origGroupMgr.actionMessage}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         <OriginGroupingsWidget {...props} />
       </Grid>
     </Grid>
-  )
+  );
 };
 
 export default observer(OriginGroupings);

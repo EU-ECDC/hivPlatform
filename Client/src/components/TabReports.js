@@ -53,7 +53,7 @@ const TabReports = (props) => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button
               size='small'
@@ -65,12 +65,12 @@ const TabReports = (props) => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Select report
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <FormControl style={{ width: '100%', marginTop: 20, marginBottom: 20 }}>
             <Select
               value={1}
@@ -96,7 +96,7 @@ const TabReports = (props) => {
           </Button>
           <ProgressBar progress={appMgr.reportMgr.creatingReportInProgress} />
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Typography variant='overline'>Parameters for report on adjusted data</Typography>
             <FormGroup>
@@ -135,15 +135,15 @@ const TabReports = (props) => {
           </Paper>
         </Grid>
         {appMgr.reportMgr.report && <React.Fragment>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Divider light style={{ margin: '30px 0' }} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography variant='h6'>
               View and download
           </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid size={2}>
             <Link
               download
               href='#'
@@ -180,7 +180,7 @@ const TabReports = (props) => {
               MS Word
             </Link>
           </Grid>
-          <Grid item xs={10}>
+          <Grid size={10}>
             <Paper style={{ padding: 10 }}>
               <div
                 dangerouslySetInnerHTML={{ __html: appMgr.reportMgr.report }}

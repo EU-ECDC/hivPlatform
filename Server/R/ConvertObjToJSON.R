@@ -10,7 +10,7 @@ ConvertObjToJSON <- function(
         data = as.matrix(obj)
       )
     }
-    json <- jsonlite::toJSON(obj, dataframe = dataframe, auto_unbox = TRUE, na = 'null')
+    json <- jsonlite::toJSON(obj, dataframe = dataframe, auto_unbox = TRUE, na = 'null', null = 'null')
   } else {
     json <- NULL
   }

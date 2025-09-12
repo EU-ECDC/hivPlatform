@@ -3,7 +3,7 @@
 #' Gets attributes mappings.
 #'
 #' @param origData Original data. Required.
-#' @param maxDistance Maximum allowed generalized Levenshtein distance between internal and origina
+#' @param maxDistance Maximum allowed generalized Levenshtein distance between internal and original
 #'   column name. Optional. Default = 4
 #'
 #' @return list with attributes mapping

@@ -29,11 +29,11 @@ const TabAdjustmentsInputsMIJomo = (props) => {
   const handleMIRestoreDefaults = (e) => appMgr.adjustMgr.restoreMIDefaults('jomo');
 
   return (
-      <React.Fragment>
-        <Typography variant='overline'>Joint Modelling - JOMO parameters</Typography>
+    <React.Fragment>
+      <Typography variant='overline'>Joint Modelling - JOMO parameters</Typography>
       <form noValidate autoComplete='off'>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Number of imputations'
               helperText='Type the number of data sets to input'
@@ -50,7 +50,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               sx={{ marginBottom: '20px' }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Number of burn-in iterations'
               helperText='Type the number of inital iterations to skip before imputing'
@@ -67,7 +67,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               sx={{ marginBottom: '20px' }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Number of iterations between two successive imputations'
               type='number'
@@ -83,7 +83,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               sx={{ marginBottom: '20px' }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <Typography id="discrete-slider" gutterBottom>
               Number of degrees of freedom for spline of diagnosis calendar year
           </Typography>
@@ -95,7 +95,7 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               marks={[{ value: 3, label: 3 }, { value: 4, label: 4 }, { value: 5, label: 5 }]}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <FormGroup row>
               <FormControlLabel
                 control={<Checkbox checked={appMgr.adjustMgr.miJomoSettings.imputeRD} onChange={handleMIJomoImputeRDChange} name='check' color='primary' />}
@@ -103,13 +103,13 @@ const TabAdjustmentsInputsMIJomo = (props) => {
               />
             </FormGroup>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Button color='primary' onClick={handleMIRestoreDefaults}>Restore defaults</Button>
           </Grid>
         </Grid>
         </form>
-      </React.Fragment>
-  )
+    </React.Fragment>
+  );
 };
 
 export default observer(TabAdjustmentsInputsMIJomo);

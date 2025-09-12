@@ -15,7 +15,7 @@
 GetBootstrapFitStats <- function(
   fits
 ) {
-  flatList <- Reduce(c, fits)
+  flatList <- Reduce(c, Reduce(c, fits))
   resultsList <- lapply(flatList, '[[', 'Results')
   runTime <- sapply(resultsList, '[[', 'RunTime')
   converged <- sapply(resultsList, '[[', 'Converged')
@@ -23,12 +23,12 @@ GetBootstrapFitStats <- function(
   succResultsList <- lapply(succFlatList, '[[', 'Results')
 
   info <- succResultsList[[1]]$Info
-  years <- info$ModelMinYear:(info$ModelMaxYear - 1)
+  years <- seq(info$ModelMinYear, (info$ModelMaxYear - 1L))
 
   mainOutputList <- lapply(succResultsList, '[[', 'MainOutputs')
   colNames <- setdiff(
     colnames(mainOutputList[[1]]),
-    c('DataSet', 'BootIteration', 'Run', 'Year')
+    c('DataSet', 'BootIteration', 'Attempt', 'Run', 'Year')
   )
   mainOutputStats <- setNames(lapply(colNames, function(colName) {
     resultSample <- sapply(mainOutputList, '[[', colName)

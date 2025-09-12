@@ -178,7 +178,7 @@ PrepareMigrantData <- function(
     )
   ]
 
-  if (nrow(imputeData) > 0) {
+  if (nrow(imputeData) > 0L) {
     selNotNA <- imputeData[, !is.na(PropBeforeArrival)]
     # Prepare logit transformation
     imputeData[selNotNA & between(PropBeforeArrival, 0, 0.00001), PropBeforeArrival := 0.00001]
@@ -258,7 +258,7 @@ PrepareMigrantData <- function(
   base <- data[is.na(Excluded)]
 
   # CD4 dataset
-  if (nrow(base) > 0) {
+  if (nrow(base) > 0L) {
     cd4 <- base[, .(
       UniqueId,
       YVar_1 = FirstCD4Count,
@@ -360,32 +360,32 @@ PrepareMigrantData <- function(
     DateOfHIVDiagnosis = as.Date(integer()),
     MigrantRegionOfOrigin = as.factor(character())
   )
-  if (nrow(baseCD4VL) > 0) {
+  if (nrow(baseCD4VL) > 0L) {
     countDistrData <- rbind(
       countDistrData,
       baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
     )
   }
-  if (nrow(baseAIDS) > 0) {
+  if (nrow(baseAIDS) > 0L) {
     countDistrData <- rbind(
       countDistrData,
       baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin)]
     )
   }
-  if (nrow(baseCD4VL) > 0) {
+  if (nrow(baseCD4VL) > 0L) {
     countDistrData <- rbind(
       countDistrData,
       baseCD4VL[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'ALL')]
     )
   }
-  if (nrow(baseAIDS) > 0) {
+  if (nrow(baseAIDS) > 0L) {
     countDistrData <- rbind(
       countDistrData,
       baseAIDS[, .(Imputation, DateOfArrival, DateOfHIVDiagnosis, MigrantRegionOfOrigin = 'ALL')]
     )
   }
 
-  if (nrow(countDistrData) > 0) {
+  if (nrow(countDistrData) > 0L) {
     countDistr <- countDistrData[,
       .(Count = .N),
       keyby = .(
@@ -435,6 +435,10 @@ PrepareMigrantData <- function(
     yodDistr <- NULL
   }
 
+  if (!is.null(yodDistr)) {
+    yodDistr <- lapply(yodDistr, GetHeatMapChartData, titleX = 'Year of Diagnosis')
+  }
+
   return(list(
     Data = list(
       Input = data[, .(UniqueId, DateOfArrival, Excluded, KnownPrePost)],
@@ -445,7 +449,7 @@ PrepareMigrantData <- function(
       Missingness = missStat,
       Imputation = imputeStat,
       RegionDistr = GetHeatMapChartData(regionDistr),
-      YODDistr = lapply(yodDistr, GetHeatMapChartData, titleX = 'Year of Diagnosis')
+      YODDistr = yodDistr
     )
   ))
 }

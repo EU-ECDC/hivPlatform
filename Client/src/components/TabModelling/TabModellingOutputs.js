@@ -28,7 +28,7 @@ const TabModellingOutputs = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -39,12 +39,12 @@ const TabModellingOutputs = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             HIV Modelling results
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <FormControlLabel
             control={
               <Switch
@@ -63,7 +63,7 @@ const TabModellingOutputs = props => {
             Dotted curves represent data not used in the modelling (see year ranges in tab "Advanced").
           </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Paper style={{ padding: 10 }}>
             <Tabs
               value={tabId}

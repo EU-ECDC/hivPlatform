@@ -29,7 +29,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
       <Typography variant='overline'>Chained Equations - MICE parameters</Typography>
       <form noValidate autoComplete='off'>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Number of imputations'
               helperText='Type the number of data sets to input'
@@ -46,7 +46,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
               sx={{ marginBottom: '20px' }}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <TextField
               label='Number of mice iterations'
               helperText='Type the number of mice iterations'
@@ -63,8 +63,8 @@ const TabAdjustmentsInputsMIMice = (props) => {
               sx={{ marginBottom: '20px' }}
             />
           </Grid>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4}>
+          <Grid size={4}></Grid>
+          <Grid size={4}>
             <Typography id="discrete-slider" gutterBottom>
               Number of degrees of freedom for spline of diagnosis calendar year
             </Typography>
@@ -76,7 +76,7 @@ const TabAdjustmentsInputsMIMice = (props) => {
               marks={[{ value: 3, label: 3 }, { value: 4, label: 4 }, { value: 5, label: 5 }]}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={4}>
             <FormGroup row>
               <FormControlLabel
                 control={<Checkbox checked={appMgr.adjustMgr.miMiceSettings.imputeRD} onChange={handleMIMiceImputeRDChange} name='check' color='primary' />}
@@ -84,13 +84,13 @@ const TabAdjustmentsInputsMIMice = (props) => {
               />
             </FormGroup>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Button color='primary' onClick={handleMIRestoreDefaults}>Restore defaults</Button>
           </Grid>
         </Grid>
       </form>
     </React.Fragment>
-  )
+  );
 };
 
 export default observer(TabAdjustmentsInputsMIMice);

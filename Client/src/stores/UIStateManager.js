@@ -238,7 +238,8 @@ export default class UIStateManager {
   setUIState = uiState => {
     this.lastEventType = uiState.lastEventType;
     this.completedSteps = uiState.completedSteps;
+    this.refreshPagesStatus();
     this.pages = uiState.pages;
-    this.activePageId = uiState.activePageId;
+    this.setActivePageId(this.activePageId);
   };
 }

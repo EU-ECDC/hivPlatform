@@ -35,10 +35,12 @@ GetAverageHIVModelOutputs <- function(
   hivModelling:::GetDataWeights(avgPopData)
 
   # Average incidence curve
-  numPoints <- 5000
+  numPoints <- 5000L
   minYear <- initModel$Results$Info$ModelMinYear
   maxYear <- initModel$Results$Info$ModelMaxYear
   years <- seq(minYear, maxYear, length.out = numPoints)
+  # Leave out the last year to avoid extrapolation
+  years <- years[-length(years)]
   incidenceCurves <- as.data.table(lapply(
     hivModels,
     function(model) {
@@ -56,6 +58,11 @@ GetAverageHIVModelOutputs <- function(
   ))
   incidenceCurves[, Avg := rowMeans(.SD)]
   avgIncidenceCurve <- as.matrix(incidenceCurves[, .(years, Avg)])
+  # Add the last point as copy of the previous one
+  avgIncidenceCurve <- rbind(
+    avgIncidenceCurve,
+    c(maxYear, avgIncidenceCurve[nrow(avgIncidenceCurve), 2])
+  )
 
   # Average context
   avgContext <- list(

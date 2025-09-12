@@ -119,7 +119,7 @@ const TabWelcome = props => {
 
   return (
     <Grid container direction='row' justifyContent='space-evenly' alignItems='baseline'>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Box width='50%' m='auto' p={5}>
           <p>
             HIV continues to be of significant public health importance in the European Union as
@@ -138,7 +138,7 @@ const TabWelcome = props => {
           </p>
         </Box>
       </Grid>
-      <Grid item xs={3}>
+      <Grid size={3}>
         <WelcomeCard
           title='Accuracy'
           description='Adjust case-based data for missing values and reporting delay'
@@ -147,7 +147,7 @@ const TabWelcome = props => {
           onClick={handleCardClick}
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid size={3}>
         <WelcomeCard
           title='Modelling'
           description='Estimate number of PLHIV and incidence'
@@ -156,7 +156,7 @@ const TabWelcome = props => {
           onClick={handleCardClick}
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid size={3}>
         <WelcomeCard
           title='All-in-one'
           description='Accuracy adjustements and modelling integrated in one tool'
@@ -165,7 +165,7 @@ const TabWelcome = props => {
           onClick={handleCardClick}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Box width='50%' m='auto' p={5}>
           <p>
             NOTE: This is the latest version of HIV Platform tool (v3). Previous version (v2) is

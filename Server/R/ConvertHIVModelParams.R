@@ -16,12 +16,12 @@ ConvertHIVModelParams <- function(
 
   casePopulationsAbbr <- sapply(x$popCombination$casePopulations, '[[', 1)
   casePopulations <- lapply(casePopulationsAbbr, function(casePopulation) {
-    casePopulation  <- strsplit(casePopulation, ', ')[[1]]
+    casePopulation <- strsplit(casePopulation, ', ')[[1]]
     l <- lapply(casePopulation, function(el) {
-      vals <- strsplit(el, ' ')[[1]]
-      value <- vals[1]
-      variableCode <- gsub('(\\[|\\])', '', vals[2])
+      variableCodeMatch <- regmatches(el, regexpr(" \\[(G|T|O|R)\\]$", el))
+      variableCode <- trimws(gsub('(\\[|\\])', '', variableCodeMatch))
       variable <- variableCodeMapping[variableCode][[1]]
+      value <- gsub(variableCodeMatch, "", el, fixed = TRUE)
       list(Value = value, Variable = variable)
     })
     list(

@@ -2,11 +2,14 @@
 dir.create('library', showWarnings = FALSE)
 .libPaths('./library')
 pak::local_install_deps(root = '.', dependencies = 'hard', upgrade = TRUE)
+pak::local_install('D:/_REPOSITORIES_ECDC/hivEstInfTime', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
+pak::local_install('D:/_REPOSITORIES_ECDC/hivModelling', dependencies = FALSE, upgrade = FALSE, ask = FALSE)
 
+sessInfo <- unlist(sessionInfo())
+rVersion <- paste(sessInfo['R.version.major'], strsplit(sessInfo['R.version.minor'], "\\.")[[1]][[1]], sep = '.')
 pkgDescr <- as.data.frame(read.dcf('DESCRIPTION'))
 pkgName <- pkgDescr$Package
 pkgVersion <- pkgDescr$Version
-rVersion <- '4.3'
 deployDate <- format(Sys.Date(), '%Y%m%d')
 rootPath <- file.path('d:/_DEPLOYMENT', pkgName)
 repoPath <- file.path(rootPath, sprintf('repository_%s_%s', pkgVersion, deployDate))
@@ -43,12 +46,12 @@ buildPath <- file.path(rootPath, 'build')
 dir.create(buildPath, showWarnings = FALSE, recursive = TRUE)
 
 # HIV Estimate Infection Time
-hivEstInfTimePkgPath <- 'D:/_REPOSITORIES/hivEstInfTime'
+hivEstInfTimePkgPath <- 'D:/_REPOSITORIES_ECDC/hivEstInfTime'
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivEstInfTimePkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
 # HIV Modelling
-hivModelPkgPath <- 'D:/_REPOSITORIES/hivModelling'
+hivModelPkgPath <- 'D:/_REPOSITORIES_ECDC/hivModelling'
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = FALSE)
 pkgbuild::build(path = hivModelPkgPath, dest_path = buildPath, binary = TRUE, args = args)
 
@@ -57,6 +60,8 @@ pkgbuild::build(dest_path = buildPath, binary = FALSE)
 pkgbuild::build(dest_path = buildPath, binary = TRUE, args = args)
 
 # Add to repository
+miniCRAN::addLocalPackage('hivEstInfTime', buildPath, repoPath, type = 'source')
+miniCRAN::addLocalPackage('hivEstInfTime', buildPath, repoPath, type = 'win.binary', Rversion = rVersion) # nolint
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'source')
 miniCRAN::addLocalPackage('hivModelling', buildPath, repoPath, type = 'win.binary', Rversion = rVersion) # nolint
 miniCRAN::addLocalPackage(pkgName, buildPath, repoPath, type = 'source')
@@ -76,10 +81,20 @@ sapply(
   overwrite = TRUE
 )
 fs::dir_create(file.path(winDeployPath, 'library'))
-pak::pkg_install(
-  'github::nextpagesoft/hivPlatform/Server',
-  dependencies = 'hard',
-  lib = file.path(winDeployPath, 'library')
+pak::pkg_install('.', dependencies = 'hard', lib = file.path(winDeployPath, 'library'))
+pak::local_install(
+  hivEstInfTimePkgPath,
+  dependencies = FALSE,
+  lib = file.path(winDeployPath, 'library'),
+  upgrade = FALSE,
+  ask = FALSE
+)
+pak::local_install(
+  hivModelPkgPath,
+  dependencies = FALSE,
+  lib = file.path(winDeployPath, 'library'),
+  upgrade = FALSE,
+  ask = FALSE
 )
 fs::file_delete(file.path(winDeployPath, 'library', '_cache'))
 

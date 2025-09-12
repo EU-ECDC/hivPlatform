@@ -4,6 +4,10 @@ GetHeatMapChartData <- function(
   chartCategoriesY = distrData[[1]],
   titleX = 'Region For Migration Module'
 ) {
+  if (is.null(distrData)) {
+    return(NULL)
+  }
+
   matrixData <- unname(as.matrix(distrData[, ..chartCategoriesX]))
   dims <- dim(matrixData)
   values <- matrix(matrixData, nrow = prod(dims), ncol = 1, byrow = TRUE)

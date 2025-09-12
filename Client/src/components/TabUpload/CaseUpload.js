@@ -38,7 +38,7 @@ const CaseUpload = (props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Box display='flex' justifyContent='flex-end'>
           <Button
             size='small'
@@ -50,12 +50,12 @@ const CaseUpload = (props) => {
           </Button>
         </Box>
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant='h6'>
           Upload case-based data
         </Typography>
       </Grid>
-      <Grid item xs={2}>
+      <Grid size={2}>
         <input
           style={{ display: 'none' }}
           id='caseUploadBtn'
@@ -92,7 +92,7 @@ const CaseUpload = (props) => {
           msg={appMgr.caseBasedDataMgr.actionMessage}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid size={10}>
         {!appMgr.caseBasedDataMgr.actionValid &&
           <PeopleIcon sx={{ color: '#eee', fontSize: '600px' }}/>
         }
@@ -100,7 +100,7 @@ const CaseUpload = (props) => {
           <Paper sx={{ padding: '10px' }}>
             <Typography variant='overline'>Uploaded file details</Typography>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Table>
                   <TableBody>
                     <TableRow>
@@ -122,7 +122,7 @@ const CaseUpload = (props) => {
                   </TableBody>
                 </Table>
               </Grid>
-              <Grid item xs={6}>
+              <Grid size={6}>
                 <Table>
                   <TableBody>
                     <TableRow hover={false}><HeaderCell>Column names</HeaderCell></TableRow>

@@ -18,7 +18,7 @@ const TabModellingPopulation = props => {
   return (
     <TabPanel>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box display='flex' justifyContent='flex-end'>
             <Button
               size='small'
@@ -29,12 +29,12 @@ const TabModellingPopulation = props => {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Case-based data
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Typography>
             Create populations from data
           </Typography>
@@ -43,18 +43,18 @@ const TabModellingPopulation = props => {
             Select one or more variables.
           </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <CreatePopulations {...props} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Aggregated data
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Typography>
             Select data for modelling
           </Typography>
@@ -62,23 +62,23 @@ const TabModellingPopulation = props => {
             Only years present in the aggregated data set will overwrite case-based derived data.
           </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <AggregatedDataPopulations {...props} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider light style={{ margin: '30px 0' }} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant='h6'>
             Combine populations
           </Typography>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Typography variant='body2' color='textSecondary'>
             Combine case-based and aggregated data populations.
           </Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <CombinePopulations {...props} />
         </Grid>
       </Grid>

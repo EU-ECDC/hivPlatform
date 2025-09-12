@@ -70,7 +70,7 @@ const OriginGroupingsWidget = (props) => {
   return (
     <Paper sx={{ padding: '10px' }}>
       <Grid container spacing={2}>
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Typography variant='overline'>Distribution of region of origin</Typography>
           <Table size='small'>
             <TableHead>
@@ -91,7 +91,7 @@ const OriginGroupingsWidget = (props) => {
             </TableBody>
           </Table>
         </Grid>
-        <Grid item xs={10}>
+        <Grid size={10}>
           <Typography variant='overline'>Migrant variable regrouping</Typography>
           <FormControl sx={{ width: '100%', fontSize: '0.75rem' }}>
             <Select
@@ -168,7 +168,7 @@ const OriginGroupingsWidget = (props) => {
         </Grid>
       </Grid>
     </Paper>
-  )
+  );
 };
 
 export default observer(OriginGroupingsWidget);
